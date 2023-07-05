@@ -1,10 +1,14 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, TextInput, TouchableOpacity, Text, View, Image, TouchableWithoutFeedback} from 'react-native';
+import { InicioSesionScreen } from '../Screens/InicioSesionScreen';
+import { useNavigation } from '@react-navigation/native';
+import HomeScreen from '../Screens/HomeScreen';
 
 const Registro = () => {
   const [usuario, setUsuario] = React.useState('');
   const [contrasena, setContrasena] = React.useState('');
 
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.contenedor2}>
@@ -22,7 +26,11 @@ const Registro = () => {
           placeholder='Contraseña'
           secureTextEntry={true}
         />
-      <TouchableOpacity style={[styles.boton,styles.shadowProp]}>
+      <TouchableOpacity style={[styles.boton,styles.shadowProp]}
+        onPress = {()=> (
+          navigation.navigate('HomeScreen')
+        )}
+      >
         <Text>Ingresar</Text>
       </TouchableOpacity>
       <TouchableWithoutFeedback>

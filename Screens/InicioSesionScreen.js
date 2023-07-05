@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { Image } from 'react-native-elements';
 import { ImageBackground} from 'react-native';
 import Registro from '../componentes/Registro';
+import { navigation } from '@react-navigation/native'; 
 
 export function InicioSesionScreen({navigation}){
   return(
