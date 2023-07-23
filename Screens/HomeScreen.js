@@ -12,7 +12,11 @@ export default function HomeScreen({navigation}) {
             />
             <MenuHorizontal />
             <View style={[{flexDirection: 'row'}, styles.primeraFila]}>
-                <TouchableOpacity style={styles.boton1}>
+                <TouchableOpacity style={styles.boton1}
+                    onPress = {()=> (
+                        navigation.navigate('BusquedaScreen')
+                    )}
+                >
                     <Image
                         source={require('../Imagenes/lupa.png')}
                         style={styles.imagen1}

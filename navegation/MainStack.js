@@ -5,6 +5,8 @@ import InicioScreen from '../Screens/InicioScreen';
 import { AccountScreen } from '../Screens/Account/AccountScreen';
 import Registro from '../componentes/Registro';
 import HomeScreen from '../Screens/HomeScreen';
+import BusquedaScreen from '../Screens/BusquedaScreen';
+import PublicacionBusqueda from '../Screens/PublicacionBusqueda';
 
 const Stack = createNativeStackNavigator()
 
@@ -31,7 +33,15 @@ export default function MainStack() {
             <Stack.Screen
                 name='HomeScreen'
                 component={HomeScreen}
-            />            
+            />
+            <Stack.Screen
+                name='BusquedaScreen'
+                component={BusquedaScreen}
+            />  
+             <Stack.Screen
+                name='PublicacionBusqueda'
+                component={PublicacionBusqueda}
+            />                      
         </Stack.Navigator>
     </NavigationContainer>
   )
