@@ -38,10 +38,10 @@ export default function MainStack() {
                 name='BusquedaScreen'
                 component={BusquedaScreen}
             />  
-             <Stack.Screen
+            <Stack.Screen
                 name='PublicacionBusqueda'
                 component={PublicacionBusqueda}
-            />                      
+            />                  
         </Stack.Navigator>
     </NavigationContainer>
   )

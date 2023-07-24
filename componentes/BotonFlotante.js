@@ -2,14 +2,24 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import PublicacionBusqueda from '../Screens/PublicacionBusqueda';
 import { useNavigation } from '@react-navigation/native';
+import SlideModal from './SlideModal';
 
 const BotonFlotante = () => {
 
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
 
     return (
       <View style={styles.container}>
-          <TouchableOpacity style={styles.botonMenu}>
+          <TouchableOpacity style={styles.botonMenu} onPress={handleOpenModal}>
           <View style={styles.fab}>
             <Image
               source={require('../Imagenes/menu.png')}
@@ -17,6 +27,7 @@ const BotonFlotante = () => {
             />
           </View>
         </TouchableOpacity>
+        <SlideModal visible={modalVisible} onClose={handleCloseModal} />
         <TouchableOpacity style={styles.botonCrear}
           onPress = {()=> (
             navigation.navigate('PublicacionBusqueda')
