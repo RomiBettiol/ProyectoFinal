@@ -1,29 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
+import axios from 'axios';
 
 const FilterButtonsExample = () => {
   const [selectedFilter, setSelectedFilter] = useState(''); // Estado para almacenar el filtro seleccionado, inicializado a una cadena vacía
+  const [publicaciones, setPublicaciones] = useState([]); // Estado para almacenar las publicaciones
 
-  // Datos de ejemplo para simular los elementos a filtrar
-  const data = [
-    { id: 1, title: 'Elemento 1', category: 'Perro' },
-    { id: 2, title: 'Elemento 2', category: 'Gato' },
-    { id: 3, title: 'Elemento 3', category: 'Perro' },
-    { id: 4, title: 'Elemento 4', category: 'Conejo' },
-    { id: 5, title: 'Elemento 5', category: 'Otros' },
-    { id: 6, title: 'Elemento 6', category: 'Otros' },
-    { id: 7, title: 'Elemento 7', category: 'Otros' },
-    { id: 8, title: 'Elemento 8', category: 'Perro' },
-    { id: 9, title: 'Elemento 9', category: 'Gato' },
-    { id: 10, title: 'Elemento 10', category: 'Perro' },
-    { id: 11, title: 'Elemento 11', category: 'Conejo' },
-    { id: 12, title: 'Elemento 12', category: 'Otros' },
-    { id: 13, title: 'Elemento 13', category: 'Otros' },
-    { id: 14, title: 'Elemento 14', category: 'Otros' },
-    { id: 15, title: 'Elemento 15', category: 'Otros' },
-    { id: 16, title: 'Elemento 16', category: 'Otros' },
-    // Añade más elementos si lo deseas
-  ];
+  const getPublicaciones = () => {
+    // Hacer la petición GET al backend usando axios
+    axios
+      .get('http://10.0.2.2:4000/publication/publications?modelType=adoption', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        console.log('Respuesta exitosa:', response.data);
+        
+        // Extraer los datos necesarios del backend y guardarlos en el estado 'publicaciones'
+        const data = response.data.data;
+        if (data && Array.isArray(data)) {
+          setPublicaciones(data);
+        } else {
+          setPublicaciones([]); // Si no se obtuvieron datos válidos, restablecer el estado a un arreglo vacío
+        }
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud GET:', error);
+        setPublicaciones([]); // En caso de error, asegurarse de restablecer el estado a un arreglo vacío
+      });
+  };  
 
   const handleFilterPress = (filter) => {
     // Si el botón seleccionado es el mismo que el anterior, deseleccionarlo
@@ -36,8 +42,13 @@ const FilterButtonsExample = () => {
     </View>
   );
 
+  // Llamar a getPublicaciones cuando el componente se monte
+  useEffect(() => {
+    getPublicaciones();
+  }, []);
+
   // Filtrar los elementos según el filtro seleccionado o mostrar todos si no hay filtro seleccionado
-  const filteredData = selectedFilter ? data.filter(item => item.category === selectedFilter) : data;
+  const filteredData = selectedFilter ? publicaciones.filter(item => item.category === selectedFilter) : publicaciones;
 
   return (
     <View style={styles.container}>
@@ -84,7 +95,7 @@ const FilterButtonsExample = () => {
         </TouchableOpacity>
       </View>
       <FlatList
-        data={filteredData}
+        data={publicaciones} // Usar el estado 'publicaciones' en lugar de la variable 'filteredData'
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
       />
@@ -101,6 +112,7 @@ const styles = StyleSheet.create({
   filterContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    marginBottom: 15,
   },
   filterButton: {
     paddingHorizontal: 10,
@@ -108,7 +120,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
     elevation: 7,
-    marginBottom: 15,
   },
   selectedFilterButton: {
     backgroundColor: '#DDC4B8',
@@ -117,9 +128,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginTop: 5,
-  },
-  selectedFilterButtonText: {
-    fontWeight: 'bold',
   },
   itemContainer: {
     paddingVertical: 10,
