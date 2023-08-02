@@ -9,10 +9,9 @@ import axios from 'axios';
 
 export default function BusquedaScreen() {
   const navigation = useNavigation();
-  const [publicaciones, setPublicaciones] = useState([]); // Estado para almacenar las publicaciones
+  const [publicaciones, setPublicaciones] = useState([]);
 
   const getPublicaciones = () => {
-    // Hacer la petición GET al backend usando axios
     axios
       .get('http://10.0.2.2:4000/publication/publications?modelType=adoption', {
         headers: {
@@ -26,6 +25,10 @@ export default function BusquedaScreen() {
         const data = response.data.data;
         if (data && Array.isArray(data)) {
           setPublicaciones(data);
+          // Imprimir los títulos en la consola
+          data.forEach((publicacion) => {
+            console.log('Título:', publicacion.title);
+          });
         } else {
           setPublicaciones([]); // Si no se obtuvieron datos válidos, restablecer el estado a un arreglo vacío
         }
