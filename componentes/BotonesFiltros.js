@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal, ActivityIndicator } from 'react-native';
+import SearchBarExample from './BarraBusqueda';
 import axios from 'axios';
 
 const FilterButtonsExample = () => {
@@ -7,6 +8,17 @@ const FilterButtonsExample = () => {
   const [publicaciones, setPublicaciones] = useState([]);
   const [loading, setLoading] = useState(true); // Estado para controlar el modal de "cargando"
   const [numPublicaciones, setNumPublicaciones] = useState(5); // Estado para controlar la cantidad de publicaciones que se muestran
+  const [filteredPublicaciones, setFilteredPublicaciones] = useState([]);
+
+  const handleSearch = (searchText) => {
+    // Filtrar las publicaciones en base al texto de búsqueda
+    const filteredData = publicaciones.filter((item) =>
+      item.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    // Actualizar el estado con las publicaciones filtradas
+    setFilteredPublicaciones(filteredData);
+  };
 
   const getPublicaciones = () => {
     setLoading(true); // Mostrar el modal de "cargando" antes de hacer la petición
@@ -157,12 +169,15 @@ const FilterButtonsExample = () => {
           <Text style={[styles.filterButtonText, selectedFilter === 'Otros' && styles.selectedFilterButtonText]}>Otros</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.container3}>
+        <SearchBarExample data={publicaciones} onSearch={handleSearch} />
+      </View>
       <View>
-        <FlatList
-          data={publicaciones}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.idPublicationSearch}
-        />
+      <FlatList
+        data={filteredPublicaciones.length > 0 ? filteredPublicaciones : publicaciones} // Usar las publicaciones filtradas si hay resultados, de lo contrario, usar todas las publicaciones
+        renderItem={renderItem}
+        keyExtractor={(item) => item.idPublicationSearch}
+      />
         {/* Mostrar el botón "Mostrar más publicaciones" solo si hay más de 10 publicaciones */}
         {numPublicaciones < publicaciones.length && (
           <TouchableOpacity onPress={handleLoadMore} style={styles.loadMoreButton}>

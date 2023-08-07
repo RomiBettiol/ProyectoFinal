@@ -16,7 +16,6 @@ export default function BusquedaScreen() {
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Encuentra a tu mascota</Text>
-          <BarraBusqueda />
           <BotonesFiltros />
           <BotonFlotante />
         </View>
@@ -30,9 +29,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titulo: {
-    marginTop: 20,
+    marginTop: 5,
     fontSize: 22,
     marginLeft: 15,
+    marginBottom: 20,
   },
   scroll: {
     flex: 1,

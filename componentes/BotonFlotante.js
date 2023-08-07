@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import SlideModal from './SlideModal';
 
 const BotonFlotante = () => {
-
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -17,43 +16,41 @@ const BotonFlotante = () => {
     setModalVisible(false);
   };
 
-    return (
-      <View style={styles.container}>
-          <TouchableOpacity style={styles.botonMenu} onPress={handleOpenModal}>
-          <View style={styles.fab}>
-            <Image
-              source={require('../Imagenes/menu.png')}
-              style={styles.imagenBoton}
-            />
-          </View>
-        </TouchableOpacity>
-        <SlideModal visible={modalVisible} onClose={handleCloseModal} />
-        <TouchableOpacity style={styles.botonCrear}
-          onPress = {()=> (
-            navigation.navigate('PublicacionBusqueda')
-          )}
-        >
-          <View style={styles.fab2}>
-            <Image
-              source={require('../Imagenes/agregar.png')}
-              style={styles.imagenBoton}
-            />
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.botonMenu} onPress={handleOpenModal}>
+        <View style={styles.fab}>
+          <Image
+            source={require('../Imagenes/menu.png')}
+            style={styles.imagenBoton}
+          />
+        </View>
+      </TouchableOpacity>
+      <SlideModal visible={modalVisible} onClose={handleCloseModal} />
+      <TouchableOpacity
+        style={styles.botonCrear}
+        onPress={() => navigation.navigate('PublicacionBusqueda')}
+      >
+        <View style={styles.fab2}>
+          <Image
+            source={require('../Imagenes/agregar.png')}
+            style={styles.imagenBoton}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-  botonMenu: {
-    position: 'absolute',
-    bottom: 120,
-    right: 25,
+  container: {
+    flex: 1,
+    position: 'absolute', // Para posicionar el contenedor en la esquina inferior derecha
+    bottom: 20, // Margen inferior para ajustar la posición vertical de los botones
+    right: 20, // Margen derecho para ajustar la posición horizontal de los botones
   },
-  botonCrear: {
-    position: 'absolute',
-    bottom: 190,
-    right: 25,
+  botonMenu: {
+    marginBottom: 10, // Ajustar el espacio vertical entre los botones
   },
   fab: {
     backgroundColor: '#DDC4B8',
@@ -63,6 +60,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
+  },
+  botonCrear: {
+    marginTop: 10, // Ajustar el espacio vertical entre los botones
   },
   fab2: {
     backgroundColor: '#FFB984',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   imagenBoton: {
     width: 40,
     height: 40,
-  }
+  },
 });
 
 export default BotonFlotante;
