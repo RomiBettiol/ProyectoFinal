@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal, ActivityIndicator } from 'react-native';
 import SearchBarExample from './BarraBusqueda';
+import PublicacionDetalle from './Busqueda/PublicacionDetalle';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 const FilterButtonsExample = () => {
+  const navigation = useNavigation();
   const [selectedFilter, setSelectedFilter] = useState('');
   const [publicaciones, setPublicaciones] = useState([]);
   const [loading, setLoading] = useState(true); // Estado para controlar el modal de "cargando"
@@ -65,7 +68,11 @@ const FilterButtonsExample = () => {
     // Verificar si el índice del item es menor que numPublicaciones
     if (publicaciones.indexOf(item) < numPublicaciones) {
       return (
-        <View style={styles.itemContainer}>
+        <TouchableOpacity style={styles.itemContainer}
+          onPress = {()=> (
+            navigation.navigate('PublicacionDetalle', { publicacion: item })
+          )}
+        >
           <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>
             <Image
               source={require('../Imagenes/imagenPublicaciones.jpg')}
@@ -107,7 +114,7 @@ const FilterButtonsExample = () => {
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       );
     } else {
       // Si es mayor o igual a numPublicaciones, no mostrar nada (ocultar la publicación)
