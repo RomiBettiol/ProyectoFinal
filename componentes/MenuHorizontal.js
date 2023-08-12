@@ -49,7 +49,9 @@ const MenuHorizontal = () => {
       width: '90%',
       height: '65%',
       marginTop: 10,
-      marginBottom: 15,    
+      marginBottom: 15,
+      backgroundColor: '#FFB984',
+      elevation: 5,      
     },
 
     menuItem: {
