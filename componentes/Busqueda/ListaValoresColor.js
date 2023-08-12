@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-
-const data = [
-  { label: 'Negro', value: '1' },
-  { label: 'Blanco', value: '2' },
-  { label: 'Gris', value: '3' },
-  { label: 'Marrón', value: '4' },
-];
+import axios from 'axios';
 
 const ListaValoresColor = () => {
-  const [value, setValue] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [colorOptions, setColorOptions] = useState([]);
+
+  const getColores = () => {
+    axios
+      .get('http://10.0.2.2:4000/parameters/petColor/', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        console.log('Colores exitosos:', response.data);
+        const petColors = response.data.petColors; // Obtenemos la lista de colores del response
+        setColorOptions(petColors); // Actualizamos el estado con la lista de colores
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud GET:', error);
+        setColorOptions([]); // En caso de error, seteamos el estado como una lista vacía
+      });
+  };
+
+  useEffect(() => {
+    getColores();
+  }, []);
+
+  console.log('colorOptions:', colorOptions); // Agregar el console.log aquí
 
   return (
     <Dropdown
@@ -18,14 +37,14 @@ const ListaValoresColor = () => {
       placeholderStyle={styles.placeholderStyle}
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
-      data={data}
+      data={colorOptions}
       maxHeight={300}
-      labelField="label"
-      valueField="value"
+      labelField="petColorName"
+      valueField="petColorName"
       placeholder="Color"
-      value={value}
+      value={selectedColor}
       onChange={item => {
-        setValue(item.value);
+        setSelectedColor(item.petColorName);
       }}
     />
   );

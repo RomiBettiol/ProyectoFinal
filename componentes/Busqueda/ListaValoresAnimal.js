@@ -1,36 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import ListaValoresRazaGatos from './ListaValoresRazaGatos';
+import ListaValoresRazaPerros from './ListaValoresRazaPerros';
+import axios from 'axios';
 
 const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal }) => {
+  const [animalOptions, setAnimalOptions] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://10.0.2.2:4000/parameters/petType/')
+      .then((response) => {
+        console.log('Tipos de animal exitosos:', response.data);
+        setAnimalOptions(response.data.petTypes);
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud GET:', error);
+        setAnimalOptions([]);
+      });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Tipo de Animal</Text>
-      <View style={[{ flexDirection: 'row' }, styles.contenedor2]}>
-        <TouchableOpacity
-          style={[styles.option, selectedAnimal === 'perro' && styles.selectedAnimal]}
-          onPress={() => setSelectedAnimal('perro')}
-        >
-          <Text style={[styles.optionText, selectedAnimal === 'perro' && styles.selectedAnimalText]}>Perro</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.option, selectedAnimal === 'gato' && styles.selectedAnimal]}
-          onPress={() => setSelectedAnimal('gato')}
-        >
-          <Text style={[styles.optionText, selectedAnimal === 'gato' && styles.selectedAnimalText]}>Gato</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.option, selectedAnimal === 'conejo' && styles.selectedAnimal]}
-          onPress={() => setSelectedAnimal('conejo')}
-        >
-          <Text style={[styles.optionText, selectedAnimal === 'conejo' && styles.selectedAnimalText]}>Conejo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.option, selectedAnimal === 'Otro' && styles.selectedAnimal]}
-          onPress={() => setSelectedAnimal('Otro')}
-        >
-          <Text style={[styles.optionText, selectedAnimal === 'Otro' && styles.selectedAnimalText]}>Otro</Text>
-        </TouchableOpacity>
+      <View style={styles.optionsContainer}>
+        {animalOptions.map((animalOption, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.option,
+              selectedAnimal === animalOption.petTypeName && styles.selectedOption,
+            ]}
+            onPress={() => setSelectedAnimal(animalOption.petTypeName)}
+          >
+            <Text
+              style={[
+                styles.optionText,
+                selectedAnimal === animalOption.petTypeName && styles.selectedOptionText,
+              ]}
+            >
+              {animalOption.petTypeName}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
+      {(selectedAnimal === 'Perro' || selectedAnimal === 'Gato') && (
+        <View>
+          {selectedAnimal === 'Perro' && (
+            <ListaValoresRazaPerros />
+          )}
+          {selectedAnimal === 'Gato' && (
+            <ListaValoresRazaGatos />
+          )}
+        </View>
+      )}
     </View>
   );
 };
@@ -43,6 +66,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 2,
   },
+  optionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   option: {
     padding: 10,
     borderWidth: 1,
@@ -53,15 +80,12 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
   },
-  selectedAnimal: {
+  selectedOption: {
     backgroundColor: '#DDC4B8',
   },
-  selectedAnimalText: {
+  selectedOptionText: {
     fontWeight: 'bold',
   },
-  contenedor2: {
-    justifyContent: 'center',
-  }
 });
 
 export default ListaValoresAnimal;

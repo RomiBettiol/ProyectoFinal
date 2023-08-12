@@ -1,21 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
-
-const data = [
-  { label: 'Ciudad', value: '1' },
-  { label: 'Luján de cuyo', value: '2' },
-  { label: 'Godoy Cruz', value: '3' },
-  { label: 'Las Heras', value: '4' },
-  { label: 'Rivadavia', value: '5' },
-  { label: 'San Rafael', value: '6' },
-  { label: 'Tunuyan', value: '7' },
-  { label: 'San Martín', value: '8' },
-];
+import axios from 'axios';
 
 const ListaValoresZona = () => {
-  const [value, setValue] = useState(null);
+  const [selectedZone, setSelectedZone] = useState(null);
+  const [zoneOptions, setZoneOptions] = useState([]);
+
+  const getZonas = () => {
+    axios
+      .get('http://10.0.2.2:4000/parameters/locality/', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        console.log('Zonas exitosas:', response.data);
+        const localities = response.data.localities;
+        if (localities && Array.isArray(localities)) {
+          setZoneOptions(localities);
+        } else {
+          setZoneOptions([]);
+        }
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud GET:', error);
+        setZoneOptions([]);
+      });
+  };
+
+  useEffect(() => {
+    getZonas();
+  }, []);
 
   return (
     <Dropdown
@@ -23,16 +40,16 @@ const ListaValoresZona = () => {
       placeholderStyle={styles.placeholderStyle}
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
-      data={data}
+      data={zoneOptions}
       search
       maxHeight={300}
-      labelField="label"
-      valueField="value"
+      labelField="localityName"
+      valueField="localityName"
       placeholder="Zona"
       searchPlaceholder="Buscar"
-      value={value}
-      onChange={item => {
-        setValue(item.value);
+      value={selectedZone}
+      onChange={(item) => {
+        setSelectedZone(item.localityName);
       }}
     />
   );
