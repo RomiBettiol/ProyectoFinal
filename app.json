@@ -15,8 +15,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier":"com.buddyBuddyProyecto"
+      "supportsTablet": true
     },
     "android": {
       "package": "com.proyecto.Buddy",
