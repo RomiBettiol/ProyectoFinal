@@ -29,8 +29,6 @@ const ListaValoresColor = () => {
     getColores();
   }, []);
 
-  console.log('colorOptions:', colorOptions); // Agregar el console.log aquí
-
   return (
     <Dropdown
       style={styles.dropdown}

@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
-export default function BotonPublicar() {
+export default function BotonPublicar({ onPress }) {
   return (
-    <TouchableOpacity style={styles.botonPublicar}>
+    <TouchableOpacity style={styles.botonPublicar} onPress={onPress}>
         <Text style={styles.textoTouch}>Publicar</Text>
     </TouchableOpacity>
   )
@@ -21,3 +21,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
       },
 });
+
+
+///publications/publication/search
