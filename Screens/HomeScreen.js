@@ -47,12 +47,16 @@ export default function HomeScreen({navigation}) {
                 <Text style={styles.texto}>Mi mascota</Text>
             </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.boton1}>
+            <TouchableOpacity style={styles.boton1}
+                onPress = {()=> (
+                    navigation.navigate('ParametrizacionScreen')
+                )}
+            >
                 <Image
                     source={require('../Imagenes/configuracion.png')}
                     style={styles.imagen1}
                 />
-                <Text style={styles.texto}>Mi mascota</Text>
+                <Text style={styles.texto}>Parametrización</Text>
             </TouchableOpacity>
             <View style={styles.informe1}>
                 <Text style={styles.textoInforme}>Informe 1</Text>

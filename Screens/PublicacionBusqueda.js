@@ -12,10 +12,47 @@ import ListaValoresMeses from '../componentes/Busqueda/ListaValoresMeses';
 import ListaValoresAño from '../componentes/Busqueda/ListaValoresAño';
 import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
 import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
+import axios from 'axios';
 
 export default function PublicacionBusqueda({ navigation }) {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedLocality, setSelectedLocality] = useState('');
+  const [selectedBreed, setSelectedBreed] = useState('');
+
+  const handlePost = async () => {
+    const postData = {
+      title,
+      description,
+      breed: {
+        petBreedName: selectedBreed,
+        type: {
+          petTypeName: selectedAnimal,
+        },
+      },
+      color: {
+        petColorName: selectedColor,
+      },
+      locality: {
+        localityName: selectedLocality,
+      },
+      isFound: Mascotas === 1 ? true : false,
+    };
+
+    console.log('Datos a publicar:', postData);
+
+    try {
+      const response = await axios.post('http://10.0.2.2:4000/publications/publication/search', postData);
+      console.log('Solicitud POST exitosa:', response.data);
+      // Maneja el éxito, muestra un mensaje de éxito, navega, etc.
+    } catch (error) {
+      console.error('Error al realizar la solicitud POST:', error);
+      // Maneja el error, muestra un mensaje de error, etc.
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -26,12 +63,20 @@ export default function PublicacionBusqueda({ navigation }) {
           <ImagePickerComponent />
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
-            <TextInput style={styles.inputTexto} />
+            <TextInput
+              style={styles.inputTexto}
+              value={title}
+              onChangeText={setTitle}
+              placeholder="Título"
+            />
           </View>
           <View style={styles.subcontenedor2}>
             <Text style={styles.descripcionPublicacion}>Descripción</Text>
             <TextInput
               style={styles.inputDescripcion}
+              value={description}
+              onChangeText={setDescription}
+              placeholder="Descripción"
               multiline={true}
               textAlignVertical="top"
               maxLength={1000}
@@ -39,11 +84,11 @@ export default function PublicacionBusqueda({ navigation }) {
           </View>
             <View style={styles.subcontenedor3}>
               <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} />
-              <ListaValoresColor />
-              <ListaValoresZona />
+              <ListaValoresColor selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+              <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
 
-              {selectedAnimal === 'perro' && <ListaValoresRazaPerros />}
-              {selectedAnimal === 'gato' && <ListaValoresRazaGatos />}
+              {selectedAnimal === 'perro' && <ListaValoresRazaPerros selectedRaza={selectedBreed} setSelectedRaza={setSelectedBreed} />}
+              {selectedAnimal === 'gato' && <ListaValoresRazaGatos selectedRaza={value} setSelectedRaza={value}/>}
             </View>
           <Mascotas />
           <Text style={styles.textoFecha}>Fecha de extravío</Text>
@@ -54,7 +99,7 @@ export default function PublicacionBusqueda({ navigation }) {
           </View>
         </View>
       </ScrollView>
-      <BotonPublicar />
+      <BotonPublicar onPress={handlePost} />
     </View>
   );
 }
