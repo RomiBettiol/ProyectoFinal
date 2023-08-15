@@ -3,33 +3,236 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, ScrollView } fr
 import Header from '../componentes/HeaderScreen';
 import axios from 'axios';
 import ModalEditar from '../componentes/Parametrizacion/ModalEditar';
+import ModalEditarColor from '../componentes/Parametrizacion/ModalEditarColor';
+import ModalEditarTipoAnimal from '../componentes/Parametrizacion/ModalEditarTipoAnimal';
+import ModalEditarRaza from '../componentes/Parametrizacion/ModalEditarRaza';
 import ModalAgregar from '../componentes/Parametrizacion/ModalAgregar';
-import ModalEliminar from '../componentes/Parametrizacion/ModalEliminar';
+import ModalAgregarColor from '../componentes/Parametrizacion/ModalAgregarColor';
+import ModalAgregarTipoAnimal from '../componentes/Parametrizacion/ModalAgregarTipoAnimal';
+import ModalEditarProvincia from '../componentes/Parametrizacion/ModalEditarProvincia';
+import ModalAgregarProvincia from '../componentes/Parametrizacion/ModalAgregarProvincia';
+import ModalEditarRegion from '../componentes/Parametrizacion/ModalEditarRegion';
+import ModalAgregarRegion from '../componentes/Parametrizacion/ModalAgregarRegion';
 
 export default function ParametrizacionScreen({ navigation }) {
-  const [selectedZone, setSelectedZone] = useState(null);
   const [zoneOptions, setZoneOptions] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [editingZone, setEditingZone] = useState(null);
-  const [isAddModalVisible, setAddModalVisible] = useState(false);
-  const [isEliminarModalVisible, setEliminarModalVisible] = useState(false);
   const [petColors, setPetColors] = useState([]);
   const [petTypes, setPetTypes] = useState([]);
   const [petBreeds, setPetBreeds] = useState([]);
+  const [isEditColorModalVisible, setEditColorModalVisible] = useState(false);
+  const [editingColor, setEditingColor] = useState(null);
+  const [isEditTypeModalVisible, setEditTypeModalVisible] = useState(false);
+  const [editingType, setEditingType] = useState(null);
+  const [isEditBreedModalVisible, setEditBreedModalVisible] = useState(false);
+  const [editingBreed, setEditingBreed] = useState(null);
+  const [isAddModalVisible, setAddModalVisible] = useState(false);
+  const [isAddColorModalVisible, setAddColorModalVisible] = useState(false);
+  const [newColorName, setNewColorName] = useState("");
+  const [isAddTipoAnimalModalVisible, setAddTipoAnimalModalVisible] = useState(false);
+  const [newTypeName, setNewTypeName] = useState("");
+  const [provinces, setProvinces] = useState([]);
+  const [isEditProvinceModalVisible, setEditProvinceModalVisible] = useState(false);
+  const [editingProvince, setEditingProvince] = useState(null);
+  const [newProvinceName, setNewProvinceName] = useState("");
+  const [isAddProvinceModalVisible, setAddProvinceModalVisible] = useState(false);
+  const [regions, setRegions] = useState([]);
+  const [isEditRegionModalVisible, setEditRegionModalVisible] = useState(false);
+  const [editingRegion, setEditingRegion] = useState(null);
+  const [isAddRegionModalVisible, setAddRegionModalVisible] = useState(false);
 
-  const handleAddModalPress = () => {
-    setAddModalVisible(true);
+  const handleRegionAdd = (newRegion) => {
+    const updatedRegions = [...regions, newRegion];
+    setRegions(updatedRegions);
   };
 
-  const handleEliminarModalPress = () => {
-    setEliminarModalVisible(true);
+  const toggleAddRegionModal = () => {
+    setAddRegionModalVisible(!isAddRegionModalVisible);
+  };
+  
+  const handleAddProvince = (newProvinceName) => {
+    const newProvince = {
+      provinceName: newProvinceName,
+      idCountry: "c4e7c89c-dcdb-4e27-90af-0123456789aa"
+    };
+  
+    axios
+      .post('http://10.0.2.2:4000/parameters/province/', newProvince)
+      .then((response) => {
+        console.log('Provincia agregada exitosamente:', response.data);
+        getProvinces(); // Actualizar la lista de provincias después de agregar
+      })
+      .catch((error) => {
+        console.error('Error al agregar provincia:', error);
+      });
+  };  
+
+  const handleAddType = (newTypeName) => {
+    const newType = {
+      petTypeName: newTypeName,
+    };
+  
+    axios
+      .post('http://10.0.2.2:4000/parameters/petType/', newType)
+      .then((response) => {
+        console.log('Tipo de animal agregado exitosamente:', response.data);
+        getPetTypes(); // Actualizar la lista de tipos de animales después de agregar
+      })
+      .catch((error) => {
+        console.error('Error al agregar tipo de animal:', error);
+      });
+  };
+  
+  const handleAddColor = (newColorName) => {
+    const newColor = {
+      petColorName: newColorName,
+    };
+  
+    axios
+      .post('http://10.0.2.2:4000/parameters/petColor/', newColor)
+      .then((response) => {
+        console.log('Color agregado exitosamente:', response.data);
+        getPetColors(); // Actualizar la lista de colores después de agregar
+      })
+      .catch((error) => {
+        console.error('Error al agregar color:', error);
+      });
+  };
+  
+
+  const handleAddZone = (localityName) => {
+    const newZone = {
+      localityName: localityName,
+      idRegion: "a65b92ce-dcdb-4e27-90af-3573"
+    };
+  
+    axios
+      .post('http://10.0.2.2:4000/parameters/locality/', newZone)
+      .then((response) => {
+        console.log('Zona agregada exitosamente:', response.data);
+        getZonas();
+      })
+      .catch((error) => {
+        console.error('Error al agregar zona:', error);
+      });
+  };  
+ 
+  const handleZoneDelete = (zoneId) => {
+    axios
+      .delete(`http://10.0.2.2:4000/parameters/locality/${zoneId}`)
+      .then((response) => {
+        console.log('Eliminación exitosa:', response.data);
+        // Realizar aquí la actualización de los datos locales después de la eliminación
+        // Por ejemplo, volver a cargar las zonas después de eliminar.
+        getZonas();
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud DELETE:', error);
+        // Mostrar mensaje de error al usuario si es necesario
+      });
+  };
+
+  const handleColorDelete = (colorId) => {
+    axios
+      .delete(`http://10.0.2.2:4000/parameters/petColor/${colorId}`)
+      .then((response) => {
+        console.log('Color eliminado exitosamente:', response.data);
+        // Actualizar la lista de colores después de la eliminación
+        getPetColors();
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud DELETE de color:', error);
+        // Mostrar mensaje de error al usuario si es necesario
+      });
+  };
+
+  const handleTypeDelete = (typeId) => {
+    axios
+      .delete(`http://10.0.2.2:4000/parameters/petType/${typeId}`)
+      .then((response) => {
+        console.log('Tipo de animal eliminado exitosamente:', response.data);
+        // Actualizar la lista de tipos de animales después de la eliminación
+        getPetTypes();
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud DELETE de tipo de animal:', error);
+        // Mostrar mensaje de error al usuario si es necesario
+      });
+  }; 
+
+  const handleBreedDelete = (breedId) => {
+    axios
+      .delete(`http://10.0.2.2:4000/parameters/petBreed/${breedId}`)
+      .then((response) => {
+        console.log('Raza de animal eliminada exitosamente:', response.data);
+        // Actualizar la lista de razas de animales después de la eliminación
+        getPetBreeds();
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud DELETE de raza de animal:', error);
+        // Mostrar mensaje de error al usuario si es necesario
+      });
+  };  
+
+  const handleProvinceDelete = (provinceId) => {
+    axios
+      .delete(`http://10.0.2.2:4000/parameters/province/${provinceId}`)
+      .then((response) => {
+        console.log('Provincia eliminada exitosamente:', response.data);
+        // Actualizar la lista de provincias después de la eliminación
+        getProvinces();
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud DELETE de provincia:', error);
+        // Mostrar mensaje de error al usuario si es necesario
+      });
+  }; 
+
+  const handleRegionDelete = (regionId) => {
+    axios
+      .delete(`http://10.0.2.2:4000/parameters/region/${regionId}`)
+      .then((response) => {
+        console.log('Región eliminada exitosamente:', response.data);
+        // Actualizar la lista de regiones después de la eliminación
+        getRegions();
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud DELETE de región:', error);
+        // Mostrar mensaje de error al usuario si es necesario
+      });
   };
  
+  const handleEditRegionPress = (region) => {
+    setEditingRegion(region);
+    setEditRegionModalVisible(true);
+  };
+
+  const handleEditProvincePress = (province) => {
+    setEditingProvince(province);
+    setEditProvinceModalVisible(true);
+  };
+
   const handleEditPress = (zone) => {
     setEditingZone(zone);
     setModalVisible(true);
   };
-  
+
+  const handleColorEditPress = (color) => {
+    setEditingColor(color);
+    setEditColorModalVisible(true);
+  };
+
+  const handleTypeEditPress = (type) => {
+    setEditingType(type);
+    setEditTypeModalVisible(true);
+  };  
+
+  const handleBreedEditPress = (breed) => {
+    setEditingBreed(breed);
+    setEditBreedModalVisible(true);
+  };  
+
   const handleCloseModal = () => {
     setModalVisible(false);
   };
@@ -40,9 +243,54 @@ export default function ParametrizacionScreen({ navigation }) {
         ? { ...zone, localityName: editedLocality }
         : zone
     );
-    setZoneOptions(updatedZones);
+    setZoneOptions(updatedZones); // Actualizar la lista con el valor editado
   }; 
-  
+
+  const handleColorEdit = (editedColorName) => {
+    const updatedColors = petColors.map((color) =>
+      color.idPetColor === editingColor.idPetColor
+        ? { ...color, petColorName: editedColorName }
+        : color
+    );
+    setPetColors(updatedColors);
+  };  
+
+  const handleTypeEdit = (editedTypeName) => {
+    const updatedTypes = petTypes.map((type) =>
+      type.idPetType === editingType.idPetType
+        ? { ...type, petTypeName: editedTypeName }
+        : type
+    );
+    setPetTypes(updatedTypes);
+  };  
+
+  const handleBreedEdit = (editedBreedName) => {
+    const updatedBreeds = petBreeds.map((breed) =>
+      breed.idPetBreed === editingBreed.idPetBreed
+        ? { ...breed, petBreedName: editedBreedName }
+        : breed
+    );
+    setPetBreeds(updatedBreeds);
+  };
+
+  const handleProvinceEdit = (editedProvinceName) => {
+    const updatedProvinces = provinces.map((province) =>
+      province.idProvince === editingProvince.idProvince
+        ? { ...province, provinceName: editedProvinceName }
+        : province
+    );
+    setProvinces(updatedProvinces);
+  };
+
+  const handleRegionEdit = (editedRegionName) => {
+    const updatedRegions = regions.map((region) =>
+      region.idRegion === editingRegion.idRegion
+        ? { ...region, regionName: editedRegionName }
+        : region
+    );
+    setRegions(updatedRegions);
+  };
+    
   const getZonas = () => {
     axios
       .get('http://10.0.2.2:4000/parameters/locality/', {
@@ -51,7 +299,7 @@ export default function ParametrizacionScreen({ navigation }) {
         },
       })
       .then((response) => {
-        console.log('Zonas exitosas:', response.data);
+        console.log('Zonas exitosas:', response.data.localities);
         const localities = response.data.localities;
         if (localities && Array.isArray(localities)) {
           setZoneOptions(localities);
@@ -63,7 +311,7 @@ export default function ParametrizacionScreen({ navigation }) {
         console.error('Error en la solicitud GET:', error);
         setZoneOptions([]);
       });
-  };
+  };  
 
   const getPetColors = () => {
     axios
@@ -118,16 +366,54 @@ export default function ParametrizacionScreen({ navigation }) {
         setPetBreeds([]);
       });
   }; 
+
+  const getProvinces = () => {
+    axios
+      .get('http://10.0.2.2:4000/parameters/province/')
+      .then((response) => {
+        console.log('Provincias exitosas:', response.data.provinces);
+        const fetchedProvinces = response.data.provinces;
+        if (fetchedProvinces && Array.isArray(fetchedProvinces)) {
+          setProvinces(fetchedProvinces);
+        } else {
+          setProvinces([]);
+        }
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud GET de provincias:', error);
+        setProvinces([]);
+      });
+  }; 
+  
+  const getRegions = () => {
+    axios
+      .get('http://10.0.2.2:4000/parameters/region/')
+      .then((response) => {
+        console.log('Regiones exitosas:', response.data.regions);
+        const fetchedRegions = response.data.regions;
+        if (fetchedRegions && Array.isArray(fetchedRegions)) {
+          setRegions(fetchedRegions);
+        } else {
+          setRegions([]);
+        }
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud GET de regiones:', error);
+        setRegions([]);
+      });
+  };
   
   useEffect(() => {
     getZonas();
     getPetColors();
     getPetTypes();
     getPetBreeds();
-  }, []);
-  
+    getProvinces(); 
+    getRegions();
+  }, []); 
+
   return (
-    <View>
+    <ScrollView>
       <Header />
       <Text style={styles.titulo}>Parametrización de filtros</Text>
       <ScrollView style={styles.scrollView}>
@@ -137,7 +423,7 @@ export default function ParametrizacionScreen({ navigation }) {
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Zona</Text>
-          <TouchableOpacity onPress={handleAddModalPress}>
+          <TouchableOpacity>
             <Image
               source={require('../Imagenes/agregar.png')}
               style={styles.imagenAgregar}
@@ -157,7 +443,7 @@ export default function ParametrizacionScreen({ navigation }) {
                     style={styles.imagenbotones}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleEliminarModalPress}>
+                <TouchableOpacity onPress={() => handleZoneDelete(zone.idLocality)}>
                   <Image
                     source={require('../Imagenes/eliminar.png')}
                     style={styles.imagenbotones}
@@ -173,7 +459,7 @@ export default function ParametrizacionScreen({ navigation }) {
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Razas</Text>
-          <TouchableOpacity onPress={handleAddModalPress}>
+          <TouchableOpacity>
             <Image
               source={require('../Imagenes/agregar.png')}
               style={styles.imagenAgregar}
@@ -187,13 +473,13 @@ export default function ParametrizacionScreen({ navigation }) {
                 {breed.petBreedName}
               </Text>
               <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() => handleEditPress()}>
+                <TouchableOpacity onPress={() => handleBreedEditPress(breed)}>
                   <Image
                     source={require('../Imagenes/editar.png')}
                     style={styles.imagenbotones}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleEliminarModalPress}>
+                <TouchableOpacity onPress={() => handleBreedDelete(breed.idPetBreed)}>
                   <Image
                     source={require('../Imagenes/eliminar.png')}
                     style={styles.imagenbotones}
@@ -209,7 +495,7 @@ export default function ParametrizacionScreen({ navigation }) {
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Colores</Text>
-          <TouchableOpacity onPress={handleAddModalPress}>
+          <TouchableOpacity onPress={() => setAddColorModalVisible(true)}>
             <Image
               source={require('../Imagenes/agregar.png')}
               style={styles.imagenAgregar}
@@ -223,13 +509,13 @@ export default function ParametrizacionScreen({ navigation }) {
                 {color.petColorName}
               </Text>
               <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() => handleEditPress()}>
+                <TouchableOpacity onPress={() => handleColorEditPress(color)}>
                   <Image
                     source={require('../Imagenes/editar.png')}
                     style={styles.imagenbotones}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleEliminarModalPress}>
+                <TouchableOpacity onPress={() => handleColorDelete(color.idPetColor)}>
                   <Image
                     source={require('../Imagenes/eliminar.png')}
                     style={styles.imagenbotones}
@@ -245,7 +531,7 @@ export default function ParametrizacionScreen({ navigation }) {
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Tipo animal</Text>
-          <TouchableOpacity onPress={handleAddModalPress}>
+          <TouchableOpacity onPress={() => setAddTipoAnimalModalVisible(true)}>
             <Image
               source={require('../Imagenes/agregar.png')}
               style={styles.imagenAgregar}
@@ -259,13 +545,90 @@ export default function ParametrizacionScreen({ navigation }) {
                 {type.petTypeName}
               </Text>
               <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() => handleEditPress()}>
+                <TouchableOpacity onPress={() => handleTypeEditPress(type)}>
                   <Image
                     source={require('../Imagenes/editar.png')}
                     style={styles.imagenbotones}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleEliminarModalPress}>
+                <TouchableOpacity onPress={() => handleTypeDelete(type.idPetType)}>
+                  <Image
+                    source={require('../Imagenes/eliminar.png')}
+                    style={styles.imagenbotones}
+                  /> 
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+        </View>
+        <View style={[{ flexDirection: 'row' }, styles.filtrosZona]}>
+          <Image
+            source={require('../Imagenes/marcador-de-posicion.png')}
+            style={styles.imagenTitulo}
+          />
+          <Text style={styles.nombreFiltros}>Filtros Departamentos</Text>
+          <TouchableOpacity onPress={toggleAddRegionModal}>
+            <Image
+              source={require('../Imagenes/agregar.png')}
+              style={styles.imagenAgregar}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.containerItem}>
+          {regions.map((region, index) => (
+            <View
+              key={index}
+              style={[
+                { flexDirection: 'row', alignItems: 'center' },
+                styles.containerTexto,
+              ]}
+            >
+              <Text style={styles.zoneItem}>{region.regionName}</Text>
+              <View style={[styles.botones,{flexDirection:'row'}]}>
+                <TouchableOpacity onPress={() =>  handleEditRegionPress(region)}>
+                  <Image
+                    source={require('../Imagenes/editar.png')}
+                    style={styles.imagenbotones}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleRegionDelete(region.idRegion)}>
+                  <Image
+                    source={require('../Imagenes/eliminar.png')}
+                    style={styles.imagenbotones}
+                  /> 
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+        </View>
+        <View style={[{ flexDirection: 'row' }, styles.filtrosZona]}>
+          <Image
+            source={require('../Imagenes/marcador-de-posicion.png')}
+            style={styles.imagenTitulo}
+          />
+          <Text style={styles.nombreFiltros}>Filtros Provincias</Text>
+          <TouchableOpacity onPress={() => setAddProvinceModalVisible(true)}>
+            <Image
+              source={require('../Imagenes/agregar.png')}
+              style={styles.imagenAgregar}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.containerItem}>
+          {provinces.map((province, index) => (
+            <View
+              key={index}
+              style={[{ flexDirection: 'row', alignItems: 'center' }, styles.containerTexto]}
+            >
+              <Text style={styles.zoneItem}>{province.provinceName}</Text>
+              <View style={[styles.botones,{flexDirection:'row'}]}>
+                <TouchableOpacity onPress={() => handleEditProvincePress(province)}>
+                  <Image
+                    source={require('../Imagenes/editar.png')}
+                    style={styles.imagenbotones}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleProvinceDelete(province.idProvince)}>
                   <Image
                     source={require('../Imagenes/eliminar.png')}
                     style={styles.imagenbotones}
@@ -277,9 +640,17 @@ export default function ParametrizacionScreen({ navigation }) {
         </View>
       </ScrollView>
       <ModalEditar isVisible={isModalVisible} onClose={handleCloseModal} onEdit={handleZoneEdit} editingZone={editingZone} />
-      <ModalAgregar isVisible={isAddModalVisible} onClose={() => setAddModalVisible(false)} />
-      <ModalEliminar isVisible={isEliminarModalVisible} onClose={() => setEliminarModalVisible(false)} />
-    </View>
+      <ModalEditarColor isVisible={isEditColorModalVisible} onClose={() => setEditColorModalVisible(false)} onEdit={handleColorEdit} editingColor={editingColor} />
+      <ModalEditarTipoAnimal isVisible={isEditTypeModalVisible} onClose={() => setEditTypeModalVisible(false)} onEdit={handleTypeEdit} editingType={editingType} />
+      <ModalEditarRaza isVisible={isEditBreedModalVisible} onClose={() => setEditBreedModalVisible(false)} onEdit={handleBreedEdit} editingBreed={editingBreed} />
+      <ModalAgregar isVisible={isAddModalVisible} onClose={() => setAddModalVisible(false)} onAdd={handleAddZone} />
+      <ModalAgregarColor isVisible={isAddColorModalVisible} onClose={() => setAddColorModalVisible(false)} onAdd={handleAddColor} newColorName={newColorName} setNewColorName={setNewColorName} />
+      <ModalAgregarTipoAnimal isVisible={isAddTipoAnimalModalVisible} onClose={() => setAddTipoAnimalModalVisible(false)} onAdd={handleAddType} newTypeName={newTypeName} setNewTypeName={setNewTypeName} />
+      <ModalEditarProvincia isVisible={isEditProvinceModalVisible} onClose={() => setEditProvinceModalVisible(false)} onEdit={handleProvinceEdit} editingProvince={editingProvince} />
+      <ModalAgregarProvincia isVisible={isAddProvinceModalVisible} onClose={() => setAddProvinceModalVisible(false)} onAdd={handleAddProvince} newProvinceName={newProvinceName} setNewProvinceName={setNewProvinceName} />
+      <ModalEditarRegion isVisible={isEditRegionModalVisible} onClose={() => setEditRegionModalVisible(false)} onEdit={handleRegionEdit} editingRegion={editingRegion} />
+      <ModalAgregarRegion isVisible={isAddRegionModalVisible} onClose={toggleAddRegionModal} onAdd={handleRegionAdd} provinces={provinces} />
+    </ScrollView>
   );
 };  
 
