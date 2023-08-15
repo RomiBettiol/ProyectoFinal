@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
 
-const ModalAgregar = ({ isVisible, onClose, onAdd }) => {
-  const [localityName, setLocalityName] = useState(""); // Estado para almacenar el valor de la nueva zona
-
-  const handleAgregarClick = () => {
-    onAdd(localityName); // Pasar el valor de la nueva zona a la función para agregar
-    onClose(); // Cerrar el modal después de agregar
-  };
+const ModalAgregarColor = ({isVisible, onClose, onAdd, newColorName, setNewColorName }) => {
+    const handleAgregarColorClick = () => {
+        onAdd(newColorName); // Pasar el valor del nuevo color a la función para agregar
+        onClose(); // Cerrar el modal después de agregar
+        setNewColorName(""); // Reiniciar el estado del nombre del nuevo color
+      };
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent>
@@ -18,12 +17,12 @@ const ModalAgregar = ({ isVisible, onClose, onAdd }) => {
             <Text style={styles.valorTexto}>Valor</Text>
             <TextInput
               style={styles.inputLocalities}
-              value={localityName}
-              onChangeText={setLocalityName}
+              value={newColorName}
+              onChangeText={setNewColorName}
             />
           </View>
           <View style={[{ flexDirection: 'row' }, styles.botonesDecidir]}>
-            <TouchableOpacity style={styles.botonesEditar} onPress={handleAgregarClick}>
+            <TouchableOpacity style={styles.botonesEditar} onPress={handleAgregarColorClick}>
               <Text>Agregar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.botonesEditar} onPress={onClose}>
@@ -81,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalAgregar;
+export default ModalAgregarColor;

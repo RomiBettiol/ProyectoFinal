@@ -1,33 +1,48 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
+import axios from 'axios';
 
-const ModalAgregar = ({ isVisible, onClose, onAdd }) => {
-  const [localityName, setLocalityName] = useState(""); // Estado para almacenar el valor de la nueva zona
+const ModalEditarProvincia = ({ isVisible, onClose, onEdit, editingProvince }) => {
+  const [provinceName, setProvinceName] = useState('');
 
-  const handleAgregarClick = () => {
-    onAdd(localityName); // Pasar el valor de la nueva zona a la función para agregar
-    onClose(); // Cerrar el modal después de agregar
+  const handleEditProvince = () => {
+    axios
+      .put(`http://10.0.2.2:4000/parameters/province/${editingProvince.idProvince}`, {
+        provinceName: provinceName,
+      })
+      .then((response) => {
+        onEdit(provinceName);
+        setProvinceName(''); // Vaciar el TextInput
+        onClose(); // Cerrar el modal
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error('Error en la solicitud PUT:', error.response.data);
+        } else {
+          console.error('Error en la solicitud PUT:', error.message);
+        }
+      });
   };
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.tituloModal}>Agregar</Text>
+          <Text style={styles.tituloModal}>Editar Provincia</Text>
           <View style={[{ flexDirection: 'row' }, styles.valorFiltro]}>
             <Text style={styles.valorTexto}>Valor</Text>
             <TextInput
               style={styles.inputLocalities}
-              value={localityName}
-              onChangeText={setLocalityName}
+              value={provinceName}
+              onChangeText={setProvinceName}
             />
           </View>
           <View style={[{ flexDirection: 'row' }, styles.botonesDecidir]}>
-            <TouchableOpacity style={styles.botonesEditar} onPress={handleAgregarClick}>
-              <Text>Agregar</Text>
+            <TouchableOpacity style={styles.botonesEditar} onPress={handleEditProvince}>
+              <Text>Editar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.botonesEditar} onPress={onClose}>
-              <Text>Cancelar</Text>
+              <Text>Cerrar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -81,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalAgregar;
+export default ModalEditarProvincia;

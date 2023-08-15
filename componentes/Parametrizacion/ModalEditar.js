@@ -7,12 +7,13 @@ const ModalEditar = ({ isVisible, onClose, onEdit, editingZone }) => {
 
   const handleEdit = () => {
     axios
-      .put(`http://10.0.2.2:4000/parameters/locality/${editingZone.localityName}`, {
+      .put(`http://10.0.2.2:4000/parameters/locality/${editingZone.idLocality}`, {
         localityName: localities,
       })
       .then((response) => {
         onEdit(localities);
-        onClose();
+        setLocalities(''); // Vaciar el TextInput
+        onClose(); // Cerrar el modal
       })
       .catch((error) => {
         if (error.response) {

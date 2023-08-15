@@ -1,31 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
 
-const ModalAgregar = ({ isVisible, onClose, onAdd }) => {
-  const [localityName, setLocalityName] = useState(""); // Estado para almacenar el valor de la nueva zona
-
-  const handleAgregarClick = () => {
-    onAdd(localityName); // Pasar el valor de la nueva zona a la función para agregar
-    onClose(); // Cerrar el modal después de agregar
-  };
-
-  return (
-    <Modal visible={isVisible} animationType="slide" transparent>
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+const ModalAgregarTipoAnimal = ({ isVisible, onClose, onAdd, newTypeName, setNewTypeName }) => {
+    const handleAgregarTipoAnimalClick = () => {
+      onAdd(newTypeName); // Pasar el valor del nuevo tipo de animal a la función para agregar
+      onClose(); // Cerrar el modal después de agregar
+      setNewTypeName(""); // Reiniciar el estado del nombre del nuevo tipo de animal
+    };
+  
+    return (
+      <Modal visible={isVisible} animationType="slide" transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
           <Text style={styles.tituloModal}>Agregar</Text>
           <View style={[{ flexDirection: 'row' }, styles.valorFiltro]}>
             <Text style={styles.valorTexto}>Valor</Text>
             <TextInput
               style={styles.inputLocalities}
-              value={localityName}
-              onChangeText={setLocalityName}
+              value={newTypeName}
+              onChangeText={setNewTypeName}
             />
-          </View>
+            </View>
           <View style={[{ flexDirection: 'row' }, styles.botonesDecidir]}>
-            <TouchableOpacity style={styles.botonesEditar} onPress={handleAgregarClick}>
+            <TouchableOpacity style={styles.botonesEditar} onPress={handleAgregarTipoAnimalClick}>
               <Text>Agregar</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
             <TouchableOpacity style={styles.botonesEditar} onPress={onClose}>
               <Text>Cancelar</Text>
             </TouchableOpacity>
@@ -33,8 +32,8 @@ const ModalAgregar = ({ isVisible, onClose, onAdd }) => {
         </View>
       </View>
     </Modal>
-  );
-};
+    );
+  };  
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -81,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalAgregar;
+export default ModalAgregarTipoAnimal;

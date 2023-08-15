@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
 
-const ModalAgregar = ({ isVisible, onClose, onAdd }) => {
-  const [localityName, setLocalityName] = useState(""); // Estado para almacenar el valor de la nueva zona
-
-  const handleAgregarClick = () => {
-    onAdd(localityName); // Pasar el valor de la nueva zona a la función para agregar
+const ModalAgregarProvincia = ({ isVisible, onClose, onAdd, newProvinceName, setNewProvinceName }) => {
+  const handleAgregarProvinciaClick = () => {
+    onAdd(newProvinceName); // Pasar el valor del nuevo nombre de provincia a la función para agregar
     onClose(); // Cerrar el modal después de agregar
+    setNewProvinceName(""); // Reiniciar el estado del nombre de la nueva provincia
   };
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.tituloModal}>Agregar</Text>
+          <Text style={styles.tituloModal}>Agregar Provincia</Text>
           <View style={[{ flexDirection: 'row' }, styles.valorFiltro]}>
             <Text style={styles.valorTexto}>Valor</Text>
             <TextInput
               style={styles.inputLocalities}
-              value={localityName}
-              onChangeText={setLocalityName}
+              value={newProvinceName}
+              onChangeText={setNewProvinceName}
             />
           </View>
           <View style={[{ flexDirection: 'row' }, styles.botonesDecidir]}>
-            <TouchableOpacity style={styles.botonesEditar} onPress={handleAgregarClick}>
+            <TouchableOpacity style={styles.botonesEditar} onPress={handleAgregarProvinciaClick}>
               <Text>Agregar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.botonesEditar} onPress={onClose}>
@@ -81,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalAgregar;
+export default ModalAgregarProvincia;
