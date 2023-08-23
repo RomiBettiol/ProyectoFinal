@@ -8,6 +8,11 @@ import HomeScreen from '../Screens/HomeScreen';
 import BusquedaScreen from '../Screens/BusquedaScreen';
 import PublicacionBusqueda from '../Screens/PublicacionBusqueda';
 import PublicacionDetalle from '../componentes/Busqueda/PublicacionDetalle';
+import PublicacionDetalleAdopcion from '../componentes/Adopcion/PublicacionDetalleAdopcion';
+import ParametrizacionScreen from '../Screens/ParametrizacionScreen';
+import AdoptarScreen from '../Screens/AdoptarScreen';
+import PublicacionAdopcion from '../Screens/PublicacionAdopcion';
+import MiPerfil from '../Screens/MiPerfil';
 
 const Stack = createNativeStackNavigator()
 
@@ -46,6 +51,26 @@ export default function MainStack() {
             <Stack.Screen
                 name='PublicacionDetalle'
                 component={PublicacionDetalle}
+            /> 
+            <Stack.Screen
+                name='ParametrizacionScreen'
+                component={ParametrizacionScreen}
+            /> 
+            <Stack.Screen
+                name='AdoptarScreen'
+                component={AdoptarScreen}
+            /> 
+            <Stack.Screen
+                name='PublicacionDetalleAdopcion'
+                component={PublicacionDetalleAdopcion}
+            /> 
+            <Stack.Screen
+                name='PublicacionAdopcion'
+                component={PublicacionAdopcion}
+            />
+            <Stack.Screen
+                name='MiPerfil'
+                component={MiPerfil}
             /> 
         </Stack.Navigator>
     </NavigationContainer>

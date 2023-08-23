@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import PublicacionBusqueda from '../Screens/PublicacionBusqueda';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import SlideModal from './SlideModal';
 
 const BotonFlotante = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const route = useRoute();
 
+  const handleNavigateToPublicacion = () => {
+    if (route.name === 'BusquedaScreen') {
+      navigation.navigate('PublicacionBusqueda');
+    } else if (route.name === 'AdoptarScreen') {
+      navigation.navigate('PublicacionAdopcion');
+    }
+  };
+  
   const handleOpenModal = () => {
     setModalVisible(true);
   };
@@ -29,7 +37,7 @@ const BotonFlotante = () => {
       <SlideModal visible={modalVisible} onClose={handleCloseModal} />
       <TouchableOpacity
         style={styles.botonCrear}
-        onPress={() => navigation.navigate('PublicacionBusqueda')}
+        onPress={handleNavigateToPublicacion}
       >
         <View style={styles.fab2}>
           <Image

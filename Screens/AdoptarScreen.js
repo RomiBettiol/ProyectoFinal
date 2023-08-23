@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HeaderScreen from '../componentes/HeaderScreen';
-import BotonesFiltros from '../componentes/BotonesFiltros';
 import BotonFlotante from '../componentes/BotonFlotante';
+import BotonesFiltrosAdopcion from '../componentes/Adopcion/BotonesFiltrosAdopcion';
 
-export default function BusquedaScreen() {
+export default function AdoptarScreen() {
   const navigation = useNavigation();
   const [buttonTransform, setButtonTransform] = useState(0);
 
@@ -14,8 +14,8 @@ export default function BusquedaScreen() {
       <HeaderScreen />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
-          <Text style={styles.titulo}>Encuentra a tu mascota</Text>
-          <BotonesFiltros />
+          <Text style={styles.titulo}>¡Adopta una mascota!</Text>
+          <BotonesFiltrosAdopcion />
         </View>
       </ScrollView>
       <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>

@@ -5,31 +5,20 @@ import ListaValoresColor from '../componentes/Busqueda/ListaValoresColor';
 import ListaValoresAnimal from '../componentes/Busqueda/ListaValoresAnimal';
 import ListaValoresZona from '../componentes/Busqueda/ListaValoresZona';
 import ListaValoresRazaPerros from '../componentes/Busqueda/ListaValoresRazaPerros';
-import ListaValoresRazaGatos from '../componentes/Busqueda/ListaValoresRazaGatos';
 import Mascotas from '../componentes/Busqueda/Mascotas';
-import ListaValoresDias from '../componentes/Busqueda/ListaValoresDias';
-import ListaValoresMeses from '../componentes/Busqueda/ListaValoresMeses';
-import ListaValoresAño from '../componentes/Busqueda/ListaValoresAño';
 import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
 import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
 import axios from 'axios';
 
-export default function PublicacionBusqueda({ navigation }) {
+export default function PublicacionAdopcion({ navigation }) {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedLocality, setSelectedLocality] = useState('');
   const [selectedBreed, setSelectedBreed] = useState('');
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [selectedDay, setSelectedDay] = useState(null);
 
-  
   const handlePost = async () => {
-    const isPetLost = Mascotas === 'Mascotas perdida';
-    const date = new Date(selectedYear, selectedMonth, selectedDay); // Define la variable date con la fecha seleccionada
-    const formattedDate = date.toISOString(); // Convierte la fecha a un formato adecuado para el envío
     const postData = {
       title,
       description,
@@ -45,12 +34,11 @@ export default function PublicacionBusqueda({ navigation }) {
       locality: {
         localityName: selectedLocality,
       },
-      isFound: !isPetLost, // Si es una mascota perdida, isFound será false, y viceversa
-      lostDate: date.toISOString(), // Asegúrate de tener este valor definido correctamente
+      isFound: Mascotas === 1 ? true : false,
     };
-  
+
     console.log('Datos a publicar:', postData);
-  
+
     try {
       const response = await axios.post('http://buddy-app.loca.lt/publications/publication/search', postData);
       console.log('Solicitud POST exitosa:', response.data);
@@ -66,7 +54,7 @@ export default function PublicacionBusqueda({ navigation }) {
       <HeaderScreen />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
-          <Text style={styles.titulo}>Publica tu mascota</Text>
+          <Text style={styles.titulo}>Publica tu mascota para adoptar</Text>
           <ImagePickerComponent />
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
@@ -93,13 +81,6 @@ export default function PublicacionBusqueda({ navigation }) {
               <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
               {selectedAnimal && <ListaValoresRazaPerros selectedAnimal={selectedAnimal} />}
             </View>
-          <Mascotas />
-          <Text style={styles.textoFecha}>Fecha de extravío</Text>
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
-          <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
-          {selectedMonth && <ListaValoresDias selectedMonth={selectedMonth} />}
-          <ListaValoresAño />
-          </View>
         </View>
       </ScrollView>
       <BotonPublicar onPress={handlePost} />

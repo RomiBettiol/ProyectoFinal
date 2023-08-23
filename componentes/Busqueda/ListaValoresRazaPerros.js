@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import axios from 'axios';
 
-const data = [
-  { label: 'Caniche', value: '1' },
-  { label: 'Labrador', value: '2' },
-  { label: 'Golden', value: '3' },
-  { label: 'Boxer', value: '4' },
-  { label: 'Afgano', value: '5' },
-  { label: 'Beagle', value: '6' },
-  { label: 'Bull Terrier', value: '7' },
-];
+const ListaValoresRazaPerros = ({ selectedAnimal }) => {
+  const [selectedBreed, setSelectedBreed] = useState(null);
+  const [breedOptions, setBreedOptions] = useState([]);
 
-const ListaValoresRazaPerros = () => {
-  const [value, setValue] = useState(null);
+  const getRazas = () => {
+    axios
+      .get(`http://buddy-app.loca.lt/parameters/petBreed/byType/${selectedAnimal}`)
+      .then((response) => {
+        console.log('Razas exitosas:', response.data);
+        const petBreeds = response.data;
+        if (petBreeds && Array.isArray(petBreeds)) {
+          setBreedOptions(petBreeds);
+        } else {
+          setBreedOptions([]);
+        }
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud GET:', error);
+        setBreedOptions([]);
+      });
+  };
+
+  useEffect(() => {
+    getRazas();
+  }, [selectedAnimal]);
 
   return (
     <Dropdown
@@ -21,16 +35,16 @@ const ListaValoresRazaPerros = () => {
       placeholderStyle={styles.placeholderStyle}
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
-      data={data}
+      data={breedOptions}
       search
       maxHeight={300}
-      labelField="label"
-      valueField="value"
+      labelField="petBreedName"
+      valueField="petBreedName"
       placeholder="Raza"
       searchPlaceholder="Buscar"
-      value={value}
-      onChange={item => {
-        setValue(item.value);
+      value={selectedBreed}
+      onChange={(item) => {
+        setSelectedBreed(item.petBreedName);
       }}
     />
   );
@@ -46,9 +60,6 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     width: '93%',
     marginTop: 20,
-  },
-  icon: {
-    marginRight: 5,
   },
   placeholderStyle: {
     fontSize: 16,

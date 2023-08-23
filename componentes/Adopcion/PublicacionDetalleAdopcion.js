@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import Header from '../HeaderScreen';
 import Carousel from 'react-native-snap-carousel';
 
-const PublicacionDetalle = ({ route }) => {
+const PublicacionDetalleAdopcion = ({ route }) => {
   const navigation = useNavigation();
   const publicacion = route.params?.publicacion;
 
@@ -12,14 +12,6 @@ const PublicacionDetalle = ({ route }) => {
     require('../../Imagenes/imagenPublicaciones.jpg'),
     require('../../Imagenes/imagenPublicaciones2.jpg'),
   ];
-
-  const formatLostDate = (dateString) => {
-    const fechaObj = new Date(dateString);
-    const year = fechaObj.getFullYear();
-    const month = String(fechaObj.getMonth() + 1).padStart(2, '0');
-    const day = String(fechaObj.getDate()).padStart(2, '0');
-    return `${day}-${month}-${year}`;
-  };
 
   return (
     <View>
@@ -35,16 +27,10 @@ const PublicacionDetalle = ({ route }) => {
           />
         </View>
         <View style={styles.informacion}>
-          <View style={[{flexDirection:'row'}, styles.containerIconos]}>
+          <View style={styles.containerIconos}>
             <TouchableOpacity>
               <Image
                 source={require('../../Imagenes/compartir.png')}
-                style={styles.iconos}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image
-                source={require('../../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png')}
                 style={styles.iconos}
               />
             </TouchableOpacity>
@@ -52,7 +38,7 @@ const PublicacionDetalle = ({ route }) => {
           <View style={[{flexDirection:'row'}, styles.contenedorTitulo]}>
             <Text style={styles.tituloPublicacion}>{publicacion?.title}</Text>
             <TouchableOpacity style={styles.botonInformacion}>
-              <Text>¡Tengo info!</Text>
+              <Text>¡Adoptar!</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.containerDescripcion}>
@@ -96,13 +82,6 @@ const PublicacionDetalle = ({ route }) => {
                   />
                   <Text style={styles.texto}>{publicacion?.breed.type.petTypeName}</Text>
                 </View>
-                <View style={[styles.itemInfoFiltro, {flexDirection:'row'}]}>
-                  <Image
-                      source={require('../../Imagenes/calendario.png')}
-                      style={styles.iconos}
-                  />
-                  <Text style={styles.texto}>{formatLostDate(publicacion?.lostDate)}</Text>
-                </View>
               </View>
             </View>
           </View>
@@ -141,7 +120,7 @@ const styles = StyleSheet.create({
       marginRight: 10,
     },
     containerIconos: {
-      marginLeft: '75%',
+      marginLeft: '85%',
     },
     containerDescripcion: {
       justifyContent: 'space-between',
@@ -175,4 +154,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default PublicacionDetalle;
+export default PublicacionDetalleAdopcion;

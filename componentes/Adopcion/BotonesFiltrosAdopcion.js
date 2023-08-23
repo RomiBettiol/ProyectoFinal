@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal, ActivityIndicator} from 'react-native';
-import SearchBarExample from './BarraBusqueda';
+import SearchBarExample from '../BarraBusqueda';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import FiltrarModal from './FiltrarModal';
+import FiltrarModal from '../FiltrarModal';
 
-const FilterButtonsExample = () => {
+const BotonesFiltrosAdopcion = () => {
   const buddyUrl = 'budy-app.loca.lt';
   const navigation = useNavigation();
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -55,7 +55,7 @@ const FilterButtonsExample = () => {
       setLoading(true);
     
       axios
-        .get('https://buddy-app.loca.lt/publications/publication?modelType=search', {
+        .get('https://buddy-app.loca.lt/publications/publication?modelType=adoption', {
           headers: {
             'Content-Type': 'application/json',
             'Bypass-Tunnel-Reminder':''
@@ -110,15 +110,6 @@ const FilterButtonsExample = () => {
       setFilteredPublicaciones(filteredData);
     }
   };
-  
-
-  const formatLostDate = (dateString) => {
-    const fechaObj = new Date(dateString);
-    const year = fechaObj.getFullYear();
-    const month = String(fechaObj.getMonth() + 1).padStart(2, '0');
-    const day = String(fechaObj.getDate()).padStart(2, '0');
-    return `${day}-${month}-${year}`;
-  };
 
   const renderItem = ({ item }) => {
     // Verificar si el índice del item es menor que numPublicaciones
@@ -126,7 +117,7 @@ const FilterButtonsExample = () => {
       return (
         <TouchableOpacity style={styles.itemContainer}
           onPress = {()=> (
-            navigation.navigate('PublicacionDetalle', { publicacion: item })
+            navigation.navigate('PublicacionDetalleAdopcion', { publicacion: item })
           )}
         >
           <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>
@@ -134,10 +125,6 @@ const FilterButtonsExample = () => {
             <View style={styles.informacion}>
               <View style={[{ flexDirection: 'row'}, styles.tituloView]}>
                 <Text style={styles.tituloPublicaciones}>{item.title}</Text>
-                {/* Aquí utilizamos el operador ternario para aplicar el estilo según isFound */}
-                <View style={item.isFound ? styles.encontradoStyle : styles.perdidoStyle}>
-                  <Text style={styles.textoEstado}>{item.isFound ? 'Encontrado' : 'Perdido'}</Text>
-                </View>
               </View>
               <Text style={styles.textoPublicaciones} numberOfLines={2} ellipsizeMode="tail">
                 {item.description}
@@ -145,26 +132,19 @@ const FilterButtonsExample = () => {
               <View style={[{ flexDirection: 'row' }, styles.filtros]}>
                 <View style={[{ flexDirection: 'row' }, styles.miniFiltros]}>
                   <Image
-                    source={require('../Imagenes/marcador-de-posicion.png')}
+                    source={require('../../Imagenes/marcador-de-posicion.png')}
                     style={styles.imagenFiltroPublicacion}
                   />
                   <Text style={styles.texto1}>{item.locality.localityName}</Text>
                 </View>
                 <View style={[{ flexDirection: 'row' }, styles.miniFiltros]}>
                   <Image
-                    source={require('../Imagenes/hueso.png')}
+                    source={require('../../Imagenes/hueso.png')}
                     style={styles.imagenFiltroPublicacion}
                   />
                   <Text style={styles.texto1}>{item.breed.petBreedName}</Text>
                 </View>
               </View>
-                <View style={[{ flexDirection: 'row' }, styles.miniFiltrosFecha]}>
-                  <Image
-                    source={require('../Imagenes/calendario.png')}
-                    style={styles.imagenFiltroPublicacion}
-                  />
-                  <Text style={styles.texto1}>{formatLostDate(item.lostDate)}</Text>
-                </View>
             </View>
           </View>
         </TouchableOpacity>
@@ -199,7 +179,7 @@ const FilterButtonsExample = () => {
           onPress={() => handleFilterPress('Perro')}
         >
           <Image
-            source={require('../Imagenes/perroFiltro.png')}
+            source={require('../../Imagenes/perroFiltro.png')}
             style={styles.imagenFiltro}
           />
           <Text style={[styles.filterButtonText, selectedFilter === 'Perro' && styles.selectedFilterButtonText]}>Perro</Text>
@@ -209,7 +189,7 @@ const FilterButtonsExample = () => {
           onPress={() => handleFilterPress('Gato')}
         >
           <Image
-            source={require('../Imagenes/gato.png')}
+            source={require('../../Imagenes/gato.png')}
             style={styles.imagenFiltro}
           />
           <Text style={[styles.filterButtonText, selectedFilter === 'Gato' && styles.selectedFilterButtonText]}>Gato</Text>
@@ -219,7 +199,7 @@ const FilterButtonsExample = () => {
           onPress={() => handleFilterPress('Conejo')}
         >
           <Image
-            source={require('../Imagenes/conejo.png')}
+            source={require('../../Imagenes/conejo.png')}
             style={styles.imagenFiltro}
           />
           <Text style={[styles.filterButtonText, selectedFilter === 'Conejo' && styles.selectedFilterButtonText]}>Conejo</Text>
@@ -229,7 +209,7 @@ const FilterButtonsExample = () => {
           onPress={() => handleFilterPress('Otros')}
         >
           <Image
-            source={require('../Imagenes/animales.png')}
+            source={require('../../Imagenes/animales.png')}
             style={styles.imagenFiltro}
           />
           <Text style={[styles.filterButtonText, selectedFilter === 'Otros' && styles.selectedFilterButtonText]}>Otros</Text>
@@ -239,7 +219,7 @@ const FilterButtonsExample = () => {
         <SearchBarExample data={publicaciones} onSearch={handleSearch} />
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image
-              source={require('../Imagenes/filtrar.png')}
+              source={require('../../Imagenes/filtrar.png')}
               style={styles.imagenFiltrar}
             />
         </TouchableOpacity>
@@ -420,4 +400,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FilterButtonsExample;
+export default BotonesFiltrosAdopcion;
