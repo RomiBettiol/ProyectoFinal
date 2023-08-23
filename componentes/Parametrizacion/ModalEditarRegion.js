@@ -7,7 +7,7 @@ const ModalEditarRegion = ({ isVisible, onClose, onEdit, editingRegion }) => {
 
   const handleEditRegion = () => {
     axios
-      .put(`http://10.0.2.2:4000/parameters/region/${editingRegion.idRegion}`, {
+      .put(`http://buddy-app.loca.lt/parameters/region/${editingRegion.idRegion}`, {
         regionName: regionName,
       })
       .then((response) => {
