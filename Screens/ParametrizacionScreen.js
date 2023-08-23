@@ -6,13 +6,14 @@ import ModalEditar from '../componentes/Parametrizacion/ModalEditar';
 import ModalEditarColor from '../componentes/Parametrizacion/ModalEditarColor';
 import ModalEditarTipoAnimal from '../componentes/Parametrizacion/ModalEditarTipoAnimal';
 import ModalEditarRaza from '../componentes/Parametrizacion/ModalEditarRaza';
-import ModalAgregar from '../componentes/Parametrizacion/ModalAgregar';
 import ModalAgregarColor from '../componentes/Parametrizacion/ModalAgregarColor';
 import ModalAgregarTipoAnimal from '../componentes/Parametrizacion/ModalAgregarTipoAnimal';
 import ModalEditarProvincia from '../componentes/Parametrizacion/ModalEditarProvincia';
 import ModalAgregarProvincia from '../componentes/Parametrizacion/ModalAgregarProvincia';
 import ModalEditarRegion from '../componentes/Parametrizacion/ModalEditarRegion';
 import ModalAgregarRegion from '../componentes/Parametrizacion/ModalAgregarRegion';
+import ModalAgregarLocalidad from '../componentes/Parametrizacion/ModalAgregarLocalidad';
+import ModalAgregarRaza from '../componentes/Parametrizacion/ModalAgregarRaza';
 
 export default function ParametrizacionScreen({ navigation }) {
   const [zoneOptions, setZoneOptions] = useState([]);
@@ -27,7 +28,6 @@ export default function ParametrizacionScreen({ navigation }) {
   const [editingType, setEditingType] = useState(null);
   const [isEditBreedModalVisible, setEditBreedModalVisible] = useState(false);
   const [editingBreed, setEditingBreed] = useState(null);
-  const [isAddModalVisible, setAddModalVisible] = useState(false);
   const [isAddColorModalVisible, setAddColorModalVisible] = useState(false);
   const [newColorName, setNewColorName] = useState("");
   const [isAddTipoAnimalModalVisible, setAddTipoAnimalModalVisible] = useState(false);
@@ -38,9 +38,14 @@ export default function ParametrizacionScreen({ navigation }) {
   const [newProvinceName, setNewProvinceName] = useState("");
   const [isAddProvinceModalVisible, setAddProvinceModalVisible] = useState(false);
   const [regions, setRegions] = useState([]);
+  const [localidades, setLocalidades] = useState([]);
   const [isEditRegionModalVisible, setEditRegionModalVisible] = useState(false);
   const [editingRegion, setEditingRegion] = useState(null);
   const [isAddRegionModalVisible, setAddRegionModalVisible] = useState(false);
+  const [isAddLocalidadModalVisible, setAddLocalidadModalVisible] = useState(false);
+  const [isAddBreedModalVisible, setAddBreedModalVisible] = useState(false);
+  const [newBreedName, setNewBreedName] = useState("");
+  const [selectedPetTypeId, setSelectedPetTypeId] = useState("");
 
   const handleRegionAdd = (newRegion) => {
     const updatedRegions = [...regions, newRegion];
@@ -50,6 +55,24 @@ export default function ParametrizacionScreen({ navigation }) {
   const toggleAddRegionModal = () => {
     setAddRegionModalVisible(!isAddRegionModalVisible);
   };
+
+  const handleLocalidadAdd = (newLocalidad) => {
+    const updatedLocalidades = [...localidades, newLocalidad];
+    setLocalidades(updatedLocalidades);
+  };
+
+  const toggleAddLocalidadModal = () => {
+    setAddLocalidadModalVisible(!isAddLocalidadModalVisible);
+  };
+
+  const toggleAddBreedModal = () => {
+    setAddBreedModalVisible(!isAddBreedModalVisible);
+  };
+  
+  const handleAddBreed = (newBreed) => {
+    const updatedBreeds = [...petBreeds, newBreed];
+    setPetBreeds(updatedBreeds);
+  };
   
   const handleAddProvince = (newProvinceName) => {
     const newProvince = {
@@ -58,7 +81,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://10.0.2.2:4000/parameters/province/', newProvince)
+      .post('http://buddy-app.loca.lt/parameters/province/', newProvince)
       .then((response) => {
         console.log('Provincia agregada exitosamente:', response.data);
         getProvinces(); // Actualizar la lista de provincias después de agregar
@@ -74,7 +97,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://10.0.2.2:4000/parameters/petType/', newType)
+      .post('http://buddy-app.loca.lt/parameters/petType/', newType)
       .then((response) => {
         console.log('Tipo de animal agregado exitosamente:', response.data);
         getPetTypes(); // Actualizar la lista de tipos de animales después de agregar
@@ -90,7 +113,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://10.0.2.2:4000/parameters/petColor/', newColor)
+      .post('http://buddy-app.loca.lt/parameters/petColor/', newColor)
       .then((response) => {
         console.log('Color agregado exitosamente:', response.data);
         getPetColors(); // Actualizar la lista de colores después de agregar
@@ -99,28 +122,10 @@ export default function ParametrizacionScreen({ navigation }) {
         console.error('Error al agregar color:', error);
       });
   };
-  
-
-  const handleAddZone = (localityName) => {
-    const newZone = {
-      localityName: localityName,
-      idRegion: "a65b92ce-dcdb-4e27-90af-3573"
-    };
-  
-    axios
-      .post('http://10.0.2.2:4000/parameters/locality/', newZone)
-      .then((response) => {
-        console.log('Zona agregada exitosamente:', response.data);
-        getZonas();
-      })
-      .catch((error) => {
-        console.error('Error al agregar zona:', error);
-      });
-  };  
- 
+   
   const handleZoneDelete = (zoneId) => {
     axios
-      .delete(`http://10.0.2.2:4000/parameters/locality/${zoneId}`)
+      .delete(`http://buddy-app.loca.lt/parameters/locality/${zoneId}`)
       .then((response) => {
         console.log('Eliminación exitosa:', response.data);
         // Realizar aquí la actualización de los datos locales después de la eliminación
@@ -133,9 +138,24 @@ export default function ParametrizacionScreen({ navigation }) {
       });
   };
 
+  const handleBreedDelete = (breedId) => {
+    console.log('ID:', breedId)
+    axios
+      .delete(`http://buddy-app.loca.lt/parameters/petBreed/${breedId}`)
+      .then((response) => {
+        console.log('Raza eliminada exitosamente:', response.data);
+        // Update the list of pet breeds after deletion
+        getPetBreeds();
+      })
+      .catch((error) => {
+        console.error('Error en la solicitud DELETE de raza:', error);
+        // Show an error message to the user if necessary
+      });
+  };
+
   const handleColorDelete = (colorId) => {
     axios
-      .delete(`http://10.0.2.2:4000/parameters/petColor/${colorId}`)
+      .delete(`http://buddy-app.loca.lt/parameters/petColor/${colorId}`)
       .then((response) => {
         console.log('Color eliminado exitosamente:', response.data);
         // Actualizar la lista de colores después de la eliminación
@@ -149,7 +169,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleTypeDelete = (typeId) => {
     axios
-      .delete(`http://10.0.2.2:4000/parameters/petType/${typeId}`)
+      .delete(`http://buddy-app.loca.lt/parameters/petType/${typeId}`)
       .then((response) => {
         console.log('Tipo de animal eliminado exitosamente:', response.data);
         // Actualizar la lista de tipos de animales después de la eliminación
@@ -161,23 +181,9 @@ export default function ParametrizacionScreen({ navigation }) {
       });
   }; 
 
-  const handleBreedDelete = (breedId) => {
-    axios
-      .delete(`http://10.0.2.2:4000/parameters/petBreed/${breedId}`)
-      .then((response) => {
-        console.log('Raza de animal eliminada exitosamente:', response.data);
-        // Actualizar la lista de razas de animales después de la eliminación
-        getPetBreeds();
-      })
-      .catch((error) => {
-        console.error('Error en la solicitud DELETE de raza de animal:', error);
-        // Mostrar mensaje de error al usuario si es necesario
-      });
-  };  
-
   const handleProvinceDelete = (provinceId) => {
     axios
-      .delete(`http://10.0.2.2:4000/parameters/province/${provinceId}`)
+      .delete(`http://buddy-app.loca.lt/parameters/province/${provinceId}`)
       .then((response) => {
         console.log('Provincia eliminada exitosamente:', response.data);
         // Actualizar la lista de provincias después de la eliminación
@@ -191,7 +197,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleRegionDelete = (regionId) => {
     axios
-      .delete(`http://10.0.2.2:4000/parameters/region/${regionId}`)
+      .delete(`http://buddy-app.loca.lt/parameters/region/${regionId}`)
       .then((response) => {
         console.log('Región eliminada exitosamente:', response.data);
         // Actualizar la lista de regiones después de la eliminación
@@ -293,7 +299,7 @@ export default function ParametrizacionScreen({ navigation }) {
     
   const getZonas = () => {
     axios
-      .get('http://10.0.2.2:4000/parameters/locality/', {
+      .get('https://buddy-app.loca.lt/parameters/locality/', {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -315,7 +321,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetColors = () => {
     axios
-      .get('http://10.0.2.2:4000/parameters/petColor/')
+      .get('https://buddy-app.loca.lt/parameters/petColor/')
       .then((response) => {
         console.log('Colores exitosos:', response.data);
         const colors = response.data.petColors;
@@ -333,7 +339,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetTypes = () => {
     axios
-      .get('http://10.0.2.2:4000/parameters/petType/')
+      .get('https://buddy-app.loca.lt/parameters/petType/')
       .then((response) => {
         console.log('Tipos de animales exitosos:', response.data);
         const types = response.data.petTypes;
@@ -351,7 +357,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetBreeds = () => {
     axios
-      .get('http://10.0.2.2:4000/parameters/petBreed/')
+      .get('https://buddy-app.loca.lt/parameters/petBreed/')
       .then((response) => {
         console.log('Razas exitosas:', response.data);
         const breeds = response.data.petBreeds;
@@ -369,7 +375,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getProvinces = () => {
     axios
-      .get('http://10.0.2.2:4000/parameters/province/')
+      .get('https://buddy-app.loca.lt/parameters/province/')
       .then((response) => {
         console.log('Provincias exitosas:', response.data.provinces);
         const fetchedProvinces = response.data.provinces;
@@ -387,7 +393,7 @@ export default function ParametrizacionScreen({ navigation }) {
   
   const getRegions = () => {
     axios
-      .get('http://10.0.2.2:4000/parameters/region/')
+      .get('https://buddy-app.loca.lt/parameters/region/')
       .then((response) => {
         console.log('Regiones exitosas:', response.data.regions);
         const fetchedRegions = response.data.regions;
@@ -423,7 +429,7 @@ export default function ParametrizacionScreen({ navigation }) {
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Zona</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleAddLocalidadModal}>
             <Image
               source={require('../Imagenes/agregar.png')}
               style={styles.imagenAgregar}
@@ -459,7 +465,7 @@ export default function ParametrizacionScreen({ navigation }) {
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Razas</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleAddBreedModal}>
             <Image
               source={require('../Imagenes/agregar.png')}
               style={styles.imagenAgregar}
@@ -643,13 +649,14 @@ export default function ParametrizacionScreen({ navigation }) {
       <ModalEditarColor isVisible={isEditColorModalVisible} onClose={() => setEditColorModalVisible(false)} onEdit={handleColorEdit} editingColor={editingColor} />
       <ModalEditarTipoAnimal isVisible={isEditTypeModalVisible} onClose={() => setEditTypeModalVisible(false)} onEdit={handleTypeEdit} editingType={editingType} />
       <ModalEditarRaza isVisible={isEditBreedModalVisible} onClose={() => setEditBreedModalVisible(false)} onEdit={handleBreedEdit} editingBreed={editingBreed} />
-      <ModalAgregar isVisible={isAddModalVisible} onClose={() => setAddModalVisible(false)} onAdd={handleAddZone} />
       <ModalAgregarColor isVisible={isAddColorModalVisible} onClose={() => setAddColorModalVisible(false)} onAdd={handleAddColor} newColorName={newColorName} setNewColorName={setNewColorName} />
       <ModalAgregarTipoAnimal isVisible={isAddTipoAnimalModalVisible} onClose={() => setAddTipoAnimalModalVisible(false)} onAdd={handleAddType} newTypeName={newTypeName} setNewTypeName={setNewTypeName} />
       <ModalEditarProvincia isVisible={isEditProvinceModalVisible} onClose={() => setEditProvinceModalVisible(false)} onEdit={handleProvinceEdit} editingProvince={editingProvince} />
       <ModalAgregarProvincia isVisible={isAddProvinceModalVisible} onClose={() => setAddProvinceModalVisible(false)} onAdd={handleAddProvince} newProvinceName={newProvinceName} setNewProvinceName={setNewProvinceName} />
       <ModalEditarRegion isVisible={isEditRegionModalVisible} onClose={() => setEditRegionModalVisible(false)} onEdit={handleRegionEdit} editingRegion={editingRegion} />
       <ModalAgregarRegion isVisible={isAddRegionModalVisible} onClose={toggleAddRegionModal} onAdd={handleRegionAdd} provinces={provinces} />
+      <ModalAgregarLocalidad isVisible={isAddLocalidadModalVisible} onClose={toggleAddLocalidadModal} onAdd={handleLocalidadAdd} regions={regions}/>
+      <ModalAgregarRaza isVisible={isAddBreedModalVisible} onClose={toggleAddBreedModal} onAdd={handleAddBreed}  petTypes={petTypes} />
     </ScrollView>
   );
 };  

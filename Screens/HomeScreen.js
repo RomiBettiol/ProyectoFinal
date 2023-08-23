@@ -23,7 +23,11 @@ export default function HomeScreen({navigation}) {
                     />
                     <Text style={styles.texto}>Encontrar mi mascota</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.boton1}>
+                <TouchableOpacity style={styles.boton1}
+                    onPress = {()=> (
+                        navigation.navigate('AdoptarScreen')
+                    )}
+                >
                     <Image
                         source={require('../Imagenes/mascota.png')}
                         style={styles.imagen1}
