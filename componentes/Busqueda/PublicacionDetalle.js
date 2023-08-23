@@ -1,13 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../HeaderScreen';
-import MapaBusqueda from './MapaBusqueda';
+import Carousel from 'react-native-snap-carousel';
 
 const PublicacionDetalle = ({ route }) => {
-  // Obtener la información de la publicación de los parámetros de la ruta
   const navigation = useNavigation();
   const publicacion = route.params?.publicacion;
+
+  const carouselImages = [
+    require('../../Imagenes/imagenPublicaciones.jpg'),
+    require('../../Imagenes/imagenPublicaciones2.jpg'),
+  ];
 
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
@@ -17,21 +21,30 @@ const PublicacionDetalle = ({ route }) => {
     return `${day}-${month}-${year}`;
   };
 
-  // Renderizar la información de la publicación
   return (
     <View>
         <Header />
         <View>
-            <Image
-                source={require('../../Imagenes/imagenPublicaciones.jpg')}
-                style={styles.imagenPublicacion}
-                />
+          <Carousel
+            data={carouselImages}
+            renderItem={({ item }) => (
+              <Image source={item} style={styles.imagenPublicacion} />
+            )}
+            sliderWidth={500}
+            itemWidth={500}
+          />
         </View>
         <View style={styles.informacion}>
           <View style={[{flexDirection:'row'}, styles.containerIconos]}>
             <TouchableOpacity>
               <Image
                 source={require('../../Imagenes/compartir.png')}
+                style={styles.iconos}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image
+                source={require('../../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png')}
                 style={styles.iconos}
               />
             </TouchableOpacity>
@@ -74,7 +87,7 @@ const PublicacionDetalle = ({ route }) => {
                       source={require('../../Imagenes/paleta-de-color.png')}
                       style={styles.iconos}
                   />
-                  <Text style={styles.texto}>Blanco</Text>
+                  <Text style={styles.texto}>{publicacion?.color.petColorName}</Text>
                 </View>
                 <View style={[styles.itemInfoFiltro, {flexDirection:'row'}]}>
                   <Image

@@ -3,20 +3,16 @@ import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import axios from 'axios';
 
-const ListaValoresRazaPerros = () => {
+const ListaValoresRazaPerros = ({ selectedAnimal }) => {
   const [selectedBreed, setSelectedBreed] = useState(null);
   const [breedOptions, setBreedOptions] = useState([]);
 
-  const getRazasPerros = () => {
+  const getRazas = () => {
     axios
-      .get('http://10.0.2.2:4000/parameters/petBreed', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      .get(`http://buddy-app.loca.lt/parameters/petBreed/byType/${selectedAnimal}`)
       .then((response) => {
-        console.log('Razas de perros exitosas:', response.data);
-        const petBreeds = response.data.petBreeds;
+        console.log('Razas exitosas:', response.data);
+        const petBreeds = response.data;
         if (petBreeds && Array.isArray(petBreeds)) {
           setBreedOptions(petBreeds);
         } else {
@@ -30,8 +26,8 @@ const ListaValoresRazaPerros = () => {
   };
 
   useEffect(() => {
-    getRazasPerros();
-  }, []);
+    getRazas();
+  }, [selectedAnimal]);
 
   return (
     <Dropdown

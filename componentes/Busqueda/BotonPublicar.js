@@ -21,6 +21,3 @@ const styles = StyleSheet.create({
         fontSize: 18,
       },
 });
-
-
-///publications/publication/search

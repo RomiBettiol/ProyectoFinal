@@ -10,7 +10,7 @@ const ListaValoresZona = () => {
 
   const getZonas = () => {
     axios
-      .get('http://10.0.2.2:4000/parameters/locality/', {
+      .get('http://buddy-app.loca.lt/parameters/locality/', {
         headers: {
           'Content-Type': 'application/json',
         },

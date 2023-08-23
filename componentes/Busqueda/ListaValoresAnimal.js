@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import ListaValoresRazaGatos from './ListaValoresRazaGatos';
-import ListaValoresRazaPerros from './ListaValoresRazaPerros';
 import axios from 'axios';
 
 const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal }) => {
@@ -9,7 +7,7 @@ const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal }) => {
 
   useEffect(() => {
     axios
-      .get('http://10.0.2.2:4000/parameters/petType/')
+      .get('http://buddy-app.loca.lt/parameters/petType/')
       .then((response) => {
         console.log('Tipos de animal exitosos:', response.data);
         setAnimalOptions(response.data.petTypes);
@@ -44,16 +42,6 @@ const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal }) => {
           </TouchableOpacity>
         ))}
       </View>
-      {(selectedAnimal === 'Perro' || selectedAnimal === 'Gato') && (
-        <View>
-          {selectedAnimal === 'Perro' && (
-            <ListaValoresRazaPerros />
-          )}
-          {selectedAnimal === 'Gato' && (
-            <ListaValoresRazaGatos />
-          )}
-        </View>
-      )}
     </View>
   );
 };
