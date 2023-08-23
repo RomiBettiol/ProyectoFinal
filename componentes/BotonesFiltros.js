@@ -1,17 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal, ActivityIndicator} from 'react-native';
 import SearchBarExample from './BarraBusqueda';
-import PublicacionDetalle from './Busqueda/PublicacionDetalle';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import FiltrarModal from './FiltrarModal';
 
 const FilterButtonsExample = () => {
+  const buddyUrl = 'budy-app.loca.lt';
   const navigation = useNavigation();
   const [selectedFilter, setSelectedFilter] = useState('');
   const [publicaciones, setPublicaciones] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado para controlar el modal de "cargando"
-  const [numPublicaciones, setNumPublicaciones] = useState(5); // Estado para controlar la cantidad de publicaciones que se muestran
+  const [loading, setLoading] = useState(true); 
+  const [numPublicaciones, setNumPublicaciones] = useState(5);
   const [filteredPublicaciones, setFilteredPublicaciones] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [imageUri, setImageUri] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedAnimalType, setSelectedAnimalType] = useState(null);
+
+  const applyFilters = () => {
+    setLoading(true);
+  
+    // Lógica para filtrar las publicaciones
+    let filteredData = publicaciones;
+  
+    if (selectedColor) {
+      filteredData = filteredData.filter(item => item.color.idPetColor === selectedColor);
+    }
+  
+    if (selectedFilter) {
+      filteredData = filteredData.filter(item => item.breed.type.petTypeName.toLowerCase() === selectedFilter.toLowerCase());
+    }
+  
+    // Actualizar el estado de las publicaciones filtradas
+    setFilteredPublicaciones(filteredData);
+    setLoading(false);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   const handleSearch = (searchText) => {
       // Filtrar las publicaciones en base al texto de búsqueda
@@ -23,58 +51,66 @@ const FilterButtonsExample = () => {
       setFilteredPublicaciones(filteredData);
     };
 
-  const getPublicaciones = () => {
-  setLoading(true);
-
-  axios
-    .get('http://10.0.2.2:4000/publications/publication?modelType=search', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((response) => {
-      console.log('Respuesta exitosa:', response.data);
-      const infoPublicacion = response.data;
-      if (infoPublicacion && Array.isArray(infoPublicacion)) {
-        setPublicaciones(infoPublicacion);
-        
-        // Filtrar las publicaciones según el tipo de animal seleccionado
-        if (selectedFilter) {
-          const filteredData = infoPublicacion.filter((item) =>
-            item.breed.type.petTypeName.toLowerCase() === selectedFilter.toLowerCase()
-          );
-          setFilteredPublicaciones(filteredData);
-        }
-      } else {
-        setPublicaciones([]);
-      }
-    })
-    .catch((error) => {
-      console.error('Error en la solicitud GET:', error);
-      setPublicaciones([]);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  };
+    const getPublicaciones = () => {
+      setLoading(true);
+    
+      axios
+        .get('https://buddy-app.loca.lt/publications/publication?modelType=search', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Bypass-Tunnel-Reminder':''
+          },
+        })
+        .then((response) => {
+          console.log('Respuesta exitosa:', response.data);
+          const infoPublicacion = response.data;
+          if (infoPublicacion && Array.isArray(infoPublicacion)) {
+            setPublicaciones(infoPublicacion);
+    
+            // Filtrar las publicaciones por color si se ha seleccionado un color
+            if (selectedColor) {
+              const filteredByColor = infoPublicacion.filter((item) =>
+                item.color.idPetColor === selectedColor
+              );
+              setFilteredPublicaciones(filteredByColor);
+            }
+            // Si no se ha seleccionado un color, proceder con el filtrado por tipo de animal
+            else if (selectedFilter) {
+              const filteredData = infoPublicacion.filter((item) =>
+                item.breed.type.petTypeName.toLowerCase() === selectedFilter.toLowerCase()
+              );
+              setFilteredPublicaciones(filteredData);
+            }
+          } else {
+            setPublicaciones([]);
+          }
+        })
+        .catch((error) => {
+          console.error('Error en la solicitud GET:', error);
+          setPublicaciones([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };   
 
   const handleFilterPress = (filter) => {
-    // Si el filtro seleccionado es el mismo que el filtro actualmente seleccionado,
-    // se deselecciona el filtro y se muestran todas las publicaciones
     if (selectedFilter === filter) {
       setSelectedFilter('');
-      setFilteredPublicaciones([]); // Limpiar las publicaciones filtradas
+      setSelectedAnimalType(null);
+      setSelectedColor(null);
+      setFilteredPublicaciones([]);
     } else {
-      // Filtrar las publicaciones según el tipo de animal seleccionado
+      setSelectedFilter(filter);
+      setSelectedAnimalType(null); 
+      setSelectedColor(null);
       const filteredData = publicaciones.filter((item) =>
         item.breed.type.petTypeName.toLowerCase() === filter.toLowerCase()
       );
-      
-      // Actualizar el estado con las publicaciones filtradas
       setFilteredPublicaciones(filteredData);
-      setSelectedFilter(filter); // Establecer el filtro seleccionado
     }
   };
+  
 
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
@@ -94,10 +130,7 @@ const FilterButtonsExample = () => {
           )}
         >
           <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>
-            <Image
-              source={require('../Imagenes/imagenPublicaciones.jpg')}
-              style={styles.imagenPublicacion}
-            />
+          {imageUri && <Image source={{ uri: imageUri }} />}
             <View style={styles.informacion}>
               <View style={[{ flexDirection: 'row'}, styles.tituloView]}>
                 <Text style={styles.tituloPublicaciones}>{item.title}</Text>
@@ -124,14 +157,14 @@ const FilterButtonsExample = () => {
                   />
                   <Text style={styles.texto1}>{item.breed.petBreedName}</Text>
                 </View>
-                <View style={[{ flexDirection: 'row' }, styles.miniFiltros]}>
+              </View>
+                <View style={[{ flexDirection: 'row' }, styles.miniFiltrosFecha]}>
                   <Image
                     source={require('../Imagenes/calendario.png')}
                     style={styles.imagenFiltroPublicacion}
                   />
                   <Text style={styles.texto1}>{formatLostDate(item.lostDate)}</Text>
                 </View>
-              </View>
             </View>
           </View>
         </TouchableOpacity>
@@ -152,6 +185,12 @@ const FilterButtonsExample = () => {
     getPublicaciones();
   }, []);
 
+  const clearFilters = () => {
+    setSelectedFilter('');
+    setSelectedAnimalType(null);
+    setSelectedColor(null);
+  };
+  
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>
@@ -198,12 +237,13 @@ const FilterButtonsExample = () => {
       </View>
       <View style={[styles.container3,{ flexDirection: 'row' }]}>
         <SearchBarExample data={publicaciones} onSearch={handleSearch} />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image
               source={require('../Imagenes/filtrar.png')}
               style={styles.imagenFiltrar}
             />
         </TouchableOpacity>
+        <FiltrarModal modalVisible={modalVisible} closeModal={closeModal} />
       </View>
       <View>
         <FlatList
@@ -227,6 +267,7 @@ const FilterButtonsExample = () => {
           </View>
         </View>
       </Modal>
+      <FiltrarModal modalVisible={modalVisible} closeModal={closeModal} applyFilters={applyFilters} />
     </View>
   );
 };
@@ -295,20 +336,24 @@ const styles = StyleSheet.create({
   },
   imagenPublicacion: {
     width: 100,
-    height: 122,
+    height: 155,
     borderRadius: 15,
     marginRight: 10,
   },
   imagenFiltroPublicacion: {
     width: 20,
     height: 20,
-    marginRight: 2,
+    marginRight: 5,
   },
   filtros: {
     marginTop: 15,
   },
   miniFiltros: {
-    marginRight: 5,
+    marginRight: 10,
+  },
+  miniFiltrosFecha:{
+    marginTop: 10,
+    marginBottom: 10,
   },
   informacion: {
     marginRight: 3,

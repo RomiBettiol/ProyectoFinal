@@ -11,7 +11,11 @@ const MenuHorizontal = () => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.menuContainer}
       >
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}
+          onPress = {()=> (
+            navigation.navigate('MiPerfil')
+        )}
+        >
             <Image
                 source={require('../Imagenes/usuario.png')}
                 style={styles.menu}
@@ -50,8 +54,7 @@ const MenuHorizontal = () => {
       height: '65%',
       marginTop: 10,
       marginBottom: 15,
-      backgroundColor: '#FFB984',
-      elevation: 5,      
+      backgroundColor: '#DDC4B8',  
     },
 
     menuItem: {

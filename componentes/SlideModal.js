@@ -1,12 +1,22 @@
 import React, { useRef } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, Animated, TouchableWithoutFeedback, Image} from 'react-native';
-import BusquedaScreen from '../Screens/BusquedaScreen';
-import InicioScreen from '../Screens/InicioScreen';
 
 const SlideModal = ({ visible, onClose }) => {
   const slideAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const handleOptionPress = (screenName) => {
+    // Verifica si la opción seleccionada coincide con la pantalla actual
+    if (route.name === screenName) {
+      handleModalClose(); // Cierra la modal si están en la misma pantalla
+    } else {
+      // Navega a la pantalla correspondiente si no están en la misma pantalla
+      navigation.navigate(screenName);
+      handleModalClose(); // Cierra la modal después de navegar
+    }
+  };
 
   const handleModalOpen = () => {
     Animated.timing(slideAnim, {
@@ -66,7 +76,7 @@ const SlideModal = ({ visible, onClose }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.menu}>
-            <TouchableOpacity style={styles.opciones} onPress={() => navigation.navigate('BusquedaScreen')}>
+            <TouchableOpacity style={styles.opciones} onPress={() => handleOptionPress('BusquedaScreen')}>
                 <View style={[{flexDirection: 'row'}, styles.view]}>
                 <Image
                     source={require('../Imagenes/lupa.png')}
@@ -75,7 +85,7 @@ const SlideModal = ({ visible, onClose }) => {
                 <Text style={styles.textoModal}>Buscar mascota</Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.opciones}>
+            <TouchableOpacity onPress={() => handleOptionPress('AdoptarScreen')} style={styles.opciones}>
                 <View style={[{flexDirection: 'row'}, styles.view]}>
                 <Image
                     source={require('../Imagenes/mascota.png')}
