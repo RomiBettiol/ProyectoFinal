@@ -59,6 +59,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleLocalidadAdd = (newLocalidad) => {
     const updatedLocalidades = [...localidades, newLocalidad];
     setLocalidades(updatedLocalidades);
+    getZonas();
   };
 
   const toggleAddLocalidadModal = () => {

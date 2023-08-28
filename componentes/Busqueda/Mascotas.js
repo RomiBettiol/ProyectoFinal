@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const ListaValoresAnimal = () => {
+const Mascotas = ({ onOptionSelect }) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
+    onOptionSelect(option === 'encontrada' ? true : false);
   };
-
+  
   return (
     <View style={styles.container}>
       <View style={[{flexDirection: 'row'}, styles.contenedor2]}>
@@ -58,4 +59,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ListaValoresAnimal;
+export default Mascotas;

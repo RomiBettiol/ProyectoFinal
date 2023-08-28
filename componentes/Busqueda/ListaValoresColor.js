@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import axios from 'axios';
 
-const ListaValoresColor = () => {
+const ListaValoresColor = ({setSelectedColorId}) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [colorOptions, setColorOptions] = useState([]);
 
@@ -42,9 +42,9 @@ const ListaValoresColor = () => {
       placeholder="Color"
       value={selectedColor}
       onChange={item => {
-        console.log('Color seleccionado:', item.petColorName); // Agregar aquí
-        setSelectedColor(item.petColorName);
-      }}
+        setSelectedColor(item);
+        setSelectedColorId(item.idPetColor);
+       }}
     />
   );
 };

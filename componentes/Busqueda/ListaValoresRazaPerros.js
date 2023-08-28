@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import axios from 'axios';
 
-const ListaValoresRazaPerros = ({ selectedAnimal }) => {
+const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
   const [selectedBreed, setSelectedBreed] = useState(null);
   const [breedOptions, setBreedOptions] = useState([]);
 
@@ -27,7 +27,9 @@ const ListaValoresRazaPerros = ({ selectedAnimal }) => {
 
   useEffect(() => {
     getRazas();
+    setSelectedBreed(null); // Reiniciar selectedBreed cuando cambie el animal seleccionado
   }, [selectedAnimal]);
+
 
   return (
     <Dropdown
@@ -42,9 +44,10 @@ const ListaValoresRazaPerros = ({ selectedAnimal }) => {
       valueField="petBreedName"
       placeholder="Raza"
       searchPlaceholder="Buscar"
-      value={selectedBreed}
+      value={selectedBreed ? selectedBreed.petBreedName : null}
       onChange={(item) => {
-        setSelectedBreed(item.petBreedName);
+        setSelectedBreed(item);
+        setSelectedBreedId(item.idPetBreed)
       }}
     />
   );

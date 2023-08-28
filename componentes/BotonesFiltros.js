@@ -47,7 +47,6 @@ const FilterButtonsExample = () => {
         item.title.toLowerCase().includes(searchText.toLowerCase())
       );
 
-      // Actualizar el estado con las publicaciones filtradas
       setFilteredPublicaciones(filteredData);
     };
 
@@ -94,24 +93,34 @@ const FilterButtonsExample = () => {
         });
     };   
 
-  const handleFilterPress = (filter) => {
-    if (selectedFilter === filter) {
-      setSelectedFilter('');
+    const handleFilterPress = (filter) => {
+      console.log("Selected Filter:", filter); // Verifica el valor de selectedFilter
       setSelectedAnimalType(null);
       setSelectedColor(null);
-      setFilteredPublicaciones([]);
-    } else {
-      setSelectedFilter(filter);
-      setSelectedAnimalType(null); 
-      setSelectedColor(null);
-      const filteredData = publicaciones.filter((item) =>
-        item.breed.type.petTypeName.toLowerCase() === filter.toLowerCase()
-      );
-      setFilteredPublicaciones(filteredData);
-    }
-  };
-  
-
+    
+      if (selectedFilter === filter) {
+        setSelectedFilter('');
+        setFilteredPublicaciones([]);
+      } else if (filter === 'Otros') {
+        setSelectedFilter(filter);
+        const filteredData = filterByOtherAnimals(publicaciones); // Filtrar publicaciones por "Otros"
+        console.log("Filtered Data:", filteredData); // Verifica el contenido de filteredData
+        setFilteredPublicaciones(filteredData);
+      } else {
+        setSelectedFilter(filter);
+        const filteredData = publicaciones.filter((item) =>
+          item.breed.type.petTypeName.toUpperCase() === filter.toUpperCase()
+        );
+        setFilteredPublicaciones(filteredData);
+      }
+    };    
+    
+    const filterByOtherAnimals = (data) => {
+      console.log("filterByOtherAnimals function called");
+      const animalTypesToExclude = ['PERRO', 'GATO', 'CONEJO'];
+      return data.filter(item => !animalTypesToExclude.includes(item.breed.type.petTypeName.toUpperCase()));
+    };           
+                  
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const year = fechaObj.getFullYear();
@@ -170,7 +179,6 @@ const FilterButtonsExample = () => {
         </TouchableOpacity>
       );
     } else {
-      // Si es mayor o igual a numPublicaciones, no mostrar nada (ocultar la publicación)
       return null;
     }
   };
@@ -246,7 +254,7 @@ const FilterButtonsExample = () => {
         <FiltrarModal modalVisible={modalVisible} closeModal={closeModal} />
       </View>
       <View>
-        <FlatList
+      <FlatList
           data={filteredPublicaciones.length > 0 ? filteredPublicaciones : publicaciones}
           renderItem={renderItem}
           keyExtractor={(item) => item.idPublicationSearch}

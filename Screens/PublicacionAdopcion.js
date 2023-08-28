@@ -1,50 +1,63 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal } from 'react-native';
 import HeaderScreen from '../componentes/HeaderScreen';
 import ListaValoresColor from '../componentes/Busqueda/ListaValoresColor';
 import ListaValoresAnimal from '../componentes/Busqueda/ListaValoresAnimal';
 import ListaValoresZona from '../componentes/Busqueda/ListaValoresZona';
 import ListaValoresRazaPerros from '../componentes/Busqueda/ListaValoresRazaPerros';
-import Mascotas from '../componentes/Busqueda/Mascotas';
 import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
 import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
 import axios from 'axios';
 
-export default function PublicacionAdopcion({ navigation }) {
+export default function PublicacionBusqueda({ navigation }) {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+  const [selectedColorId, setSelectedColorId] = useState('');
   const [selectedLocality, setSelectedLocality] = useState('');
-  const [selectedBreed, setSelectedBreed] = useState('');
-
+  const [selectedBreedId, setSelectedBreedId] = useState('');
+  const [isSuccessful, setIsSuccessful] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  
   const handlePost = async () => {
-    const postData = {
-      title,
-      description,
-      breed: {
-        petBreedName: selectedBreed,
-        type: {
-          petTypeName: selectedAnimal,
-        },
-      },
-      color: {
-        petColorName: selectedColor,
-      },
-      locality: {
-        localityName: selectedLocality,
-      },
-      isFound: Mascotas === 1 ? true : false,
-    };
-
-    console.log('Datos a publicar:', postData);
-
+    const images = "";
+  
     try {
-      const response = await axios.post('http://buddy-app.loca.lt/publications/publication/search', postData);
+      const postData = {
+        title,
+        description,
+        images,
+        idUser: "b191f32c-214d-4e4c-aff2-a5528da49409",     
+        idPetBreed: selectedBreedId,
+        idPetColor: selectedColorId,         
+        idLocality: selectedLocality,
+        contactPhone,
+        newOwnerName: "",
+      };
+  
+      console.log('Datos a publicar:', postData);
+  
+      const response = await axios.post('http://buddy-app.loca.lt/publications/publication/adoption', postData);
       console.log('Solicitud POST exitosa:', response.data);
-      // Maneja el éxito, muestra un mensaje de éxito, navega, etc.
+      setIsSuccessful(true);
+      setIsModalVisible(true);
+      setModalMessage('¡Publicación exitosa!');
+      setTimeout(() => {
+        setIsModalVisible(false); // Cierra el modal después de 2 segundos
+        setTimeout(() => {
+          navigation.navigate('HomeScreen'); // Navega a 'HomeScreen' después de 5 segundos
+        }, 1000); // 1000 milisegundos = 1 segundos
+      }, 2000); // 2000 milisegundos = 2 segundos
     } catch (error) {
       console.error('Error al realizar la solicitud POST:', error);
+      setIsSuccessful(false);
+      setIsModalVisible(true);
+      setModalMessage('Publicación fallida, por favor intente nuevamente');
+      setTimeout(() => {
+        setIsModalVisible(false); // Cierra el modal después de 3 segundos
+      }, 2000); // 2000 milisegundos = 2 segundos
       // Maneja el error, muestra un mensaje de error, etc.
     }
   };
@@ -77,11 +90,29 @@ export default function PublicacionAdopcion({ navigation }) {
           </View>
             <View style={styles.subcontenedor3}>
               <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} />
-              <ListaValoresColor selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+              <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
               <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
-              {selectedAnimal && <ListaValoresRazaPerros selectedAnimal={selectedAnimal} />}
+              {selectedAnimal && <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />}
+            </View>
+            <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
+              <Text style={styles.tituloPublicacion}>Celular</Text>
+              <TextInput
+                style={styles.inputTexto}
+                value={contactPhone}
+                onChangeText={text => {
+                  const numericValue = text.replace(/[^0-9]/g, '');
+                  setContactPhone(numericValue);
+                }}
+              />
             </View>
         </View>
+        <Modal visible={isModalVisible} animationType="slide" transparent={true} onRequestClose={() => setIsModalVisible(false)}>
+          <View style={[styles.modalContainer, isSuccessful ? styles.successModalBackground : styles.errorModalBackground]}>
+            <View style={[styles.modalContent, styles.bottomModalContent]}>
+              <Text style={[styles.modalMessage, isSuccessful ? styles.successModalText : styles.errorModalText]}>{modalMessage}</Text>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
       <BotonPublicar onPress={handlePost} />
     </View>
@@ -149,5 +180,25 @@ const styles = StyleSheet.create({
   subcontenedor4: {
     margin: 15,
     justifyContent: 'center',
+  },
+  successModalBackground: {
+    backgroundColor: 'green',
+    marginTop: '180%',
+  },
+  successModalText: {
+    color: 'white',
+  },  
+  errorModalBackground: {
+    backgroundColor: 'red', // Cambiar a azul o el color que desees
+    marginTop: '180%',
+    margin: 20,
+    borderRadius: 10,
+  },
+  errorModalText: {
+    color: 'white', // Cambiar a blanco o el color de texto deseado
+  },
+  bottomModalContent: {
+    alignItems: 'flex-end', // Alinea el contenido del modal en el extremo inferior
+    padding: 20,
   },
 });

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import axios from 'axios';
 
-const ListaValoresZona = () => {
+const ListaValoresZona = ({ setSelectedLocality }) => {
   const [selectedZone, setSelectedZone] = useState(null);
   const [zoneOptions, setZoneOptions] = useState([]);
 
@@ -49,7 +48,8 @@ const ListaValoresZona = () => {
       searchPlaceholder="Buscar"
       value={selectedZone}
       onChange={(item) => {
-        setSelectedZone(item.localityName);
+        setSelectedZone(item); // Guardar el objeto completo de la zona seleccionada
+        setSelectedLocality(item.idLocality); // Llamar a setSelectedLocality con el ID de la zona
       }}
     />
   );

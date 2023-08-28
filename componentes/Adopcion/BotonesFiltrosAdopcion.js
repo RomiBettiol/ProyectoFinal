@@ -20,7 +20,7 @@ const BotonesFiltrosAdopcion = () => {
 
   const applyFilters = () => {
     setLoading(true);
-  
+
     // Lógica para filtrar las publicaciones
     let filteredData = publicaciones;
   
@@ -94,22 +94,33 @@ const BotonesFiltrosAdopcion = () => {
         });
     };   
 
-  const handleFilterPress = (filter) => {
-    if (selectedFilter === filter) {
-      setSelectedFilter('');
+    const handleFilterPress = (filter) => {
+      console.log("Selected Filter:", filter); // Verifica el valor de selectedFilter
       setSelectedAnimalType(null);
       setSelectedColor(null);
-      setFilteredPublicaciones([]);
-    } else {
-      setSelectedFilter(filter);
-      setSelectedAnimalType(null); 
-      setSelectedColor(null);
-      const filteredData = publicaciones.filter((item) =>
-        item.breed.type.petTypeName.toLowerCase() === filter.toLowerCase()
-      );
-      setFilteredPublicaciones(filteredData);
-    }
-  };
+    
+      if (selectedFilter === filter) {
+        setSelectedFilter('');
+        setFilteredPublicaciones([]);
+      } else if (filter === 'Otros') {
+        setSelectedFilter(filter);
+        const filteredData = filterByOtherAnimals(publicaciones); // Filtrar publicaciones por "Otros"
+        console.log("Filtered Data:", filteredData); // Verifica el contenido de filteredData
+        setFilteredPublicaciones(filteredData);
+      } else {
+        setSelectedFilter(filter);
+        const filteredData = publicaciones.filter((item) =>
+          item.breed.type.petTypeName.toUpperCase() === filter.toUpperCase()
+        );
+        setFilteredPublicaciones(filteredData);
+      }
+    };    
+    
+    const filterByOtherAnimals = (data) => {
+      console.log("filterByOtherAnimals function called");
+      const animalTypesToExclude = ['PERRO', 'GATO', 'CONEJO'];
+      return data.filter(item => !animalTypesToExclude.includes(item.breed.type.petTypeName.toUpperCase()));
+    };           
 
   const renderItem = ({ item }) => {
     // Verificar si el índice del item es menor que numPublicaciones
