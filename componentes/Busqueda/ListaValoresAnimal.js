@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal }) => {
+const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal, setSelectedAnimalId }) => {
   const [animalOptions, setAnimalOptions] = useState([]);
 
   useEffect(() => {
@@ -24,13 +24,16 @@ const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal }) => {
       <View style={styles.optionsContainer}>
         {animalOptions.map((animalOption, index) => (
           <TouchableOpacity
-            key={index}
-            style={[
-              styles.option,
-              selectedAnimal === animalOption.petTypeName && styles.selectedOption,
-            ]}
-            onPress={() => setSelectedAnimal(animalOption.petTypeName)}
-          >
+          key={index}
+          style={[
+            styles.option,
+            selectedAnimal === animalOption.petTypeName && styles.selectedOption,
+          ]}
+          onPress={() => {
+            setSelectedAnimal(animalOption.petTypeName);
+            setSelectedAnimalId(animalOption.idPetType); // Agrega el ID al estado
+          }}
+        >
             <Text
               style={[
                 styles.optionText,

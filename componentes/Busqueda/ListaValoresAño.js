@@ -7,7 +7,7 @@ const data = [
   { label: '2023', value: '2' },
 ];
 
-const ListaValoresAño = () => {
+const ListaValoresAño = ({ setSelectedYear }) => {
   const [value, setValue] = useState(null);
 
   return (
@@ -24,6 +24,7 @@ const ListaValoresAño = () => {
       value={value}
       onChange={item => {
         setValue(item.value);
+        setSelectedYear(item.label);
       }}
     />
   );

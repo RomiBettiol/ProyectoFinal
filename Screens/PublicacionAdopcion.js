@@ -20,6 +20,7 @@ export default function PublicacionBusqueda({ navigation }) {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [selectedAnimalId, setSelectedAnimalId] = useState(null);
   
   const handlePost = async () => {
     const images = "";
@@ -29,7 +30,8 @@ export default function PublicacionBusqueda({ navigation }) {
         title,
         description,
         images,
-        idUser: "b191f32c-214d-4e4c-aff2-a5528da49409",     
+        idUser: "7ea0ab93-d534-4d6e-9da3-c46db875bda3",   
+        idPetType: selectedAnimalId,  
         idPetBreed: selectedBreedId,
         idPetColor: selectedColorId,         
         idLocality: selectedLocality,
@@ -89,10 +91,12 @@ export default function PublicacionBusqueda({ navigation }) {
             />
           </View>
             <View style={styles.subcontenedor3}>
-              <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} />
+            <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
               <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
               <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
-              {selectedAnimal && <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />}
+              {selectedAnimal && (
+                <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
+              )}
             </View>
             <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
               <Text style={styles.tituloPublicacion}>Celular</Text>

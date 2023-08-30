@@ -22,16 +22,18 @@ export default function PublicacionBusqueda({ navigation }) {
   const [selectedLocality, setSelectedLocality] = useState('');
   const [selectedBreedId, setSelectedBreedId] = useState('');
   const [selectedIsFound, setSelectedIsFound] = useState(null);
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [selectedDay, setSelectedDay] = useState(null);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [selectedAnimalId, setSelectedAnimalId] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
   
   const handlePost = async () => {
     const longitude = 12.09812;
     const latitude = 34.56789; 
     const images = "";
+    const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay} 10:30:00`;
   
     try {
       const postData = {
@@ -40,7 +42,8 @@ export default function PublicacionBusqueda({ navigation }) {
         longitude,
         latitude,
         images,
-        idUser: "b191f32c-214d-4e4c-aff2-a5528da49409",     
+        idUser: "7ea0ab93-d534-4d6e-9da3-c46db875bda3",   
+        idPetType: selectedAnimalId,  
         idPetBreed: selectedBreedId,
         idPetColor: selectedColorId,         
         idLocality: selectedLocality,
@@ -102,17 +105,19 @@ export default function PublicacionBusqueda({ navigation }) {
             />
           </View>
             <View style={styles.subcontenedor3}>
-              <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} />
+              <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
               <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
               <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
-              {selectedAnimal && <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />}
+              {selectedAnimal && (
+                <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
+              )}
             </View>
             <Mascotas selectedIsFound={selectedIsFound} onOptionSelect={setSelectedIsFound} />
           <Text style={styles.textoFecha}>Fecha de extravío</Text>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
           <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
-          {selectedMonth && <ListaValoresDias selectedMonth={selectedMonth} />}
-          <ListaValoresAño />
+          {selectedMonth && <ListaValoresDias selectedMonth={selectedMonth} setSelectedDay={setSelectedDay} />}
+          <ListaValoresAño setSelectedYear={setSelectedYear} />
           </View>
         </View>
       </ScrollView>

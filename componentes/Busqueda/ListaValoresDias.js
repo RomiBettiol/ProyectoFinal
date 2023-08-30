@@ -36,7 +36,7 @@ const data = [
   { label: '31', value: '31' },
 ];
 
-const ListaValoresDias = ({ selectedMonth }) => {
+const ListaValoresDias = ({ selectedMonth, setSelectedDay }) => {
     const [value, setValue] = useState(null);
     const [filteredData, setFilteredData] = useState(data);
 
@@ -66,6 +66,7 @@ const ListaValoresDias = ({ selectedMonth }) => {
           value={value}
           onChange={item => {
             setValue(item.value);
+            setSelectedDay(item.value);
           }}
         />
       );
