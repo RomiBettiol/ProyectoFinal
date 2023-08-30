@@ -14,8 +14,11 @@ import ModalEditarRegion from '../componentes/Parametrizacion/ModalEditarRegion'
 import ModalAgregarRegion from '../componentes/Parametrizacion/ModalAgregarRegion';
 import ModalAgregarLocalidad from '../componentes/Parametrizacion/ModalAgregarLocalidad';
 import ModalAgregarRaza from '../componentes/Parametrizacion/ModalAgregarRaza';
+import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
 export default function ParametrizacionScreen({ navigation }) {
+  const route = useRoute(); // Obtiene la prop route
+  const { token } = route.params;
   const [zoneOptions, setZoneOptions] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [editingZone, setEditingZone] = useState(null);

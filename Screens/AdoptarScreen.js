@@ -4,10 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import HeaderScreen from '../componentes/HeaderScreen';
 import BotonFlotante from '../componentes/BotonFlotante';
 import BotonesFiltrosAdopcion from '../componentes/Adopcion/BotonesFiltrosAdopcion';
+import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
 export default function AdoptarScreen() {
   const navigation = useNavigation();
   const [buttonTransform, setButtonTransform] = useState(0);
+  const route = useRoute(); // Obtiene la prop route
+  const { token } = route.params;
 
   return (
     <View style={styles.container}>

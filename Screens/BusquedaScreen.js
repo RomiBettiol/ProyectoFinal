@@ -4,11 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import HeaderScreen from '../componentes/HeaderScreen';
 import BotonesFiltros from '../componentes/BotonesFiltros';
 import BotonFlotante from '../componentes/BotonFlotante';
+import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
 export default function BusquedaScreen() {
   const navigation = useNavigation();
   const [buttonTransform, setButtonTransform] = useState(0);
-
+  const route = useRoute(); // Obtiene la prop route
+  const { token } = route.params;
   return (
     <View style={styles.container}>
       <HeaderScreen />
