@@ -12,6 +12,7 @@ import ListaValoresAño from '../componentes/Busqueda/ListaValoresAño';
 import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
 import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
 import axios from 'axios';
+import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
 export default function PublicacionBusqueda({ navigation }) {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
@@ -28,7 +29,9 @@ export default function PublicacionBusqueda({ navigation }) {
   const [selectedAnimalId, setSelectedAnimalId] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
-  
+  const route = useRoute(); // Obtiene la prop route
+  const { token } = route.params;
+
   const handlePost = async () => {
     const longitude = 12.09812;
     const latitude = 34.56789; 
@@ -61,7 +64,7 @@ export default function PublicacionBusqueda({ navigation }) {
       setTimeout(() => {
         setIsModalVisible(false); // Cierra el modal después de 2 segundos
         setTimeout(() => {
-          navigation.navigate('HomeScreen'); // Navega a 'HomeScreen' después de 5 segundos
+          navigation.navigate('HomeScreen', {token}); // Navega a 'HomeScreen' después de 5 segundos
         }, 1000); // 1000 milisegundos = 1 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
       // Maneja el éxito, muestra un mensaje de éxito, navega, etc.

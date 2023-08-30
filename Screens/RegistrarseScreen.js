@@ -4,8 +4,9 @@ import { Image } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormularioRegistrarse from '../componentes/FormularioRegistrarse';
 import axios, { AxiosError } from 'axios';
-//import { compare, hash } from 'react-native-bcrypt';
-import bcrypt from 'bcryptjs';
+
+import bcrypt from 'react-native-bcrypt';
+
 import BotonImagenRegis from '../componentes/BotonImagenRegis';
 
 
@@ -27,15 +28,17 @@ export function RegistrarseScreen({ navigation }) {
         name: datosFormulario.nombre,
         mail: datosFormulario.email,
         userName: datosFormulario.usuario,
-       
+        
       };
       try {
         // Hash the password with a salt of 10 rounds
         const salt = await bcrypt.genSalt(10);
         data.password = await bcrypt.hash(datosFormulario.contrasena, salt);
+        
       } catch (error) {
-        console.error('Error al hashear la contraseña:', error);
-        setErrorMessage('Hubo un error al registrar el usuario.');
+        console.error('hola')
+        //console.error('Error al hashear la contraseña:', error);
+      //  setErrorMessage('Hubo un error al registrar el usuario.');
         return;
       }
       // Hacer la petición POST al backend usando axios

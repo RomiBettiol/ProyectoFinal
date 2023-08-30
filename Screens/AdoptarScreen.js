@@ -11,7 +11,7 @@ export default function AdoptarScreen() {
   const [buttonTransform, setButtonTransform] = useState(0);
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
-
+  console.log("prueba en adoptar: "+ token);
   return (
     <View style={styles.container}>
       <HeaderScreen />
@@ -21,8 +21,9 @@ export default function AdoptarScreen() {
           <BotonesFiltrosAdopcion />
         </View>
       </ScrollView>
+      
       <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
-            <BotonFlotante />
+            <BotonFlotante token={token} />
           </View>
     </View>
   );

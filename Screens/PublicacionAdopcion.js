@@ -8,6 +8,7 @@ import ListaValoresRazaPerros from '../componentes/Busqueda/ListaValoresRazaPerr
 import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
 import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
 import axios from 'axios';
+import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
 export default function PublicacionBusqueda({ navigation }) {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
@@ -21,7 +22,9 @@ export default function PublicacionBusqueda({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [selectedAnimalId, setSelectedAnimalId] = useState(null);
-  
+  const route = useRoute();
+  const { token } = route.params;
+
   const handlePost = async () => {
     const images = "";
   
@@ -49,7 +52,7 @@ export default function PublicacionBusqueda({ navigation }) {
       setTimeout(() => {
         setIsModalVisible(false); // Cierra el modal después de 2 segundos
         setTimeout(() => {
-          navigation.navigate('HomeScreen'); // Navega a 'HomeScreen' después de 5 segundos
+          navigation.navigate('HomeScreen', {token}); // Navega a 'HomeScreen' después de 5 segundos
         }, 1000); // 1000 milisegundos = 1 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
     } catch (error) {

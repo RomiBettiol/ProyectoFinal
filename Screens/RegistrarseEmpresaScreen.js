@@ -7,6 +7,7 @@ import FormularioRegistrarse from '../componentes/FormularioRegistrarse';
 import DocumentosRegistrarseEmpresaScreen from './DocumentosRegistrarseEmpresaScreen';
 import {ConfirmacionRegistroScreen} from './ConfirmacionRegistroScreen';
 import { useNavigation } from '@react-navigation/native';
+//import bcrypt from 'bcrypt';
 
 export function RegistrarseEmpresaScreen({}){
   const [nombre, setNombre] = React.useState('');

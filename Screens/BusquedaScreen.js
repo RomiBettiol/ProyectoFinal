@@ -11,6 +11,7 @@ export default function BusquedaScreen() {
   const [buttonTransform, setButtonTransform] = useState(0);
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
+
   return (
     <View style={styles.container}>
       <HeaderScreen />
@@ -21,7 +22,7 @@ export default function BusquedaScreen() {
         </View>
       </ScrollView>
       <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
-            <BotonFlotante />
+            <BotonFlotante token={token} />
           </View>
     </View>
   );

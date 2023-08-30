@@ -7,12 +7,14 @@ const BotonFlotante = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const route = useRoute();
-
+  const { token } = route.params;
+  
+  console.log("prueba en boton flotante: "+ token);
   const handleNavigateToPublicacion = () => {
     if (route.name === 'BusquedaScreen') {
-      navigation.navigate('PublicacionBusqueda');
+      navigation.navigate('PublicacionBusqueda', {token});
     } else if (route.name === 'AdoptarScreen') {
-      navigation.navigate('PublicacionAdopcion');
+      navigation.navigate('PublicacionAdopcion', {token});
     }
   };
   
