@@ -1,9 +1,12 @@
 import React from 'react'
 import { ScrollView, View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
 const MenuHorizontal = () => {
   const navigation = useNavigation();
+  const route = useRoute(); // Obtiene la prop route
+  const { token } = route.params;
 
     return (
       <ScrollView
@@ -13,7 +16,7 @@ const MenuHorizontal = () => {
       >
         <TouchableOpacity style={styles.menuItem}
           onPress = {()=> (
-            navigation.navigate('MiPerfil')
+            navigation.navigate('MiPerfil', {token})
         )}
         >
             <Image
