@@ -11,24 +11,35 @@ export default function MiPerfil({ navigation }) {
   const [editPasswordModalVisible, setEditPasswordModalVisible] = useState(false);
   const [areFieldsEmpty, setAreFieldsEmpty] = useState(true);
   const [showFieldsEmptyMessage, setShowFieldsEmptyMessage] = useState(false);
-  const [userName, setUserName] = useState('');
   const [editUserModalVisible, setEditUserModalVisible] = useState(false);
   const [newName, setNewName] = useState('');
-  const [newEmail, setNewEmail] = useState('');
+  const [newUserName, setNewUserName] = useState('');
+  const [user, setUser] = useState ('');
+  const [passwordMismatchError, setPasswordMismatchError] = useState(false);
+  const [requisitosContrasena, setRequisitosContrasena] = useState(false);
+  const[contrasenaIgual, setContrasenaIgual] = useState(false);
+  const [passwordUpdated, setPasswordUpdated] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [userUpdated, setUserUpdated] = useState(false);
+  const [contrasenaVacia, setContrasenaVacia] = useState(false);
+  const [currentPasswordError, setCurrentPasswordError] = useState(false);
 
   console.log("perfil: ", token);
 
-  useEffect(() => {
-    const idUser = '7ea0ab93-d534-4d6e-9da3-c46db875bda3';
+  const idUser = '7ea0ab93-d534-4d6e-9da3-c46db875bda3';
 
+  //Trae info del usuario
+  useEffect(() => {
     axios.get(`https://buddy-app.loca.lt/security/user/${idUser}`, {
-    headers: {
-      Authorization: `Bearer ${token}` // Agrega el token en el encabezado
-    }
+      headers: {
+        'auth-token': token
+      }
   })
   .then(response => {
-    const user = response.data.username; // Ajusta esto según la estructura de tu respuesta
-    setUserName(user);
+    setUser(response.data);
+    setUser(response.data);
+    setNewName(response.data[0].name);
+    setNewUserName(response.data[0].userName);
   })
   .catch(error => {
     console.error('Error fetching user data:', error);
@@ -48,6 +59,7 @@ export default function MiPerfil({ navigation }) {
     setCurrentPassword('');
     setNewPassword('');
     setRepeatPassword('');
+    setCurrentPasswordError(false);
     
     setEditPasswordModalVisible(true);
     closeModal();
@@ -57,36 +69,117 @@ export default function MiPerfil({ navigation }) {
     setEditPasswordModalVisible(false);
     setAreFieldsEmpty(true);
     setShowFieldsEmptyMessage(false);
+    setRequisitosContrasena(false);
+    setPasswordMismatchError(false);
+    setCurrentPasswordError(false);
+  };
+
+  const validatePassword = (password) => {
+    const hasNumber = /\d/.test(password); // Comprueba si hay al menos un número
+    const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(password); // Comprueba si hay al menos un carácter especial
+    const isLengthValid = password.length >= 8; // Comprueba si la longitud es al menos 8 caracteres
+  
+    return hasNumber && hasSpecialChar && isLengthValid;
   };
 
   const handleUpdatePassword = () => {
     if (currentPassword === '' || newPassword === '' || repeatPassword === '') {
       setShowFieldsEmptyMessage(true);
+      setPasswordMismatchError(false);
+      setRequisitosContrasena(false);
+      setContrasenaIgual(false);
+    } else if (newPassword === currentPassword) {
+      setShowFieldsEmptyMessage(false);
+      setPasswordMismatchError(false);
+      setRequisitosContrasena(false);
+      setContrasenaIgual(true);
+    } else if (newPassword !== repeatPassword) {
+      setShowFieldsEmptyMessage(false);
+      setPasswordMismatchError(true);
+      setRequisitosContrasena(false);
+      setContrasenaIgual(false);
+    } else if (!validatePassword(newPassword)) {
+      setShowFieldsEmptyMessage(false);
+      setPasswordMismatchError(false);
+      setRequisitosContrasena(true);
+      setContrasenaIgual(false);
     } else {
       setShowFieldsEmptyMessage(false);
-      closeEditPasswordModal();
-      // Ejecutar la acción de actualización de contraseña aquí
+      setPasswordMismatchError(false);
+      setRequisitosContrasena(false);
+      setContrasenaIgual(false);
+
+      const updatedUserData = {
+        username: user[0].userName,
+        name: user[0].name,
+        lastName: user[0].lastName,
+        password: newPassword,
+        currentPassword: currentPassword,
+      };
+  
+      // Realiza la solicitud PUT a la URL con los datos actualizados
+      axios
+        .put(`https://buddy-app.loca.lt/security/user/${idUser}`, updatedUserData, {
+          headers: {
+            'auth-token': token,
+          },
+        })
+        .then(response => {
+          console.log('Contraseña actualizada con éxito:', response.data);
+          closeEditPasswordModal();
+          setPasswordUpdated(true);
+          setTimeout(() => {
+            setPasswordUpdated(false);
+          }, 2000);
+        })
+        .catch(error => {
+          console.error('Error al actualizar la contraseña:', error);
+          setCurrentPasswordError(true);
+        });
     }
-  };  
+  };      
 
   const handleUpdateUser = () => {
-    setEditUserModalVisible(false);
-  };
-
+    if (confirmPassword === '') {
+      setContrasenaVacia(true);
+      return;
+    }
+    setContrasenaVacia(false);
+    const updatedUserData = {
+      name: newName,
+      userName: newUserName,
+      currentPassword: confirmPassword,
+    };
+  
+    // Realiza la solicitud PUT para actualizar la información del usuario
+    axios
+      .put(`https://buddy-app.loca.lt/security/user/${idUser}`, updatedUserData, {
+        headers: {
+          'auth-token': token,
+        },
+      })
+      .then(response => {
+        console.log('Datos de usuario actualizados con éxito:', response.data);
+        setEditUserModalVisible(false); // Cierra el modal después de actualizar
+        setUserUpdated(true); // Activa el estado para mostrar el mensaje de confirmación
+        setTimeout(() => {
+          setUserUpdated(false); // Desactiva el mensaje de confirmación después de 2 segundos
+        }, 2000);
+      })
+      .catch(error => {
+        console.error('Error al actualizar los datos de usuario:', error);
+        setCurrentPasswordError(true);
+      });
+  };  
+  
   const openEditUserModal = () => {
     // Cerrar el modal de opciones si está abierto
     setModalVisible(false);
-  
-    // Resetear los valores de los campos al abrir el modal
-    setNewName('');
-    setNewEmail('');
-  
+    setConfirmPassword('');
     // Abrir el modal de editar usuario
     setEditUserModalVisible(true);
   };
   
-  
-
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -98,7 +191,11 @@ export default function MiPerfil({ navigation }) {
           <Image source={require('../Imagenes/usuario.png')} style={styles.imagenUsuario} />
           <View>
             <Text style={styles.titulo}>MI PERFIL</Text>
-            <Text style={styles.textoUsuario}>{userName}</Text>
+            {user ? (
+              <Text style={styles.textoUsuario}>{user[0].userName}</Text>
+            ) : (
+              <Text style={styles.textoUsuario}>Cargando...</Text>
+            )}
           </View>
           <TouchableOpacity onPress={openModal}>
             <Image source={require('../Imagenes/opciones.png')} style={styles.imagenOpciones} />
@@ -154,31 +251,66 @@ export default function MiPerfil({ navigation }) {
                 <Text>Cancelar</Text>
               </TouchableOpacity>
             </View>
+            {currentPasswordError && (
+              <Text style={styles.fieldsEmptyMessage}>La contraseña actual es incorrecta</Text>
+            )}
             {areFieldsEmpty && showFieldsEmptyMessage && (
               <Text style={styles.fieldsEmptyMessage}>Por favor, completar todos los campos</Text>
+            )}
+            {passwordMismatchError && (
+              <Text style={styles.fieldsEmptyMessage}>Las contraseñas no coinciden.</Text>
+            )}
+            {requisitosContrasena && (
+              <Text style={styles.fieldsEmptyMessage}>La contraseña debe tener:</Text>
+            )}
+            {requisitosContrasena && (
+              <Text style={styles.fieldsEmptyMessage}>8 caracteres como mínimo.</Text>
+            )}
+            {requisitosContrasena && (
+              <Text style={styles.fieldsEmptyMessage}>Un número como mínimo.</Text>
+            )}
+            {requisitosContrasena && (
+              <Text style={styles.fieldsEmptyMessage}>Un caracter especial.</Text>
+            )}
+            {contrasenaIgual && (
+              <Text style={styles.fieldsEmptyMessage}>La contraseña debe ser diferente a la actual</Text>
             )}
           </View>
         </View>
       </Modal>
-
+      {passwordUpdated && (
+        <View style={styles.confirmationMessage}>
+          <Text style={styles.confirmationText}>¡Contraseña actualizada correctamente!</Text>
+        </View>
+      )}
       <Modal animationType="slide" transparent={true} visible={editUserModalVisible} onRequestClose={() => setEditUserModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContentEditarUsuario}>
             <Text style={styles.tituloModal}>Editar Usuario</Text>
             <View style={{flexDirection: 'row'}}>
                 <Text style={styles.contraseñaActual}>Nombre</Text>
-                <TextInput style={styles.passwordInput} />
+                <TextInput
+                  style={styles.passwordInput}
+                  value={newName}
+                  onChangeText={setNewName}
+                />
             </View>
             <View style={{flexDirection: 'row'}}>
                 <Text style={styles.contraseñaActual}>Usuario</Text>
-                <TextInput style={styles.passwordInput} />
-            </View>
-            <View style={{flexDirection: 'row'}}>
-                <Text style={styles.contraseñaActual}>E-mail</Text>
-                <TextInput style={styles.passwordInput} />
+                <TextInput
+                  style={styles.passwordInput}
+                  value={newUserName}
+                  onChangeText={setNewUserName}
+                />
             </View>
             <View>
-                <TextInput placeholder='Ingrese contraseña para confirmar' style={styles.contraseñaConfirmar} secureTextEntry={true} />
+            <TextInput
+              placeholder='Ingrese contraseña para confirmar'
+              style={styles.contraseñaConfirmar}
+              secureTextEntry={true}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
             </View>
             <View style={[styles.contenedorBotones, {flexDirection:'row'}]}>
               <TouchableOpacity style={styles.botonEditarContraseña} onPress={handleUpdateUser}>
@@ -188,9 +320,20 @@ export default function MiPerfil({ navigation }) {
                 <Text>Cancelar</Text>
               </TouchableOpacity>
             </View>
+            {contrasenaVacia && (
+              <Text style={styles.fieldsEmptyMessage}>Por favor, ingrese la contraseña para confirmar.</Text>
+            )}
+            {currentPasswordError && (
+              <Text style={styles.fieldsEmptyMessage}>La contraseña actual es incorrecta</Text>
+            )}
           </View>
         </View>
       </Modal>
+      {userUpdated && (
+        <View style={styles.confirmationMessage}>
+          <Text style={styles.confirmationText}>¡Usuario actualizado!</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -218,6 +361,7 @@ const styles = StyleSheet.create({
   },
   textoUsuario: {
     marginLeft: 15,
+    fontSize: 20,
   },
   textoPublicaciones: {
     marginTop: 25,
@@ -301,6 +445,15 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 2,
     marginBottom: 10,
+    textAlign: 'center',
+  },
+  confirmationMessage: {
+    backgroundColor: 'green',
+    padding: 10,
+    marginTop: '145%',
+  },
+  confirmationText: {
+    color: 'white',
     textAlign: 'center',
   },
 });
