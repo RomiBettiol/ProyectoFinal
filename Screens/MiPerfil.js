@@ -55,8 +55,7 @@ export default function MiPerfil({ navigation }) {
   };
 
   const openEditPasswordModal = () => {
-    // Resetear los valores de los campos al abrir el modal
-    setCurrentPassword('');
+     setCurrentPassword('');
     setNewPassword('');
     setRepeatPassword('');
     setCurrentPasswordError(false);

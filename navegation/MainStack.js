@@ -44,6 +44,7 @@ import MiInfoImportante from '../Screens/MiInfoImportante';
 import EditarInfo from '../componentes/MiMascota/EditarInfo';
 import BotonInformacion from '../componentes/MiMascota/BotonInformacion';
 import AltaInformacion from '../componentes/MiMascota/AltaInformacion';
+import ReportesScreen from '../Screens/ReportesScreen';
 
 const Stack = createNativeStackNavigator()
 
@@ -229,6 +230,10 @@ export default function MainStack() {
             <Stack.Screen
                 name='AltaInformacion'
                 component={AltaInformacion}
+            />
+            <Stack.Screen
+                name='ReportesScreen'
+                component={ReportesScreen}
             />
         </Stack.Navigator>
     </NavigationContainer>

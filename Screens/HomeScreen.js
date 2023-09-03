@@ -43,37 +43,50 @@ export default function HomeScreen({navigation}) {
                     </TouchableOpacity>
                 </View>
                 <View style={[{flexDirection: 'row'}, styles.segundaFila]}>
-                <TouchableOpacity style={styles.boton1}>
-                    <Image
-                        source={require('../Imagenes/perro.png')}
-                        style={styles.imagen1}
-                    />
-                    <Text style={styles.texto}>Servicios para mi mascota</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.boton1}
-                 onPress = {()=> (
-                    navigation.navigate('MiMascotaScreen', { token })
-                )}
-                
-                >
-                    <Image
-                        source={require('../Imagenes/huella.png')}
-                        style={styles.imagen1}
-                    />
-                    <Text style={styles.texto}>Mi mascota</Text>
-                </TouchableOpacity>
-                </View>
-                <TouchableOpacity style={styles.boton1}
+                    <TouchableOpacity style={styles.boton1}>
+                        <Image
+                            source={require('../Imagenes/perro.png')}
+                            style={styles.imagen1}
+                        />
+                        <Text style={styles.texto}>Servicios para mi mascota</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boton1}
                     onPress = {()=> (
-                        navigation.navigate('ParametrizacionScreen', {token})
+                        navigation.navigate('MiMascotaScreen', { token })
                     )}
-                >
-                    <Image
-                        source={require('../Imagenes/configuracion.png')}
-                        style={styles.imagen1}
-                    />
-                    <Text style={styles.texto}>Parametrización</Text>
-                </TouchableOpacity>
+                    
+                    >
+                        <Image
+                            source={require('../Imagenes/huella.png')}
+                            style={styles.imagen1}
+                        />
+                        <Text style={styles.texto}>Mi mascota</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={[{flexDirection: 'row'}, styles.segundaFila]}>
+                    <TouchableOpacity style={styles.boton1}
+                        onPress = {()=> (
+                            navigation.navigate('ParametrizacionScreen', {token})
+                        )}
+                    >
+                        <Image
+                            source={require('../Imagenes/configuracion.png')}
+                            style={styles.imagen1}
+                        />
+                        <Text style={styles.texto}>Parametrización</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.boton1}
+                        onPress = {()=> (
+                            navigation.navigate('ReportesScreen', {token})
+                        )}
+                    >
+                        <Image
+                            source={require('../Imagenes/analitica.png')}
+                            style={styles.imagen1}
+                        />
+                        <Text style={styles.texto}>Reportes</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.informe1}>
                     <Text style={styles.textoInforme}>Informe 1</Text>
                 </View>
