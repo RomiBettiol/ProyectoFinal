@@ -1,15 +1,54 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView} from 'react-native'
 import MenuHorizontal from '../componentes/MenuHorizontal'
 import MiMascotaScreen from './MiMascotaScreen'
 import { useRoute } from '@react-navigation/native'; // Importa useRoute
-
+import axios from 'axios';
+ 
 export default function HomeScreen({navigation}) {
     const route = useRoute(); // Obtiene la prop route
+    const [quantity, setQuantity] = useState('');
+    const [adoptionQuantity, setAdoptionQuantity] = useState('');
+    const [lostPetsQuantity, setLostPetsQuantity] = useState('');
+
+    useEffect(() => {
+        // Realizar la solicitud GET utilizando Axios
+        axios.get('http://buddy-app.loca.lt/reports/count/founds-success')
+          .then((response) => {
+            // Extraer el valor quantity de la respuesta
+            const { quantity } = response.data;
+            setQuantity(quantity); // Actualizar el estado con el valor quantity
+          })
+          .catch((error) => {
+            console.error('Error al obtener el contador:', error);
+          });
+
+        // Mascotas perdidas
+        axios.get('http://buddy-app.loca.lt/reports/count/losts-actives')
+        .then((response) => {
+          // Extraer el valor quantity de la respuesta
+          const { quantity } = response.data;
+          setLostPetsQuantity(quantity); // Actualizar el estado con el valor quantity
+        })
+        .catch((error) => {
+          console.error('Error al obtener el contador:', error);
+        });
+
+        // Mascotas adoptadas
+        axios.get('http://buddy-app.loca.lt/reports/count/adoptions-success')
+        .then((response) => {
+          // Extraer el valor quantity de la respuesta
+          const { quantity } = response.data;
+          setAdoptionQuantity(quantity); // Actualizar el estado con el valor quantity
+        })
+        .catch((error) => {
+          console.error('Error al obtener el contador:', error);
+        });
+      }, []);
 
     // Accede al parámetro token
     const { token } = route.params;
-    console.log("ESTOY EN el home"+ token);
+    console.log("ESTOY EN el home: "+ token);
     return (
         <ScrollView style={styles.scroll}>
             <View style={styles.home}>
@@ -87,14 +126,17 @@ export default function HomeScreen({navigation}) {
                         <Text style={styles.texto}>Reportes</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.informe1}>
-                    <Text style={styles.textoInforme}>Informe 1</Text>
+                <View style={[styles.informe1,{flexDirection:'row'}]}>
+                    <Text style={styles.textoInforme}>Mascotas encontradas</Text>
+                    <Text style={styles.textoInforme}>{quantity}</Text>
                 </View>
-                <View style={styles.informe2}>
-                    <Text style={styles.textoInforme}>Informe 2</Text>
+                <View style={[styles.informe2, {flexDirection: 'row'}]}>
+                    <Text style={styles.textoInforme}>{adoptionQuantity}</Text>
+                    <Text style={styles.textoInforme}>Mascotas adoptadas</Text>
                 </View>
-                <View style={styles.informe3}>
-                    <Text style={styles.textoInforme}>Informe 3</Text>
+                <View style={[styles.informe3,{flexDirection:'row'}]}>
+                    <Text style={styles.textoInforme}>Mascotas perdidas</Text>
+                    <Text style={styles.textoInforme}>{lostPetsQuantity}</Text>
                 </View>
             </View>
         </ScrollView>
@@ -182,6 +224,7 @@ export default function HomeScreen({navigation}) {
     
         textoInforme: {
             fontSize: 20,
+            marginRight: 15,
         },
     
         scroll: {

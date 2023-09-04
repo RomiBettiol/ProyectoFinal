@@ -1,9 +1,85 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import Header from '../componentes/HeaderScreen'
 import BotonMenu from '../componentes/BotonMenu';
+import axios from 'axios';
 
 export default function ReportesScreen() {
+    const [quantity, setQuantity] = useState('');
+    const [servicesActiveQuantity, setServicesActiveQuantity] = useState('');
+    const [usersActiveQuantity, setUsersActiveQuantity] = useState(''); 
+    const [lostPetsQuantity, setLostPetsQuantity] = useState(''); 
+    const [adoptionPetsQuantity, setAdoptionPetsQuantity] = useState('');
+    const [adoptionQuantity, setAdoptionQuantity] = useState('');  
+
+    useEffect(() => {
+        // Realizar la solicitud GET utilizando Axios
+        axios.get('http://buddy-app.loca.lt/reports/count/founds-success')
+          .then((response) => {
+            // Extraer el valor quantity de la respuesta
+            const { quantity } = response.data;
+            setQuantity(quantity); // Actualizar el estado con el valor quantity
+          })
+          .catch((error) => {
+            console.error('Error al obtener el contador:', error);
+          });
+
+        // Servicios activos
+        axios.get('http://buddy-app.loca.lt/reports/count/services-actives')
+        .then((response) => {
+          // Extraer el valor quantity de la respuesta
+          const { quantity } = response.data;
+          setServicesActiveQuantity(quantity); // Actualizar el estado con el valor quantity
+        })
+        .catch((error) => {
+          console.error('Error al obtener el contador:', error);
+        });
+
+        // Usuarios activos
+        axios.get('http://buddy-app.loca.lt/reports/count/users-actives')
+        .then((response) => {
+          // Extraer el valor quantity de la respuesta
+          const { quantity } = response.data;
+          setUsersActiveQuantity(quantity); // Actualizar el estado con el valor quantity
+        })
+        .catch((error) => {
+          console.error('Error al obtener el contador:', error);
+        });
+
+        // Mascotas perdidas
+        axios.get('http://buddy-app.loca.lt/reports/count/losts-actives')
+        .then((response) => {
+          // Extraer el valor quantity de la respuesta
+          const { quantity } = response.data;
+          setLostPetsQuantity(quantity); // Actualizar el estado con el valor quantity
+        })
+        .catch((error) => {
+          console.error('Error al obtener el contador:', error);
+        });
+
+        // Mascotas en adopción
+        axios.get('http://buddy-app.loca.lt/reports/count/adoptions-actives')
+        .then((response) => {
+          // Extraer el valor quantity de la respuesta
+          const { quantity } = response.data;
+          setAdoptionPetsQuantity(quantity); // Actualizar el estado con el valor quantity
+        })
+        .catch((error) => {
+          console.error('Error al obtener el contador:', error);
+        });
+
+        // Mascotas adoptadas
+        axios.get('http://buddy-app.loca.lt/reports/count/adoptions-success')
+        .then((response) => {
+          // Extraer el valor quantity de la respuesta
+          const { quantity } = response.data;
+          setAdoptionQuantity(quantity); // Actualizar el estado con el valor quantity
+        })
+        .catch((error) => {
+          console.error('Error al obtener el contador:', error);
+        });
+      }, []);
+
   return (
     <View>
       <Header />
@@ -11,27 +87,27 @@ export default function ReportesScreen() {
       <View style={styles.Container}>
         <View style={[styles.informeUsuariosActivos,{flexDirection:'row'}]}>
             <Text style={styles.textoInforme}>Usuarios activos</Text>
-            <Text style={styles.textoInforme}>20</Text>
+            <Text style={styles.textoInforme}>{usersActiveQuantity}</Text>
         </View>
         <View style={[styles.informeMascotasPerdidas,{flexDirection:'row'}]}>
             <Text style={styles.textoInforme}>Mascotas perdidas</Text>
-            <Text style={styles.textoInforme}>20</Text>
+            <Text style={styles.textoInforme}>{lostPetsQuantity}</Text>
         </View>
         <View style={[styles.informeMascotasAdopcion,{flexDirection:'row'}]}>
             <Text style={styles.textoInforme}>Mascotas en adopción</Text>
-            <Text style={styles.textoInforme}>20</Text>
+            <Text style={styles.textoInforme}>{adoptionPetsQuantity}</Text>
         </View>
         <View style={[styles.informeEstablecimientosActivos,{flexDirection:'row'}]}>
             <Text style={styles.textoInforme}>Establecimientos activos</Text>
-            <Text style={styles.textoInforme}>20</Text>
+            <Text style={styles.textoInforme}>{servicesActiveQuantity}</Text>
         </View>
         <View style={[styles.informeMascotasEncontradas,{flexDirection:'row'}]}>
             <Text style={styles.textoInforme}>Mascotas encontradas</Text>
-            <Text style={styles.textoInforme}>20</Text>
+            <Text style={styles.textoInforme}>{quantity}</Text>
         </View>
         <View style={[styles.informeMascotasAdoptadas,{flexDirection:'row'}]}>
             <Text style={styles.textoInforme}>Mascotas adoptadas</Text>
-            <Text style={styles.textoInforme}>20</Text>
+            <Text style={styles.textoInforme}>{adoptionQuantity}</Text>
         </View>
       </View>
       <BotonMenu />
