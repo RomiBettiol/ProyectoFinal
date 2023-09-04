@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native';
 import Header from '../componentes/HeaderScreen';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
@@ -23,6 +23,10 @@ export default function MiPerfil({ navigation }) {
   const [userUpdated, setUserUpdated] = useState(false);
   const [contrasenaVacia, setContrasenaVacia] = useState(false);
   const [currentPasswordError, setCurrentPasswordError] = useState(false);
+  const [userPublications, setUserPublications] = useState([]);
+  const [optionsModalVisible, setOptionsModalVisible] = useState(false);
+  const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const [selectedPublication, setSelectedPublication] = useState(null);
 
   console.log("perfil: ", token);
 
@@ -34,17 +38,31 @@ export default function MiPerfil({ navigation }) {
       headers: {
         'auth-token': token
       }
-  })
-  .then(response => {
-    setUser(response.data);
-    setUser(response.data);
-    setNewName(response.data[0].name);
-    setNewUserName(response.data[0].userName);
-  })
-  .catch(error => {
-    console.error('Error fetching user data:', error);
-  });
-}, []);
+    })
+    .then(response => {
+      setUser(response.data);
+      setUser(response.data);
+      setNewName(response.data[0].name);
+      setNewUserName(response.data[0].userName);
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+  
+    // Nueva llamada para obtener las publicaciones del usuario
+    axios.get(`http://buddy-app.loca.lt/publications/publication/${idUser}`, {
+      headers: {
+        'auth-token': token
+      }
+    })
+    .then(response => {
+      setUserPublications(response.data); // Almacena las publicaciones en el estado
+      console.log('Publicaciones', response.data)
+    })
+    .catch(error => {
+      console.error('Error fetching user publications:', error);
+    });
+  }, []);
 
   const openModal = () => {
     setModalVisible(true);
@@ -183,156 +201,365 @@ export default function MiPerfil({ navigation }) {
   const [newPassword, setNewPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
 
+  const openOptionsModal = (publication) => {
+    setSelectedPublication(publication);
+    setOptionsModalVisible(true);
+  };
+
+  const closeOptionsModal = () => {
+    setSelectedPublication(null);
+    setOptionsModalVisible(false);
+  };
+
+  const openConfirmationModal = () => {
+    setConfirmationModalVisible(true);
+  };
+  
+  const closeConfirmationModal = () => {
+    setConfirmationModalVisible(false);
+  };  
+
+  const handleDeletePublication = () => {
+    console.log('Ejecutando handleDeletePublication');
+    if (selectedPublication) {
+      console.log('selectedPublication:', selectedPublication);
+      const publicationId = selectedPublication._idPublicationAdoption;
+      console.log("Publication ID:", publicationId);
+      // Realiza la solicitud DELETE a la URL con el ID de la publicación
+      axios
+        .delete(`http://buddy-app.loca.lt/publications/publication/${publicationId}`, {
+          headers: {
+            'auth-token': token, // Asegúrate de incluir el token de autenticación si es necesario
+          },
+        })
+        .then(response => {
+          console.log('Publicación eliminada con éxito:', response.data);
+          closeConfirmationModal();
+          getPublicaciones();
+        })
+        .catch(error => {
+          console.error('Error al eliminar la publicación:', error);
+          // Maneja el error de acuerdo a tus necesidades
+        });
+    } else {
+      console.log('selectedPublication es null, no se puede eliminar.');
+    }
+  };
+
+  const formatLostDate = (dateString) => {
+    const fechaObj = new Date(dateString);
+    const year = fechaObj.getFullYear();
+    const month = String(fechaObj.getMonth() + 1).padStart(2, '0');
+    const day = String(fechaObj.getDate()).padStart(2, '0');
+    return `${day}-${month}-${year}`;
+  };
+  
   return (
     <View>
         <Header />
-        <View style={[styles.principal, { flexDirection: 'row' }]}>
-          <Image source={require('../Imagenes/usuario.png')} style={styles.imagenUsuario} />
-          <View>
-            <Text style={styles.titulo}>MI PERFIL</Text>
-            {user ? (
-              <Text style={styles.textoUsuario}>{user[0].userName}</Text>
-            ) : (
-              <Text style={styles.textoUsuario}>Cargando...</Text>
-            )}
+        <ScrollView>
+          <View style={[styles.principal, { flexDirection: 'row' }]}>
+            <Image source={require('../Imagenes/usuario.png')} style={styles.imagenUsuario} />
+            <View>
+              <Text style={styles.titulo}>MI PERFIL</Text>
+              {user ? (
+                <Text style={styles.textoUsuario}>{user[0].userName}</Text>
+              ) : (
+                <Text style={styles.textoUsuario}>Cargando...</Text>
+              )}
+            </View>
+            <TouchableOpacity onPress={openModal}>
+              <Image source={require('../Imagenes/opciones.png')} style={styles.imagenOpciones} />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={openModal}>
-            <Image source={require('../Imagenes/opciones.png')} style={styles.imagenOpciones} />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
+          <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
+          {userPublications.adoptions && userPublications.adoptions.length > 0 && userPublications.adoptions.map((adoption, index) => (
+            <TouchableOpacity 
+              key={index} 
+              style={[styles.publicationContainer, {flexDirection: 'row'}]}
+            >
+              <Image
+                source={require('../Imagenes/imagenPublicaciones.jpg')}
+                style={styles.imagenPublicaciones}
+              />
+              <View>
+                <View style={[styles.informacionPublicacion, {flexDirection: 'row'}]}>
+                  <Text style={styles.publicationTitle}>{adoption.title}</Text>
+                  <TouchableOpacity style={styles.botonInformacion}>
+                    <Text>En adopción</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => openOptionsModal(adoption)}>
+                    <Image
+                      source={require('../Imagenes/opciones.png')}
+                      style={styles.imagenOpcionesPublicaciones}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={[styles.containerfiltros, {flexDirection: 'row'}]}>
+                  <View style={{flexDirection: 'row'}}>
+                    <Image
+                      source={require('../Imagenes/marcador-de-posicion.png')}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{adoption.locality.localityName}</Text>
+                  </View>
+                  <View style={{flexDirection: 'row'}}>
+                    <Image
+                      source={require('../Imagenes/hueso.png')}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{adoption.breed.petBreedName}</Text>
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+          {userPublications.searchs && userPublications.searchs.length > 0 && userPublications.searchs.map((search, index) => (
+            <TouchableOpacity key={index} style={[styles.publicationContainer, {flexDirection: 'row'}]}>
+              <Image
+                source={require('../Imagenes/imagenPublicaciones.jpg')}
+                style={styles.imagenPublicaciones}
+              />
+              <View>
+                <View style={[styles.informacionPublicacion, {flexDirection: 'row'}]}>
+                  <Text style={styles.publicationTitle}>{search.title}</Text>
+                  <TouchableOpacity style={styles.botonInformacion}>
+                    <Text>En búsqueda</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => openOptionsModal(search)}>
+                      <Image
+                        source={require('../Imagenes/opciones.png')}
+                        style={styles.imagenOpcionesPublicaciones}
+                      />
+                    </TouchableOpacity>
+                </View>
+                <View style={[styles.containerfiltros, {flexDirection: 'row'}]}>
+                    <View style={{flexDirection: 'row'}}>
+                      <Image
+                        source={require('../Imagenes/marcador-de-posicion.png')}
+                        style={styles.imagenFiltros}
+                      />
+                      <Text>{search.locality.localityName}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <Image
+                        source={require('../Imagenes/hueso.png')}
+                        style={styles.imagenFiltros}
+                      />
+                      <Text>{search.breed.petBreedName}</Text>
+                    </View>
+                </View>
+                <View style={[{flexDirection: 'row'},styles.containerFecha]}>
+                  <Image
+                    source={require('../Imagenes/calendario.png')}
+                    style={styles.imagenFiltros}
+                  />
+                  <Text>{formatLostDate(search.lostDate)}</Text>
+                  <Text
+                    style={
+                      search.isFound
+                        ? styles.textoInformacionBusquedaEncontrada // Usar el estilo para "Encontrada"
+                        : styles.textoInformacionBusquedaPerdida // Usar el estilo para "Perdida"
+                    }
+                  >
+                    {search.isFound ? 'Encontrada' : 'Perdida'}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
 
-        {/* Modal */}
-        <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={closeModal}>
+          {/* Modal */}
+          <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={closeModal}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <TouchableOpacity style={styles.opcionesModal} onPress={openEditPasswordModal}>
+                  <Text>Editar Contraseña</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.opcionesModal} onPress={openEditUserModal}>
+                  <Text>Editar Usuario</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.opcionesModal}>
+                  <Text>Cerrar Sesión</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.cancelarModal} onPress={closeModal}>
+                  <Text>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+
+          {/* Editar Contraseña Modal */}
+          <Modal animationType="slide" transparent={true} visible={editPasswordModalVisible} onRequestClose={closeEditPasswordModal}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContentEditarContraseña}>
+                <Text style={styles.tituloModal}>Actualizar contraseña</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.contraseñaActual}>Contraseña actual</Text>
+                  <TextInput style={styles.passwordInput} secureTextEntry={true} value={currentPassword} onChangeText={setCurrentPassword} />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.contraseñaActual}>Nueva contraseña</Text>
+                  <TextInput style={styles.passwordInput} secureTextEntry={true}  value={newPassword} onChangeText={setNewPassword} />
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.contraseñaActual}>Repetir contraseña</Text>
+                  <TextInput style={styles.passwordInput} secureTextEntry={true}  value={repeatPassword} onChangeText={setRepeatPassword}/>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={[styles.botonEditarContraseña, areFieldsEmpty && styles.disabledButton]}
+                  onPress={handleUpdatePassword}
+                >
+                  <Text>Actualizar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.botonEditarContraseña} onPress={closeEditPasswordModal}>
+                  <Text>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+              {currentPasswordError && (
+                <Text style={styles.fieldsEmptyMessage}>La contraseña actual es incorrecta</Text>
+              )}
+              {areFieldsEmpty && showFieldsEmptyMessage && (
+                <Text style={styles.fieldsEmptyMessage}>Por favor, completar todos los campos</Text>
+              )}
+              {passwordMismatchError && (
+                <Text style={styles.fieldsEmptyMessage}>Las contraseñas no coinciden.</Text>
+              )}
+              {requisitosContrasena && (
+                <Text style={styles.fieldsEmptyMessage}>La contraseña debe tener:</Text>
+              )}
+              {requisitosContrasena && (
+                <Text style={styles.fieldsEmptyMessage}>8 caracteres como mínimo.</Text>
+              )}
+              {requisitosContrasena && (
+                <Text style={styles.fieldsEmptyMessage}>Un número como mínimo.</Text>
+              )}
+              {requisitosContrasena && (
+                <Text style={styles.fieldsEmptyMessage}>Un caracter especial.</Text>
+              )}
+              {contrasenaIgual && (
+                <Text style={styles.fieldsEmptyMessage}>La contraseña debe ser diferente a la actual</Text>
+              )}
+            </View>
+          </View>
+        </Modal>
+        {passwordUpdated && (
+          <View style={styles.confirmationMessage}>
+            <Text style={styles.confirmationText}>¡Contraseña actualizada correctamente!</Text>
+          </View>
+        )}
+        <Modal animationType="slide" transparent={true} visible={editUserModalVisible} onRequestClose={() => setEditUserModalVisible(false)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContentEditarUsuario}>
+              <Text style={styles.tituloModal}>Editar Usuario</Text>
+              <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.contraseñaActual}>Nombre</Text>
+                  <TextInput
+                    style={styles.passwordInput}
+                    value={newName}
+                    onChangeText={setNewName}
+                  />
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.contraseñaActual}>Usuario</Text>
+                  <TextInput
+                    style={styles.passwordInput}
+                    value={newUserName}
+                    onChangeText={setNewUserName}
+                  />
+              </View>
+              <View>
+              <TextInput
+                placeholder='Ingrese contraseña para confirmar'
+                style={styles.contraseñaConfirmar}
+                secureTextEntry={true}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+              />
+              </View>
+              <View style={[styles.contenedorBotones, {flexDirection:'row'}]}>
+                <TouchableOpacity style={styles.botonEditarContraseña} onPress={handleUpdateUser}>
+                  <Text>Actualizar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.botonEditarContraseña} onPress={() => setEditUserModalVisible(false)}>
+                  <Text>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+              {contrasenaVacia && (
+                <Text style={styles.fieldsEmptyMessage}>Por favor, ingrese la contraseña para confirmar.</Text>
+              )}
+              {currentPasswordError && (
+                <Text style={styles.fieldsEmptyMessage}>La contraseña actual es incorrecta</Text>
+              )}
+            </View>
+          </View>
+        </Modal>
+        {userUpdated && (
+          <View style={styles.confirmationMessage}>
+            <Text style={styles.confirmationText}>¡Usuario actualizado!</Text>
+          </View>
+        )}
+
+        {/* Modal editar o eliminar*/}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={optionsModalVisible}
+          onRequestClose={closeOptionsModal}
+        >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <TouchableOpacity style={styles.opcionesModal} onPress={openEditPasswordModal}>
-                <Text>Editar Contraseña</Text>
+              <TouchableOpacity
+                style={styles.opcionesModal}
+                onPress={() => {
+                   closeOptionsModal();
+                }}
+              >
+                <Text>Modificar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.opcionesModal} onPress={openEditUserModal}>
-                <Text>Editar Usuario</Text>
+              <TouchableOpacity
+                style={styles.opcionesModal}
+                onPress={() => {
+                  closeOptionsModal();
+                  openConfirmationModal();
+                }}
+              >
+                <Text>Eliminar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.opcionesModal}>
-                <Text>Cerrar Sesión</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.cancelarModal} onPress={closeModal}>
+              <TouchableOpacity style={styles.cancelarModal} onPress={closeOptionsModal}>
                 <Text>Cancelar</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
 
-        {/* Editar Contraseña Modal */}
-        <Modal animationType="slide" transparent={true} visible={editPasswordModalVisible} onRequestClose={closeEditPasswordModal}>
+        {/*Modal eliminacion*/}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={confirmationModalVisible}
+          onRequestClose={closeConfirmationModal}
+        >
           <View style={styles.modalContainer}>
-            <View style={styles.modalContentEditarContraseña}>
-              <Text style={styles.tituloModal}>Actualizar contraseña</Text>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={styles.contraseñaActual}>Contraseña actual</Text>
-                <TextInput style={styles.passwordInput} secureTextEntry={true} value={currentPassword} onChangeText={setCurrentPassword} />
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={styles.contraseñaActual}>Nueva contraseña</Text>
-                <TextInput style={styles.passwordInput} secureTextEntry={true}  value={newPassword} onChangeText={setNewPassword} />
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={styles.contraseñaActual}>Repetir contraseña</Text>
-                <TextInput style={styles.passwordInput} secureTextEntry={true}  value={repeatPassword} onChangeText={setRepeatPassword}/>
-              </View>
-              <View style={{flexDirection: 'row'}}>
+            <View style={styles.modalContent}>
+              <Text style={styles.tituloModal}>¿Estás seguro?</Text>
               <TouchableOpacity
-                style={[styles.botonEditarContraseña, areFieldsEmpty && styles.disabledButton]}
-                onPress={handleUpdatePassword}
+                style={styles.cancelarModal}
+                onPress={handleDeletePublication}
               >
-                <Text>Actualizar</Text>
+                <Text>Eliminar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.botonEditarContraseña} onPress={closeEditPasswordModal}>
+              <TouchableOpacity
+                style={styles.cancelarModal}
+                onPress={closeConfirmationModal}
+              >
                 <Text>Cancelar</Text>
               </TouchableOpacity>
             </View>
-            {currentPasswordError && (
-              <Text style={styles.fieldsEmptyMessage}>La contraseña actual es incorrecta</Text>
-            )}
-            {areFieldsEmpty && showFieldsEmptyMessage && (
-              <Text style={styles.fieldsEmptyMessage}>Por favor, completar todos los campos</Text>
-            )}
-            {passwordMismatchError && (
-              <Text style={styles.fieldsEmptyMessage}>Las contraseñas no coinciden.</Text>
-            )}
-            {requisitosContrasena && (
-              <Text style={styles.fieldsEmptyMessage}>La contraseña debe tener:</Text>
-            )}
-            {requisitosContrasena && (
-              <Text style={styles.fieldsEmptyMessage}>8 caracteres como mínimo.</Text>
-            )}
-            {requisitosContrasena && (
-              <Text style={styles.fieldsEmptyMessage}>Un número como mínimo.</Text>
-            )}
-            {requisitosContrasena && (
-              <Text style={styles.fieldsEmptyMessage}>Un caracter especial.</Text>
-            )}
-            {contrasenaIgual && (
-              <Text style={styles.fieldsEmptyMessage}>La contraseña debe ser diferente a la actual</Text>
-            )}
           </View>
-        </View>
-      </Modal>
-      {passwordUpdated && (
-        <View style={styles.confirmationMessage}>
-          <Text style={styles.confirmationText}>¡Contraseña actualizada correctamente!</Text>
-        </View>
-      )}
-      <Modal animationType="slide" transparent={true} visible={editUserModalVisible} onRequestClose={() => setEditUserModalVisible(false)}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContentEditarUsuario}>
-            <Text style={styles.tituloModal}>Editar Usuario</Text>
-            <View style={{flexDirection: 'row'}}>
-                <Text style={styles.contraseñaActual}>Nombre</Text>
-                <TextInput
-                  style={styles.passwordInput}
-                  value={newName}
-                  onChangeText={setNewName}
-                />
-            </View>
-            <View style={{flexDirection: 'row'}}>
-                <Text style={styles.contraseñaActual}>Usuario</Text>
-                <TextInput
-                  style={styles.passwordInput}
-                  value={newUserName}
-                  onChangeText={setNewUserName}
-                />
-            </View>
-            <View>
-            <TextInput
-              placeholder='Ingrese contraseña para confirmar'
-              style={styles.contraseñaConfirmar}
-              secureTextEntry={true}
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-            />
-            </View>
-            <View style={[styles.contenedorBotones, {flexDirection:'row'}]}>
-              <TouchableOpacity style={styles.botonEditarContraseña} onPress={handleUpdateUser}>
-                <Text>Actualizar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.botonEditarContraseña} onPress={() => setEditUserModalVisible(false)}>
-                <Text>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-            {contrasenaVacia && (
-              <Text style={styles.fieldsEmptyMessage}>Por favor, ingrese la contraseña para confirmar.</Text>
-            )}
-            {currentPasswordError && (
-              <Text style={styles.fieldsEmptyMessage}>La contraseña actual es incorrecta</Text>
-            )}
-          </View>
-        </View>
-      </Modal>
-      {userUpdated && (
-        <View style={styles.confirmationMessage}>
-          <Text style={styles.confirmationText}>¡Usuario actualizado!</Text>
-        </View>
-      )}
+        </Modal>
+      </ScrollView>
     </View>
   );
 };
@@ -454,5 +681,72 @@ const styles = StyleSheet.create({
   confirmationText: {
     color: 'white',
     textAlign: 'center',
+  },
+  publicationContainer:{
+    padding: 1,
+    paddingRight: 15,
+    backgroundColor: '#f0f0f0',
+    margin: 5,
+    borderRadius: 15,
+    elevation: 4,
+    width: '90%',
+    marginLeft: 25,
+    marginTop: 15,
+    alignItems: 'center',
+  },
+  imagenOpcionesPublicaciones:{
+    width: 20,
+    height: 20,
+    marginTop: 15,
+    marginLeft: 20,
+  },
+  botonInformacion: {
+    backgroundColor: '#f0f0f0',
+    elevation: 5,
+    height: 30,
+    padding: 5,
+    borderRadius: 10,
+    marginTop: 5,
+    marginLeft: 20,
+  },
+  informacionPublicacion: {
+    justifyContent: 'space-between'
+  },
+  imagenFiltros: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+    marginLeft: 10,
+  },
+  containerfiltros: {
+    marginBottom: 10,
+    marginLeft: 5,
+    marginTop: 15,
+  },
+  containerFecha: {
+    marginBottom: 10,
+    marginLeft: 5,
+    marginTop: 5,
+  },
+  publicationTitle: {
+    marginTop: 10,
+    fontSize: 18,
+    marginLeft: 15,
+  },
+  imagenPublicaciones: {
+    width: '30%',
+    height: 100,
+    borderRadius: 15,
+  },
+  textoInformacionBusquedaEncontrada: {
+    marginLeft: 15,
+    backgroundColor: '#CBC2C2',
+    padding: 5,
+  },
+
+  textoInformacionBusquedaPerdida: {
+    marginLeft: 15,
+    backgroundColor: '#58DCD4',
+    padding: 5,
   },
 });
