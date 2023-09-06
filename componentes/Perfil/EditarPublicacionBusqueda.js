@@ -5,46 +5,58 @@ import ListaValoresColor from '../componentes/Busqueda/ListaValoresColor';
 import ListaValoresAnimal from '../componentes/Busqueda/ListaValoresAnimal';
 import ListaValoresZona from '../componentes/Busqueda/ListaValoresZona';
 import ListaValoresRazaPerros from '../componentes/Busqueda/ListaValoresRazaPerros';
+import Mascotas from '../componentes/Busqueda/Mascotas';
+import ListaValoresDias from '../componentes/Busqueda/ListaValoresDias';
+import ListaValoresMeses from '../componentes/Busqueda/ListaValoresMeses';
+import ListaValoresAño from '../componentes/Busqueda/ListaValoresAño';
 import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
 import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
-export default function PublicacionBusqueda({ navigation }) {
+export default function EditarPublicacionBusqueda({ navigation }) {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
   const [selectedColorId, setSelectedColorId] = useState('');
   const [selectedLocality, setSelectedLocality] = useState('');
   const [selectedBreedId, setSelectedBreedId] = useState('');
+  const [selectedIsFound, setSelectedIsFound] = useState(null);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [selectedAnimalId, setSelectedAnimalId] = useState(null);
-  const route = useRoute();
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
+  const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
 
   const handlePost = async () => {
+    const longitude = 12.09812;
+    const latitude = 34.56789; 
     const images = "";
+    const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay} 10:30:00`;
   
     try {
       const postData = {
         title,
         description,
+        longitude,
+        latitude,
         images,
         idUser: "7ea0ab93-d534-4d6e-9da3-c46db875bda3",   
         idPetType: selectedAnimalId,  
         idPetBreed: selectedBreedId,
         idPetColor: selectedColorId,         
         idLocality: selectedLocality,
-        contactPhone,
-        newOwnerName: "",
+        isFound: selectedIsFound,
+        lostDate: "2023-07-19 10:30:00", 
       };
   
       console.log('Datos a publicar:', postData);
   
-      const response = await axios.post('http://buddy-app1.loca.lt/publications/publication/adoption', postData);
+      const response = await axios.post('http://buddy-app1.loca.lt/publications/publication/search', postData);
       console.log('Solicitud POST exitosa:', response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);
@@ -55,6 +67,7 @@ export default function PublicacionBusqueda({ navigation }) {
           navigation.navigate('HomeScreen', {token}); // Navega a 'HomeScreen' después de 5 segundos
         }, 1000); // 1000 milisegundos = 1 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
+      // Maneja el éxito, muestra un mensaje de éxito, navega, etc.
     } catch (error) {
       console.error('Error al realizar la solicitud POST:', error);
       setIsSuccessful(false);
@@ -64,6 +77,7 @@ export default function PublicacionBusqueda({ navigation }) {
         setIsModalVisible(false); // Cierra el modal después de 3 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
       // Maneja el error, muestra un mensaje de error, etc.
+      // Maneja el error, muestra un mensaje de error, etc.
     }
   };
 
@@ -72,7 +86,7 @@ export default function PublicacionBusqueda({ navigation }) {
       <HeaderScreen />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
-          <Text style={styles.titulo}>Publica tu mascota para adoptar</Text>
+          <Text style={styles.titulo}>Publica tu mascota</Text>
           <ImagePickerComponent />
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
@@ -94,33 +108,29 @@ export default function PublicacionBusqueda({ navigation }) {
             />
           </View>
             <View style={styles.subcontenedor3}>
-            <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
+              <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
               <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
               <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
               {selectedAnimal && (
                 <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
               )}
             </View>
-            <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
-              <Text style={styles.tituloPublicacion}>Celular</Text>
-              <TextInput
-                style={styles.inputTexto}
-                value={contactPhone}
-                onChangeText={text => {
-                  const numericValue = text.replace(/[^0-9]/g, '');
-                  setContactPhone(numericValue);
-                }}
-              />
-            </View>
+            <Mascotas selectedIsFound={selectedIsFound} onOptionSelect={setSelectedIsFound} />
+          <Text style={styles.textoFecha}>Fecha de extravío</Text>
+          <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
+          <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
+          {selectedMonth && <ListaValoresDias selectedMonth={selectedMonth} setSelectedDay={setSelectedDay} />}
+          <ListaValoresAño setSelectedYear={setSelectedYear} />
+          </View>
         </View>
-        <Modal visible={isModalVisible} animationType="slide" transparent={true} onRequestClose={() => setIsModalVisible(false)}>
+      </ScrollView>
+      <Modal visible={isModalVisible} animationType="slide" transparent={true} onRequestClose={() => setIsModalVisible(false)}>
           <View style={[styles.modalContainer, isSuccessful ? styles.successModalBackground : styles.errorModalBackground]}>
             <View style={[styles.modalContent, styles.bottomModalContent]}>
               <Text style={[styles.modalMessage, isSuccessful ? styles.successModalText : styles.errorModalText]}>{modalMessage}</Text>
             </View>
           </View>
-        </Modal>
-      </ScrollView>
+      </Modal>
       <BotonPublicar onPress={handlePost} />
     </View>
   );

@@ -68,7 +68,7 @@ export default function AltaInformacion({ visible, onClose }) {
                       
                             try {
                                                  
-                              const response = await axios.post(`https://buddy-app.loca.lt/mypet/information/${mascotaId}`, data);
+                              const response = await axios.post(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}`, data);
                           
                               console.log('Respuesta del servidor:', response.data);
                           

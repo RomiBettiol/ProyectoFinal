@@ -7,7 +7,7 @@ const ModalEditarRaza = ({ isVisible, onClose, onEdit, editingBreed }) => {
 
   const handleEditBreed = () => {
     axios
-      .put(`http://buddy-app.loca.lt/parameters/petBreed/${editingBreed.idPetBreed}`, {
+      .put(`http://buddy-app1.loca.lt/parameters/petBreed/${editingBreed.idPetBreed}`, {
         petBreedName: breedName,
       })
       .then((response) => {

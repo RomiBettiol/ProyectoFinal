@@ -105,7 +105,7 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
                     birthDate: `${selectedDay}-${selectedMonth}-${selectedYear}`,
                   };
 
-                  const response = await axios.post('https://buddy-app.loca.lt/mypet/pet/', data, config);
+                  const response = await axios.post('https://buddy-app1.loca.lt/mypet/pet/', data, config);
               
                   console.log('Respuesta del servidor:', response.data);
               

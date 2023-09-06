@@ -34,7 +34,7 @@ export default function MisTurnos() {
         
         async function fetchTurnos() {
             try {
-                const response = await axios.get(`https://buddy-app.loca.lt/mypet/turn/${mascotaId}`);
+                const response = await axios.get(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}`);
                 
                 if (Array.isArray(response.data.turns)) {
                     setTurnos(response.data.turns);
@@ -102,7 +102,7 @@ export default function MisTurnos() {
     const handleDeleteTurno = async () => {
         console.log(turno.idTurn)
         try {
-            const response = await axios.delete(`https://buddy-app.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
+            const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
             console.log('Turno eliminado:', response.data);
             } catch (error) {
                 console.error('Error eliminando la mascota:', error);

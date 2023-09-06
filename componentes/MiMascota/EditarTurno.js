@@ -31,7 +31,7 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
     };
     console.log(turno.idTurn)
     try {
-        const response = await axios.put(`https://buddy-app.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,{
+        const response = await axios.put(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,{
           titleTurn: updatedData.titleTurn,
           descriptionTurn: updatedData.descriptionTurn,
           turnDate: updatedData.turnDate

@@ -31,7 +31,7 @@ export default function MiInfoImportante() {
         
         async function fetchInformacion() {
             try {
-                const response = await axios.get(`https://buddy-app.loca.lt/mypet/information/${mascotaId}`);
+                const response = await axios.get(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}`);
                 
                 if (Array.isArray(response.data.information)) {
                     setInformacion(response.data.information);
@@ -77,7 +77,7 @@ export default function MiInfoImportante() {
     const handleDeleteInfo= async () => {
         console.log(info.idInformation)
         try {
-            const response = await axios.delete(`https://buddy-app.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`);
+            const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`);
             console.log('Info eliminado:', response.data);
             } catch (error) {
                 console.error('Error eliminando la mascota:', error);

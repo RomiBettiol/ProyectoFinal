@@ -54,7 +54,7 @@ const FilterButtonsExample = () => {
       setLoading(true);
     
       axios
-        .get('https://buddy-app.loca.lt/publications/publication?modelType=search', {
+        .get('https://buddy-app1.loca.lt/publications/publication?modelType=search', {
           headers: {
             'Content-Type': 'application/json',
             'Bypass-Tunnel-Reminder':''

@@ -5,7 +5,7 @@ import axios from 'axios';
 const EliminarMascotaModal = ({ visible, onCancel, onConfirm, mascotaId }) => {
   const eliminarMascota = async () => {
     try {
-      await axios.delete(`https://buddy-app.loca.lt/mypet/pet/${mascotaId}`);
+      await axios.delete(`https://buddy-app1.loca.lt/mypet/pet/${mascotaId}`);
       onConfirm();
     } catch (error) {
       console.error('Error eliminando la mascota:', error);

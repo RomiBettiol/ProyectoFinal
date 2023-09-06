@@ -19,7 +19,7 @@ const ModalAgregarLocalidad = ({ isVisible, onClose, onAdd, regions }) => {
     };
 
     axios
-      .post('http://buddy-app.loca.lt/parameters/locality', newLocalidad)
+      .post('http://buddy-app1.loca.lt/parameters/locality', newLocalidad)
       .then((response) => {
         onAdd(newLocalidad);
         setLocalityName('');

@@ -18,7 +18,7 @@ const FiltrarModal = ({ modalVisible, closeModal}) => {
 
   const fetchLocalities = async () => {
     try {
-      const response = await axios.get('http://buddy-app.loca.lt/parameters/locality/');
+      const response = await axios.get('http://buddy-app1.loca.lt/parameters/locality/');
       const data = response.data.localities;
       setLocalities(data);
     } catch (error) {
@@ -28,7 +28,7 @@ const FiltrarModal = ({ modalVisible, closeModal}) => {
 
   const fetchColors = async () => {
     try {
-      const response = await axios.get('http://buddy-app.loca.lt/parameters/petColor/');
+      const response = await axios.get('http://buddy-app1.loca.lt/parameters/petColor/');
       const data = response.data.petColors;
       setColors(data);
     } catch (error) {
@@ -38,7 +38,7 @@ const FiltrarModal = ({ modalVisible, closeModal}) => {
 
   const fetchAnimalTypes = async () => {
     try {
-      const response = await axios.get('http://buddy-app.loca.lt/parameters/petType/');
+      const response = await axios.get('http://buddy-app1.loca.lt/parameters/petType/');
       const data = response.data.petTypes;
       setAnimalTypes(data);
     } catch (error) {
@@ -60,7 +60,7 @@ const FiltrarModal = ({ modalVisible, closeModal}) => {
 
   const fetchAnimalBreeds = async (animalType) => {
     try {
-      const response = await axios.get(`http://buddy-app.loca.lt/parameters/petBreed/byType/${animalType}`);
+      const response = await axios.get(`http://buddy-app1.loca.lt/parameters/petBreed/byType/${animalType}`);
       const data = response.data;
       console.log('Mostrar:' + data);
       setAnimalBreeds(data);

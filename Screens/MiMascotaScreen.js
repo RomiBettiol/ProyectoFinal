@@ -101,7 +101,7 @@ export default function MiMascotaScreen() {
     
     try {
       console.log("estoy adentro del try")                                
-      const response = await axios.get('https://buddy-app.loca.lt/mypet/pet',{
+      const response = await axios.get('https://buddy-app1.loca.lt/mypet/pet',{
         headers: {
           'auth-token': token
         }

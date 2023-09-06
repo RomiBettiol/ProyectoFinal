@@ -7,7 +7,7 @@ const ModalEditar = ({ isVisible, onClose, onEdit, editingZone }) => {
 
   const handleEdit = () => {
     axios
-      .put(`http://buddy-app.loca.lt/parameters/locality/${editingZone.idLocality}`, {
+      .put(`http://buddy-app1.loca.lt/parameters/locality/${editingZone.idLocality}`, {
         localityName: localities,
       })
       .then((response) => {

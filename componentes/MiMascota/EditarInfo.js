@@ -19,7 +19,7 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
     };
     console.log(info.idInformation)
     try {
-        const response = await axios.put(`https://buddy-app.loca.lt/mypet/information/${mascotaId}/${idInformation}`,{
+        const response = await axios.put(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}/${idInformation}`,{
           titleInformation: updatedData.titleInformation,
           descriptionInformation: updatedData.descriptionInformation,
         

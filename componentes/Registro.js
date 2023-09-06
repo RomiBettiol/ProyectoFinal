@@ -29,7 +29,7 @@ const Registro = () => {
   const handleIngresarPress = async () => {
     if (formValid) {
       try {
-        const response = await axios.post('https://buddy-app.loca.lt/security/auth/login', {
+        const response = await axios.post('https://buddy-app1.loca.lt/security/auth/login', {
           headers: {
             'Content-Type': 'application/json',
           },

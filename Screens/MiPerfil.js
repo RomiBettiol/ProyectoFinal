@@ -34,7 +34,7 @@ export default function MiPerfil({ navigation }) {
 
   //Trae info del usuario
   useEffect(() => {
-    axios.get(`https://buddy-app.loca.lt/security/user/${idUser}`, {
+    axios.get(`https://buddy-app1.loca.lt/security/user/${idUser}`, {
       headers: {
         'auth-token': token
       }
@@ -50,7 +50,7 @@ export default function MiPerfil({ navigation }) {
     });
   
     // Nueva llamada para obtener las publicaciones del usuario
-    axios.get(`http://buddy-app.loca.lt/publications/publication/${idUser}`, {
+    axios.get(`http://buddy-app1.loca.lt/publications/publication/${idUser}`, {
       headers: {
         'auth-token': token
       }
@@ -136,7 +136,7 @@ export default function MiPerfil({ navigation }) {
   
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
-        .put(`https://buddy-app.loca.lt/security/user/${idUser}`, updatedUserData, {
+        .put(`https://buddy-app1.loca.lt/security/user/${idUser}`, updatedUserData, {
           headers: {
             'auth-token': token,
           },
@@ -170,7 +170,7 @@ export default function MiPerfil({ navigation }) {
   
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
-      .put(`https://buddy-app.loca.lt/security/user/${idUser}`, updatedUserData, {
+      .put(`https://buddy-app1.loca.lt/security/user/${idUser}`, updatedUserData, {
         headers: {
           'auth-token': token,
         },
@@ -204,7 +204,10 @@ export default function MiPerfil({ navigation }) {
   const openOptionsModal = (publication) => {
     setSelectedPublication(publication);
     setOptionsModalVisible(true);
-  };
+  }
+  useEffect(() => {
+    console.log('selectedPublication (after update): ', selectedPublication);
+  }, [selectedPublication]); 
 
   const closeOptionsModal = () => {
     setSelectedPublication(null);
@@ -219,33 +222,30 @@ export default function MiPerfil({ navigation }) {
     setConfirmationModalVisible(false);
   };  
 
-  const handleDeletePublication = () => {
-    console.log('Ejecutando handleDeletePublication');
-    if (selectedPublication) {
-      console.log('selectedPublication:', selectedPublication);
-      const publicationId = selectedPublication._idPublicationAdoption;
-      console.log("Publication ID:", publicationId);
-      // Realiza la solicitud DELETE a la URL con el ID de la publicación
+  const handleDeletePublication = (publicationToDelete) => {
+    if (publicationToDelete) {
+      const idPublicationToDelete = publicationToDelete.idPublicationAdoption || publicationToDelete.idSearch;
+  
       axios
-        .delete(`http://buddy-app.loca.lt/publications/publication/${publicationId}`, {
+        .delete(`https://buddy-app1.loca.lt/publications/publication/${idPublicationToDelete}`, {
           headers: {
-            'auth-token': token, // Asegúrate de incluir el token de autenticación si es necesario
+            'auth-token': token,
           },
         })
         .then(response => {
           console.log('Publicación eliminada con éxito:', response.data);
           closeConfirmationModal();
-          getPublicaciones();
+          // Realiza cualquier actualización necesaria aquí.
         })
         .catch(error => {
           console.error('Error al eliminar la publicación:', error);
-          // Maneja el error de acuerdo a tus necesidades
+          // Maneja el error de eliminación aquí, si es necesario.
         });
     } else {
-      console.log('selectedPublication es null, no se puede eliminar.');
+      console.error('La publicación a eliminar es nula');
     }
-  };
-
+  }; 
+    
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const year = fechaObj.getFullYear();
@@ -288,7 +288,7 @@ export default function MiPerfil({ navigation }) {
                   <TouchableOpacity style={styles.botonInformacion}>
                     <Text>En adopción</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => openOptionsModal(adoption)}>
+                  <TouchableOpacity onPress={() => openOptionsModal(adoption.idPublicationAdoption)}>
                     <Image
                       source={require('../Imagenes/opciones.png')}
                       style={styles.imagenOpcionesPublicaciones}
@@ -326,7 +326,7 @@ export default function MiPerfil({ navigation }) {
                   <TouchableOpacity style={styles.botonInformacion}>
                     <Text>En búsqueda</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => openOptionsModal(search)}>
+                  <TouchableOpacity onPress={() => openOptionsModal(search.idPublicationSearch)}>
                       <Image
                         source={require('../Imagenes/opciones.png')}
                         style={styles.imagenOpcionesPublicaciones}
@@ -513,7 +513,7 @@ export default function MiPerfil({ navigation }) {
               <TouchableOpacity
                 style={styles.opcionesModal}
                 onPress={() => {
-                   closeOptionsModal();
+                   openOptionsModal();
                 }}
               >
                 <Text>Modificar</Text>
@@ -521,8 +521,8 @@ export default function MiPerfil({ navigation }) {
               <TouchableOpacity
                 style={styles.opcionesModal}
                 onPress={() => {
-                  closeOptionsModal();
-                  openConfirmationModal();
+                  setOptionsModalVisible(false); // Cierra el modal de opciones
+                  setConfirmationModalVisible(true); // Abre el modal de confirmación
                 }}
               >
                 <Text>Eliminar</Text>
@@ -546,7 +546,9 @@ export default function MiPerfil({ navigation }) {
               <Text style={styles.tituloModal}>¿Estás seguro?</Text>
               <TouchableOpacity
                 style={styles.cancelarModal}
-                onPress={handleDeletePublication}
+                onPress={() => {
+                  handleDeletePublication(selectedPublication);
+                }}
               >
                 <Text>Eliminar</Text>
               </TouchableOpacity>

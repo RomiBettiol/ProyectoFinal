@@ -10,7 +10,7 @@ import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
-export default function PublicacionBusqueda({ navigation }) {
+export default function EditarPublicacionAdopcion({ navigation }) {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -72,7 +72,7 @@ export default function PublicacionBusqueda({ navigation }) {
       <HeaderScreen />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
-          <Text style={styles.titulo}>Publica tu mascota para adoptar</Text>
+          <Text style={styles.titulo}>Edita tu mascota</Text>
           <ImagePickerComponent />
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>

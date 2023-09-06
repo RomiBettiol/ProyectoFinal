@@ -55,7 +55,7 @@ const BotonesFiltrosAdopcion = () => {
       setLoading(true);
     
       axios
-        .get('https://buddy-app.loca.lt/publications/publication?modelType=adoption', {
+        .get('https://buddy-app1.loca.lt/publications/publication?modelType=adoption', {
           headers: {
             'Content-Type': 'application/json',
             'Bypass-Tunnel-Reminder':''

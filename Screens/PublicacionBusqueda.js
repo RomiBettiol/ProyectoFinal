@@ -56,7 +56,7 @@ export default function PublicacionBusqueda({ navigation }) {
   
       console.log('Datos a publicar:', postData);
   
-      const response = await axios.post('http://buddy-app.loca.lt/publications/publication/search', postData);
+      const response = await axios.post('http://buddy-app1.loca.lt/publications/publication/search', postData);
       console.log('Solicitud POST exitosa:', response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);

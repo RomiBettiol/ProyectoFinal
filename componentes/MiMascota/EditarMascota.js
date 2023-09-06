@@ -30,7 +30,7 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
     };
     console.log({idPet})
     try {
-      const response = await axios.put(`https://buddy-app.loca.lt/mypet/pet/${mascota.idPet}`,{
+      const response = await axios.put(`https://buddy-app1.loca.lt/mypet/pet/${mascota.idPet}`,{
         headers: {
           'auth-token': token
         },
