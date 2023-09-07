@@ -27,6 +27,7 @@ export default function MiPerfil({ navigation }) {
   const [optionsModalVisible, setOptionsModalVisible] = useState(false);
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
+  const [publicationDeleted, setPublicationDeleted] = useState(false);
 
   console.log("perfil: ", token);
 
@@ -220,16 +221,17 @@ export default function MiPerfil({ navigation }) {
   
   const closeConfirmationModal = () => {
     setConfirmationModalVisible(false);
-  };  
+  }; 
 
   const handleDeletePublication = (publicationToDelete) => {
+    console.log('Mostrar en el handle: ', selectedPublication);
     if (publicationToDelete) {
-      const idPublicationToDelete = publicationToDelete.idPublicationAdoption || publicationToDelete.idSearch;
+      const idPublicationToDelete = publicationToDelete.idPublicationAdoption || publicationToDelete.idPublicationSearch;
       const modalType = publicationToDelete.idPublicationAdoption ? 'adoption' : 'search';
       console.log('modalType:', modalType);
-  
+      console.log('idPublicacion: ', idPublicationToDelete);
       axios
-        .delete(`https://buddy-app1.loca.lt/publications/publication/${idPublicationToDelete}?modalType=${modalType}`, {
+       .delete(`https://buddy-app1.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`, {
           headers: {
             'auth-token': token,
           },
@@ -237,16 +239,14 @@ export default function MiPerfil({ navigation }) {
         .then(response => {
           console.log('Publicación eliminada con éxito:', response.data);
           closeConfirmationModal();
-          // Realiza cualquier actualización necesaria aquí.
         })
         .catch(error => {
           console.error('Error al eliminar la publicación:', error);
-          // Maneja el error de eliminación aquí, si es necesario.
         });
     } else {
       console.error('La publicación a eliminar es nula');
     }
-  };   
+};   
     
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
@@ -286,17 +286,17 @@ export default function MiPerfil({ navigation }) {
               />
               <View>
                 <View style={[styles.informacionPublicacion, {flexDirection: 'row'}]}>
-                  <Text style={styles.publicationTitle}>{adoption.title}</Text>
                   <TouchableOpacity style={styles.botonInformacion}>
-                    <Text>En adopción</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => openOptionsModal(adoption.idPublicationAdoption)}>
+                  <Text>En adopción</Text>
+                </TouchableOpacity>
+                  <TouchableOpacity onPress={() => openOptionsModal(adoption)}>
                     <Image
                       source={require('../Imagenes/opciones.png')}
                       style={styles.imagenOpcionesPublicaciones}
                     />
                   </TouchableOpacity>
                 </View>
+                <Text style={styles.publicationTitle}>{adoption.title}</Text>
                 <View style={[styles.containerfiltros, {flexDirection: 'row'}]}>
                   <View style={{flexDirection: 'row'}}>
                     <Image
@@ -324,17 +324,17 @@ export default function MiPerfil({ navigation }) {
               />
               <View>
                 <View style={[styles.informacionPublicacion, {flexDirection: 'row'}]}>
-                  <Text style={styles.publicationTitle}>{search.title}</Text>
                   <TouchableOpacity style={styles.botonInformacion}>
                     <Text>En búsqueda</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => openOptionsModal(search.idPublicationSearch)}>
+                  <TouchableOpacity onPress={() => openOptionsModal(search)}>
                       <Image
                         source={require('../Imagenes/opciones.png')}
                         style={styles.imagenOpcionesPublicaciones}
                       />
-                    </TouchableOpacity>
+                  </TouchableOpacity>
                 </View>
+                <Text style={styles.publicationTitle}>{search.title}</Text>
                 <View style={[styles.containerfiltros, {flexDirection: 'row'}]}>
                     <View style={{flexDirection: 'row'}}>
                       <Image
@@ -348,7 +348,7 @@ export default function MiPerfil({ navigation }) {
                         source={require('../Imagenes/hueso.png')}
                         style={styles.imagenFiltros}
                       />
-                      <Text>{search.breed.petBreedName}</Text>
+                      <Text>{search.petBreed.petBreedName}</Text>
                     </View>
                 </View>
                 <View style={[{flexDirection: 'row'},styles.containerFecha]}>
