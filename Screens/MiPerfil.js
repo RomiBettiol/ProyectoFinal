@@ -30,7 +30,7 @@ export default function MiPerfil({ navigation }) {
 
   console.log("perfil: ", token);
 
-  const idUser = '7ea0ab93-d534-4d6e-9da3-c46db875bda3';
+  const idUser = '917f740b-6a2f-482c-8d62-4ce289a8f206';
 
   //Trae info del usuario
   useEffect(() => {
@@ -225,9 +225,11 @@ export default function MiPerfil({ navigation }) {
   const handleDeletePublication = (publicationToDelete) => {
     if (publicationToDelete) {
       const idPublicationToDelete = publicationToDelete.idPublicationAdoption || publicationToDelete.idSearch;
+      const modalType = publicationToDelete.idPublicationAdoption ? 'adoption' : 'search';
+      console.log('modalType:', modalType);
   
       axios
-        .delete(`https://buddy-app1.loca.lt/publications/publication/${idPublicationToDelete}`, {
+        .delete(`https://buddy-app1.loca.lt/publications/publication/${idPublicationToDelete}?modalType=${modalType}`, {
           headers: {
             'auth-token': token,
           },
@@ -244,7 +246,7 @@ export default function MiPerfil({ navigation }) {
     } else {
       console.error('La publicación a eliminar es nula');
     }
-  }; 
+  };   
     
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
@@ -308,7 +310,7 @@ export default function MiPerfil({ navigation }) {
                       source={require('../Imagenes/hueso.png')}
                       style={styles.imagenFiltros}
                     />
-                    <Text>{adoption.breed.petBreedName}</Text>
+                    <Text>{adoption.petBreed.petBreedName}</Text>
                   </View>
                 </View>
               </View>

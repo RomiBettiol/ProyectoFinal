@@ -153,7 +153,7 @@ const BotonesFiltrosAdopcion = () => {
                     source={require('../../Imagenes/hueso.png')}
                     style={styles.imagenFiltroPublicacion}
                   />
-                  <Text style={styles.texto1}>{item.breed.petBreedName}</Text>
+                  <Text style={styles.texto1}>{item.petBreed.petBreedName}</Text>
                 </View>
               </View>
             </View>

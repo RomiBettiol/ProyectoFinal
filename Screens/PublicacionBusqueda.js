@@ -36,7 +36,7 @@ export default function PublicacionBusqueda({ navigation }) {
     const longitude = 12.09812;
     const latitude = 34.56789; 
     const images = "";
-    const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay} 10:30:00`;
+    const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay}`;
   
     try {
       const postData = {
@@ -45,13 +45,13 @@ export default function PublicacionBusqueda({ navigation }) {
         longitude,
         latitude,
         images,
-        idUser: "7ea0ab93-d534-4d6e-9da3-c46db875bda3",   
+        idUser: "917f740b-6a2f-482c-8d62-4ce289a8f206",   
         idPetType: selectedAnimalId,  
         idPetBreed: selectedBreedId,
         idPetColor: selectedColorId,         
         idLocality: selectedLocality,
         isFound: selectedIsFound,
-        lostDate: "2023-07-19 10:30:00", 
+        lostDate: formattedDate, 
       };
   
       console.log('Datos a publicar:', postData);

@@ -33,7 +33,7 @@ export default function PublicacionBusqueda({ navigation }) {
         title,
         description,
         images,
-        idUser: "7ea0ab93-d534-4d6e-9da3-c46db875bda3",   
+        idUser: "917f740b-6a2f-482c-8d62-4ce289a8f206",   
         idPetType: selectedAnimalId,  
         idPetBreed: selectedBreedId,
         idPetColor: selectedColorId,         

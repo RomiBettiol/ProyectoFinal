@@ -71,7 +71,7 @@ const PublicacionDetalle = ({ route }) => {
                       source={require('../../Imagenes/hueso.png')}
                       style={styles.iconos}
                   />
-                  <Text style={styles.texto}>{publicacion?.breed.petBreedName}</Text>
+                  <Text style={styles.texto}>{publicacion?.petBreed.petBreedName}</Text>
                 </View>
                 <View style={[styles.itemInfoFiltro, {flexDirection:'row'}]}>
                   <Image
