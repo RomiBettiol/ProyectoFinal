@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
 import axios from 'axios';
 
-const ModalEditarRegion = ({ isVisible, onClose, onEdit, editingRegion }) => {
+const ModalEditarRegion = ({ isVisible, onClose, onEdit, editingRegion, onSuccessUpdate, onErrorUpdate  }) => {
   const [regionName, setRegionName] = useState('');
 
   const handleEditRegion = () => {
@@ -13,13 +13,16 @@ const ModalEditarRegion = ({ isVisible, onClose, onEdit, editingRegion }) => {
       .then((response) => {
         onEdit(regionName);
         setRegionName(''); // Vaciar el TextInput
+        onSuccessUpdate();
         onClose(); // Cerrar el modal
       })
       .catch((error) => {
         if (error.response) {
           console.error('Error en la solicitud PUT:', error.response.data);
+          onErrorUpdate();
         } else {
           console.error('Error en la solicitud PUT:', error.message);
+          onErrorUpdate();
         }
       });
   };

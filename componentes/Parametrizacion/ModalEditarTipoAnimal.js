@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
 import axios from 'axios';
 
-const ModalEditarTipoAnimal = ({ isVisible, onClose, onEdit, editingType }) => {
+const ModalEditarTipoAnimal = ({ isVisible, onClose, onEdit, editingType, onSuccessUpdate, onErrorUpdate  }) => {
   const [typeName, setTypeName] = useState('');
 
   const handleEditType = () => {
@@ -13,13 +13,16 @@ const ModalEditarTipoAnimal = ({ isVisible, onClose, onEdit, editingType }) => {
       .then((response) => {
         onEdit(typeName);
         setTypeName(''); // Vaciar el TextInput
+        onSuccessUpdate();
         onClose(); // Cerrar el modal
       })
       .catch((error) => {
         if (error.response) {
           console.error('Error en la solicitud PUT:', error.response.data);
+          onErrorUpdate();
         } else {
           console.error('Error en la solicitud PUT:', error.message);
+          onErrorUpdate();
         }
       });
   };

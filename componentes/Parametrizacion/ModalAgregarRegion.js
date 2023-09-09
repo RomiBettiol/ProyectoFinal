@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput, ScrollView } from 'react-native';
 import axios from 'axios';
 
-const ModalAgregarRegion = ({ isVisible, onClose, onAdd }) => {
+const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) => {
   const [regionName, setRegionName] = useState('');
   const [selectedProvinceId, setSelectedProvinceId] = useState('');
   const [provinces, setProvinces] = useState([]);
   const [showProvinceList, setShowProvinceList] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     axios
@@ -21,7 +23,9 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd }) => {
 
   const handleAddRegion = () => {
     if (!regionName || !selectedProvinceId) {
-      Alert.alert('Error', 'Por favor, ingresa el nombre de la región y selecciona una provincia.');
+      console.log('Error', 'Por favor, ingresa el nombre de la región y selecciona una provincia.');
+      onError();
+      onClose();
       return;
     }
 
@@ -36,13 +40,22 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd }) => {
         onAdd(newRegion);
         setRegionName('');
         setSelectedProvinceId('');
-        onClose();
+        setShowSuccess(true); // Mostrar el mensaje de éxito inmediatamente
+        onClose(); // Cerrar el modal
+
+        // Ocultar el mensaje de éxito después de 1 segundo
+        setTimeout(() => {
+          setShowSuccess(false);
+          onSuccess(); // Llamar a la función de éxito
+        }, 1000);
       })
       .catch((error) => {
         if (error.response) {
           console.error('Error en la solicitud POST:', error.response.data);
+          onError();
         } else {
           console.error('Error en la solicitud POST:', error.message);
+          onError();
         }
       });
   };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput, ScrollView } from 'react-native';
 import axios from 'axios';
 
-const ModalAgregarRaza = ({ isVisible, onClose, onAdd, petTypes }) => {
+const ModalAgregarRaza = ({ isVisible, onClose, onAdd, petTypes, onSuccess, onError }) => {
   const [breedName, setBreedName] = useState('');
   const [selectedPetTypeId, setSelectedPetTypeId] = useState('');
   const [showPetTypeList, setShowPetTypeList] = useState(false);
@@ -10,6 +10,7 @@ const ModalAgregarRaza = ({ isVisible, onClose, onAdd, petTypes }) => {
   const handleAddRaza = () => {
     if (!breedName || !selectedPetTypeId) {
       console.log('Error', 'Por favor, ingresa el nombre de la raza y selecciona un tipo de animal.');
+      onError();
       return;
     }
 
@@ -24,13 +25,16 @@ const ModalAgregarRaza = ({ isVisible, onClose, onAdd, petTypes }) => {
         onAdd(newBreed);
         setBreedName('');
         setSelectedPetTypeId('');
+        onSuccess();
         onClose();
       })
       .catch((error) => {
         if (error.response) {
           console.error('Error en la solicitud POST:', error.response.data);
+          onError();
         } else {
           console.error('Error en la solicitud POST:', error.message);
+          onError();
         }
       });
   };

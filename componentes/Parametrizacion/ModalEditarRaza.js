@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
 import axios from 'axios';
 
-const ModalEditarRaza = ({ isVisible, onClose, onEdit, editingBreed }) => {
+const ModalEditarRaza = ({ isVisible, onClose, onEdit, editingBreed, onSuccessUpdate, onErrorUpdate  }) => {
   const [breedName, setBreedName] = useState('');
 
   const handleEditBreed = () => {
@@ -13,13 +13,16 @@ const ModalEditarRaza = ({ isVisible, onClose, onEdit, editingBreed }) => {
       .then((response) => {
         onEdit(breedName);
         setBreedName(''); // Vaciar el TextInput
+        onSuccessUpdate();
         onClose(); // Cerrar el modal
       })
       .catch((error) => {
         if (error.response) {
           console.error('Error en la solicitud PUT:', error.response.data);
+          onErrorUpdate();
         } else {
           console.error('Error en la solicitud PUT:', error.message);
+          onErrorUpdate();
         }
       });
   };

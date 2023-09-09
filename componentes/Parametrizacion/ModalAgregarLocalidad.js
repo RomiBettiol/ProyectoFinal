@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput, ScrollView } from 'react-native';
 import axios from 'axios';
 
-const ModalAgregarLocalidad = ({ isVisible, onClose, onAdd, regions }) => {
+const ModalAgregarLocalidad = ({ isVisible, onClose, onAdd, regions, onSuccess, onError }) => {
   const [localityName, setLocalityName] = useState('');
   const [selectedRegionId, setSelectedRegionId] = useState('');
   const [showRegionList, setShowRegionList] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleAddLocalidad = () => {
     if (!localityName || !selectedRegionId) {
       console.log('Error', 'Por favor, ingresa el nombre de la localidad y selecciona una región.');
+      onError();
       return;
     }
 
@@ -24,13 +27,17 @@ const ModalAgregarLocalidad = ({ isVisible, onClose, onAdd, regions }) => {
         onAdd(newLocalidad);
         setLocalityName('');
         setSelectedRegionId('');
+        setShowSuccess(true);
+        onSuccess();
         onClose();
       })
       .catch((error) => {
         if (error.response) {
           console.error('Error en la solicitud POST:', error.response.data);
+          onError();
         } else {
           console.error('Error en la solicitud POST:', error.message);
+          onError();
         }
       });
   };

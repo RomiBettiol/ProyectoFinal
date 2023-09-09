@@ -49,7 +49,77 @@ export default function ParametrizacionScreen({ navigation }) {
   const [isAddBreedModalVisible, setAddBreedModalVisible] = useState(false);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [successModalUpdateVisible, setSuccessModalUpdateVisible] = useState(false);
+  const [errorModalUpdateVisible, setErrorModalUpdateVisible] = useState(false);
+  const [successModalDeleteVisible, setSuccessModalDeleteVisible] = useState(false);
+  const [errorModalDeleteVisible, setErrorModalDeleteVisible] = useState(false);
 
+  // Cuando la publicación sea exitosa
+  const handleSuccessfulRegionPublication = () => {
+    setSuccessModalVisible(true);
+  
+    // Ocultar el modal de éxito después de 1 segundo
+    setTimeout(() => {
+      setSuccessModalVisible(false);
+      // Puedes hacer otras acciones relacionadas con la publicación exitosa aquí
+    }, 1000);
+  };
+
+  // Cuando la publicación falle
+  const handleFailedRegionPublication = () => {
+    setErrorModalVisible(true);
+  
+    // Ocultar el modal de error después de 1 segundo
+    setTimeout(() => {
+      setErrorModalVisible(false);
+      // Puedes hacer otras acciones relacionadas con la publicación fallida aquí
+    }, 2000);
+  };
+
+  //ACTUALIZACIÓN DE FILTROS
+
+    const handleSuccessfulUpdatePublication = () => {
+      setSuccessModalUpdateVisible(true);
+    
+      // Ocultar el modal de éxito después de 1 segundo
+      setTimeout(() => {
+        setSuccessModalUpdateVisible(false);
+        // Puedes hacer otras acciones relacionadas con la publicación exitosa aquí
+      }, 1000);
+    };
+  
+    const handleFailedUpdatePublication = () => {
+      setErrorModalVisible(true);
+    
+      // Ocultar el modal de error después de 1 segundo
+      setTimeout(() => {
+        setErrorModalUpdateVisible(false);
+        // Puedes hacer otras acciones relacionadas con la publicación fallida aquí
+      }, 2000);
+    };
+
+    //ELIMINCACIÓN DE FILTROS
+
+    const handleSuccessfulDeletePublication = () => {
+      setSuccessModalDeleteVisible(true);
+    
+      // Ocultar el modal de éxito después de 1 segundo
+      setTimeout(() => {
+        setSuccessModalDeleteVisible(false);
+        // Puedes hacer otras acciones relacionadas con la publicación exitosa aquí
+      }, 1000);
+    };
+  
+    const handleFailedDeleteublication = () => {
+      setErrorModalDeleteVisible(true);
+    
+      // Ocultar el modal de error después de 1 segundo
+      setTimeout(() => {
+        setErrorModalDeleteVisible(false);
+        // Puedes hacer otras acciones relacionadas con la publicación fallida aquí
+      }, 2000);
+    };
+  
   const handleRegionAdd = (newRegion) => {
     const updatedRegions = [...regions, newRegion];
     setRegions(updatedRegions);
@@ -164,13 +234,12 @@ export default function ParametrizacionScreen({ navigation }) {
       .delete(`http://buddy-app1.loca.lt/parameters/locality/${zoneId}`)
       .then((response) => {
         console.log('Eliminación exitosa:', response.data);
-        // Realizar aquí la actualización de los datos locales después de la eliminación
-        // Por ejemplo, volver a cargar las zonas después de eliminar.
+        handleSuccessfulDeletePublication();
         getZonas();
       })
       .catch((error) => {
         console.error('Error en la solicitud DELETE:', error);
-        // Mostrar mensaje de error al usuario si es necesario
+        handleFailedDeleteublication();
       });
   };
 
@@ -180,12 +249,12 @@ export default function ParametrizacionScreen({ navigation }) {
       .delete(`http://buddy-app1.loca.lt/parameters/petBreed/${breedId}`)
       .then((response) => {
         console.log('Raza eliminada exitosamente:', response.data);
-        // Update the list of pet breeds after deletion
+        handleSuccessfulDeletePublication();
         getPetBreeds();
       })
       .catch((error) => {
         console.error('Error en la solicitud DELETE de raza:', error);
-        // Show an error message to the user if necessary
+        handleFailedDeleteublication();
       });
   };
 
@@ -194,12 +263,12 @@ export default function ParametrizacionScreen({ navigation }) {
       .delete(`http://buddy-app1.loca.lt/parameters/petColor/${colorId}`)
       .then((response) => {
         console.log('Color eliminado exitosamente:', response.data);
-        // Actualizar la lista de colores después de la eliminación
+        handleSuccessfulDeletePublication();
         getPetColors();
       })
       .catch((error) => {
         console.error('Error en la solicitud DELETE de color:', error);
-        // Mostrar mensaje de error al usuario si es necesario
+        handleFailedDeleteublication();
       });
   };
 
@@ -208,12 +277,12 @@ export default function ParametrizacionScreen({ navigation }) {
       .delete(`http://buddy-app1.loca.lt/parameters/petType/${typeId}`)
       .then((response) => {
         console.log('Tipo de animal eliminado exitosamente:', response.data);
-        // Actualizar la lista de tipos de animales después de la eliminación
+        handleSuccessfulDeletePublication();
         getPetTypes();
       })
       .catch((error) => {
         console.error('Error en la solicitud DELETE de tipo de animal:', error);
-        // Mostrar mensaje de error al usuario si es necesario
+        handleFailedDeleteublication();
       });
   }; 
 
@@ -222,12 +291,12 @@ export default function ParametrizacionScreen({ navigation }) {
       .delete(`http://buddy-app1.loca.lt/parameters/province/${provinceId}`)
       .then((response) => {
         console.log('Provincia eliminada exitosamente:', response.data);
-        // Actualizar la lista de provincias después de la eliminación
+        handleSuccessfulDeletePublication();
         getProvinces();
       })
       .catch((error) => {
         console.error('Error en la solicitud DELETE de provincia:', error);
-        // Mostrar mensaje de error al usuario si es necesario
+        handleFailedDeleteublication();
       });
   }; 
 
@@ -236,12 +305,12 @@ export default function ParametrizacionScreen({ navigation }) {
       .delete(`http://buddy-app1.loca.lt/parameters/region/${regionId}`)
       .then((response) => {
         console.log('Región eliminada exitosamente:', response.data);
-        // Actualizar la lista de regiones después de la eliminación
+        handleSuccessfulDeletePublication();
         getRegions();
       })
       .catch((error) => {
         console.error('Error en la solicitud DELETE de región:', error);
-        // Mostrar mensaje de error al usuario si es necesario
+        handleFailedDeleteublication();
       });
   };
  
@@ -681,18 +750,18 @@ export default function ParametrizacionScreen({ navigation }) {
           ))}
         </View>
       </ScrollView>
-      <ModalEditar isVisible={isModalVisible} onClose={handleCloseModal} onEdit={handleZoneEdit} editingZone={editingZone} />
-      <ModalEditarColor isVisible={isEditColorModalVisible} onClose={() => setEditColorModalVisible(false)} onEdit={handleColorEdit} editingColor={editingColor} />
-      <ModalEditarTipoAnimal isVisible={isEditTypeModalVisible} onClose={() => setEditTypeModalVisible(false)} onEdit={handleTypeEdit} editingType={editingType} />
-      <ModalEditarRaza isVisible={isEditBreedModalVisible} onClose={() => setEditBreedModalVisible(false)} onEdit={handleBreedEdit} editingBreed={editingBreed} />
+      <ModalEditar isVisible={isModalVisible} onClose={handleCloseModal} onEdit={handleZoneEdit} editingZone={editingZone} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
+      <ModalEditarColor isVisible={isEditColorModalVisible} onClose={() => setEditColorModalVisible(false)} onEdit={handleColorEdit} editingColor={editingColor} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
+      <ModalEditarTipoAnimal isVisible={isEditTypeModalVisible} onClose={() => setEditTypeModalVisible(false)} onEdit={handleTypeEdit} editingType={editingType} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
+      <ModalEditarRaza isVisible={isEditBreedModalVisible} onClose={() => setEditBreedModalVisible(false)} onEdit={handleBreedEdit} editingBreed={editingBreed} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
       <ModalAgregarColor isVisible={isAddColorModalVisible} onClose={() => setAddColorModalVisible(false)} onAdd={handleAddColor} newColorName={newColorName} setNewColorName={setNewColorName} />
       <ModalAgregarTipoAnimal isVisible={isAddTipoAnimalModalVisible} onClose={() => setAddTipoAnimalModalVisible(false)} onAdd={handleAddType} newTypeName={newTypeName} setNewTypeName={setNewTypeName} />
-      <ModalEditarProvincia isVisible={isEditProvinceModalVisible} onClose={() => setEditProvinceModalVisible(false)} onEdit={handleProvinceEdit} editingProvince={editingProvince} />
+      <ModalEditarProvincia isVisible={isEditProvinceModalVisible} onClose={() => setEditProvinceModalVisible(false)} onEdit={handleProvinceEdit} editingProvince={editingProvince} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
       <ModalAgregarProvincia isVisible={isAddProvinceModalVisible} onClose={() => setAddProvinceModalVisible(false)} onAdd={handleAddProvince} newProvinceName={newProvinceName} setNewProvinceName={setNewProvinceName} />
-      <ModalEditarRegion isVisible={isEditRegionModalVisible} onClose={() => setEditRegionModalVisible(false)} onEdit={handleRegionEdit} editingRegion={editingRegion} />
-      <ModalAgregarRegion isVisible={isAddRegionModalVisible} onClose={toggleAddRegionModal} onAdd={handleRegionAdd} provinces={provinces} />
-      <ModalAgregarLocalidad isVisible={isAddLocalidadModalVisible} onClose={toggleAddLocalidadModal} onAdd={handleLocalidadAdd} regions={regions}/>
-      <ModalAgregarRaza isVisible={isAddBreedModalVisible} onClose={toggleAddBreedModal} onAdd={handleAddBreed}  petTypes={petTypes} />
+      <ModalEditarRegion isVisible={isEditRegionModalVisible} onClose={() => setEditRegionModalVisible(false)} onEdit={handleRegionEdit} editingRegion={editingRegion} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
+      <ModalAgregarRegion isVisible={isAddRegionModalVisible} onClose={toggleAddRegionModal} onAdd={handleRegionAdd} provinces={provinces} onSuccess={handleSuccessfulRegionPublication} onError={handleFailedRegionPublication}/>
+      <ModalAgregarLocalidad isVisible={isAddLocalidadModalVisible} onClose={toggleAddLocalidadModal} onAdd={handleLocalidadAdd} regions={regions} onSuccess={handleSuccessfulRegionPublication} onError={handleFailedRegionPublication}/>
+      <ModalAgregarRaza isVisible={isAddBreedModalVisible} onClose={toggleAddBreedModal} onAdd={handleAddBreed}  petTypes={petTypes} onSuccess={handleSuccessfulRegionPublication} onError={handleFailedRegionPublication} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -712,6 +781,50 @@ export default function ParametrizacionScreen({ navigation }) {
       >
         <View style={styles.errorModal}>
           <Text style={styles.modalText}>No se ha agregado, intente de nuevo.</Text>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={successModalUpdateVisible}
+        onRequestClose={() => setSuccessModalVisible(false)}
+      >
+        <View style={styles.successModal}>
+          <Text style={styles.modalText}>¡Actualizado con éxito!</Text>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={errorModalUpdateVisible}
+        onRequestClose={() => setErrorModalVisible(false)}
+      >
+        <View style={styles.errorModal}>
+          <Text style={styles.modalText}>No se ha actualizado, intente de nuevo.</Text>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={successModalDeleteVisible}
+        onRequestClose={() => setSuccessModalVisible(false)}
+      >
+        <View style={styles.successModal}>
+          <Text style={styles.modalText}>¡Eliminado con éxito!</Text>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={errorModalDeleteVisible}
+        onRequestClose={() => setErrorModalVisible(false)}
+      >
+        <View style={styles.errorModal}>
+          <Text style={styles.modalText}>No se ha eliminado, intente de nuevo.</Text>
         </View>
       </Modal>
     </ScrollView>

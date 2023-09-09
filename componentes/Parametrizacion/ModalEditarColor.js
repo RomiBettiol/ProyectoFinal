@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
 import axios from 'axios';
 
-const ModalEditarColor = ({ isVisible, onClose, onEdit, editingColor }) => {
+const ModalEditarColor = ({ isVisible, onClose, onEdit, editingColor, onSuccessUpdate, onErrorUpdate  }) => {
   const [colorName, setColorName] = useState('');
 
   const handleEditColor = () => {
@@ -13,13 +13,16 @@ const ModalEditarColor = ({ isVisible, onClose, onEdit, editingColor }) => {
       .then((response) => {
         onEdit(colorName);
         setColorName(''); // Vaciar el TextInput
+        onSuccessUpdate();
         onClose(); // Cerrar el modal
       })
       .catch((error) => {
         if (error.response) {
           console.error('Error en la solicitud PUT:', error.response.data);
+          onErrorUpdate();
         } else {
           console.error('Error en la solicitud PUT:', error.message);
+          onErrorUpdate();
         }
       });
   };

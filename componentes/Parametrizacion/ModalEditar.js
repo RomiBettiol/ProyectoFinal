@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput } from 'react-native';
 import axios from 'axios';
 
-const ModalEditar = ({ isVisible, onClose, onEdit, editingZone }) => {
+const ModalEditar = ({ isVisible, onClose, onEdit, editingZone, onSuccessUpdate, onErrorUpdate }) => {
   const [localities, setLocalities] = useState('');
 
   const handleEdit = () => {
@@ -13,13 +13,16 @@ const ModalEditar = ({ isVisible, onClose, onEdit, editingZone }) => {
       .then((response) => {
         onEdit(localities);
         setLocalities(''); // Vaciar el TextInput
+        onSuccessUpdate();
         onClose(); // Cerrar el modal
       })
       .catch((error) => {
         if (error.response) {
           console.error('Error en la solicitud PUT:', error.response.data);
+          onErrorUpdate();
         } else {
           console.error('Error en la solicitud PUT:', error.message);
+          onErrorUpdate();
         }
       });
   };
