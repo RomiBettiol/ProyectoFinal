@@ -6,7 +6,8 @@ import Carousel from 'react-native-snap-carousel';
 
 const PublicacionDetalleAdopcion = ({ route }) => {
   const navigation = useNavigation();
-  const publicacion = route.params?.publicacion;
+  const { publicacion, token, userName } = route.params || {};
+  console.log(route.params);
 
   const carouselImages = [
     require('../../Imagenes/imagenPublicaciones.jpg'),
@@ -64,7 +65,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
                       source={require('../../Imagenes/dueno.png')}
                       style={styles.iconos}
                   />
-                  <Text style={styles.texto}>Romina Bettiol</Text>
+                  <Text style={styles.texto}>{publicacion?.user.userName}</Text>
                 </View>
               </View>
               <View style={styles.izquierda}>

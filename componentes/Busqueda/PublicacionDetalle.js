@@ -78,7 +78,7 @@ const PublicacionDetalle = ({ route }) => {
                       source={require('../../Imagenes/dueno.png')}
                       style={styles.iconos}
                   />
-                  <Text style={styles.texto}>Romina Bettiol</Text>
+                  <Text style={styles.texto}>{publicacion?.user.userName}</Text>
                 </View>
               </View>
               <View style={styles.izquierda}>

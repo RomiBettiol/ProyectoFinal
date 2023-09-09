@@ -43,8 +43,13 @@ export default function PublicacionBusqueda({ navigation }) {
       };
   
       console.log('Datos a publicar:', postData);
+      const config = {
+        headers: {
+          'auth-token': token,
+        },
+      };
   
-      const response = await axios.post('http://buddy-app1.loca.lt/publications/publication/adoption', postData);
+      const response = await axios.post('http://buddy-app1.loca.lt/publications/publication/adoption', postData,config);
       console.log('Solicitud POST exitosa:', response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);

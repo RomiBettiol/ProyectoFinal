@@ -44,8 +44,7 @@ export default function PublicacionBusqueda({ navigation }) {
         description,
         longitude,
         latitude,
-        images,
-        idUser: "917f740b-6a2f-482c-8d62-4ce289a8f206",   
+        images, 
         idPetType: selectedAnimalId,  
         idPetBreed: selectedBreedId,
         idPetColor: selectedColorId,         
@@ -55,8 +54,12 @@ export default function PublicacionBusqueda({ navigation }) {
       };
   
       console.log('Datos a publicar:', postData);
-  
-      const response = await axios.post('https://buddy-app1.loca.lt/publications/publication/search', postData);
+      const config = {
+        headers: {
+          'auth-token': token,
+        },
+      };
+      const response = await axios.post('https://buddy-app1.loca.lt/publications/publication/search', postData, config);
       console.log('Solicitud POST exitosa:', response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);

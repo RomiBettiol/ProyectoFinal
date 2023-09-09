@@ -31,9 +31,6 @@ export default function MiPerfil({ navigation }) {
   const [selectedPublication, setSelectedPublication] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteFailure, setDeleteFailure] = useState(false);
-  const [isColorSuccessMessageVisible, setIsColorSuccessMessageVisible] = useState(false);
-  const [isColorErrorMessageVisible, setIsColorErrorMessageVisible] = useState(false);
-
 
   console.log("perfil: ", token);
 
@@ -337,13 +334,7 @@ useEffect(() => {
           </View>
           <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
           {userPublications.adoptions && userPublications.adoptions.length > 0 && userPublications.adoptions.map((adoption, index) => (
-            <TouchableOpacity 
-              key={index} 
-              style={[styles.publicationContainer, {flexDirection: 'row'}]}
-              onPress = {()=> (
-                navigation.navigate('PublicacionDetalleAdopcion', { publicacion: selectedPublication, token })
-            )}
-            >
+            <View style={[styles.publicationContainer, {flexDirection: 'row'}]}>
               <Image
                 source={require('../Imagenes/imagenPublicaciones.jpg')}
                 style={styles.imagenPublicaciones}
@@ -378,10 +369,10 @@ useEffect(() => {
                   </View>
                 </View>
               </View>
-            </TouchableOpacity>
+            </View>
           ))}
           {userPublications.searchs && userPublications.searchs.length > 0 && userPublications.searchs.map((search, index) => (
-            <TouchableOpacity key={index} style={[styles.publicationContainer, {flexDirection: 'row'}]}>
+            <View style={[styles.publicationContainer, {flexDirection: 'row'}]}>
               <Image
                 source={require('../Imagenes/imagenPublicaciones.jpg')}
                 style={styles.imagenPublicaciones}
@@ -432,7 +423,7 @@ useEffect(() => {
                   </Text>
                 </View>
               </View>
-            </TouchableOpacity>
+            </View>
           ))}
 
           {/* Modal */}
@@ -593,6 +584,28 @@ useEffect(() => {
                 }}
               >
                 <Text>Eliminar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.opcionesModal}
+                onPress={() => {
+                  const modelType = selectedPublication.idPublicationAdoption ? 'adoption' : 'search';
+                  console.log('Model Type:', modelType);
+                  console.log('selectedPublication: ', selectedPublication);
+                  if (modelType === 'adoption') {
+                    navigation.navigate('PublicacionDetalleAdopcion', { 
+                      publicacion: selectedPublication,
+                      token
+                    });
+                  } else {
+                    navigation.navigate('PublicacionDetalle', {
+                      publicacion: selectedPublication,
+                      token
+                    });
+                  }
+                  closeOptionsModal();
+                }}
+              >
+                <Text>Ver publicación</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.cancelarModal} onPress={closeOptionsModal}>
                 <Text>Cancelar</Text>

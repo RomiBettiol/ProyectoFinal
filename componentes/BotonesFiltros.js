@@ -29,7 +29,7 @@ const FilterButtonsExample = () => {
     }
   
     if (selectedFilter) {
-      filteredData = filteredData.filter(item => item.breed.type.petTypeName.toLowerCase() === selectedFilter.toLowerCase());
+      filteredData = filteredData.filter(item => item.petBreed.petType.petTypeName.toLowerCase() === selectedFilter.toLowerCase());
     }
   
     // Actualizar el estado de las publicaciones filtradas
@@ -76,7 +76,7 @@ const FilterButtonsExample = () => {
             // Si no se ha seleccionado un color, proceder con el filtrado por tipo de animal
             else if (selectedFilter) {
               const filteredData = infoPublicacion.filter((item) =>
-                item.breed.type.petTypeName.toLowerCase() === selectedFilter.toLowerCase()
+                item.petBreed.petType.petTypeName.toLowerCase() === selectedFilter.toLowerCase()
               );
               setFilteredPublicaciones(filteredData);
             }
@@ -109,7 +109,7 @@ const FilterButtonsExample = () => {
       } else {
         setSelectedFilter(filter);
         const filteredData = publicaciones.filter((item) =>
-          item.breed.type.petTypeName.toUpperCase() === filter.toUpperCase()
+          item.petBreed.petType.petTypeName.toUpperCase() === filter.toUpperCase()
         );
         setFilteredPublicaciones(filteredData);
       }
@@ -118,7 +118,7 @@ const FilterButtonsExample = () => {
     const filterByOtherAnimals = (data) => {
       console.log("filterByOtherAnimals function called");
       const animalTypesToExclude = ['PERRO', 'GATO', 'CONEJO'];
-      return data.filter(item => !animalTypesToExclude.includes(item.breed.type.petTypeName.toUpperCase()));
+      return data.filter(item => !animalTypesToExclude.includes(item.petBreed.petType.petTypeName.toUpperCase()));
     };           
                   
   const formatLostDate = (dateString) => {
