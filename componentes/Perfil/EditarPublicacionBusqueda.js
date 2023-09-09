@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal } from 'react-native';
-import HeaderScreen from '../componentes/HeaderScreen';
-import ListaValoresColor from '../componentes/Busqueda/ListaValoresColor';
-import ListaValoresAnimal from '../componentes/Busqueda/ListaValoresAnimal';
-import ListaValoresZona from '../componentes/Busqueda/ListaValoresZona';
-import ListaValoresRazaPerros from '../componentes/Busqueda/ListaValoresRazaPerros';
-import Mascotas from '../componentes/Busqueda/Mascotas';
-import ListaValoresDias from '../componentes/Busqueda/ListaValoresDias';
-import ListaValoresMeses from '../componentes/Busqueda/ListaValoresMeses';
-import ListaValoresAño from '../componentes/Busqueda/ListaValoresAño';
-import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
-import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
+import HeaderScreen from '../HeaderScreen';
+import ListaValoresColor from '../Busqueda/ListaValoresColor';
+import ListaValoresAnimal from '../Busqueda/ListaValoresAnimal';
+import ListaValoresZona from '../Busqueda/ListaValoresZona';
+import ListaValoresRazaPerros from '../Busqueda/ListaValoresRazaPerros';
+import Mascotas from '../Busqueda/Mascotas';
+import ListaValoresDias from '../Busqueda/ListaValoresDias';
+import ListaValoresMeses from '../Busqueda/ListaValoresMeses';
+import ListaValoresAño from '../Busqueda/ListaValoresAño';
+import ImagePickerComponent from '../Busqueda/ImagePickerComponent';  
+import BotonPublicar from '../Busqueda/BotonPublicar';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
+import { useNavigation } from '@react-navigation/native';
 
-export default function EditarPublicacionBusqueda({ navigation }) {
+export default function EditarPublicacionBusqueda({ route }) {
+  const { publicationToEdit } = route.params;
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState(publicationToEdit.title);
+  const [description, setDescription] = useState(publicationToEdit.description);
   const [selectedColorId, setSelectedColorId] = useState('');
   const [selectedLocality, setSelectedLocality] = useState('');
   const [selectedBreedId, setSelectedBreedId] = useState('');
@@ -29,57 +31,85 @@ export default function EditarPublicacionBusqueda({ navigation }) {
   const [selectedAnimalId, setSelectedAnimalId] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
-  const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
+  const navigation = useNavigation();
 
-  const handlePost = async () => {
+  const idPublicationSearch = publicationToEdit.idPublicationSearch;
+  const idUser = '917f740b-6a2f-482c-8d62-4ce289a8f206';
+  console.log('Publicacion búsqueda: ', idPublicationSearch);
+
+
+  const actualizarPublicacion = async () => {
     const longitude = 12.09812;
-    const latitude = 34.56789; 
+    const latitude = 34.56789;
     const images = "";
-    const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay} 10:30:00`;
-  
+    const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay}`;
     try {
-      const postData = {
+      console.log('Información a actualizar:', {
         title,
         description,
-        longitude,
+        selectedColorId,
+        selectedAnimalId,
+        selectedBreedId,
+        selectedLocality,
+        idPublicationSearch,
+        formattedDate,
         latitude,
-        images,
-        idUser: "7ea0ab93-d534-4d6e-9da3-c46db875bda3",   
-        idPetType: selectedAnimalId,  
-        idPetBreed: selectedBreedId,
-        idPetColor: selectedColorId,         
-        idLocality: selectedLocality,
-        isFound: selectedIsFound,
-        lostDate: "2023-07-19 10:30:00", 
-      };
+        longitude,
+        idUser,
+        selectedIsFound,
+      });
   
-      console.log('Datos a publicar:', postData);
+      const response = await axios.put(
+        `https://buddy-app1.loca.lt/publications/publication/${idPublicationSearch}?modelType=search`,
+        {
+          title,
+          description,
+          longitude,
+          latitude,
+          images,
+          idUser: idUser,
+          idPetType: selectedAnimalId,
+          idPetBreed: selectedBreedId,
+          idPetColor: selectedColorId,
+          idLocality: selectedLocality,
+          isFound: selectedIsFound,
+          lostDate: formattedDate,
+        },
+        {
+          headers: {
+            'auth-token': token,
+          },
+        }
+      );
   
-      const response = await axios.post('http://buddy-app1.loca.lt/publications/publication/search', postData);
-      console.log('Solicitud POST exitosa:', response.data);
-      setIsSuccessful(true);
       setIsModalVisible(true);
-      setModalMessage('¡Publicación exitosa!');
+  
+      if (response.status === 200) {
+        setIsSuccessful(true);
+        setModalMessage('Publicación actualizada con éxito');
+      } else {
+        setIsSuccessful(false);
+        setModalMessage('Hubo un error al actualizar la publicación');
+      }
+  
       setTimeout(() => {
-        setIsModalVisible(false); // Cierra el modal después de 2 segundos
-        setTimeout(() => {
-          navigation.navigate('HomeScreen', {token}); // Navega a 'HomeScreen' después de 5 segundos
-        }, 1000); // 1000 milisegundos = 1 segundos
-      }, 2000); // 2000 milisegundos = 2 segundos
-      // Maneja el éxito, muestra un mensaje de éxito, navega, etc.
+        setIsModalVisible(false); // Cierra el modal después de 1 segundo
+        navigation.navigate('HomeScreen', {token}); // Redirige al perfil
+      }, 1000); // 1000 milisegundos = 1 segundo
     } catch (error) {
-      console.error('Error al realizar la solicitud POST:', error);
       setIsSuccessful(false);
+      setModalMessage('Hubo un error al actualizar la publicación');
       setIsModalVisible(true);
-      setModalMessage('Publicación fallida, por favor intente nuevamente');
+      console.error('Error al actualizar la publicación:', error);
+  
+      // Agregar este código para ocultar el modal después de 1 segundo en caso de error
       setTimeout(() => {
-        setIsModalVisible(false); // Cierra el modal después de 3 segundos
-      }, 2000); // 2000 milisegundos = 2 segundos
-      // Maneja el error, muestra un mensaje de error, etc.
-      // Maneja el error, muestra un mensaje de error, etc.
+        setIsModalVisible(false);
+      }, 1000); // 1000 milisegundos = 1 segundo
     }
   };
+  
 
   return (
     <View style={styles.container}>
@@ -131,7 +161,7 @@ export default function EditarPublicacionBusqueda({ navigation }) {
             </View>
           </View>
       </Modal>
-      <BotonPublicar onPress={handlePost} />
+      <BotonPublicar onPress={actualizarPublicacion} />
     </View>
   );
 }

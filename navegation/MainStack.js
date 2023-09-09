@@ -45,6 +45,8 @@ import EditarInfo from '../componentes/MiMascota/EditarInfo';
 import BotonInformacion from '../componentes/MiMascota/BotonInformacion';
 import AltaInformacion from '../componentes/MiMascota/AltaInformacion';
 import ReportesScreen from '../Screens/ReportesScreen';
+import EditarPublicacionAdopcion from '../componentes/Perfil/EditarPublicacionAdopcion';
+import EditarPublicacionBusqueda from '../componentes/Perfil/EditarPublicacionBusqueda';
 
 const Stack = createNativeStackNavigator()
 
@@ -234,6 +236,14 @@ export default function MainStack() {
             <Stack.Screen
                 name='ReportesScreen'
                 component={ReportesScreen}
+            />
+             <Stack.Screen
+                name='EditarPublicacionBusqueda'
+                component={EditarPublicacionBusqueda}
+            />
+            <Stack.Screen
+                name='EditarPublicacionAdopcion'
+                component={EditarPublicacionAdopcion}
             />
         </Stack.Navigator>
     </NavigationContainer>

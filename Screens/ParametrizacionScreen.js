@@ -14,10 +14,10 @@ import ModalEditarRegion from '../componentes/Parametrizacion/ModalEditarRegion'
 import ModalAgregarRegion from '../componentes/Parametrizacion/ModalAgregarRegion';
 import ModalAgregarLocalidad from '../componentes/Parametrizacion/ModalAgregarLocalidad';
 import ModalAgregarRaza from '../componentes/Parametrizacion/ModalAgregarRaza';
-import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
+import { useRoute } from '@react-navigation/native';
 
 export default function ParametrizacionScreen({ navigation }) {
-  const route = useRoute(); // Obtiene la prop route
+  const route = useRoute();
   const { token } = route.params;
   const [zoneOptions, setZoneOptions] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -47,8 +47,8 @@ export default function ParametrizacionScreen({ navigation }) {
   const [isAddRegionModalVisible, setAddRegionModalVisible] = useState(false);
   const [isAddLocalidadModalVisible, setAddLocalidadModalVisible] = useState(false);
   const [isAddBreedModalVisible, setAddBreedModalVisible] = useState(false);
-  const [newBreedName, setNewBreedName] = useState("");
-  const [selectedPetTypeId, setSelectedPetTypeId] = useState("");
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
 
   const handleRegionAdd = (newRegion) => {
     const updatedRegions = [...regions, newRegion];
@@ -88,12 +88,24 @@ export default function ParametrizacionScreen({ navigation }) {
       .post('http://buddy-app1.loca.lt/parameters/province/', newProvince)
       .then((response) => {
         console.log('Provincia agregada exitosamente:', response.data);
+        setSuccessModalVisible(true); // Mostrar el modal de éxito
         getProvinces(); // Actualizar la lista de provincias después de agregar
+  
+        // Ocultar el modal de éxito después de 1 segundo
+        setTimeout(() => {
+          setSuccessModalVisible(false);
+        }, 1000);
       })
       .catch((error) => {
-        console.error('Error al agregar provincia:', error);
+        //console.error('Error al agregar provincia:', error);
+        setErrorModalVisible(true); // Mostrar el modal de error
+  
+        // Ocultar el modal de error después de 2 segundos
+        setTimeout(() => {
+          setErrorModalVisible(false);
+        }, 2000);
       });
-  };  
+  };
 
   const handleAddType = (newTypeName) => {
     const newType = {
@@ -103,13 +115,25 @@ export default function ParametrizacionScreen({ navigation }) {
     axios
       .post('http://buddy-app1.loca.lt/parameters/petType/', newType)
       .then((response) => {
-        console.log('Tipo de animal agregado exitosamente:', response.data);
+        //console.log('Tipo de animal agregado exitosamente:', response.data);
+        setSuccessModalVisible(true); // Mostrar el modal de éxito
         getPetTypes(); // Actualizar la lista de tipos de animales después de agregar
+  
+        // Ocultar el modal de éxito después de 1 segundo
+        setTimeout(() => {
+          setSuccessModalVisible(false);
+        }, 1000);
       })
       .catch((error) => {
-        console.error('Error al agregar tipo de animal:', error);
+        //console.error('Error al agregar tipo de animal:', error);
+        setErrorModalVisible(true); // Mostrar el modal de error
+  
+        // Ocultar el modal de error después de 2 segundos
+        setTimeout(() => {
+          setErrorModalVisible(false);
+        }, 2000);
       });
-  };
+  };  
   
   const handleAddColor = (newColorName) => {
     const newColor = {
@@ -121,11 +145,19 @@ export default function ParametrizacionScreen({ navigation }) {
       .then((response) => {
         console.log('Color agregado exitosamente:', response.data);
         getPetColors(); // Actualizar la lista de colores después de agregar
+        setSuccessModalVisible(true); // Mostrar mensaje de éxito
+        setTimeout(() => {
+          setSuccessModalVisible(false);
+        }, 1000);
       })
       .catch((error) => {
-        console.error('Error al agregar color:', error);
+        //console.error('Error al agregar color:', error);
+        setErrorModalVisible(true); // Mostrar el modal de error
+        setTimeout(() => {
+          setErrorModalVisible(false);
+        }, 2000); // Puedes ajustar el tiempo según tus preferencias
       });
-  };
+  };  
    
   const handleZoneDelete = (zoneId) => {
     axios
@@ -661,6 +693,27 @@ export default function ParametrizacionScreen({ navigation }) {
       <ModalAgregarRegion isVisible={isAddRegionModalVisible} onClose={toggleAddRegionModal} onAdd={handleRegionAdd} provinces={provinces} />
       <ModalAgregarLocalidad isVisible={isAddLocalidadModalVisible} onClose={toggleAddLocalidadModal} onAdd={handleLocalidadAdd} regions={regions}/>
       <ModalAgregarRaza isVisible={isAddBreedModalVisible} onClose={toggleAddBreedModal} onAdd={handleAddBreed}  petTypes={petTypes} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={successModalVisible}
+        onRequestClose={() => setSuccessModalVisible(false)}
+      >
+        <View style={styles.successModal}>
+          <Text style={styles.modalText}>¡Agregado con éxito!</Text>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={errorModalVisible}
+        onRequestClose={() => setErrorModalVisible(false)}
+      >
+        <View style={styles.errorModal}>
+          <Text style={styles.modalText}>No se ha agregado, intente de nuevo.</Text>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };  
@@ -715,5 +768,29 @@ const styles = StyleSheet.create({
     marginLeft: 83,
     marginTop: 10,
     paddingLeft: 10,
+  },
+  successModal: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+
+  errorModal: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
+
+  modalText: {
+    color: 'white',
+    textAlign: 'center',
   },
 });

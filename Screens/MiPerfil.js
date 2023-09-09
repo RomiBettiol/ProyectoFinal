@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput, Scro
 import Header from '../componentes/HeaderScreen';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
+import BotonFlotante from '../componentes/BotonFlotante';
+import { useNavigation } from '@react-navigation/native';
 
 export default function MiPerfil({ navigation }) {
   const route = useRoute();
@@ -27,7 +29,11 @@ export default function MiPerfil({ navigation }) {
   const [optionsModalVisible, setOptionsModalVisible] = useState(false);
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
-  const [publicationDeleted, setPublicationDeleted] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [deleteFailure, setDeleteFailure] = useState(false);
+  const [isColorSuccessMessageVisible, setIsColorSuccessMessageVisible] = useState(false);
+  const [isColorErrorMessageVisible, setIsColorErrorMessageVisible] = useState(false);
+
 
   console.log("perfil: ", token);
 
@@ -201,6 +207,9 @@ export default function MiPerfil({ navigation }) {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+  const [isSuccessful, setIsSuccessful] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const openOptionsModal = (publication) => {
     setSelectedPublication(publication);
@@ -223,6 +232,36 @@ export default function MiPerfil({ navigation }) {
     setConfirmationModalVisible(false);
   }; 
 
+  const showSuccessModal = () => {
+    setDeleteSuccess(true);
+    setTimeout(() => {
+      setDeleteSuccess(false);
+    }, 1000); // 1000 milisegundos = 1 segundo
+  };
+
+  // Función para mostrar el modal de falla durante 1 segundo
+  const showFailureModal = () => {
+    setDeleteFailure(true);
+    setTimeout(() => {
+      setDeleteFailure(false);
+    }, 1000); // 1000 milisegundos = 1 segundo
+  };
+
+  const editPublication = (publicationToEdit) => {
+    console.log('Mostrar edicion', selectedPublication);
+    const idPublicationToEdit = publicationToEdit.idPublicationAdoption || publicationToEdit.idPublicationSearch;
+    const modalType = publicationToEdit.idPublicationAdoption ? 'adoption' : 'search';
+    console.log('modalType:', modalType);
+    console.log('idPublicationToEdit:', idPublicationToEdit);
+
+    if (modalType === 'adoption') {
+      navigation.navigate('EditarPublicacionAdopcion', {publicationToEdit : selectedPublication });
+    } else if (modalType === 'search') {
+      navigation.navigate('EditarPublicacionBusqueda', {publicationToEdit : selectedPublication });
+      console.log('Mostrar desde mi perfil el id: ', selectedPublication);
+    }
+  };
+
   const handleDeletePublication = (publicationToDelete) => {
     console.log('Mostrar en el handle: ', selectedPublication);
     if (publicationToDelete) {
@@ -238,15 +277,37 @@ export default function MiPerfil({ navigation }) {
         })
         .then(response => {
           console.log('Publicación eliminada con éxito:', response.data);
+          showSuccessModal(); 
           closeConfirmationModal();
         })
         .catch(error => {
           console.error('Error al eliminar la publicación:', error);
+          showFailureModal();
+          closeConfirmationModal();
         });
     } else {
       console.error('La publicación a eliminar es nula');
     }
 };   
+
+useEffect(() => {
+  if (deleteSuccess || deleteFailure) {
+    // Realiza la solicitud GET para cargar las publicaciones actualizadas
+    axios
+      .get(`http://buddy-app1.loca.lt/publications/publication/${idUser}`, {
+        headers: {
+          'auth-token': token
+        }
+      })
+      .then(response => {
+        setUserPublications(response.data); // Actualiza las publicaciones en el estado
+        console.log('Publicaciones actualizadas', response.data);
+      })
+      .catch(error => {
+        console.error('Error al cargar las publicaciones actualizadas:', error);
+      });
+  }
+}, [deleteSuccess, deleteFailure]);
     
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
@@ -279,6 +340,9 @@ export default function MiPerfil({ navigation }) {
             <TouchableOpacity 
               key={index} 
               style={[styles.publicationContainer, {flexDirection: 'row'}]}
+              onPress = {()=> (
+                navigation.navigate('PublicacionDetalleAdopcion', { publicacion: selectedPublication, token })
+            )}
             >
               <Image
                 source={require('../Imagenes/imagenPublicaciones.jpg')}
@@ -515,7 +579,8 @@ export default function MiPerfil({ navigation }) {
               <TouchableOpacity
                 style={styles.opcionesModal}
                 onPress={() => {
-                   openOptionsModal();
+                  editPublication(selectedPublication);
+                  closeOptionsModal();
                 }}
               >
                 <Text>Modificar</Text>
@@ -563,12 +628,46 @@ export default function MiPerfil({ navigation }) {
             </View>
           </View>
         </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={deleteSuccess}
+          onRequestClose={() => {
+            setDeleteSuccess(false);
+          }}
+        >
+          <View style={[styles.modalContainer, { justifyContent: 'flex-end' }]}>
+            <View style={styles.successModal}>
+              <Text style={styles.confirmationText}>¡Publicación eliminada!</Text>
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={deleteFailure}
+          onRequestClose={() => {
+            setDeleteFailure(false);
+          }}
+        >
+          <View style={[styles.modalContainer, { justifyContent: 'flex-end' }]}>
+            <View style={styles.failureModal}>
+              <Text style={styles.confirmationText}>¡Eliminación fallida!</Text>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
+      <View style={styles.contenedorBotonesFlotantes}>
+        <BotonFlotante />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  contenedorBotonesFlotantes:{
+    marginTop: '115%',
+  }, 
   principal: {
     marginTop: 30,
     marginLeft: 25,
@@ -752,5 +851,22 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     backgroundColor: '#58DCD4',
     padding: 5,
+  },
+
+  successModal: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 20, // Ajusta el margen inferior según tus preferencias
+  },
+
+  // Estilos para el modal de confirmación fallida
+  failureModal: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 20, // Ajusta el margen inferior según tus preferencias
   },
 });

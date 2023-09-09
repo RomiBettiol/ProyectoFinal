@@ -56,7 +56,7 @@ export default function PublicacionBusqueda({ navigation }) {
   
       console.log('Datos a publicar:', postData);
   
-      const response = await axios.post('http://buddy-app1.loca.lt/publications/publication/search', postData);
+      const response = await axios.post('https://buddy-app1.loca.lt/publications/publication/search', postData);
       console.log('Solicitud POST exitosa:', response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);
@@ -69,10 +69,10 @@ export default function PublicacionBusqueda({ navigation }) {
       }, 2000); // 2000 milisegundos = 2 segundos
       // Maneja el éxito, muestra un mensaje de éxito, navega, etc.
     } catch (error) {
-      console.error('Error al realizar la solicitud POST:', error);
+      //console.error('Error al realizar la solicitud POST:', error);
       setIsSuccessful(false);
       setIsModalVisible(true);
-      setModalMessage('Publicación fallida, por favor intente nuevamente');
+      setModalMessage('Publicación fallida, por favor complete todos los campos');
       setTimeout(() => {
         setIsModalVisible(false); // Cierra el modal después de 3 segundos
       }, 2000); // 2000 milisegundos = 2 segundos

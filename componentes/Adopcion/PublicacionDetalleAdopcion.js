@@ -57,7 +57,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
                       source={require('../../Imagenes/hueso.png')}
                       style={styles.iconos}
                   />
-                  <Text style={styles.texto}>{publicacion?.breed.petBreedName}</Text>
+                  <Text style={styles.texto}>{publicacion?.petBreed.petBreedName}</Text>
                 </View>
                 <View style={[styles.itemInfoFiltro, {flexDirection:'row'}]}>
                   <Image
@@ -73,14 +73,14 @@ const PublicacionDetalleAdopcion = ({ route }) => {
                       source={require('../../Imagenes/paleta-de-color.png')}
                       style={styles.iconos}
                   />
-                  <Text style={styles.texto}>{publicacion?.color.petColorName}</Text>
+                  <Text style={styles.texto}>{publicacion?.petcolor.petColorName}</Text>
                 </View>
                 <View style={[styles.itemInfoFiltro, {flexDirection:'row'}]}>
                   <Image
                       source={require('../../Imagenes/huella.png')}
                       style={styles.iconos}
                   />
-                  <Text style={styles.texto}>{publicacion?.breed.type.petTypeName}</Text>
+                  <Text style={styles.texto}>{publicacion?.petBreed.petType.petTypeName}</Text>
                 </View>
               </View>
             </View>
