@@ -31,42 +31,50 @@ export default function MiPerfil({ navigation }) {
   const [selectedPublication, setSelectedPublication] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteFailure, setDeleteFailure] = useState(false);
+  const [idUser, setIdUser] = useState('');
 
   console.log("perfil: ", token);
 
-  const idUser = '917f740b-6a2f-482c-8d62-4ce289a8f206';
-
   //Trae info del usuario
   useEffect(() => {
-    axios.get(`https://buddy-app1.loca.lt/security/user/${idUser}`, {
+    axios.get(`https://buddy-app1.loca.lt/security/user/`, {
       headers: {
         'auth-token': token
       }
     })
     .then(response => {
       setUser(response.data);
-      setUser(response.data);
       setNewName(response.data[0].name);
       setNewUserName(response.data[0].userName);
+  
+      // Declarar la constante idUser
+      setIdUser(response.data[0].idUser);
+      
+      // Luego puedes usar idUser como desees en tu componente.
     })
     .catch(error => {
       console.error('Error fetching user data:', error);
     });
-  
-    // Nueva llamada para obtener las publicaciones del usuario
-    axios.get(`http://buddy-app1.loca.lt/publications/publication/${idUser}`, {
-      headers: {
-        'auth-token': token
-      }
-    })
-    .then(response => {
-      setUserPublications(response.data); // Almacena las publicaciones en el estado
-      console.log('Publicaciones', response.data)
-    })
-    .catch(error => {
-      console.error('Error fetching user publications:', error);
-    });
-  }, []);
+  }, [token, idUser]);
+
+  console.log('idUser1: ', idUser);
+
+  useEffect(() => {
+    axios.get(`http://buddy-app1.loca.lt/publications/publication/ByUser`, {
+        headers: {
+          'auth-token': token
+        }
+      })
+      .then(response => {
+        setUserPublications(response.data); // Almacena las publicaciones en el estado
+        console.log('Publicaciones', response.data)
+      })
+      .catch(error => {
+        console.error('Error fetching user publications:', error);
+      });
+  },[]);
+
+  console.log('idUser: ', idUser);
 
   const openModal = () => {
     setModalVisible(true);
