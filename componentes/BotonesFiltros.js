@@ -229,7 +229,6 @@ const FilterButtonsExample = () => {
             <View style={styles.informacion}>
               <View style={[{ flexDirection: 'row'}, styles.tituloView]}>
                 <Text style={styles.tituloPublicaciones}>{item.title}</Text>
-                <Text style={styles.tituloPublicaciones}>{item.petcolor.petColorName}</Text>
                 {/* Aquí utilizamos el operador ternario para aplicar el estilo según isFound */}
                 <View style={item.isFound ? styles.encontradoStyle : styles.perdidoStyle}>
                   <Text style={styles.textoEstado}>{item.isFound ? 'Encontrado' : 'Perdido'}</Text>

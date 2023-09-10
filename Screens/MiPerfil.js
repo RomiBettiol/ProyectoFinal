@@ -32,6 +32,7 @@ export default function MiPerfil({ navigation }) {
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteFailure, setDeleteFailure] = useState(false);
   const [idUser, setIdUser] = useState('');
+  const [buttonTransform, setButtonTransform] = useState(0);
 
   console.log("perfil: ", token);
 
@@ -678,17 +679,14 @@ useEffect(() => {
           </View>
         </Modal>
       </ScrollView>
-      <View style={styles.contenedorBotonesFlotantes}>
-        <BotonFlotante />
+      <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
+            <BotonFlotante token={token} />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  contenedorBotonesFlotantes:{
-    marginTop: '115%',
-  }, 
   principal: {
     marginTop: 30,
     marginLeft: 25,
@@ -889,5 +887,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginBottom: 20, // Ajusta el margen inferior según tus preferencias
+  },
+  botonFlotanteContainer: {
+    position: 'absolute',
+    bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
+    right: 20, // Puedes ajustar esta cantidad según tus preferencias
+    transform: [{ translateY: 0 }], // Inicialmente no se desplaza
   },
 });
