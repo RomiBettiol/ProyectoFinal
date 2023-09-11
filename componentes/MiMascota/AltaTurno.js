@@ -22,7 +22,7 @@ export default function AltaTurno({ visible, onClose }) {
   const mascotaId = route.params?.mascotaId;
   console.log(mascotaId)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
-
+  const [isButtonDisabled1, setIsButtonDisabled1] = useState(true); 
   
   
   const [turnData, setTurnData] = useState({
@@ -51,16 +51,18 @@ export default function AltaTurno({ visible, onClose }) {
     // Validar la hora y minutos
     const horaValida = /^\d+$/.test(turnData.hora) && parseInt(turnData.hora, 10) >= 0 && parseInt(turnData.hora, 10) <= 23;
     const minutosValidos = /^\d+$/.test(turnData.minutos) && parseInt(turnData.minutos, 10) >= 0 && parseInt(turnData.minutos, 10) <= 59;
-
-    // Actualizar el estado de error y deshabilitar el botón en consecuencia
+  
+    // Actualizar el estado de error en consecuencia
     if (horaValida && minutosValidos) {
       setTurnData({ ...turnData, error: null });
-      setIsButtonDisabled(false);
     } else {
       setTurnData({ ...turnData, error: 'Ingrese una hora válida (00-23) y minutos válidos (00-59)' });
-      setIsButtonDisabled(true);
     }
+  
+    // Habilitar o deshabilitar el botón según la validación
+    setIsButtonDisabled(!(horaValida && minutosValidos));
   }, [turnData.hora, turnData.minutos]);
+  
 
     return (
           <View>
@@ -130,27 +132,39 @@ export default function AltaTurno({ visible, onClose }) {
           <ListaValoresAñoMascota setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
           </View>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor5]}>
-            <TouchableOpacity
-                          style={styles.closeButton}
-                          onPress={async () => {
-                            console.log('hora: ',hora) 
-                            console.log('fecha y hora: ',data.turnDate) 
-                      
-                            try {
-                                                 
-                              const response = await axios.post(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}`, data);
-                              console.log('Respuesta del servidor:', response.data);
-                              setShowSuccessModal(true);
-                            } catch (error) {
-                              setShowErrorModal(true);
-                              console.error('Error al hacer la solicitud POST:', error);
-                            }
-                            setOverlayVisible(false); // Cierra el overlay después de eliminar
-                          }}
-                          disabled={isButtonDisabled}
-                      >
-                          <Text style={styles.closeButtonText}>Aceptar</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+                style={styles.closeButton}
+                onPress={async () => {
+                  console.log('hora: ', hora);
+                  console.log('fecha y hora: ', data.turnDate);
+                  setIsButtonDisabled1(true)
+                  if (isButtonDisabled) {
+                    return; // Si el botón está deshabilitado, no hacer nada
+                  }
+
+                  setIsButtonDisabled(true); // Deshabilitar el botón
+
+                  try {
+                    const response = await axios.post(
+                      `https://buddy-app1.loca.lt/mypet/turn/${mascotaId}`,
+                      data
+                    );
+                    console.log('Respuesta del servidor:', response.data);
+                    setShowSuccessModal(true);
+                  } catch (error) {
+                    setShowErrorModal(true);
+                    console.error('Error al hacer la solicitud POST:', error);
+                  }
+
+                  setTimeout(() => {
+                    setIsButtonDisabled(false); // Habilitar el botón nuevamente después de 2 segundos
+                  }, 2000);
+                }}
+                disabled={isButtonDisabled && isButtonDisabled1}
+              >
+  <Text style={styles.closeButtonText}>Aceptar</Text>
+</TouchableOpacity>
+
             <TouchableOpacity
                           style={styles.closeButton}
                           onPress={onClose}

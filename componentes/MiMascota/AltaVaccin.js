@@ -22,7 +22,8 @@ export default function AltaVaccin({ visible, onClose }) {
   const mascotaId = route.params?.mascotaId;
   console.log(mascotaId)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
-
+  const [isButtonDisabled1, setIsButtonDisabled1] = useState(true); 
+  
   
   const [vaccinData, setVaccinData] = useState({
     titleVaccin: '',
@@ -53,6 +54,9 @@ export default function AltaVaccin({ visible, onClose }) {
         setVaccinData({ ...vaccinData, error: 'Ingrese una hora válida (00-23) y minutos válidos (00-59)' });
         setIsButtonDisabled(true);
       }
+
+       // Habilitar o deshabilitar el botón según la validación
+    setIsButtonDisabled(!(horaValida && minutosValidos));
     }, [vaccinData.hora, vaccinData.minutos]);
     return (
       <View>
@@ -127,7 +131,12 @@ export default function AltaVaccin({ visible, onClose }) {
                           onPress={async () => {
                             console.log('hora: ',hora) 
                             console.log('fecha y hora: ',data.vaccineDate) 
-                      
+                            setIsButtonDisabled1(true)
+                            if (isButtonDisabled) {
+                              return; // Si el botón está deshabilitado, no hacer nada
+                            }
+
+                            setIsButtonDisabled(true); // Deshabilitar el botón
                             try {
                                                  
                               const response = await axios.post(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}`, data);
@@ -137,11 +146,14 @@ export default function AltaVaccin({ visible, onClose }) {
                               setShowErrorModal(true);
                               console.error('Error al hacer la solicitud POST:', error);
                             }
+                            setTimeout(() => {
+                              setIsButtonDisabled(false); // Habilitar el botón nuevamente después de 2 segundos
+                            }, 2000);
                           //  setOverlayVisible(false); // Cierra el overlay después de eliminar
                           }}
-                          disabled={isButtonDisabled}
+                          disabled={isButtonDisabled && isButtonDisabled1}
                       >
-                          <Text style={styles.closeButtonText}>Aceptar</Text>
+                          <Text style={styles.closeButtonText} disabled={isButtonDisabled1}>Aceptar</Text>
             </TouchableOpacity>
             <TouchableOpacity
                           style={styles.closeButton}

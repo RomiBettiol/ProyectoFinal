@@ -9,6 +9,7 @@ import AgregarImagen from '../AgregarImagen';
 import axios from 'axios';
 import SuccessModal from './SuccessModal';
 import ErrorModal from './ErrorModal';
+
 export default function EditarMascota({ navigation, mascota, token, onCloseEditarMascota}) {
   const [nombre, setNombre] = useState(mascota.petName || '');
   const [raza, setRaza] = useState(mascota.petBreed || '');
@@ -25,13 +26,16 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
  const [selectedBreedId, setSelectedBreedId] = useState('');
  const[idPetBreed,setIdPetBreed]= useState('');
   const[idPetType, setIdPetType]=useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
   const updateMascota = async () => {
+    setIsButtonDisabled(true);
     const idPet = mascota.idPet; // Obtén la ID de la mascota desde los props
     const updatedData = {
       petName: nombre,
       day: selectedDay, // Agregar a los datos actualizados
       idPetType: selectedAnimalId,
-        idPetBreed: selectedBreedId,
+      idPetBreed: selectedBreedId,
       month: selectedMonth, // Agregar a los datos actualizados
       year: selectedYear, // Agregar a los datos actualizados
       // Otras propiedades que quieras actualizar
@@ -63,6 +67,9 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
       console.error('Error al actualizar la mascota:', error);
       setShowErrorModal(true);
     }
+    setTimeout(() => {
+      setIsButtonDisabled(false);
+    }, 2000);
   };
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
@@ -152,7 +159,7 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
           style={styles.closeButton}
           onPress={updateMascota}
         >
-          <Text style={styles.closeButtonText}>Actualizar Mascota</Text>
+          <Text style={styles.closeButtonText} disabled={isButtonDisabled}>Actualizar Mascota</Text>
         </TouchableOpacity>
       </View>
       

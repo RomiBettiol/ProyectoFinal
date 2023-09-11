@@ -9,45 +9,43 @@ const windowHeight = Dimensions.get('window').height;
 const InfoModal = ({ visible, onClose, info }) => {
     
     return (
-        <Modal
-            visible={visible}
-            animationType="slide"
-            transparent={true}
-        >
-          <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                    {/* Contenido de la tarjeta modal */}
-                    <Text style={styles.titulo}> INFORMACIÓN</Text>
-          
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
-            <Text style={styles.tituloPublicacion}>Titulo</Text>
-            <TextInput 
-                style={styles.inputTexto}
-                editable={false} // Campo de solo lectura
-                value={info.titleInformation}
-                
-             />
-           </View>
-          <View style={[{ flexDirection: 'column' }, styles.subcontenedor1]}>
-            <Text style={[{ flexDirection: 'row' }, styles.tituloDescripcion]}>Descripcion</Text>
-            <TextInput 
-            style={[{ flexDirection: 'row' }, styles.inputTextoDescripcion]}
-            editable={false} // Campo de solo lectura
-            value={info.descriptionInformation}
-            />
-          </View>
+        <View>
+            <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                      {/* Contenido de la tarjeta modal */}
+                      <Text style={styles.titulo}> INFORMACIÓN</Text>
+            
+            <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
+              <Text style={styles.tituloPublicacion}>Titulo</Text>
+              <TextInput 
+                  style={styles.inputTexto}
+                  editable={false} // Campo de solo lectura
+                  value={info.titleInformation}
+                  
+              />
+            </View>
+            <View style={[{ flexDirection: 'column' }, styles.subcontenedor1]}>
+              <Text style={[{ flexDirection: 'row' }, styles.tituloDescripcion]}>Descripcion</Text>
+              <TextInput 
+              style={[{ flexDirection: 'row' }, styles.inputTextoDescripcion]}
+              editable={false} // Campo de solo lectura
+              value={info.descriptionInformation}
+              />
+            </View>
 
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor5]}>
-            <TouchableOpacity
-                style={styles.closeButton}
-                onPress={onClose}
-            >
-                <Text style={styles.closeButtonText}>Cerrar</Text>
-            </TouchableOpacity>
+            <View style={[{ flexDirection: 'row' }, styles.subcontenedor5]}>
+              <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={onClose}
+              >
+                  <Text style={styles.closeButtonText}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
-        </Modal>
+         
+      
     );
 };
 const styles = StyleSheet.create({

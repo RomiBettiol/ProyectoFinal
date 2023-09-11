@@ -35,6 +35,9 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
   const [petBreedOptions, setPetBreedOptions] = useState([]);
   const [selectedBreedId, setSelectedBreedId] = useState('');
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+
   const authtoken = token;
   console.log("token en agregarmascota: "+ token)
   console.log("authtoken: "+ authtoken)
@@ -92,6 +95,8 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
     onCloseNuevaMascota(); // Cierra el modal NuevaMascota
   };
   const handleAddPet = async () => {
+    // Deshabilita el botón al principio de la función
+     setIsButtonDisabled(true);
     try {
       const config = {
         headers: {
@@ -119,6 +124,10 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
 
       console.error('Error al hacer la solicitud POST:', error);
     }
+    // Habilita el botón nuevamente después de dos segundos
+    setTimeout(() => {
+      setIsButtonDisabled(false);
+    }, 2000);
   };
 
   return (
@@ -169,7 +178,7 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
           </View>
 
           <View style={styles.subcontenedor5}>
-            <TouchableOpacity style={styles.closeButton} onPress={handleAddPet}>
+            <TouchableOpacity style={styles.closeButton} onPress={handleAddPet}  disabled={isButtonDisabled}>
                 <Text style={styles.closeButtonText}>Agregar</Text>
             </TouchableOpacity>     
           </View>

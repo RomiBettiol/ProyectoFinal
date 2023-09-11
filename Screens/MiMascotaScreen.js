@@ -33,7 +33,7 @@ export default function MiMascotaScreen() {
   const [mascotas, setMascotas] = useState([]);
   const [botonesVisibles, setBotonesVisibles] = useState({}); // Usar un objeto en lugar de un array
   const [showNuevaMascotaModal, setShowNuevaMascotaModal] = useState(false);
-
+  const [error404, setError404] = useState(false);
   const route = useRoute(); // Obtiene la prop route
  const { token } = route.params;
 
@@ -112,7 +112,10 @@ export default function MiMascotaScreen() {
      console.log(mascotas)
       setBotonesVisibles(Array(mascotasData.length).fill(false)); // Inicializa el estado
     } catch (error) {
-      console.error('Error fetching mascotas:', error);
+      if (error.response && error.response.status === 404) {
+        // Si el error es 404, establece el estado error404 en true
+        setError404(true);
+    }
     }
     console.log("estoy saliendo del try")                                
   };
@@ -135,6 +138,11 @@ export default function MiMascotaScreen() {
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Mi mascota</Text>
         </View> 
+        {error404 ? (
+                        <View style={styles.contentContainer22}>
+                            <Text style={styles.sinInfo}>NO HAY INFORMACION CARGADA</Text>
+                        </View>
+                    ) : (
         <View style={styles.contenedor2}>
           {mascotas.map((mascota, index) => (
             <View 
@@ -286,7 +294,9 @@ export default function MiMascotaScreen() {
             </TouchableOpacity>
   
             </View>  
-        </View>
+            
+        </View>  
+        )}
          {/* Modal AGREGAR (tarjeta flotante) */}
          <Modal
             transparent={true}
@@ -308,13 +318,22 @@ export default function MiMascotaScreen() {
               </View>
             </View>
           </Modal>
-
+      
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  sinInfo:{
+    fontSize: 14,
+    color:'grey',
+},
+contentContainer22: {
+   marginTop:400,        
+    justifyContent: 'center', // Para centrar vertical
+    alignItems:'center',
+},
   container: {
     flex: 1,
     backgroundColor:'#DDC4B8',

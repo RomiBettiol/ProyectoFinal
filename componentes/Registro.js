@@ -7,7 +7,6 @@ import RecuperarContrasenaScreen from '../Screens/RecuperarContrasenaScreen';
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
 
-
 const Registro = () => {
   const [usuario, setUsuario] = React.useState('');
   const [contrasena, setContrasena] = React.useState('');
@@ -28,6 +27,12 @@ const Registro = () => {
 
   const handleIngresarPress = async () => {
     if (formValid) {
+
+      const data = {
+        mail: usuario,
+        password: contrasena
+      }
+
       try {
         const response = await axios.post('https://buddy-app1.loca.lt/security/auth/login', {
           headers: {
