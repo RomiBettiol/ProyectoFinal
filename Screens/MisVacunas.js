@@ -2,21 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Modal, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HeaderScreen from '../componentes/HeaderScreen';
-import BarraBusqueda from '../componentes/BarraBusqueda';
-//import BotonVaccin from '../componentes/MiMascota/BotonVaccin';
+import BarraBusquedaMascota from '../componentes/MiMascota/BarraBusquedaMascota';
+import BotonVaccine from '../componentes/MiMascota/BotonVaccine';
 import BotonFlotante from '../componentes/BotonFlotante';
 import { Popover, Overlay } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
-//import AltaVaccin from '../componentes/MiMascota/AltaVaccin';
-//import EditarVaccin from '../componentes/MiMascota/EditarVaccin';
-//import VaccinModal from '../componentes/MiMascota/VaccinModal';
+import AltaVaccin from '../componentes/MiMascota/AltaVaccin';
+import EditarVaccin from '../componentes/MiMascota/EditarVaccin';
+import VaccinModal from '../componentes/MiMascota/VaccinModal';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 import axios from 'axios';
+import SuccessModal from '../componentes/MiMascota/SuccessModal';
+import ErrorModal from '../componentes/MiMascota/ErrorModal';
+import { dismissBrowser } from 'expo-web-browser';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function MisVacunas() {
+export default function MisVacunas(token) {
     const [overlayVisible, setOverlayVisible] = useState(false);
     const [selectedVaccinIndex, setSelectedVaccinIndex] = useState(null);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -25,19 +28,28 @@ export default function MisVacunas() {
     const [showEditarVaccinModal, setShowEditarVaccinModal] = useState(false);
     const [showOptionsOverlay, setShowOptionsOverlay] = useState(false);
     const [vaccines, setVaccines] = useState([]);
-    const [vaccin, setvaccin] = useState(false);
-    
+    const [vaccin, setVaccin] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
     const route = useRoute();
     const mascotaId = route.params?.mascotaId; 
+    console.log(mascotaId)
+    const[showVaccinModal, setShowVaccinModal] = useState(false);
+    const [buttonTransform, setButtonTransform] = useState(0);
+    const[mensaje, setMensaje] = useState('')
 
+
+    
     useEffect(() => {
         
-        async function fetchvaccines() {
+        async function fetchVaccines() {
             try {
                 const response = await axios.get(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}`);
-                
-                if (Array.isArray(response.data.vaccines)) {
+                console.log('Después de hacer la solicitud GET');
+                if (response.data && Array.isArray(response.data.vaccines)) {
+                    
                     setVaccines(response.data.vaccines);
+                   
                 } else {
                     console.error('API response does not have a valid "vaccines" array:', response.data);
                 }
@@ -46,28 +58,46 @@ export default function MisVacunas() {
                 console.error('Error fetching data:', error);
             }
         };
-    
-        fetchvaccines();
+        
+        fetchVaccines();
     }, []);
-
+    
+    
     const filterAndSearchVaccines = () => {
+        
         return vaccines
             .filter(vaccin => {
-                const vaccinYear = new Date(vaccin.vaccinDate).getFullYear();
+                console.log(vaccin.vaccineDate)
+                const dateParts = vaccin.vaccineDate.split('-');
+                const day= parseInt(dateParts[0], 10);
+                const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+                const  year= parseInt(dateParts[2], 10);
+                console.log(year)
+                console.log(month)
+                console.log(day)
+                const vaccineDate = new Date(year, month, day);
+                console.log('vaccineDate: ',vaccineDate); 
+                const vaccinYear = vaccineDate.getFullYear();
+                console.log('vaccinYear: ',vaccinYear); 
                 const searchTextLower = searchText.toLowerCase();
+                console.log('searchTextLower: ', searchTextLower); 
                 const titleLower = vaccin.titleVaccine.toLowerCase();
-
+                console.log('titleLower: ', titleLower); 
+                console.log('hora:',vaccin.vaccineHour);
                 return (
                     (selectedYear === null || vaccinYear === selectedYear) &&
                     (searchText === '' || titleLower.includes(searchTextLower))
+                    
                 );
             })
             .sort((a, b) => {
-                const fechaA = new Date(a.vaccinDate);
-                const fechaB = new Date(b.vaccinDate);
+                
+                const fechaA = new Date(a.vaccineDate);
+                const fechaB = new Date(b.vaccineDate);
 
                 return fechaA - fechaB;
             });
+             
     };
 
     const filteredAndSortedVaccines = filterAndSearchVaccines();
@@ -75,7 +105,11 @@ export default function MisVacunas() {
         const groupedVaccines = {};
     
         vaccines.forEach(vaccin => {
-          //  const fecha = new Date(vaccin.vaccinDate);
+            const dateParts = vaccin.vaccineDate.split('-');
+            const year= parseInt(dateParts[2], 10);
+            const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+            const  day= parseInt(dateParts[0], 10);
+            const fecha = new Date(year, month, day);
             const mes = fecha.toLocaleString('default', { month: 'long' });
     
             if (!groupedVaccines[mes]) {
@@ -97,32 +131,71 @@ export default function MisVacunas() {
     const toggleAltaVaccinModal = () => {
         setShowAltaVaccinModal(!showAltaVaccinModal);
     };
+
+    function dia (vaccin) {
+        const dateParts = vaccin.vaccineDate.split('-');
+        const year= parseInt(dateParts[2], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+        const  day= parseInt(dateParts[0], 10);
+        return day;
+    };
+    
+    
     // Dentro de la función que maneja la opción "Eliminar"
     const handleDeleteVaccin = async () => {
         console.log(vaccin.idVaccin )
         try {
-            const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/vaccin/${mascotaId}/${vaccin.idaVaccin}`);
+            const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`);
             console.log('Vaccin  eliminado:', response.data);
+            setMensaje('Vacuna eliminada correctamente')
+            setShowSuccessModal(true);
             } catch (error) {
                 console.error('Error eliminando la vacuna:', error);
+                setMensaje('Vacuna eliminada correctamente')
+                setShowErrorModal(true);
             }
         
         setOverlayVisible(false); // Cierra el overlay después de eliminar
     };
+   
 
+    const handleSuccessModalClose = () => {
+        setShowSuccessModal(false);
+        setShowVaccinModal(false);
+        setOverlayVisible(false); // Cierra el modal NuevaMascota
+      };
+    
+    useEffect(() => {
+        console.log("vaccines: ");
+        console.log(vaccines);
+    }, [vaccines]);
+
+    
+    
     return (
         <View style={styles.container}>
             <HeaderScreen />
             <ScrollView style={styles.scroll}>
                 <View style={styles.contentContainer1}>
-                    {/* ... (contenido del encabezado) */}
-                </View>
+                        <View style={styles.container1}>
+                            <Image
+                                source={require('../Imagenes/perrito.jpeg')}
+                                style={styles.imagMascota}
+                            />
+                            <View style={styles.containerTitulo}>
+                                <Text style={styles.titulo}>
+                                    MIS VACUNAS
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
                 <View>
                     <View style={styles.containerBarra}>
-                        <BarraBusqueda
+                        <BarraBusquedaMascota
                             searchText={searchText}
                             onSearchTextChange={setSearchText}
                         />
+                        
                     </View>
                     
                     <View style={styles.yearPickerContainer}>
@@ -132,6 +205,7 @@ export default function MisVacunas() {
                             onValueChange={(itemValue, itemIndex) => setSelectedYear(itemValue)}
                             style={{ height: 50, width: 130 }}
                         >
+                            
                             {/* Generar las opciones de años dinámicamente */}
                             {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
                                 <Picker.Item key={year} label={year.toString()} value={year} />
@@ -157,14 +231,15 @@ export default function MisVacunas() {
                                 </Text>
                                 <ScrollView horizontal={true}>
                                     {filteredVaccinesAgrupados[mes].map((vaccin, index) => (
+                                       
                                         <View style={styles.contenedorVaccin} key={index}>
-                                            
+                                              
                                                 <TouchableOpacity
                                                     style={styles.containerVaccin}
                                                     onPress={() => {
-                                                        setSelectedVaccinIndex(index);
-                                                        setOverlayVisible(true);
-                                                    }}
+                                                        setVaccin(vaccin); // Esto ya lo tienes en tu código
+                                                        setShowVaccinModal(true); // Abre el modal TurnoModal
+                                                      }}
                                                 > 
                                                     <TouchableOpacity
                                                         style={styles.botonOpc}
@@ -182,18 +257,14 @@ export default function MisVacunas() {
                                                                                                               
                                                     <View style={styles.dia}>
                                                         <Text style={styles.numero}>
-                                                        {/* 
-                                                            {new Date(vaccin.vaccinDate).getDate()}
-                                                        */}
+                                                         {dia(vaccin)}                                                          
                                                         </Text>
                                                     </View>
                                                     <Text>
-                                                    {/*
-                                                        {new Date(vaccin.vaccinDate).toLocaleTimeString()}
-                                                    */}
+                                                        {vaccin.vaccineHour}
                                                     </Text>
                                                     <Text style={styles.detalle}>
-                                                        {vaccin.titleVaccine}
+                                                      {vaccin.titleVaccine}
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -203,7 +274,9 @@ export default function MisVacunas() {
                         </View>
                     ))}
             </View>
-             
+           
+                <BotonVaccine onAddVaccin={toggleAltaVaccinModal} token={token}/>  
+            
              {/* Overlay para opciones */}
              <Overlay
                     isVisible={overlayVisible}
@@ -227,8 +300,8 @@ export default function MisVacunas() {
                     >
                         <View style={styles.modalContainer}>
                             <View style={styles.modalContent}>
-                           {/*     <EditarVaccin mascotaId={mascotaId} vaccin={vaccin} onClose={toggleEditarVaccinModal} />
-                           */}
+                                <EditarVaccin mascotaId={mascotaId} vaccin={vaccin} onClose={toggleEditarVaccinModal} />
+                           
                             </View>
                         </View>
                     </Modal>
@@ -241,21 +314,49 @@ export default function MisVacunas() {
                     </TouchableOpacity>
                 </Overlay>
                  {/* Modal (tarjeta flotante) */}
-                
-            </ScrollView>
-            <Modal
-                visible={showAltaVaccinModal}
-                animationType="slide"
-                transparent={true}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                       {/*
-                        <AltaVaccin onClose={toggleAltaVaccinModal} />
-                        */}
+                <Modal
+                    visible={showAltaVaccinModal}
+                    animationType="slide"
+                    transparent={true}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                        
+                            <AltaVaccin onClose={toggleAltaVaccinModal} />
+                        
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+                <SuccessModal
+                    visible={showSuccessModal}
+                    onClose={() => {
+                    setShowSuccessModal(false);
+                    handleSuccessModalClose(); // Cerrar el modal EditarTurno
+                    }}
+                    message={mensaje}
+                />
+                <ErrorModal
+                    visible={showErrorModal}
+                    errorMessage={mensaje}
+                    onClose={() => setShowErrorModal(false)}
+                />
+                <Modal
+                    visible={showVaccinModal}
+                    animationType="slide"
+                    transparent={true}
+                    onClose={() => {
+                        setShowVaccinModal(false);
+                        handleSuccessModalClose();
+                    }}
+                    >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>                 
+                            <VaccinModal vaccin={vaccin} onClose={() => setShowVaccinModal(false)}  />
+                        </View>
+                    </View>
+                </Modal>
+            </ScrollView>
+            
             
         </View>
     );
@@ -267,6 +368,23 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        
+    },
+    modalContent: {
+      backgroundColor: '#FFFFFF',
+      elevation: 10,
+      borderRadius: 25,
+      padding: 20,
+      width: windowWidth * 0.95,
+      height:windowHeight * 0.65,
+      textAlign: 'center',
+      alignItems: 'center', // Para centrar horizont
+  },
     scroll: {
         flex: 1,
     },

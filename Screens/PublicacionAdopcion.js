@@ -32,8 +32,7 @@ export default function PublicacionBusqueda({ navigation }) {
       const postData = {
         title,
         description,
-        images,
-        idUser: "917f740b-6a2f-482c-8d62-4ce289a8f206",   
+        images, 
         idPetType: selectedAnimalId,  
         idPetBreed: selectedBreedId,
         idPetColor: selectedColorId,         
@@ -43,6 +42,7 @@ export default function PublicacionBusqueda({ navigation }) {
       };
   
       console.log('Datos a publicar:', postData);
+      console.log('token :', token)
       const config = {
         headers: {
           'auth-token': token,

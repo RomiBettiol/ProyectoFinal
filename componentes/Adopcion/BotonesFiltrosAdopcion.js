@@ -195,7 +195,7 @@ const BotonesFiltrosAdopcion = () => {
       } else {
         setSelectedFilter(filter);
         const filteredData = publicaciones.filter((item) =>
-          item.breed.type.petTypeName.toUpperCase() === filter.toUpperCase()
+          item.petBreed.petType.petTypeName.toUpperCase() === filter.toUpperCase()
         );
         setFilteredPublicaciones(filteredData);
       }
@@ -204,7 +204,7 @@ const BotonesFiltrosAdopcion = () => {
     const filterByOtherAnimals = (data) => {
       console.log("filterByOtherAnimals function called");
       const animalTypesToExclude = ['PERRO', 'GATO', 'CONEJO'];
-      return data.filter(item => !animalTypesToExclude.includes(item.breed.type.petTypeName.toUpperCase()));
+      return data.filter(item => !animalTypesToExclude.includes(item.petBreed.petType.petTypeName.toUpperCase()));
     };           
 
   const renderItem = ({ item }) => {

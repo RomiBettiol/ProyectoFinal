@@ -4,40 +4,40 @@ import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Dimensions 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const TurnoModal = ({ visible, turnoContent, onClose, turno }) => {
-    const timeParts = turno.turnHour.split(':');
+const VaccinModal = ({ visible, vaccinContent, onClose, vaccin }) => {
+    const timeParts = vaccin.vaccineHour.split(':');
     const hor = parseInt(timeParts[0], 10) ;
     const min= parseInt(timeParts[1], 10);
-    const [selectedMonth, setSelectedMonth] = useState(null);
+    const dateParts = vaccin.vaccineDate.split('-');
+    const year= parseInt(dateParts[2], 10);
+    const month = parseInt(dateParts[1], 10) ; // Restamos 1 porque los meses en JavaScript son 0-11
+    const  day= parseInt(dateParts[0], 10);
+    console.log('ATENTE:', day)
     const [hora, setHora] = useState(hor);
     const [minutos, setMinutos] = useState(min);
-    const dateParts = turno.turnDate.split('-');
-    const  year= parseInt(dateParts[2], 10);
-    const month = parseInt(dateParts[1], 10); // Restamos 1 porque los meses en JavaScript son 0-11
-    const day= parseInt(dateParts[0], 10);
     
     return (
         <View>
           <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     {/* Contenido de la tarjeta modal */}
-                    <Text style={styles.titulo}> TURNO</Text>
+                    <Text style={styles.titulo}> VACUNA</Text>
           
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
             <TextInput 
                 style={styles.inputTexto}
                 editable={false} // Campo de solo lectura
-                value={turno.titleTurn}
+                value={vaccin.titleVaccine}
                 
              />
            </View>
           <View style={[{ flexDirection: 'column' }, styles.subcontenedor1]}>
             <Text style={[{ flexDirection: 'row' }, styles.tituloDescripcion]}>Descripcion</Text>
             <TextInput 
-              style={[{ flexDirection: 'row' }, styles.inputTextoDescripcion]}
-              editable={false} // Campo de solo lectura
-              value={turno.descriptionTurn}
+            style={[{ flexDirection: 'row' }, styles.inputTextoDescripcion]}
+            editable={false} // Campo de solo lectura
+            value={vaccin.descriptionVaccine}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -132,9 +132,9 @@ const styles = StyleSheet.create({
         height: 32,
         borderRadius: 100,
         textAlign: 'center',
-    //    paddingStart:5,
+        paddingStart:5,
         marginHorizontal:2,
-        color:'black',
+        color:'black'
     },
     inputTextoDescripcion: {
         backgroundColor: '#EEE9E9',
@@ -142,18 +142,8 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 10,
         textAlign: 'center',
-        marginVertical:20,
+        marginVertical:20,        
         color:'black',
-    },
-    input: {
-      height: 40,
-      backgroundColor: '#EEE9E9',
-      padding: 5,
-      borderRadius: 20,
-      width: '30%',
-      fontSize:14,
-      textAlign:'center',
-      color:'black',
     },
     textoFecha: {
         fontSize: 16,
@@ -187,6 +177,16 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent:'center',
   },
+  input: {
+    height: 40,
+    backgroundColor: '#EEE9E9',
+    padding: 5,
+    borderRadius: 20,
+    width: '30%',
+    fontSize:18,
+    textAlign:'center',
+    color:'black',
+  },
   inputDivider: {
       fontSize: 24,
       marginRight: 5,
@@ -198,4 +198,4 @@ const styles = StyleSheet.create({
   });
       
 
-export default TurnoModal;
+export default VaccinModal;

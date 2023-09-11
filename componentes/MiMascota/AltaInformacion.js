@@ -3,6 +3,8 @@ import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Dimensions 
 import ListaValoresDias from '../Busqueda/ListaValoresDias';
 import ListaValoresMeses from '../Busqueda/ListaValoresMeses';
 import ListaValoresAño from '../Busqueda/ListaValoresAño';
+import SuccessModal from './SuccessModal';
+import ErrorModal from './ErrorModal';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
@@ -10,33 +12,25 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function AltaInformacion({ visible, onClose }) {
-    const route = useRoute();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const route = useRoute();
   const mascotaId = route.params?.mascotaId;
-  console.log(mascotaId)
-
   
+  console.log(mascotaId);
+
   const [informationData, setInformationData] = useState({
     titleInformation: '',
     descriptionInformation:'',
    
-    
   });
-
-
     const data = {
                   titleInformation: informationData.titleInformation,
-                  descriptionInformation: informationData.descriptionInformation,
-                 
-                };
-    
-
+                  descriptionInformation: informationData.descriptionInformation,            
+                };    
     return (
-        <Modal
-            visible={visible}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={onClose}
-        >
+        <View>
+        
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     {/* Contenido de la tarjeta modal */}
@@ -69,11 +63,11 @@ export default function AltaInformacion({ visible, onClose }) {
                             try {
                                                  
                               const response = await axios.post(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}`, data);
-                          
+                              console.log("console log en alta informacion")
                               console.log('Respuesta del servidor:', response.data);
-                          
+                              setShowSuccessModal(true);
                             } catch (error) {
-                             
+                              setShowErrorModal(true);
                               console.error('Error al hacer la solicitud POST:', error);
                             }
                           }}
@@ -89,7 +83,21 @@ export default function AltaInformacion({ visible, onClose }) {
           </View>
         </View>
       </View>
-      </Modal>
+      <SuccessModal
+        visible={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          onClose(); // Cerrar el modal EditarTurno
+        }}
+        message="Información creada correctamente"
+      />
+      <ErrorModal
+        visible={showErrorModal}
+        errorMessage="Hubo un error al crear la información."
+        onClose={() => setShowErrorModal(false)}
+      />
+         
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -106,7 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 20,
     width: windowWidth * 0.95,
-    height:windowHeight * 0.65,
+    height:windowHeight * 0.45,
     textAlign: 'center',
     alignItems: 'center', // Para centrar horizont
 },
@@ -191,4 +199,3 @@ tituloDescripcion:{
   marginTop:10,
 },
 });
-    

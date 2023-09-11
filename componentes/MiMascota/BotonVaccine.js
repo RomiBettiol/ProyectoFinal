@@ -1,29 +1,27 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import AltaTurno from './AltaTurno';
+import AltaVaccin from './AltaVaccin';
 import SlideModal from '../SlideModal';
-
-const BotonTurnos = ({ onAddTurno, token }) => {
-    const [showAltaTurnoModal, setShowAltaTurnoModal] = useState(false);
+const BotonVaccine = ({ onAddVaccin, token }) => {
+    const [showAltaVaccinModal, setShowAltaVaccinModal] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
 
-    const toggleAltaTurnoModal = () => {
-        setShowAltaTurnoModal(!showAltaTurnoModal);
+    const toggleAltaVaccinModal = () => {
+        setShowAltaVaccinModal(!showAltaVaccinModal);
     };
 
     const handleCloseModal = () => {
-        setShowAltaTurnoModal(false);
+        setShowAltaVaccinModal(false);
         setModalVisible(false);
     };
 
     const handleOpenModal = () => {
         setModalVisible(true);
       };
-    
     console.log("console logg en boton informacion")
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.botonMenu} onPress={handleOpenModal} >
+            <TouchableOpacity style={styles.botonMenu} onPress={handleOpenModal}>
                 <View style={styles.fab}>
                     <Image
                         source={require('../../Imagenes/menu.png')}
@@ -34,7 +32,7 @@ const BotonTurnos = ({ onAddTurno, token }) => {
 
             <SlideModal visible={modalVisible} onClose={handleCloseModal} token={token}/>
 
-            <TouchableOpacity style={styles.botonCrear} onPress={onAddTurno}>
+            <TouchableOpacity style={styles.botonCrear} onPress={onAddVaccin}>
                 <View style={styles.fab2}>
                     <Image
                         source={require('../../Imagenes/agregar.png')}
@@ -84,4 +82,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default BotonTurnos;
+export default BotonVaccine;

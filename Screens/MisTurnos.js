@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Modal, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HeaderScreen from '../componentes/HeaderScreen';
-import BarraBusqueda from '../componentes/BarraBusqueda';
+import BarraBusquedaMascota from '../componentes/MiMascota/BarraBusquedaMascota';
 import BotonTurnos from '../componentes/MiMascota/BotonTurnos';
 import BotonFlotante from '../componentes/BotonFlotante';
 import { Popover, Overlay } from 'react-native-elements';
@@ -12,11 +12,13 @@ import EditarTurno from '../componentes/MiMascota/EditarTurno';
 import TurnoModal from '../componentes/MiMascota/TurnoModal';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 import axios from 'axios';
+import SuccessModal from '../componentes/MiMascota/SuccessModal';
+import ErrorModal from '../componentes/MiMascota/ErrorModal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function MisTurnos() {
+export default function MisTurnos(token) {
     const [overlayVisible, setOverlayVisible] = useState(false);
     const [selectedTurnIndex, setSelectedTurnIndex] = useState(null);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -26,7 +28,9 @@ export default function MisTurnos() {
     const [showOptionsOverlay, setShowOptionsOverlay] = useState(false);
     const [turnos, setTurnos] = useState([]);
     const [turno, setTurno] = useState(false);
-    
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const[showTurnoModal, setShowTurnoModal] = useState(false);
     const route = useRoute();
     const mascotaId = route.params?.mascotaId;
     
@@ -35,28 +39,39 @@ export default function MisTurnos() {
         async function fetchTurnos() {
             try {
                 const response = await axios.get(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}`);
-                
-                if (Array.isArray(response.data.turns)) {
-                    setTurnos(response.data.turns);
-                } else {
-                    console.error('API response does not have a valid "turns" array:', response.data);
+                if (response.data && Array.isArray(response.data.turns)) {
+                setTurnos(response.data.turns);
+                console.log(response.data.turns)
                 }
                 
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-    
+        
+        console.log(turnos)
         fetchTurnos();
     }, []);
     
     const filterAndSearchTurnos = () => {
         return turnos
             .filter(turno => {
-                const turnoYear = new Date(turno.turnDate).getFullYear();
+                console.log(turno.turnDate)
+                const dateParts = turno.turnDate.split('-');
+                const day= parseInt(dateParts[0], 10);
+                const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+                const  year= parseInt(dateParts[2], 10);
+                console.log(year)
+                console.log(month)
+                console.log(day)
+                const turnDate = new Date(year, month, day);
+                console.log('turnDate: ',turnDate);             
+                const turnoYear = year;
+                console.log(turnoYear);
                 const searchTextLower = searchText.toLowerCase();
+                console.log('searchTextLower: ', searchTextLower); 
                 const titleLower = turno.titleTurn.toLowerCase();
-
+                console.log('titulo',titleLower);
                 return (
                     (selectedYear === null || turnoYear === selectedYear) &&
                     (searchText === '' || titleLower.includes(searchTextLower))
@@ -75,9 +90,19 @@ export default function MisTurnos() {
         const groupedTurnos = {};
     
         turnos.forEach(turno => {
-            const fecha = new Date(turno.turnDate);
-            const mes = fecha.toLocaleString('default', { month: 'long' });
-    
+
+                const dateParts = turno.turnDate.split('-');
+                const  year= parseInt(dateParts[2], 10);
+                const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+                const day= parseInt(dateParts[0], 10);
+                const fecha = new Date(year, month, day);
+                console.log('fecha: ', (fecha))
+                console.log('month: ', (month))
+                console.log('year: ', (year))
+                console.log('day: ', (day))
+                const mes = fecha.toLocaleString('default', { month: 'long' });              
+                console.log('mes:', mes)
+
             if (!groupedTurnos[mes]) {
                 groupedTurnos[mes] = [];
             }
@@ -104,13 +129,26 @@ export default function MisTurnos() {
         try {
             const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
             console.log('Turno eliminado:', response.data);
+            setShowSuccessModal(true);
             } catch (error) {
                 console.error('Error eliminando la mascota:', error);
+                setShowErrorModal(true);
             }
         
         setOverlayVisible(false); // Cierra el overlay después de eliminar
     };
-
+    function dia (turno) {
+        const dateParts = turno.turnDate.split('-');
+        const  year= parseInt(dateParts[2], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+        const day= parseInt(dateParts[0], 10);
+        return day;
+    };
+    const handleSuccessModalClose = () => {
+        setShowSuccessModal(false);
+        setShowTurnoModal(false);
+        setOverlayVisible(false); // Cierra el modal NuevaMascota
+      };
     return (
         <View style={styles.container}>
             <HeaderScreen />
@@ -130,7 +168,7 @@ export default function MisTurnos() {
                 </View>
                 <View>
                     <View style={styles.containerBarra}>
-                        <BarraBusqueda
+                        <BarraBusquedaMascota
                             searchText={searchText}
                             onSearchTextChange={setSearchText}
                         />
@@ -173,8 +211,8 @@ export default function MisTurnos() {
                                                 <TouchableOpacity
                                                     style={styles.containerTurno}
                                                     onPress={() => {
-                                                        setSelectedTurnIndex(index);
-                                                        setOverlayVisible(true);
+                                                        setTurno(turno);
+                                                        setShowTurnoModal(true);
                                                     }}
                                                 > 
                                                     <TouchableOpacity
@@ -193,14 +231,14 @@ export default function MisTurnos() {
                                                                                                               
                                                     <View style={styles.dia}>
                                                         <Text style={styles.numero}>
-                                                            {new Date(turno.turnDate).getDate()}
+                                                        {dia(turno)} 
                                                         </Text>
                                                     </View>
                                                     <Text>
-                                                        {new Date(turno.turnDate).toLocaleTimeString()}
+                                                        {turno.turnHour}
                                                     </Text>
                                                     <Text style={styles.detalle}>
-                                                        {turno.titleTurn}
+                                                       {turno.titleTurn}
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -210,7 +248,7 @@ export default function MisTurnos() {
                         </View>
                     ))}
             </View>
-            <BotonTurnos onAddTurno={toggleAltaTurnoModal} />   
+           <BotonTurnos onAddTurno={toggleAltaTurnoModal} token={token} />   
              {/* Overlay para opciones */}
              <Overlay
                     isVisible={overlayVisible}
@@ -240,26 +278,56 @@ export default function MisTurnos() {
                     </Modal>
                     <TouchableOpacity                                               
                         style={styles.overlayOption}
-                        onPress={handleDeleteTurno} // Llama a la función de eliminación
-                        
+                        onPress={handleDeleteTurno} // Llama a la función de eliminación                   
                     >
                         <Text>Eliminar</Text>
                     </TouchableOpacity>
                 </Overlay>
                  {/* Modal (tarjeta flotante) */}
-
                 <Modal
                 visible={showAltaTurnoModal}
                 animationType="slide"
                 transparent={true}
+               
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                       
                         <AltaTurno onClose={toggleAltaTurnoModal} />
                     </View>
                 </View>
             </Modal>
+            <SuccessModal
+                visible={showSuccessModal}
+                onClose={() => {
+                setShowSuccessModal(false);
+                handleSuccessModalClose();
+                onClose(); // Cerrar el modal EditarVaccin
+                }}
+                message="Turno eliminado correctamente"
+            />
+            <ErrorModal
+                visible={showErrorModal}
+                errorMessage="Hubo un error al eliminar el turno."
+                onClose={() => {
+                    setShowErrorModal(false);
+                    handleSuccessModalClose();
+                    }}
+            />
+                <Modal
+                    visible={showTurnoModal}
+                    animationType="slide"
+                    transparent={true}
+                    onClose={() => {
+                        setShowTurnoModal(false);
+                        handleSuccessModalClose();
+                    }}
+                    >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>                 
+                            <TurnoModal turno={turno} onClose={() => setShowTurnoModal(false)}  />
+                        </View>
+                    </View>
+                </Modal>         
             </ScrollView>
             
             
@@ -269,6 +337,23 @@ export default function MisTurnos() {
            
 
 const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        
+    },
+    modalContent: {
+      backgroundColor: '#FFFFFF',
+      elevation: 10,
+      borderRadius: 25,
+      padding: 20,
+      width: windowWidth * 0.95,
+      height:windowHeight * 0.65,
+      textAlign: 'center',
+      alignItems: 'center', // Para centrar horizont
+  },
     container: {
         flex: 1,
         backgroundColor: 'white',

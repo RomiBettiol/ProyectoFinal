@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
 import { Image } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormularioRegistrarse from '../componentes/FormularioRegistrarse';
 import axios, { AxiosError } from 'axios';
-
-import bcrypt from 'react-native-bcrypt';
-
+import bcrypt from "bcryptjs"
 import BotonImagenRegis from '../componentes/BotonImagenRegis';
 
 
 
 export function RegistrarseScreen({ navigation }) {
   const [formValid, setFormValid] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [showAlert, setShowAlert] = React.useState(false); // Estado para mostrar/ocultar el cuadro de diálogo personalizado
+  const [showAlertServer, setShowAlertServer] = React.useState(false); // Estado para mostrar/ocultar el cuadro de diálogo personalizado del back-end
+  const [error, setError] = React.useState('');
   const [datosFormulario, setDatosFormulario] = useState({
     nombre: '',
     email: '',
@@ -21,43 +21,58 @@ export function RegistrarseScreen({ navigation }) {
     contrasena: '',
     contrasena2: '',
   });
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const handleSubmit = async () => {
     if (formValid) {
+      const hashedPassword = await bcrypt.hash(datosFormulario.contrasena, 10)
       const data = {
-        name: datosFormulario.nombre,
+       // name: datosFormulario.nombre,
         mail: datosFormulario.email,
         userName: datosFormulario.usuario,
+        password: hashedPassword,
         
-      };
-      try {
-        // Hash the password with a salt of 10 rounds
-        const salt = await bcrypt.genSalt(10);
-        data.password = await bcrypt.hash(datosFormulario.contrasena, salt);
-        
-      } catch (error) {
-        console.error('hola')
-        //console.error('Error al hashear la contraseña:', error);
-      //  setErrorMessage('Hubo un error al registrar el usuario.');
-        return;
       }
       // Hacer la petición POST al backend usando axios
-      axios
-        .post('https://buddyproyecto.loca.lt/security/user/register', data, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        .then((response) => {
-          console.log('Registro exitoso:', response.data);
-          navigation.navigate('ConfirmacionRegistroScreen');
-        })
-        .catch((error) => {
-          console.error('Error en el registro:', error);
-          console.error('Error en el registro:', Request.response);
-          setErrorMessage('Hubo un error al registrar el usuario.');
-        });
-    }
+      console.log(data)
+        try {
+          const response = await axios.post('https://buddy-app1.loca.lt/security/user/register', data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (response.status === 201) {
+            console.log('Registro exitoso:', response.data);
+            navigation.navigate('ConfirmacionRegistroScreen');
+          } else {
+            setError(response.data.message || 'Error desconocido');
+            setShowAlertServer(true);
+          }
+        } catch (error) {
+          console.log('Error:', error);
+          setError(error.response?.data?.message || 'Error desconocido');
+          setShowAlertServer(true);
+        }
+      }else {
+       
+        let errorText = 'Revise todos los campos';
+  
+         if (datosFormulario.nombre.trim() === '') {
+          errorText = 'Por favor, complete el nombre.';
+        } else if (datosFormulario.contrasena !== datosFormulario.contrasena2) {
+          errorText = 'Las contraseñas no coinciden.';
+        } else if (datosFormulario.usuario.trim() === '') {
+          errorText = 'Por favor, complete el nombre de usuario.';
+        }else if(datosFormulario.email.trim() === '') {
+          errorText = 'Por favor, complete el mail.';
+        }
+        
+        setErrorMessage(errorText);
+        console.log(errorMessage)
+      }
+      
+      
+    
   };
 
   const handleDatosChange = (datos) => {
@@ -87,19 +102,76 @@ export function RegistrarseScreen({ navigation }) {
       <View style={styles.footerBoton}>
         <TouchableOpacity
           style={[styles.botonRegistro, !formValid && styles.disabledBotonRegistro]}
-          disabled={!formValid}
+        //  disabled={!formValid}
           onPress={handleSubmit} // Llamamos a la función handleSubmit al presionar el botón "Registrarse"
         >
           <Text style={styles.textoBoton}>Registrarse</Text>
         </TouchableOpacity>
 
-        {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+        {error && <Text style={styles.errorText}>Error: {error}</Text>}
       </View>
+      {/* Cuadro de diálogo personalizado */}
+      <Modal
+        visible={showAlert}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setShowAlert(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.alertContainer}>
+            <Text style={styles.alertText}>Por favor, completa ambos campos.</Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowAlert(false)}
+            >
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={showAlertServer}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setShowAlertServer(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.alertContainer}>
+            <Text style={styles.alertText}> {error}</Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowAlertServer(false)}
+            >
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* Nuevo modal de error */}
+      <Modal
+        visible={!!errorMessage} // Mostrar modal si errorMessage tiene un valor
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setErrorMessage('')}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.alertContainer}>
+            <Text style={styles.alertText}>{errorMessage}</Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setErrorMessage('')}
+            >
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  
   container: {
     flexGrow: 1,
     backgroundColor: 'white',
@@ -108,7 +180,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 80,
   },
 
   titulo: {
@@ -142,14 +214,41 @@ const styles = StyleSheet.create({
   },
 
   botonRegistro: {
-    marginTop: 40,
-    backgroundColor: '#FFB988',
+    marginTop: 70,
+    backgroundColor: '#FFB984',
     alignItems: 'center',
     justifyContent: 'center',
     height: 45,
     width: '100%',
     marginBottom: 0,
     paddingHorizontal: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  alertContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  alertText: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  closeButton: {
+    backgroundColor: '#FFB984',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    fontSize: 16,
+    color: '#fff',
   },
 });
 

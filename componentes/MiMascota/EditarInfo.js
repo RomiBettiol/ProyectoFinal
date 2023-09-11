@@ -1,12 +1,15 @@
 import React,{useState} from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Dimensions } from 'react-native';
 import axios from 'axios';
+import SuccessModal from './SuccessModal';
+import ErrorModal from './ErrorModal';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function EditarInfo({ visible, onClose, info, mascotaId }) {
- 
- 
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const [titleInformation, setTitleInformation] = useState(info.titleInformation || '');
   const [descriptionInformation, setDescriptionInformation] = useState(info.descriptionInformation || '' );
 
@@ -22,19 +25,17 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
         const response = await axios.put(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}/${idInformation}`,{
           titleInformation: updatedData.titleInformation,
           descriptionInformation: updatedData.descriptionInformation,
-        
-        
-        }
-        
-        );
+        });
         console.log('Info editado:', response.data);
-        
+        setShowSuccessModal(true);
     } catch (error) {
         console.error('Error al editar la info:', error);
+        setShowErrorModal(true);
     }
     
     setOverlayVisible(false); // Cierra el overlay después de eliminar
 };
+
     return (
         <Modal
             visible={visible}
@@ -53,6 +54,7 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
               style={styles.inputTexto}
               value={titleInformation}
               onChangeText={setTitleInformation}
+              editable={true} 
               />
           </View>
           <View style={[{ flexDirection: 'column' }, styles.subcontenedor1]}>
@@ -81,6 +83,19 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
           </View>
         </View>
       </View>
+          <SuccessModal
+                visible={showSuccessModal}
+                onClose={() => {
+                  setShowSuccessModal(false);
+                  onClose(); // Cerrar el modal EditarTurno
+                }}
+                message="Información editada correctamente"
+            />
+            <ErrorModal
+                visible={showErrorModal}
+                errorMessage="Hubo un error al editar la información."
+                onClose={() => setShowErrorModal(false)}
+            />
       </Modal>
   );
 }
@@ -99,7 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 20,
     width: windowWidth * 0.95,
-    height:windowHeight * 0.65,
+    height:windowHeight * 0.45,
     textAlign: 'center',
     alignItems: 'center', // Para centrar horizont
 },

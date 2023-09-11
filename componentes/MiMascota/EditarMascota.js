@@ -1,42 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import Mascotas from '../Busqueda/Mascotas';
-import ListaValoresDias from '../Busqueda/ListaValoresDias';
-import ListaValoresMeses from '../Busqueda/ListaValoresMeses';
-import ListaValoresAño from '../Busqueda/ListaValoresAño';
+import ListaValoresDiasMascota from '../MiMascota/ListaValoresDiasMascota';
+import ListaValoresMesesMascota from '../MiMascota/ListaValoresMesesMascota';
+import ListaValoresAñoMascota from '../MiMascota/ListaValoresAñoMascota';
+import ListaValoresRazaPerros from '../Busqueda/ListaValoresRazaPerros';
 import AgregarImagen from '../AgregarImagen';
 import axios from 'axios';
 import SuccessModal from './SuccessModal';
 import ErrorModal from './ErrorModal';
 export default function EditarMascota({ navigation, mascota, token, onCloseEditarMascota}) {
   const [nombre, setNombre] = useState(mascota.petName || '');
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  // Agregar estados para día y año
-  const [selectedDay, setSelectedDay] = useState(mascota.day || null);
-  const [selectedYear, setSelectedYear] = useState(mascota.year || null);
+  const [raza, setRaza] = useState(mascota.petBreed || '');
+  const [tipo, setTipo] = useState(mascota.petType|| '');
+  const [selectedMonth, setSelectedMonth] = useState(mascota.birthDate.month || null); // Agregar estados para día y año
+  const [selectedDay, setSelectedDay] = useState(mascota.birthDate.day || null);
+  const [selectedYear, setSelectedYear] = useState(mascota.birthDate.year || null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
-
-
+  const [petTypeOptions, setPetTypeOptions] = useState([]);
+  const [petBreedOptions, setPetBreedOptions] = useState([]);
+  const[selectedAnimal, setSelectedAnimal]=useState([]);
+  const[selectedAnimalId,setSelectedAnimalId] =useState('')
+ const [selectedBreedId, setSelectedBreedId] = useState('');
+ const[idPetBreed,setIdPetBreed]= useState('');
+  const[idPetType, setIdPetType]=useState('');
   const updateMascota = async () => {
     const idPet = mascota.idPet; // Obtén la ID de la mascota desde los props
     const updatedData = {
       petName: nombre,
       day: selectedDay, // Agregar a los datos actualizados
+      idPetType: selectedAnimalId,
+        idPetBreed: selectedBreedId,
       month: selectedMonth, // Agregar a los datos actualizados
       year: selectedYear, // Agregar a los datos actualizados
       // Otras propiedades que quieras actualizar
-      birthDate: `${selectedDay}/${selectedMonth}/${selectedYear}`,
+      birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+      
     };
     console.log({idPet})
+    console.log(updatedData)
     try {
       const response = await axios.put(`https://buddy-app1.loca.lt/mypet/pet/${mascota.idPet}`,{
         headers: {
           'auth-token': token
         },
-      
+        
         petName: updatedData.petName,
         birthDate: updatedData.birthDate,
+        idPetType: updatedData.idPetType,
+        idPetBreed: updatedData.idPetBreed,
         // Otros datos que puedas necesitar
       
       }
@@ -55,7 +69,43 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
     setShowSuccessModal(false);
     onCloseEditarMascota(); // Cierra el modal NuevaMascota
   };
-
+  useEffect(() => {
+    console.log(tipo);
+    console.log(raza);
+    // Obtener tipos de mascotas
+    axios.get('https://buddy-app1.loca.lt/parameters/petType')
+      .then((response) => {
+        // Mapear los datos para obtener un array de opciones
+        const petTypeOptions = response.data.petTypes.map((petType) => ({
+          label: petType.petTypeName,
+          value: petType.idPetType,
+        }));
+        // Guardar las opciones en el estado
+        setPetTypeOptions(petTypeOptions);
+        console.log(petTypeOptions);
+        console.log('tipo de mascota obtenido con exito');
+      })
+      .catch((error) => {
+        console.error('Error al obtener tipos de mascotas:', error);
+      });
+  
+    // Obtener razas de mascotas
+    axios.get('http://buddy-app1.loca.lt/parameters/petBreed')
+      .then((response) => {
+        // Mapear los datos para obtener un array de opciones
+        const petBreedOptions = response.data.petBreeds.map((petBreed) => ({
+          label: petBreed.petBreedName,
+          value: petBreed.idPetBreed,
+        }));
+        // Guardar las opciones en el estado
+        setPetBreedOptions(petBreedOptions);
+        console.log(petBreedOptions);
+        console.log('tipo de raza obtenido con exito');
+      })
+      .catch((error) => {
+        console.error('Error al obtener razas de mascotas:', error);
+      });
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.scroll}>
@@ -68,26 +118,45 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
               style={styles.inputTexto}
               value={nombre}
               onChangeText={setNombre}
+             
             />
          </View>
       {/* Campo de edición para la fecha */}
-      <Text style={styles.textoFecha}>Fecha de nacimiento</Text>
+      <Text style={styles.textoFecha}>Fecha de nacimiento:</Text>
       <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
-        <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
-        {selectedMonth && <ListaValoresDias
+        <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
+        {selectedMonth && <ListaValoresDiasMascota
           selectedMonth={selectedMonth} // Pasa el mes seleccionado
           selectedValue={selectedDay} // Pasa el día seleccionado
           setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
         />}
-       <ListaValoresAño setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
+       <ListaValoresAñoMascota setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
       </View>
+      <ScrollView horizontal={true}>
+          <View >
+            
+          <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
+
+          </View>
+          </ScrollView>
+          
+          <View style={[styles.dropdown,{ borderRadius: 100 }]}>
+           
+          {selectedAnimal && (
+                <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
+              )}
+          </View>
       {/* Botón para actualizar */}
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={updateMascota}
-      >
-        <Text style={styles.closeButtonText}>Actualizar Mascota</Text>
-      </TouchableOpacity>
+
+      <View style={styles.subcontenedor5}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={updateMascota}
+        >
+          <Text style={styles.closeButtonText}>Actualizar Mascota</Text>
+        </TouchableOpacity>
+      </View>
+      
       </View>
         </View>
         <SuccessModal
@@ -113,6 +182,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:"#FFFFFF",
     marginTop:35,
+  },
+
+  dropdown: {
+    backgroundColor: '#EEE9E9',
+    width: '90%',
+    height: 50,
+    margin: 10,
+    padding:0,
+    justifyContent:'center',
+ 
   },
   titulo: {
     marginTop: 10,
@@ -187,4 +266,3 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
-

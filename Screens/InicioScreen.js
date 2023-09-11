@@ -26,12 +26,14 @@ export default function InicioScreen({navigation}){
   };
 
   const handleAceptar = () => {
+    setModalVisible(false);
     // Navegar a la página correspondiente según el checkbox seleccionado
     if (checkBox1) {
       navigation.navigate('RegistrarseScreen');
     } else if (checkBox2) {
       navigation.navigate('RegistrarseEmpresaScreen');
     }
+    
   };
 
   const handleCancelar = () => {

@@ -1,11 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, Animated, TouchableWithoutFeedback, Image} from 'react-native';
 
-const SlideModal = ({ visible, onClose }) => {
+const SlideModal = ({ visible, onClose, token }) => {
   const slideAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
   const route = useRoute();
+
+  const [confirmLogoutModalVisible, setConfirmLogoutModalVisible] = useState(false);
+  const [logoutError, setLogoutError] = useState(null);
 
   const handleOptionPress = (screenName) => {
     // Verifica si la opción seleccionada coincide con la pantalla actual
@@ -37,6 +40,33 @@ const SlideModal = ({ visible, onClose }) => {
   const handleBackgroundPress = () => {
     // Close the modal when the background is pressed
     handleModalClose();
+  };
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('https://buddy-app1.loca.lt/security/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': token,
+        },
+      });
+  
+      if (response.status === 200) {
+        // Cierre de sesión exitoso, navega a InicioScreen.js
+        navigation.navigate('InicioScreen');
+        onClose(); // Cierra el SlideModal
+      } else {
+        // Mostrar un modal de error en caso de que la llamada no sea exitosa
+        setLogoutError('Hubo un error al cerrar sesión.');
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      setLogoutError('Hubo un error al cerrar sesión.');
+    }
+  };
+  
+  const handleConfirmLogout = () => {
+    setConfirmLogoutModalVisible(true);
   };
 
   return (
@@ -114,7 +144,7 @@ const SlideModal = ({ visible, onClose }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.viewCerrarSesion}>
-            <TouchableOpacity style={styles.touchableCerrarSesion} onPress={() => navigation.navigate('InicioScreen')}>
+          <TouchableOpacity style={styles.touchableCerrarSesion} onPress={handleConfirmLogout}>
                 <View style={styles.viewCerrarSesion}>
                     <Text style={styles.cerrarSesion}>Cerrar sesión</Text>
                 </View>
@@ -122,6 +152,45 @@ const SlideModal = ({ visible, onClose }) => {
           </View>
         </Animated.View>
       </View>
+            {logoutError && (
+            <View style={styles.errorContainer}>
+              <Text>{logoutError}</Text>
+              <TouchableOpacity onPress={() => setLogoutError(null)}>
+                <Text>OK</Text>
+              </TouchableOpacity>
+            </View>
+      )}
+      <Modal
+        visible={confirmLogoutModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setConfirmLogoutModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text>¿Desea cerrar sesión?</Text>
+            <View style={styles.confirmButtons}>
+              <TouchableOpacity
+                onPress={() => {
+                  setConfirmLogoutModalVisible(false);
+                  handleLogout(); // Esta función aún no está definida, la agregaremos a continuación.
+                }}
+                style={[styles.confirmButton, styles.confirmButtonAccept]}
+              >
+                <Text style={styles.confirmButtonText}>Aceptar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setConfirmLogoutModalVisible(false)}
+                style={[styles.confirmButton, styles.confirmButtonCancel]}
+              >
+                <Text style={styles.confirmButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+            
+          </View>
+        </View>
+      </Modal>
+
     </Modal>
   );
 };

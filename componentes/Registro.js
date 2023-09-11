@@ -6,6 +6,7 @@ import HomeScreen from '../Screens/HomeScreen';
 import RecuperarContrasenaScreen from '../Screens/RecuperarContrasenaScreen';
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
+import bcrypt from "bcryptjs"
 
 
 const Registro = () => {
@@ -28,13 +29,16 @@ const Registro = () => {
 
   const handleIngresarPress = async () => {
     if (formValid) {
+      const hashedPassword = await bcrypt.hash(contrasena, 10)
+      const data = {
+        mail: usuario,
+        password: hashedPassword
+      }
       try {
-        const response = await axios.post('https://buddy-app1.loca.lt/security/auth/login', {
+        const response = await axios.post('https://buddy-app1.loca.lt/security/auth/login', data, {
           headers: {
             'Content-Type': 'application/json',
           },
-          mail: usuario,
-          password: contrasena,
         });
 
   

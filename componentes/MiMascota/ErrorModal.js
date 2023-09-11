@@ -12,9 +12,9 @@ export default function ErrorModal({ visible, errorMessage, onClose }) {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.modalText}>{errorMessage}</Text>
-          <TouchableOpacity onPress={onClose} style={[styles.confirmButton, styles.confirmButtonCancel]}>
-            <Text style={styles.confirmButtonText}>Cerrar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.botonesEditar} onPress={onClose}>
+              <Text>Cerrar</Text>
+            </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -22,38 +22,34 @@ export default function ErrorModal({ visible, errorMessage, onClose }) {
 }
 
 const styles = StyleSheet.create({
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-      modalContent: {
-        width: '80%',
-        backgroundColor: '#fff',
-        padding: 20,
-        borderRadius: 10,
-        elevation: 5,
-        alignItems: 'center',
-      },
-      confirmButtons: {
-        flexDirection: 'row',
-        marginTop: 10,
-      },
-      confirmButton: {
-        flex: 1,
-        backgroundColor: '#FFB984',
-        alignItems: 'center',
-        paddingVertical: 10,
-        borderRadius: 5,
-      },
-      confirmButtonAccept: {
-        marginRight: 5,
-      },
-      confirmButtonCancel: {
-        marginLeft: 5,
-      },
-      confirmButtonText: {
-        fontSize: 16,
-      },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '85%',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  modalText:{
+    fontSize: 16,
+    padding:5,
+  },
+  botonesEditar: {
+    width: '40%',
+    backgroundColor: 'red',
+    marginLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    height: 30,
+    marginTop: 20,
+    marginRight: 10,
+    backgroundColor: '#FFB984',
+  },
 });

@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import AltaInformacion from './AltaInformacion';
-
-const BotonInformacion = ({ onAddInformacion }) => {
-    const [showAltaInformacionModal, setShowAltaInformacionModal] = useState(false);
+import SlideModal from '../SlideModal';
+const BotonInformacion = ({ onAddInfo, token }) => {
+    const [showAltaInfoModal, setShowAltaInfoModal] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const toggleAltaInformacionModal = () => {
-        setShowAltaInformacionModal(!showAltaInformacionModal);
+        setShowAltaInfoModal(!showAltaInfoModal);
+        console.log("console logg en boton informacion")
     };
 
     const handleCloseModal = () => {
-        setShowAltaInformacionModal(false);
+        setShowAltaInfoModal(false);
+        setModalVisible(false);
     };
 
+    const handleOpenModal = () => {
+        setModalVisible(true);
+      };
+    
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.botonMenu} onPress={toggleAltaInformacionModal}>
+            <TouchableOpacity style={styles.botonMenu} onPress={handleOpenModal}>
                 <View style={styles.fab}>
                     <Image
                         source={require('../../Imagenes/menu.png')}
@@ -24,9 +31,9 @@ const BotonInformacion = ({ onAddInformacion }) => {
                 </View>
             </TouchableOpacity>
 
-            <AltaInformacion visible={showAltaInformacionModal} onClose={handleCloseModal} />
+            <SlideModal visible={modalVisible} onClose={handleCloseModal} token={token} />
 
-            <TouchableOpacity style={styles.botonCrear} onPress={onAddInformacion}>
+            <TouchableOpacity style={styles.botonCrear} onPress={onAddInfo} >
                 <View style={styles.fab2}>
                     <Image
                         source={require('../../Imagenes/agregar.png')}

@@ -1,48 +1,69 @@
 import React,{useState, useEffect} from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Dimensions } from 'react-native';
-import ListaValoresDias from '../Busqueda/ListaValoresDias';
-import ListaValoresMeses from '../Busqueda/ListaValoresMeses';
-import ListaValoresAño from '../Busqueda/ListaValoresAño';
+import ListaValoresDiasMascota from './ListaValoresDiasMascota';
+import ListaValoresMesesMascota from './ListaValoresMesesMascota';
+import ListaValoresAñoMascota from './ListaValoresAñoMascota';
+import SuccessModal from './SuccessModal';
+import ErrorModal from './ErrorModal';
 import axios from 'axios';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+
 
 export default function AltaTurno({ visible, onClose }) {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const [hora, setHora] = useState('');
   const [minutos, setMinutos] = useState('');
   const route = useRoute();
   const mascotaId = route.params?.mascotaId;
   console.log(mascotaId)
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
 
+  
   
   const [turnData, setTurnData] = useState({
     titleTurn: '',
-    descriptionTurn:'',
-    turnDate:'',
-    
+    descriptionTurn: '',
+    turnDate: '',
+    hora: '', // Nuevo estado para la hora
+    minutos: '', // Nuevo estado para los minutos
+
   });
 
 
     const data = {
                   titleTurn: turnData.titleTurn,
                   descriptionTurn: turnData.descriptionTurn,
-                  turnDate: `${selectedYear}-${selectedMonth}-${selectedDay}T${hora}-${minutos}:25.000Z`,
+                  turnDate: `${selectedYear}-${selectedMonth}-${selectedDay} ${hora}:${minutos}:00`,
                  
                 };
-    
+     // Función para validar la hora y minutos
+  const validateHoraMinutos = (hora, minutos) => {
+    const horaValida = /^\d+$/.test(hora) && parseInt(hora, 10) >= 0 && parseInt(hora, 10) <= 23;
+    const minutosValidos = /^\d+$/.test(minutos) && parseInt(minutos, 10) >= 0 && parseInt(minutos, 10) <= 59;
+    return horaValida && minutosValidos;
+  };
+  useEffect(() => {
+    // Validar la hora y minutos
+    const horaValida = /^\d+$/.test(turnData.hora) && parseInt(turnData.hora, 10) >= 0 && parseInt(turnData.hora, 10) <= 23;
+    const minutosValidos = /^\d+$/.test(turnData.minutos) && parseInt(turnData.minutos, 10) >= 0 && parseInt(turnData.minutos, 10) <= 59;
+
+    // Actualizar el estado de error y deshabilitar el botón en consecuencia
+    if (horaValida && minutosValidos) {
+      setTurnData({ ...turnData, error: null });
+      setIsButtonDisabled(false);
+    } else {
+      setTurnData({ ...turnData, error: 'Ingrese una hora válida (00-23) y minutos válidos (00-59)' });
+      setIsButtonDisabled(true);
+    }
+  }, [turnData.hora, turnData.minutos]);
 
     return (
-        <Modal
-            visible={visible}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={onClose}
-        >
+          <View>
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     {/* Contenido de la tarjeta modal */}
@@ -65,52 +86,68 @@ export default function AltaTurno({ visible, onClose }) {
               />
           </View>
           <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Hora:</Text>
-                        <View style={styles.horaInputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="HH"
-                                value={hora}
-                                onChangeText={setHora}
-                                maxLength={2}
-                            />
-                            <Text style={styles.inputDivider}> : </Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="MM"
-                                value={minutos}
-                                onChangeText={setMinutos}
-                                maxLength={2}
-                            />
-                        </View>
+            <Text style={styles.label}>Hora:</Text>
+            <View style={styles.horaInputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="HH"
+                value={turnData.hora}
+                onChangeText={(text) => {
+                  // Realiza el setTurnData
+                  setTurnData({ ...turnData, hora: text });
+                  // Realiza el setHora
+                  setHora(text);
+                }}
+                maxLength={2}
+              />
+              <Text style={styles.inputDivider}> : </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="MM"
+                value={turnData.minutos}
+                onChangeText={(text) => {
+                  // Realiza el setTurnData
+                  setTurnData({ ...turnData, minutos: text });
+                  // Realiza el setMinutos
+                  setMinutos(text);
+                }}
+                maxLength={2}
+              />
             </View>
+          </View>
+          {/* Mostrar el error debajo del campo de entrada */}
+          {turnData.error && (
+            <Text style={styles.errorText}>{turnData.error}</Text>
+          )}
           <Text style={styles.textoFecha}>Fecha de turno</Text>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
-            <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
-            {selectedMonth && <ListaValoresDias
+            <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
+            {selectedMonth && <ListaValoresDiasMascota
               selectedMonth={selectedMonth} // Pasa el mes seleccionado
               selectedValue={selectedDay} // Pasa el día seleccionado
               setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
             />}
-          <ListaValoresAño setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
+          <ListaValoresAñoMascota setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
           </View>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor5]}>
             <TouchableOpacity
                           style={styles.closeButton}
                           onPress={async () => {
-                            console.log(data.turnDate) 
+                            console.log('hora: ',hora) 
+                            console.log('fecha y hora: ',data.turnDate) 
                       
                             try {
                                                  
                               const response = await axios.post(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}`, data);
-                          
                               console.log('Respuesta del servidor:', response.data);
-                          
+                              setShowSuccessModal(true);
                             } catch (error) {
-                             
+                              setShowErrorModal(true);
                               console.error('Error al hacer la solicitud POST:', error);
                             }
+                            setOverlayVisible(false); // Cierra el overlay después de eliminar
                           }}
+                          disabled={isButtonDisabled}
                       >
                           <Text style={styles.closeButtonText}>Aceptar</Text>
             </TouchableOpacity>
@@ -123,10 +160,28 @@ export default function AltaTurno({ visible, onClose }) {
           </View>
         </View>
       </View>
-      </Modal>
+      <SuccessModal
+        visible={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          onClose(); // Cerrar el modal EditarTurno
+        }}
+        message="Turno creado correctamente"
+      />
+      <ErrorModal
+        visible={showErrorModal}
+        errorMessage="Hubo un error al crear el turno."
+        onClose={() => setShowErrorModal(false)}
+      />
+      </View>
   );
 }
 const styles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
+  },
   modalContainer: {
       flex: 1,
       justifyContent: 'center',
@@ -139,8 +194,8 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 25,
     padding: 20,
-    width: windowWidth * 0.95,
-    height:windowHeight * 0.65,
+    width: Dimensions.get('window').width * 0.95,
+    height:Dimensions.get('window').height * 0.65,
     textAlign: 'center',
     alignItems: 'center', // Para centrar horizont
 },
@@ -225,4 +280,3 @@ tituloDescripcion:{
   marginTop:10,
 },
 });
-    

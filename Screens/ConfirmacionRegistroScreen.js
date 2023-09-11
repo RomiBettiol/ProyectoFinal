@@ -33,6 +33,14 @@ export function ConfirmacionRegistroScreen({navigation}){
                 Por favor, ingresá a tu mail para validar la misma.
             </Text>
         </View>
+        <TouchableOpacity
+          style={styles.botonRegistro}
+          onPress={() => {                 
+              navigation.navigate('InicioScreen');
+          }}
+        >
+          <Text style={styles.textoBoton}>REGRESAR AL INICIO</Text>
+        </TouchableOpacity>
         
     </KeyboardAwareScrollView>
              
@@ -44,7 +52,7 @@ const styles = StyleSheet.create({
    
   logoContainer: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 60,
   },
     container:{
     alignItems: 'center',
@@ -88,6 +96,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop:15,
   },
-
-
+  botonRegistro: {
+    marginTop: 191,
+    backgroundColor: '#FFB988',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 45,
+    width: '100%',
+    marginBottom: 0,
+    paddingHorizontal: 20,
+  },
+  textoBoton: {
+    fontSize: 20,
+  },
 });

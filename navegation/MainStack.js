@@ -48,6 +48,16 @@ import ReportesScreen from '../Screens/ReportesScreen';
 import EditarPublicacionAdopcion from '../componentes/Perfil/EditarPublicacionAdopcion';
 import EditarPublicacionBusqueda from '../componentes/Perfil/EditarPublicacionBusqueda';
 
+import InfoModal from '../componentes/MiMascota/InfoModal';
+import BarraBusquedaMascota from '../componentes/MiMascota/BarraBusquedaMascota';
+import BotonVaccine from '../componentes/MiMascota/BotonVaccine';
+import AltaVaccin from '../componentes/MiMascota/AltaVaccin';
+import VaccinModal from '../componentes/MiMascota/VaccinModal';
+import ListaValoresAñoMascota from '../componentes/MiMascota/ListaValoresAñoMascota';
+import ListaValoresDiasMascota from '../componentes/MiMascota/ListaValoresDiasMascota';
+import ListaValoresMesesMascota from '../componentes/MiMascota/ListaValoresMesesMascota';
+import EditarVaccin from '../componentes/MiMascota/EditarVaccin';
+
 const Stack = createNativeStackNavigator()
 
 export default function MainStack() {
@@ -238,12 +248,49 @@ export default function MainStack() {
                 component={ReportesScreen}
             />
              <Stack.Screen
+                name='BarraBusquedaMascota'
+                component={BarraBusquedaMascota}
+            />
+             <Stack.Screen
                 name='EditarPublicacionBusqueda'
                 component={EditarPublicacionBusqueda}
             />
             <Stack.Screen
                 name='EditarPublicacionAdopcion'
                 component={EditarPublicacionAdopcion}
+            />
+
+            <Stack.Screen
+                name='InfoModal'
+                component={InfoModal}
+            />
+            <Stack.Screen
+                name='BotonVaccine'
+                component={BotonVaccine}
+            />
+            <Stack.Screen
+                name='AltaVaccin'
+                component={AltaVaccin}
+            />
+            <Stack.Screen
+                name='VaccinModal'
+                component={VaccinModal}
+            />
+            <Stack.Screen
+                name='ListaValoresAñoMascota'
+                component={ListaValoresAñoMascota}
+            />
+            <Stack.Screen
+                name='ListaValoresDiasMascota'
+                component={ListaValoresDiasMascota}
+            />
+            <Stack.Screen
+                name='ListaValoresMesesMascota'
+                component={ListaValoresMesesMascota}
+            />
+            <Stack.Screen
+                name='EditarVaccin'
+                component={EditarVaccin}
             />
         </Stack.Navigator>
     </NavigationContainer>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import HeaderScreen from '../HeaderScreen';
 import ListaValoresColor from '../Busqueda/ListaValoresColor';
 import ListaValoresAnimal from '../Busqueda/ListaValoresAnimal';
@@ -7,17 +8,18 @@ import ListaValoresZona from '../Busqueda/ListaValoresZona';
 import ListaValoresRazaPerros from '../Busqueda/ListaValoresRazaPerros';
 import ListaValoresRazaGatos from '../Busqueda/ListaValoresRazaGatos';
 import Mascotas from '../Busqueda/Mascotas';
-import ListaValoresDias from '../Busqueda/ListaValoresDias';
-import ListaValoresMeses from '../Busqueda/ListaValoresMeses';
-import ListaValoresAño from '../Busqueda/ListaValoresAño';
+import ListaValoresDiasMascota from '../MiMascota/ListaValoresDiasMascota';
+import ListaValoresMesesMascota from '../MiMascota/ListaValoresMesesMascota';
+import ListaValoresAñoMascota from '../MiMascota/ListaValoresAñoMascota';
 import AgregarImagen from '../AgregarImagen';
 import SuccessModal from './SuccessModal';
 import ErrorModal from './ErrorModal';
 import axios from 'axios'; // Importa la librería axios
+import { Dropdown } from 'react-native-element-dropdown';
 
 
 export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }) {
-  const [selectedAnimal, setSelectedAnimal] = useState(null);
+  
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
@@ -26,7 +28,13 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [addPetSuccess, setAddPetSuccess] = useState(false);
-
+  const[idPetBreed,setIdPetBreed]= useState('');
+  const[idPetType, setIdPetType]=useState('');
+  const[selectedAnimal, setSelectedAnimal]=useState([]);
+  const[selectedAnimalId,setSelectedAnimalId] =useState('')
+  const [petTypeOptions, setPetTypeOptions] = useState();
+  const [petBreedOptions, setPetBreedOptions] = useState([]);
+  const [selectedBreedId, setSelectedBreedId] = useState('');
 
   const authtoken = token;
   console.log("token en agregarmascota: "+ token)
@@ -45,6 +53,7 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
   };
 
   useEffect(() => {
+    
     if (addPetSuccess) {
       // Espera un breve momento antes de mostrar el modal de éxito
       const timer = setTimeout(() => {
@@ -56,9 +65,61 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
       return () => clearTimeout(timer);
     }
   }, [addPetSuccess]);
+  useEffect(() => {
+    console.log(idPetType);
+    console.log(idPetBreed);
+    // Obtener tipos de mascotas
+    axios.get('https://buddy-app1.loca.lt/parameters/petType')
+      .then((response) => {
+        // Mapear los datos para obtener un array de opciones
+        const petTypeOptions = response.data.petTypes.map((petType) => ({
+          label: petType.petTypeName,
+          value: petType.idPetType,
+        }));
+        // Guardar las opciones en el estado
+        setPetTypeOptions(petTypeOptions);
+        console.log(petTypeOptions);
+        console.log('tipo de mascota obtenido con exito');
+      })
+      .catch((error) => {
+        console.error('Error al obtener tipos de mascotas:', error);
+      });
+  
+  }, []);
+  
+
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
     onCloseNuevaMascota(); // Cierra el modal NuevaMascota
+  };
+  const handleAddPet = async () => {
+    try {
+      const config = {
+        headers: {
+          'auth-token': authtoken,
+        },
+      };
+
+      const data = {
+        petName: petData.petName,
+        birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+        idPetType: selectedAnimalId,
+        idPetBreed: selectedBreedId,
+      };
+      console.log(data);
+      const response = await axios.post('https://buddy-app1.loca.lt/mypet/pet/', data, config);
+
+      console.log('Respuesta del servidor:', response.data);
+
+      toggleModal();
+
+      setAddPetSuccess(true);
+    } catch (error) {
+      setErrorMessage(error.message);
+      setShowErrorModal(true);
+
+      console.error('Error al hacer la solicitud POST:', error);
+    }
   };
 
   return (
@@ -76,56 +137,42 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
               onChangeText={(text) => setPetData({ ...petData, petName: text })}
             />
           </View>
-            
+          <View style={styles.subtitulo}>
+            <Text style={styles.label}>Fecha de nacimiento:</Text>
+          </View>
+          
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
-            <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
-            {selectedMonth && <ListaValoresDias
+            <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
+            {selectedMonth && <ListaValoresDiasMascota
               selectedMonth={selectedMonth} // Pasa el mes seleccionado
               selectedValue={selectedDay} // Pasa el día seleccionado
               setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
             />}
-          <ListaValoresAño setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
+          <ListaValoresAñoMascota setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
           </View>
-          <View style={styles.subcontenedor5}>
-                  <TouchableOpacity
-              style={styles.closeButton}
-              onPress={async () => {
-              
-                      
-                try {
-                  const config = {
-                    headers: {
-                      'auth-token': authtoken
-                    }
-                  };
-                  
-                  const data = {
-                    // Aquí debes definir los datos que deseas enviar en el body de la solicitud POST
-                    petName: petData.petName,
-                    birthDate: `${selectedDay}-${selectedMonth}-${selectedYear}`,
-                  };
+          <View style={styles.subtitulo}>
+            <Text style={styles.label}>Tipo de Animal</Text>
+          </View>
+          
+          <ScrollView horizontal={true}>
+          <View >
+            
+          <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
 
-                  const response = await axios.post('https://buddy-app1.loca.lt/mypet/pet/', data, config);
-              
-                  console.log('Respuesta del servidor:', response.data);
-              
-                  // Cierra el modal de "NuevaMascota" primero
-                  toggleModal();
-              
-                  // Luego, establece la variable de éxito en true para mostrar el modal de éxito
-                  setAddPetSuccess(true);
-                } catch (error) {
-                  // Si hay un error, muestra el modal de error con el mensaje de error
-                  setErrorMessage(error.message);
-                  setShowErrorModal(true);
-              
-                  console.error('Error al hacer la solicitud POST:', error);
-                }
-              }}
-              
-            >
-              <Text style={styles.closeButtonText}>Agregar</Text>
-            </TouchableOpacity>
+          </View>
+          </ScrollView>
+          
+          <View style={[styles.dropdown,{ borderRadius: 100 }]}>
+           
+          {selectedAnimal && (
+                <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
+              )}
+          </View>
+
+          <View style={styles.subcontenedor5}>
+            <TouchableOpacity style={styles.closeButton} onPress={handleAddPet}>
+                <Text style={styles.closeButtonText}>Agregar</Text>
+            </TouchableOpacity>     
           </View>
         </View>
       </View>
@@ -137,11 +184,32 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
 }
 
 const styles = StyleSheet.create({
+  label: {
+    fontSize: 16,
+    marginBottom: 2,
+    
+    
+  },
+  subtitulo:{
+    textAlign:'left',
+    width:'90%',
+    margin:5,
+  },
   container: {
     flex: 1,
     backgroundColor:"#FFFFFF",
     marginTop:35,
+    padding:5,
   },
+  dropdown: {
+    backgroundColor: '#EEE9E9',
+    width: '90%',
+    margin: 10,
+    padding:0,
+    justifyContent:'center',
+ 
+  },
+  
   titulo: {
     marginTop: 10,
     fontSize: 22,
@@ -154,6 +222,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignContent:'center',
     alignItems:'center',
+    width:'100%',
   },
   inputTexto: {
     backgroundColor: '#EEE9E9',
@@ -191,6 +260,7 @@ const styles = StyleSheet.create({
   subcontenedor4: {
     marginTop: 15,
     justifyContent: 'center',
+    marginBottom: 25,
   },
   tarjeta: {
     backgroundColor: '#ffffff',

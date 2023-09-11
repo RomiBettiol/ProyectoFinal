@@ -1,28 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Modal, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import HeaderScreen from '../componentes/HeaderScreen';
-import BarraBusqueda from '../componentes/BarraBusqueda';
+import HeaderScreen from '../componentes/HeaderScreen';  
 import EditarInfo from '../componentes/MiMascota/EditarInfo';
 import BotonInformacion from '../componentes/MiMascota/BotonInformacion';
 import { Popover, Overlay } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 import axios from 'axios';
+import SuccessModal from '../componentes/MiMascota/SuccessModal';
+import ErrorModal from '../componentes/MiMascota/ErrorModal';
+import AltaInformacion from '../componentes/MiMascota/AltaInformacion';
+import BarraBusquedaMascota from '../componentes/MiMascota/BarraBusquedaMascota';
+import InfoModal from '../componentes/MiMascota/InfoModal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function MiInfoImportante() {
+export default function MiInfoImportante(token) {
     const [overlayVisible, setOverlayVisible] = useState(false);
     const [selectedInformationIndex, setSelectedInformationIndex] = useState(null);
-    
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [showAltaInfoModal, setShowAltaInfoModal] = useState(false);
     const [showEditarInfoModal, setShowEditarInfoModal] = useState(false);
     const [showOptionsOverlay, setShowOptionsOverlay] = useState(false);
     const [informacion, setInformacion] = useState([]);
     const [info, setInfo] = useState(false);
+    const [showInfoModal, setShowInfoModal] = useState(false);
     
     const route = useRoute();
     const mascotaId = route.params?.mascotaId;
@@ -35,12 +41,14 @@ export default function MiInfoImportante() {
                 
                 if (Array.isArray(response.data.information)) {
                     setInformacion(response.data.information);
+                    
                 } else {
                     console.error('API response does not have a valid "information" array:', response.data);
                 }
                 
             } catch (error) {
                 console.error('Error fetching data:', error);
+            
             }
         };
     
@@ -79,13 +87,18 @@ export default function MiInfoImportante() {
         try {
             const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`);
             console.log('Info eliminado:', response.data);
+            setShowSuccessModal(true);
             } catch (error) {
                 console.error('Error eliminando la mascota:', error);
+            setShowErrorModal(true);
             }
         
         setOverlayVisible(false); // Cierra el overlay después de eliminar
     };
-
+    const handleSuccessModalClose = () => {
+        setShowSuccessModal(false);
+        setOverlayVisible(false); // Cierra el modal NuevaMascota
+      };
     return (
         <View style={styles.container}>
             <HeaderScreen />
@@ -105,7 +118,7 @@ export default function MiInfoImportante() {
                 </View>
                
                     <View style={styles.containerBarra}>
-                        <BarraBusqueda
+                        <BarraBusquedaMascota
                             searchText={searchText}
                             onSearchTextChange={setSearchText}
                         />
@@ -120,13 +133,12 @@ export default function MiInfoImportante() {
                             <ScrollView>
                                     {filteredInformacionAgrupados.map((info, index) => (
                                         <View style={styles.contenedorInfo} key={index}>
-                                            
-                                                <TouchableOpacity
+                                             <TouchableOpacity
                                                     style={styles.containerInfo}
                                                     onPress={() => {
-                                                        setSelectedInformationIndex(index);
-                                                        setOverlayVisible(true);
-                                                    }}
+                                                        setInfo(info); // Esto ya lo tienes en tu código
+                                                        setShowInfoModal(true); // Abre el modal TurnoModal
+                                                      }}
                                                 > 
                                                 <View style={styles.infoContainer}>
                                                     <View style={styles.info}>
@@ -155,6 +167,7 @@ export default function MiInfoImportante() {
                                                     
                                                 </View>
                                                 </TouchableOpacity>
+                                               
                                         </View>
                                          ))}
                                          </ScrollView>
@@ -162,7 +175,7 @@ export default function MiInfoImportante() {
             </View>
             
            
-           <BotonInformacion onAddInfo={toggleAltaInfoModal} />  
+           <BotonInformacion onAddInfo={toggleAltaInfoModal} token={token}/>  
           
              {/* Overlay para opciones */}
              <Overlay
@@ -212,19 +225,59 @@ export default function MiInfoImportante() {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        {/*
-                        <AltaInfo onClose={toggleAltaInfoModal} />
-                            */}
+                        
+                        <AltaInformacion onClose={() => setShowAltaInfoModal(false)} />
+                            
                     </View>
                 </View>
             </Modal>
-            
+            <SuccessModal
+                visible={showSuccessModal}
+                onClose={() => {
+                setShowSuccessModal(false);
+                handleSuccessModalClose(); // Cerrar el modal EditarTurno
+                }}
+                message="Información eliminada correctamente"
+            />
+            <ErrorModal
+                visible={showErrorModal}
+                errorMessage="Hubo un error al eliminar la información."
+                onClose={() => setShowErrorModal(false)}
+            />
+            <Modal
+                visible={showInfoModal}
+                animationType="slide"
+                transparent={true}
+                >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>                 
+                        <InfoModal info={info} onClose={() => setShowInfoModal(false)}/>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
            
 
 const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        
+    },
+    modalContent: {
+      backgroundColor: '#FFFFFF',
+      elevation: 10,
+      borderRadius: 25,
+      padding: 20,
+      width: windowWidth * 0.95,
+      height:windowHeight * 0.45,
+      textAlign: 'center',
+      alignItems: 'center', // Para centrar horizont
+  },
     container: {
         flex: 1,
         backgroundColor: 'white',

@@ -20,7 +20,8 @@ const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal, setSelectedAnim
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Tipo de Animal</Text>
+      
+      
       <View style={styles.optionsContainer}>
         {animalOptions.map((animalOption, index) => (
           <TouchableOpacity

@@ -48,7 +48,7 @@ export default function HomeScreen({navigation}) {
 
     // Accede al parámetro token
     const { token } = route.params;
-    console.log("ESTOY EN el home: "+ token);
+    
     return (
         <ScrollView style={styles.scroll}>
             <View style={styles.home}>
@@ -56,7 +56,7 @@ export default function HomeScreen({navigation}) {
                     source={require('../Imagenes/logo2.png')}
                     style={styles.logo}
                 />
-                <MenuHorizontal />
+                <MenuHorizontal token={token} />
                 <View style={[{flexDirection: 'row'}, styles.primeraFila]}>
                     <TouchableOpacity style={styles.boton1}
                         onPress = {()=> (

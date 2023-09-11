@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import BotonFlotante from '../componentes/BotonFlotante';
 import { useNavigation } from '@react-navigation/native';
+import bcrypt from "bcryptjs"
 
 export default function MiPerfil({ navigation }) {
   const route = useRoute();
@@ -19,7 +20,7 @@ export default function MiPerfil({ navigation }) {
   const [user, setUser] = useState ('');
   const [passwordMismatchError, setPasswordMismatchError] = useState(false);
   const [requisitosContrasena, setRequisitosContrasena] = useState(false);
-  const[contrasenaIgual, setContrasenaIgual] = useState(false);
+  const [contrasenaIgual, setContrasenaIgual] = useState(false);
   const [passwordUpdated, setPasswordUpdated] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userUpdated, setUserUpdated] = useState(false);
@@ -112,7 +113,7 @@ export default function MiPerfil({ navigation }) {
     return hasNumber && hasSpecialChar && isLengthValid;
   };
 
-  const handleUpdatePassword = () => {
+  const handleUpdatePassword = async () => {
     if (currentPassword === '' || newPassword === '' || repeatPassword === '') {
       setShowFieldsEmptyMessage(true);
       setPasswordMismatchError(false);
@@ -139,12 +140,15 @@ export default function MiPerfil({ navigation }) {
       setRequisitosContrasena(false);
       setContrasenaIgual(false);
 
+      const currentHashedPassword = await bcrypt.hash(currentPassword, 10)
+      const newHashedPassword = await bcrypt.hash(newPassword, 10)
+
       const updatedUserData = {
         username: user[0].userName,
         name: user[0].name,
         lastName: user[0].lastName,
-        password: newPassword,
-        currentPassword: currentPassword,
+        password: newHashedPassword,
+        currentPassword: currentHashedPassword,
       };
   
       // Realiza la solicitud PUT a la URL con los datos actualizados
@@ -169,16 +173,19 @@ export default function MiPerfil({ navigation }) {
     }
   };      
 
-  const handleUpdateUser = () => {
+  const handleUpdateUser = async () => {
     if (confirmPassword === '') {
       setContrasenaVacia(true);
       return;
     }
     setContrasenaVacia(false);
+
+    const confirmHashedPassword = await bcrypt.hash(confirmPassword, 10)
+
     const updatedUserData = {
       name: newName,
       userName: newUserName,
-      currentPassword: confirmPassword,
+      currentPassword: confirmHashedPassword,
     };
   
     // Realiza la solicitud PUT para actualizar la información del usuario
@@ -261,9 +268,9 @@ export default function MiPerfil({ navigation }) {
     console.log('idPublicationToEdit:', idPublicationToEdit);
 
     if (modalType === 'adoption') {
-      navigation.navigate('EditarPublicacionAdopcion', {publicationToEdit : selectedPublication });
+      navigation.navigate('EditarPublicacionAdopcion', {publicationToEdit : selectedPublication, token });
     } else if (modalType === 'search') {
-      navigation.navigate('EditarPublicacionBusqueda', {publicationToEdit : selectedPublication });
+      navigation.navigate('EditarPublicacionBusqueda', {publicationToEdit : selectedPublication, token });
       console.log('Mostrar desde mi perfil el id: ', selectedPublication);
     }
   };
@@ -300,7 +307,7 @@ useEffect(() => {
   if (deleteSuccess || deleteFailure) {
     // Realiza la solicitud GET para cargar las publicaciones actualizadas
     axios
-      .get(`http://buddy-app1.loca.lt/publications/publication/${idUser}`, {
+      .get(`http://buddy-app1.loca.lt/publications/publication/ByUser`, {
         headers: {
           'auth-token': token
         }
@@ -679,9 +686,6 @@ useEffect(() => {
           </View>
         </Modal>
       </ScrollView>
-      <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
-            <BotonFlotante token={token} />
-      </View>
     </View>
   );
 };
