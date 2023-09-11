@@ -16,6 +16,7 @@ export default function AltaInformacion({ visible, onClose }) {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const route = useRoute();
   const mascotaId = route.params?.mascotaId;
+  const [isButtonDisabled1, setIsButtonDisabled1] = useState(false); 
   
   console.log(mascotaId);
 
@@ -27,7 +28,11 @@ export default function AltaInformacion({ visible, onClose }) {
     const data = {
                   titleInformation: informationData.titleInformation,
                   descriptionInformation: informationData.descriptionInformation,            
-                };    
+                }; 
+                
+       
+
+    
     return (
         <View>
         
@@ -59,7 +64,7 @@ export default function AltaInformacion({ visible, onClose }) {
                           style={styles.closeButton}
                           onPress={async () => {
                             console.log(data.informationDate) 
-                      
+                            setIsButtonDisabled1(true);
                             try {
                                                  
                               const response = await axios.post(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}`, data);
@@ -70,9 +75,13 @@ export default function AltaInformacion({ visible, onClose }) {
                               setShowErrorModal(true);
                               console.error('Error al hacer la solicitud POST:', error);
                             }
+                            setTimeout(() => {
+                              setIsButtonDisabled1(false);
+                            }, 2000);
                           }}
+                          disabled={isButtonDisabled1}
                       >
-                          <Text style={styles.closeButtonText}>Aceptar</Text>
+                          <Text style={styles.closeButtonText} disabled={isButtonDisabled1}>Aceptar</Text>
             </TouchableOpacity>
             <TouchableOpacity
                           style={styles.closeButton}

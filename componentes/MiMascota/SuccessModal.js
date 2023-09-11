@@ -14,7 +14,7 @@ export default function SuccessModal({ visible, onClose, message}) {
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-        <Text style={styles.modalText}>! {message} ¡</Text>
+        <Text style={styles.modalText}>¡ {message} !</Text>
             <TouchableOpacity style={styles.botonesEditar} onPress={onClose}>
               <Text>Cerrar</Text>
             </TouchableOpacity>

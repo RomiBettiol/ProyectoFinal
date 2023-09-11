@@ -4,7 +4,6 @@ import { Image } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormularioRegistrarse from '../componentes/FormularioRegistrarse';
 import axios, { AxiosError } from 'axios';
-import bcrypt from "bcryptjs"
 import BotonImagenRegis from '../componentes/BotonImagenRegis';
 
 
@@ -21,63 +20,60 @@ export function RegistrarseScreen({ navigation }) {
     contrasena: '',
     contrasena2: '',
   });
+
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const handleSubmit = async () => {
     if (formValid) {
-      const hashedPassword = await bcrypt.hash(datosFormulario.contrasena, 10)
+
       const data = {
-       // name: datosFormulario.nombre,
+        userName: datosFormulario.nombre,
         mail: datosFormulario.email,
-        userName: datosFormulario.usuario,
-        password: hashedPassword,
-        
+        password: datosFormulario.contrasena,
+        name: nombre,
       }
+
       // Hacer la petición POST al backend usando axios
-      console.log(data)
-        try {
-          const response = await axios.post('https://buddy-app1.loca.lt/security/user/register', data, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          if (response.status === 201) {
-            console.log('Registro exitoso:', response.data);
-            navigation.navigate('ConfirmacionRegistroScreen');
-          } else {
-            setError(response.data.message || 'Error desconocido');
-            setShowAlertServer(true);
-          }
-        } catch (error) {
-          console.log('Error:', error);
-          setError(error.response?.data?.message || 'Error desconocido');
+      try {
+        const response = await axios.post('https://buddy-app1.loca.lt/security/user/register', data, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.status === 201) {
+          console.log('Registro exitoso:', response.data);
+          navigation.navigate('ConfirmacionRegistroScreen');
+        } else {
+          setError(response.data.message || 'Error desconocido');
           setShowAlertServer(true);
         }
-      }else {
-       
-        let errorText = 'Revise todos los campos';
-  
-         if (datosFormulario.nombre.trim() === '') {
-          errorText = 'Por favor, complete el nombre.';
-        } else if (datosFormulario.contrasena !== datosFormulario.contrasena2) {
-          errorText = 'Las contraseñas no coinciden.';
-        } else if (datosFormulario.usuario.trim() === '') {
-          errorText = 'Por favor, complete el nombre de usuario.';
-        }else if(datosFormulario.email.trim() === '') {
-          errorText = 'Por favor, complete el mail.';
-        }
-        
-        setErrorMessage(errorText);
-        console.log(errorMessage)
+      } catch (error) {
+        console.log('Error:', error);
+        setError(error.response?.data?.message || 'Error desconocido');
+        setShowAlertServer(true);
+      }
+    }else {
+      let errorText = 'Revise todos los campos';
+      if (datosFormulario.nombre.trim() === '') {
+        errorText = 'Por favor, complete el nombre.';
+      } else if (datosFormulario.contrasena !== datosFormulario.contrasena2) {
+        errorText = 'Las contraseñas no coinciden.';
+      } else if (datosFormulario.usuario.trim() === '') {
+        errorText = 'Por favor, complete el nombre de usuario.';
+      }else if(datosFormulario.email.trim() === '') {
+        errorText = 'Por favor, complete el mail.';
       }
       
-      
-    
+      setErrorMessage(errorText);
+      console.log(errorMessage)
+           
+    }
   };
+            
 
-  const handleDatosChange = (datos) => {
-    setDatosFormulario(datos);
-  };
+  // const handleDatosChange = (datos) => {
+  //   setDatosFormulario(datos);
+  // };
 
   return (
     <KeyboardAwareScrollView

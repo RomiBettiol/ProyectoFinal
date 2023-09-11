@@ -30,30 +30,33 @@ export default function MiInfoImportante(token) {
     const [info, setInfo] = useState(false);
     const [showInfoModal, setShowInfoModal] = useState(false);
     
+    const [error404, setError404] = useState(false);
+
+
     const route = useRoute();
     const mascotaId = route.params?.mascotaId;
 
-    useEffect(() => {
-        
+      
         async function fetchInformacion() {
             try {
                 const response = await axios.get(`https://buddy-app1.loca.lt/mypet/information/${mascotaId}`);
                 
                 if (Array.isArray(response.data.information)) {
                     setInformacion(response.data.information);
-                    
                 } else {
                     console.error('API response does not have a valid "information" array:', response.data);
                 }
                 
             } catch (error) {
-                console.error('Error fetching data:', error);
-            
+              
+        
+                if (error.response && error.response.status === 404) {
+                    // Si el error es 404, establece el estado error404 en true
+                    setError404(true);
+                }
             }
-        };
-    
-        fetchInformacion();
-    }, []);
+        }
+
 
     const filterAndSearchInformacion = () => {
         return informacion
@@ -76,11 +79,15 @@ export default function MiInfoImportante(token) {
 
     const toggleEditarInfoModal = () => {
         setShowEditarInfoModal(!showEditarInfoModal);
+        fetchInformacion();
     }; 
 
-    const toggleAltaInfoModal = () => {
+    const toggleAltaInfoModal = async () => {
+        await fetchInformacion(); // Espera a que se complete la actualización del estado
         setShowAltaInfoModal(!showAltaInfoModal);
+        
     };
+    
     // Dentro de la función que maneja la opción "Eliminar"
     const handleDeleteInfo= async () => {
         console.log(info.idInformation)
@@ -94,11 +101,17 @@ export default function MiInfoImportante(token) {
             }
         
         setOverlayVisible(false); // Cierra el overlay después de eliminar
+        fetchInformacion();
     };
     const handleSuccessModalClose = () => {
+        fetchInformacion();
         setShowSuccessModal(false);
         setOverlayVisible(false); // Cierra el modal NuevaMascota
       };
+
+      useEffect(() => {
+        fetchInformacion();
+    }, [showSuccessModal]);  
     return (
         <View style={styles.container}>
             <HeaderScreen />
@@ -126,8 +139,12 @@ export default function MiInfoImportante(token) {
                     <Text style={styles.titulo}>
                         Mi información
                     </Text>                  
-                <View style={styles.contentContainer2}>
-                   
+                    {error404 ? (
+                        <View style={styles.contentContainer22}>
+                            <Text style={styles.sinInfo}>NO HAY INFORMACION CARGADA</Text>
+                        </View>
+                    ) : (
+                    <View style={styles.contentContainer2}>   
                         
                             <View style={styles.contentContainer3} >
                             <ScrollView>
@@ -173,7 +190,7 @@ export default function MiInfoImportante(token) {
                                          </ScrollView>
                         </View>
             </View>
-            
+            )}
            
            <BotonInformacion onAddInfo={toggleAltaInfoModal} token={token}/>  
           
@@ -261,6 +278,15 @@ export default function MiInfoImportante(token) {
            
 
 const styles = StyleSheet.create({
+    sinInfo:{
+        fontSize: 14,
+        color:'grey',
+    },
+    contentContainer22: {
+       marginTop:200,        
+        justifyContent: 'center', // Para centrar vertical
+        alignItems:'center',
+    },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',

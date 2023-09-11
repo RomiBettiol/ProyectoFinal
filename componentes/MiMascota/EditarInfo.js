@@ -37,12 +37,7 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
 };
 
     return (
-        <Modal
-            visible={visible}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={onClose}
-        >
+       <View>
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     {/* Contenido de la tarjeta modal */}
@@ -96,7 +91,7 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
                 errorMessage="Hubo un error al editar la información."
                 onClose={() => setShowErrorModal(false)}
             />
-      </Modal>
+      </View>
   );
 }
 const styles = StyleSheet.create({

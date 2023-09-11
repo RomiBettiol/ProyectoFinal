@@ -37,11 +37,10 @@ export default function MisVacunas(token) {
     const[showVaccinModal, setShowVaccinModal] = useState(false);
     const [buttonTransform, setButtonTransform] = useState(0);
     const[mensaje, setMensaje] = useState('')
-
+    const [error404, setError404] = useState(false);
 
     
-    useEffect(() => {
-        
+    
         async function fetchVaccines() {
             try {
                 const response = await axios.get(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}`);
@@ -55,12 +54,15 @@ export default function MisVacunas(token) {
                 }
                 
             } catch (error) {
-                console.error('Error fetching data:', error);
+                
+        
+                if (error.response && error.response.status === 404) {
+                    // Si el error es 404, establece el estado error404 en true
+                    setError404(true);
+                }
             }
         };
-        
-        fetchVaccines();
-    }, []);
+       
     
     
     const filterAndSearchVaccines = () => {
@@ -126,10 +128,12 @@ export default function MisVacunas(token) {
 
     const toggleEditarVaccinModal = () => {
         setShowEditarVaccinModal(!showEditarVaccinModal);
+        fetchVaccines();
     };
 
     const toggleAltaVaccinModal = () => {
         setShowAltaVaccinModal(!showAltaVaccinModal);
+        fetchVaccines();
     };
 
     function dia (vaccin) {
@@ -156,14 +160,17 @@ export default function MisVacunas(token) {
             }
         
         setOverlayVisible(false); // Cierra el overlay después de eliminar
+        fetchVaccines();
     };
    
 
     const handleSuccessModalClose = () => {
+        fetchVaccines();
         setShowSuccessModal(false);
         setShowVaccinModal(false);
         setOverlayVisible(false); // Cierra el modal NuevaMascota
-      };
+
+    };
     
     useEffect(() => {
         console.log("vaccines: ");
@@ -171,7 +178,10 @@ export default function MisVacunas(token) {
     }, [vaccines]);
 
     
-    
+    useEffect(() => {
+        fetchVaccines();
+    }, []);    
+
     return (
         <View style={styles.container}>
             <HeaderScreen />
@@ -213,8 +223,12 @@ export default function MisVacunas(token) {
                         </Picker>
                     </View>
                 </View>
-                
-                <View style={styles.contentContainer2}>
+                {error404 ? (
+                        <View style={styles.contentContainer22}>
+                            <Text style={styles.sinInfo}>NO HAY VACUNAS CARGADAS</Text>
+                        </View>
+                    ) : (
+                    <View style={styles.contentContainer2}>
                     {Object.keys(filteredVaccinesAgrupados)
                         .sort((a, b) => {
                             const mesesOrdenados = [
@@ -274,7 +288,7 @@ export default function MisVacunas(token) {
                         </View>
                     ))}
             </View>
-           
+            )}
                 <BotonVaccine onAddVaccin={toggleAltaVaccinModal} token={token}/>  
             
              {/* Overlay para opciones */}
@@ -364,6 +378,15 @@ export default function MisVacunas(token) {
            
 
 const styles = StyleSheet.create({
+    sinInfo:{
+        fontSize: 14,
+        color:'grey',
+    },
+    contentContainer22: {
+       marginTop:200,        
+        justifyContent: 'center', // Para centrar vertical
+        alignItems:'center',
+    },
     container: {
         flex: 1,
         backgroundColor: 'white',

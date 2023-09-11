@@ -33,9 +33,9 @@ export default function MisTurnos(token) {
     const[showTurnoModal, setShowTurnoModal] = useState(false);
     const route = useRoute();
     const mascotaId = route.params?.mascotaId;
-    
-    useEffect(() => {
-        
+    const [error404, setError404] = useState(false);
+
+   
         async function fetchTurnos() {
             try {
                 const response = await axios.get(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}`);
@@ -45,33 +45,27 @@ export default function MisTurnos(token) {
                 }
                 
             } catch (error) {
-                console.error('Error fetching data:', error);
+                if (error.response && error.response.status === 404) {
+                    // Si el error es 404, establece el estado error404 en true
+                    setError404(true);
+                }
             }
         };
         
         console.log(turnos)
-        fetchTurnos();
-    }, []);
+
     
     const filterAndSearchTurnos = () => {
         return turnos
             .filter(turno => {
-                console.log(turno.turnDate)
                 const dateParts = turno.turnDate.split('-');
                 const day= parseInt(dateParts[0], 10);
                 const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
                 const  year= parseInt(dateParts[2], 10);
-                console.log(year)
-                console.log(month)
-                console.log(day)
-                const turnDate = new Date(year, month, day);
-                console.log('turnDate: ',turnDate);             
+                const turnDate = new Date(year, month, day); 
                 const turnoYear = year;
-                console.log(turnoYear);
                 const searchTextLower = searchText.toLowerCase();
-                console.log('searchTextLower: ', searchTextLower); 
                 const titleLower = turno.titleTurn.toLowerCase();
-                console.log('titulo',titleLower);
                 return (
                     (selectedYear === null || turnoYear === selectedYear) &&
                     (searchText === '' || titleLower.includes(searchTextLower))
@@ -96,12 +90,7 @@ export default function MisTurnos(token) {
                 const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
                 const day= parseInt(dateParts[0], 10);
                 const fecha = new Date(year, month, day);
-                console.log('fecha: ', (fecha))
-                console.log('month: ', (month))
-                console.log('year: ', (year))
-                console.log('day: ', (day))
                 const mes = fecha.toLocaleString('default', { month: 'long' });              
-                console.log('mes:', mes)
 
             if (!groupedTurnos[mes]) {
                 groupedTurnos[mes] = [];
@@ -117,11 +106,13 @@ export default function MisTurnos(token) {
 
     const toggleEditarTurnoModal = () => {
         setShowEditarTurnoModal(!showEditarTurnoModal);
+        fetchTurnos();
         
     };
 
     const toggleAltaTurnoModal = () => {
         setShowAltaTurnoModal(!showAltaTurnoModal);
+        fetchTurnos();
     };
     // Dentro de la función que maneja la opción "Eliminar"
     const handleDeleteTurno = async () => {
@@ -136,6 +127,7 @@ export default function MisTurnos(token) {
             }
         
         setOverlayVisible(false); // Cierra el overlay después de eliminar
+        fetchTurnos()
     };
     function dia (turno) {
         const dateParts = turno.turnDate.split('-');
@@ -145,10 +137,16 @@ export default function MisTurnos(token) {
         return day;
     };
     const handleSuccessModalClose = () => {
+        fetchTurnos();
         setShowSuccessModal(false);
         setShowTurnoModal(false);
         setOverlayVisible(false); // Cierra el modal NuevaMascota
       };
+
+      useEffect(() => {
+        fetchTurnos();
+
+    }, []);
     return (
         <View style={styles.container}>
             <HeaderScreen />
@@ -188,7 +186,11 @@ export default function MisTurnos(token) {
                         </Picker>
                     </View>
                 </View>
-                
+                {error404 ? (
+                        <View style={styles.contentContainer22}>
+                            <Text style={styles.sinInfo}>NO HAY TURNOS CARGADOS</Text>
+                        </View>
+                    ) : (
                 <View style={styles.contentContainer2}>
                     {Object.keys(filteredTurnosAgrupados)
                         .sort((a, b) => {
@@ -248,6 +250,7 @@ export default function MisTurnos(token) {
                         </View>
                     ))}
             </View>
+            )}
            <BotonTurnos onAddTurno={toggleAltaTurnoModal} token={token} />   
              {/* Overlay para opciones */}
              <Overlay
@@ -301,7 +304,6 @@ export default function MisTurnos(token) {
                 onClose={() => {
                 setShowSuccessModal(false);
                 handleSuccessModalClose();
-                onClose(); // Cerrar el modal EditarVaccin
                 }}
                 message="Turno eliminado correctamente"
             />
@@ -337,6 +339,15 @@ export default function MisTurnos(token) {
            
 
 const styles = StyleSheet.create({
+    sinInfo:{
+        fontSize: 14,
+        color:'grey',
+    },
+    contentContainer22: {
+       marginTop:200,        
+        justifyContent: 'center', // Para centrar vertical
+        alignItems:'center',
+    },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',

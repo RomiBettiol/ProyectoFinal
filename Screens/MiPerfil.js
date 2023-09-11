@@ -5,7 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import BotonFlotante from '../componentes/BotonFlotante';
 import { useNavigation } from '@react-navigation/native';
-import bcrypt from "bcryptjs"
+
 
 export default function MiPerfil({ navigation }) {
   const route = useRoute();
@@ -140,15 +140,12 @@ export default function MiPerfil({ navigation }) {
       setRequisitosContrasena(false);
       setContrasenaIgual(false);
 
-      const currentHashedPassword = await bcrypt.hash(currentPassword, 10)
-      const newHashedPassword = await bcrypt.hash(newPassword, 10)
-
       const updatedUserData = {
         username: user[0].userName,
         name: user[0].name,
         lastName: user[0].lastName,
-        password: newHashedPassword,
-        currentPassword: currentHashedPassword,
+        password: newPassword,
+        currentPassword: currentPassword,
       };
   
       // Realiza la solicitud PUT a la URL con los datos actualizados
@@ -180,12 +177,10 @@ export default function MiPerfil({ navigation }) {
     }
     setContrasenaVacia(false);
 
-    const confirmHashedPassword = await bcrypt.hash(confirmPassword, 10)
-
     const updatedUserData = {
       name: newName,
       userName: newUserName,
-      currentPassword: confirmHashedPassword,
+      currentPassword: confirmPassword,
     };
   
     // Realiza la solicitud PUT para actualizar la información del usuario
@@ -686,6 +681,9 @@ useEffect(() => {
           </View>
         </Modal>
       </ScrollView>
+      <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
+            <BotonFlotante token={token} />
+      </View>
     </View>
   );
 };
