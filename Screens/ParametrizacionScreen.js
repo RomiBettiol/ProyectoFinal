@@ -243,9 +243,9 @@ export default function ParametrizacionScreen({ navigation }) {
       });
   };
 
-  const handleBreedDelete = (breedId) => {
+  const  handleBreedDelete =  async (breedId) => {
     console.log('ID:', breedId)
-    axios
+    await axios
       .delete(`http://buddy-app1.loca.lt/parameters/petBreed/${breedId}`)
       .then((response) => {
         console.log('Raza eliminada exitosamente:', response.data);

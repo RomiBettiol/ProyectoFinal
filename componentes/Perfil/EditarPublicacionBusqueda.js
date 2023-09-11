@@ -16,6 +16,7 @@ import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 import { useNavigation } from '@react-navigation/native';
 
 export default function EditarPublicacionBusqueda({ route }) {
+  const [isValid, setIsValid] = useState(true);
   const { publicationToEdit } = route.params;
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
@@ -35,9 +36,16 @@ export default function EditarPublicacionBusqueda({ route }) {
   const navigation = useNavigation();
 
   const idPublicationSearch = publicationToEdit.idPublicationSearch;
-  const idUser = '917f740b-6a2f-482c-8d62-4ce289a8f206';
   console.log('Publicacion búsqueda: ', idPublicationSearch);
 
+  const handleEndEditing = () => {
+    if (4 < title.length) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+    console.log(isValid)
+  };
 
   const actualizarPublicacion = async () => {
     const longitude = 12.09812;
@@ -56,7 +64,6 @@ export default function EditarPublicacionBusqueda({ route }) {
         formattedDate,
         latitude,
         longitude,
-        idUser,
         selectedIsFound,
       });
   
@@ -68,7 +75,6 @@ export default function EditarPublicacionBusqueda({ route }) {
           longitude,
           latitude,
           images,
-          idUser: idUser,
           idPetType: selectedAnimalId,
           idPetBreed: selectedBreedId,
           idPetColor: selectedColorId,
@@ -124,8 +130,10 @@ export default function EditarPublicacionBusqueda({ route }) {
               style={styles.inputTexto}
               value={title}
               onChangeText={setTitle}
+              onEndEditing={handleEndEditing}
             />
           </View>
+          {!isValid && <Text style={styles.errorTextCaracteres}>Ingresa al menos 4 caracteres.</Text>}
           <View style={styles.subcontenedor2}>
             <Text style={styles.descripcionPublicacion}>Descripción</Text>
             <TextInput
@@ -138,7 +146,13 @@ export default function EditarPublicacionBusqueda({ route }) {
             />
           </View>
             <View style={styles.subcontenedor3}>
-              <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
+                <Text style={styles.tipoAnimal}>Tipo de animal</Text>
+                <ScrollView
+                  horizontal={true} // Hace que el ScrollView sea horizontal
+                  contentContainerStyle={{ flexDirection: 'row' }} // Establece la dirección de los elementos hijos como horizontal
+                >
+                  <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
+                </ScrollView>
               <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
               <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
               {selectedAnimal && (
@@ -161,7 +175,7 @@ export default function EditarPublicacionBusqueda({ route }) {
             </View>
           </View>
       </Modal>
-      <BotonPublicar onPress={actualizarPublicacion} />
+      <BotonPublicar disabled={!isValid} onPress={actualizarPublicacion} />
     </View>
   );
 }
@@ -247,5 +261,13 @@ const styles = StyleSheet.create({
   bottomModalContent: {
     alignItems: 'flex-end', // Alinea el contenido del modal en el extremo inferior
     padding: 20,
+  },
+  errorTextCaracteres:{
+    color: 'red',
+    marginLeft: 40,
+  },
+  tipoAnimal: {
+    marginLeft: '3%',
+    fontSize: 16,
   },
 });

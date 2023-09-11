@@ -15,6 +15,7 @@ import axios from 'axios';
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
 export default function PublicacionBusqueda({ navigation }) {
+  const [isValid, setIsValid] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [title, setTitle] = useState('');
@@ -31,6 +32,15 @@ export default function PublicacionBusqueda({ navigation }) {
   const [selectedDay, setSelectedDay] = useState(null);
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
+
+  const handleEndEditing = () => {
+    if (4 < title.length) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+    console.log(isValid)
+  };
 
   const handlePost = async () => {
     const longitude = 12.09812;
@@ -94,11 +104,13 @@ export default function PublicacionBusqueda({ navigation }) {
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
             <TextInput
-              style={styles.inputTexto}
+              style={[styles.inputTexto, !isValid && styles.inputError]}
               value={title}
               onChangeText={setTitle}
+              onEndEditing={handleEndEditing}
             />
           </View>
+          {!isValid && <Text style={styles.errorTextCaracteres}>Ingresa al menos 4 caracteres.</Text>}
           <View style={styles.subcontenedor2}>
             <Text style={styles.descripcionPublicacion}>Descripción</Text>
             <TextInput
@@ -111,7 +123,13 @@ export default function PublicacionBusqueda({ navigation }) {
             />
           </View>
             <View style={styles.subcontenedor3}>
-              <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
+              <Text style={styles.tipoAnimal}>Tipo de animal</Text>
+              <ScrollView
+                horizontal={true} // Hace que el ScrollView sea horizontal
+                contentContainerStyle={{ flexDirection: 'row' }} // Establece la dirección de los elementos hijos como horizontal
+              >
+                <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
+              </ScrollView>
               <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
               <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
               {selectedAnimal && (
@@ -134,7 +152,7 @@ export default function PublicacionBusqueda({ navigation }) {
             </View>
           </View>
       </Modal>
-      <BotonPublicar onPress={handlePost} />
+      <BotonPublicar disabled={!isValid} onPress={handlePost}/>
     </View>
   );
 }
@@ -184,6 +202,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: '8%',
   },
+  tipoAnimal: {
+    marginLeft: '3%',
+    fontSize: 16,
+  },
   inputDescripcion: {
     backgroundColor: '#EEE9E9',
     width: '85%',
@@ -220,5 +242,9 @@ const styles = StyleSheet.create({
   bottomModalContent: {
     alignItems: 'flex-end', // Alinea el contenido del modal en el extremo inferior
     padding: 20,
+  },
+  errorTextCaracteres:{
+    color: 'red',
+    marginLeft: 40,
   },
 });

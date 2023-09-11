@@ -126,10 +126,10 @@ export default function MisTurnos(token) {
     // Dentro de la función que maneja la opción "Eliminar"
     const handleDeleteTurno = async () => {
         console.log(turno.idTurn)
-        try {
-            const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
-            console.log('Turno eliminado:', response.data);
-            setShowSuccessModal(true);
+            try {
+                const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
+                console.log('Turno eliminado:', response.data);
+                setShowSuccessModal(true);
             } catch (error) {
                 console.error('Error eliminando la mascota:', error);
                 setShowErrorModal(true);
@@ -297,14 +297,13 @@ export default function MisTurnos(token) {
                 </View>
             </Modal>
             <SuccessModal
-                visible={showSuccessModal}
-                onClose={() => {
-                setShowSuccessModal(false);
-                handleSuccessModalClose();
-                onClose(); // Cerrar el modal EditarVaccin
-                }}
-                message="Turno eliminado correctamente"
-            />
+                    visible={showSuccessModal}
+                    onClose={() => {
+                    setShowSuccessModal(false);
+                    handleSuccessModalClose(); // Cerrar el modal EditarTurno
+                    }}
+                    message="Turno eliminado correctamente"
+                />
             <ErrorModal
                 visible={showErrorModal}
                 errorMessage="Hubo un error al eliminar el turno."

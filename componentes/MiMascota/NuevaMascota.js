@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import HeaderScreen from '../HeaderScreen';
 import ListaValoresColor from '../Busqueda/ListaValoresColor';
 import ListaValoresAnimal from '../Busqueda/ListaValoresAnimal';

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import Mascotas from '../Busqueda/Mascotas';
 import ListaValoresDiasMascota from '../MiMascota/ListaValoresDiasMascota';
 import ListaValoresMesesMascota from '../MiMascota/ListaValoresMesesMascota';
 import ListaValoresAñoMascota from '../MiMascota/ListaValoresAñoMascota';
 import ListaValoresRazaPerros from '../Busqueda/ListaValoresRazaPerros';
+import ListaValoresAnimal from '../Busqueda/ListaValoresAnimal';
 import AgregarImagen from '../AgregarImagen';
 import axios from 'axios';
 import SuccessModal from './SuccessModal';
