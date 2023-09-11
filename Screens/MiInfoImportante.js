@@ -5,7 +5,7 @@ import HeaderScreen from '../componentes/HeaderScreen';
 import EditarInfo from '../componentes/MiMascota/EditarInfo';
 import BotonInformacion from '../componentes/MiMascota/BotonInformacion';
 import { Popover, Overlay } from 'react-native-elements';
-import { Picker } from '@react-native-picker/picker';
+
 import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 import axios from 'axios';
 import SuccessModal from '../componentes/MiMascota/SuccessModal';

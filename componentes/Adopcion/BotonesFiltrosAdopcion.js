@@ -218,6 +218,10 @@ const BotonesFiltrosAdopcion = () => {
         >
           <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>
           {imageUri && <Image source={{ uri: imageUri }} />}
+          <Image
+            source={require('../../Imagenes/imagenPublicaciones.jpg')}
+            style={styles.imagenPublicacion}
+          />
             <View style={styles.informacion}>
               <View style={[{ flexDirection: 'row'}, styles.tituloView]}>
                 <Text style={styles.tituloPublicaciones}>{item.title}</Text>
@@ -481,7 +485,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-    marginRight: 20,
   },
   imagenFiltro: {
     width: 60,
@@ -507,7 +510,7 @@ const styles = StyleSheet.create({
   },
   imagenPublicacion: {
     width: 100,
-    height: 155,
+    height: 110,
     borderRadius: 15,
     marginRight: 10,
   },
@@ -567,7 +570,7 @@ const styles = StyleSheet.create({
   },
   tituloView: {
     marginTop: 15,
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
   },
   loadMoreButton: {
     backgroundColor: '#f0f0f0',

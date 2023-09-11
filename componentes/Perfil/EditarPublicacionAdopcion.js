@@ -12,6 +12,7 @@
   import { useNavigation } from '@react-navigation/native';
 
   export default function EditarPublicacionAdopcion({ route }) {
+    const [isValid, setIsValid] = useState(true);
     const { publicationToEdit } = route.params;
     const [selectedAnimal, setSelectedAnimal] = useState(null);
     console.log('publicationToEdit.title:', publicationToEdit.title);
@@ -29,8 +30,16 @@
     const navigation = useNavigation();
 
     const idPublicationAdoption = publicationToEdit.idPublicationAdoption;
-    const idUser = '917f740b-6a2f-482c-8d62-4ce289a8f206';
     console.log('Publicacion adopcion: ', idPublicationAdoption);
+
+    const handleEndEditing = () => {
+      if (4 < title.length) {
+        setIsValid(true);
+      } else {
+        setIsValid(false);
+      }
+      console.log(isValid)
+    };
 
     const actualizarPublicacion = async () => {
       try {
@@ -43,7 +52,6 @@
           selectedBreedId,
           selectedLocality,
           idPublicationAdoption,
-          idUser,
         });
     
         const response = await axios.put(
@@ -57,7 +65,6 @@
             idPetBreed: selectedBreedId,
             idLocality: selectedLocality,
             idPublicationAdoption: idPublicationAdoption,
-            idUser: idUser,
           },
           {
             headers: {
@@ -101,8 +108,10 @@
                 style={styles.inputTexto}
                 value={title}
                 onChangeText={setTitle}
+                onEndEditing={handleEndEditing}
               />
             </View>
+            {!isValid && <Text style={styles.errorTextCaracteres}>Ingresa al menos 4 caracteres.</Text>}
             <View style={styles.subcontenedor2}>
               <Text style={styles.descripcionPublicacion}>Descripción</Text>
               <TextInput
@@ -115,12 +124,18 @@
               />
             </View>
               <View style={styles.subcontenedor3}>
-              <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
-                <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
-                <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
-                {selectedAnimal && (
-                  <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
-                )}
+                <Text style={styles.tipoAnimal}>Tipo de animal</Text>
+                <ScrollView
+                  horizontal={true} // Hace que el ScrollView sea horizontal
+                  contentContainerStyle={{ flexDirection: 'row' }} // Establece la dirección de los elementos hijos como horizontal
+                >
+                  <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
+                </ScrollView>
+                  <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
+                  <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
+                  {selectedAnimal && (
+                    <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
+                  )}
               </View>
               <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
                 <Text style={styles.tituloPublicacion}>Celular</Text>
@@ -142,7 +157,7 @@
             </View>
           </Modal>
         </ScrollView>
-        <BotonPublicar onPress={actualizarPublicacion} />
+        <BotonPublicar disabled={!isValid} onPress={actualizarPublicacion} />
       </View>
     );
   }
@@ -228,5 +243,13 @@
     bottomModalContent: {
       alignItems: 'flex-end', // Alinea el contenido del modal en el extremo inferior
       padding: 20,
+    },
+    errorTextCaracteres:{
+      color: 'red',
+      marginLeft: 40,
+    },
+    tipoAnimal: {
+      marginLeft: '3%',
+      fontSize: 16,
     },
   });

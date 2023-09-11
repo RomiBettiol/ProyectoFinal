@@ -686,6 +686,9 @@ useEffect(() => {
           </View>
         </Modal>
       </ScrollView>
+      <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
+          <BotonFlotante token={token} />
+      </View>
     </View>
   );
 };

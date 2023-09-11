@@ -7,7 +7,7 @@ const ModalAgregarRaza = ({ isVisible, onClose, onAdd, petTypes, onSuccess, onEr
   const [selectedPetTypeId, setSelectedPetTypeId] = useState('');
   const [showPetTypeList, setShowPetTypeList] = useState(false);
 
-  const handleAddRaza = () => {
+  const handleAddRaza =async () => {
     if (!breedName || !selectedPetTypeId) {
       console.log('Error', 'Por favor, ingresa el nombre de la raza y selecciona un tipo de animal.');
       onError();
@@ -19,9 +19,10 @@ const ModalAgregarRaza = ({ isVisible, onClose, onAdd, petTypes, onSuccess, onEr
       idPetType: selectedPetTypeId,
     };
 
-    axios
+    await axios
       .post('http://buddy-app1.loca.lt/parameters/petBreed', newBreed)
       .then((response) => {
+        console.log(response);
         onAdd(newBreed);
         setBreedName('');
         setSelectedPetTypeId('');
