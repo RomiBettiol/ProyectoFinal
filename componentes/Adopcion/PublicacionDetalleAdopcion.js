@@ -16,7 +16,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
 
   return (
     <View>
-        <Header />
+        <Header/>
         <View>
           <Carousel
             data={carouselImages}

@@ -4,8 +4,6 @@ import Header from '../componentes/HeaderScreen';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import BotonFlotante from '../componentes/BotonFlotante';
-import { useNavigation } from '@react-navigation/native';
-
 
 export default function MiPerfil({ navigation }) {
   const route = useRoute();
@@ -34,6 +32,12 @@ export default function MiPerfil({ navigation }) {
   const [deleteFailure, setDeleteFailure] = useState(false);
   const [idUser, setIdUser] = useState('');
   const [buttonTransform, setButtonTransform] = useState(0);
+  const [confirmLogoutModalVisible, setConfirmLogoutModalVisible] = useState(false);
+  const [logoutError, setLogoutError] = useState(null);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
+  
 
   console.log("perfil: ", token);
 
@@ -212,13 +216,6 @@ export default function MiPerfil({ navigation }) {
     setEditUserModalVisible(true);
   };
   
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [isSuccessful, setIsSuccessful] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-
   const openOptionsModal = (publication) => {
     setSelectedPublication(publication);
     setOptionsModalVisible(true);
@@ -324,9 +321,36 @@ useEffect(() => {
     const day = String(fechaObj.getDate()).padStart(2, '0');
     return `${day}-${month}-${year}`;
   };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('https://buddy-app1.loca.lt/security/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': token,
+        },
+      });
   
+      if (response.status === 200) {
+        // Cierre de sesión exitoso, navega a InicioScreen.js
+        navigation.navigate('InicioScreen');
+        onClose(); // Cierra el SlideModal
+      } else {
+        // Mostrar un modal de error en caso de que la llamada no sea exitosa
+        setLogoutError('Hubo un error al cerrar sesión.');
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      setLogoutError('Hubo un error al cerrar sesión.');
+    }
+  };
+
+  const handleConfirmLogout = () => {
+    setConfirmLogoutModalVisible(true);
+  };
   return (
-    <View>
+    <View style={styles.container}>
         <Header />
         <ScrollView>
           <View style={[styles.principal, { flexDirection: 'row' }]}>
@@ -447,7 +471,7 @@ useEffect(() => {
                 <TouchableOpacity style={styles.opcionesModal} onPress={openEditUserModal}>
                   <Text>Editar Usuario</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.opcionesModal}>
+                <TouchableOpacity style={styles.opcionesModal} onPress={handleConfirmLogout}>
                   <Text>Cerrar Sesión</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelarModal} onPress={closeModal}>
@@ -512,11 +536,6 @@ useEffect(() => {
             </View>
           </View>
         </Modal>
-        {passwordUpdated && (
-          <View style={styles.confirmationMessage}>
-            <Text style={styles.confirmationText}>¡Contraseña actualizada correctamente!</Text>
-          </View>
-        )}
         <Modal animationType="slide" transparent={true} visible={editUserModalVisible} onRequestClose={() => setEditUserModalVisible(false)}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContentEditarUsuario}>
@@ -563,11 +582,6 @@ useEffect(() => {
             </View>
           </View>
         </Modal>
-        {userUpdated && (
-          <View style={styles.confirmationMessage}>
-            <Text style={styles.confirmationText}>¡Usuario actualizado!</Text>
-          </View>
-        )}
 
         {/* Modal editar o eliminar*/}
         <Modal
@@ -624,7 +638,6 @@ useEffect(() => {
             </View>
           </View>
         </Modal>
-
         {/*Modal eliminacion*/}
         <Modal
           animationType="slide"
@@ -652,7 +665,8 @@ useEffect(() => {
             </View>
           </View>
         </Modal>
-        <Modal
+      </ScrollView>
+      <Modal
           animationType="slide"
           transparent={true}
           visible={deleteSuccess}
@@ -680,10 +694,56 @@ useEffect(() => {
             </View>
           </View>
         </Modal>
-      </ScrollView>
       <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
             <BotonFlotante token={token} />
       </View>
+      {logoutError && (
+            <View style={styles.errorContainer1}>
+              <Text>{logoutError}</Text>
+              <TouchableOpacity onPress={() => setLogoutError(null)}>
+                <Text>OK</Text>
+              </TouchableOpacity>
+            </View>
+      )}
+      <Modal
+        visible={confirmLogoutModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setConfirmLogoutModalVisible(false)}
+      >
+        <View style={styles.modalContainer1}>
+          <View style={styles.modalContent1}>
+            <Text>¿Desea cerrar sesión?</Text>
+            <View style={styles.confirmButtons1}>
+              <TouchableOpacity
+                onPress={() => {
+                  setConfirmLogoutModalVisible(false);
+                  handleLogout(); // Esta función aún no está definida, la agregaremos a continuación.
+                }}
+                style={[styles.confirmButton1, styles.confirmButtonAccept1]}
+              >
+                <Text style={styles.confirmButtonText1}>Aceptar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setConfirmLogoutModalVisible(false)}
+                style={[styles.confirmButton1, styles.confirmButtonCancel1]}
+              >
+                <Text style={styles.confirmButtonText1}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {userUpdated && (
+          <View style={styles.confirmationMessage}>
+            <Text style={styles.confirmationText}>¡Usuario actualizado!</Text>
+          </View>
+      )}
+      {passwordUpdated && (
+          <View style={styles.confirmationMessage}>
+            <Text style={styles.confirmationText}>¡Contraseña actualizada correctamente!</Text>
+          </View>
+      )}
     </View>
   );
 };
@@ -895,5 +955,42 @@ const styles = StyleSheet.create({
     bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
     right: 20, // Puedes ajustar esta cantidad según tus preferencias
     transform: [{ translateY: 0 }], // Inicialmente no se desplaza
+  },
+  container: {
+    flex: 1, // Esto hace que la vista principal ocupe toda la pantalla
+  },
+  modalContainer1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent1: {
+    width: '80%',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  confirmButtons1: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  confirmButton1: {
+    flex: 1,
+    backgroundColor: '#FFB984',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  confirmButtonAccept1: {
+    marginRight: 5,
+  },
+  confirmButtonCancel1: {
+    marginLeft: 5,
+  },
+  confirmButtonText1: {
+    fontSize: 16,
   },
 });

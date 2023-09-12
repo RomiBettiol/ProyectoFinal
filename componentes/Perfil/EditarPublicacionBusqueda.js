@@ -119,7 +119,7 @@ export default function EditarPublicacionBusqueda({ route }) {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen  token={token}/>
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publica tu mascota</Text>

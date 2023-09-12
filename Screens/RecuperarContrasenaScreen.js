@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 50,
   },
     container:{
     alignItems: 'center',
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems:'center',
     marginTop:70,
-    marginBottom:70,
+    marginBottom:160,
   },
 
   imagen: {

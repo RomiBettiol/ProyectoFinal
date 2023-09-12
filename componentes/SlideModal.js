@@ -1,12 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect} from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, Animated, TouchableWithoutFeedback, Image} from 'react-native';
+import axios from 'axios';
 
-const SlideModal = ({ visible, onClose, token }) => {
+const SlideModal = ({ visible, onClose }) => {
   const slideAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
   const route = useRoute();
-
+  const { token } = route.params;
   const [confirmLogoutModalVisible, setConfirmLogoutModalVisible] = useState(false);
   const [logoutError, setLogoutError] = useState(null);
 
@@ -16,7 +17,7 @@ const SlideModal = ({ visible, onClose, token }) => {
       handleModalClose(); // Cierra la modal si están en la misma pantalla
     } else {
       // Navega a la pantalla correspondiente si no están en la misma pantalla
-      navigation.navigate(screenName);
+      navigation.navigate(screenName, { token });
       handleModalClose(); // Cierra la modal después de navegar
     }
   };
@@ -69,6 +70,48 @@ const SlideModal = ({ visible, onClose, token }) => {
     setConfirmLogoutModalVisible(true);
   };
 
+
+  const [newName, setNewName] = useState('');
+  const [newUserName, setNewUserName] = useState('');
+  const [user, setUser] = useState ('');
+  const [idUser, setIdUser] = useState('');
+
+  console.log("perfil: ", token);
+
+  //Trae info del usuario
+ const fetchNombre = () => {
+    axios.get(`https://buddy-app1.loca.lt/security/user/`, {
+      headers: {
+        'auth-token': token
+      }
+    })
+    .then(response => {
+      setUser(response.data);
+      setNewName(response.data[0].name);
+      setNewUserName(response.data[0].userName);
+  
+      // Declarar la constante idUser
+      setIdUser(response.data[0].idUser);
+      
+      // Luego puedes usar idUser como desees en tu componente.
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+    console.log("user: ", user);
+      console.log("newName: ", newName);
+      console.log("newUserName: ", newUserName);
+      console.log("idUser: ", idUser);
+  }
+      useEffect(()=>{
+    fetchNombre();
+
+ 
+  }, [token, idUser]);
+
+  console.log('idUser1: ', idUser);
+
+
   return (
     <Modal
       visible={visible}
@@ -101,8 +144,12 @@ const SlideModal = ({ visible, onClose, token }) => {
                 source={require('../Imagenes/usuario.png')}
                 style={styles.imagenUsuario}
             />
-            <TouchableOpacity>
-                <Text style={styles.textoUsuario}>Nombre del usuario</Text>
+            <TouchableOpacity
+                onPress = {()=> (
+                  navigation.navigate('MiPerfil', {token})
+              )}
+            >
+                <Text style={styles.textoUsuario}>{newUserName}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.menu}>
@@ -133,7 +180,10 @@ const SlideModal = ({ visible, onClose, token }) => {
                 <Text style={styles.textoModal}>Servicios</Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.opciones}>
+            <TouchableOpacity style={styles.opciones} 
+                        onPress = {()=> (
+                            navigation.navigate('MiMascotaScreen', {token})
+                        )}>
                 <View style={[{flexDirection: 'row'}, styles.view]}>
                 <Image
                     source={require('../Imagenes/huella.png')}
@@ -260,6 +310,40 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDC4B8',
     borderRadius: 30,
     marginBottom: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  confirmButtons: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  confirmButton: {
+    flex: 1,
+    backgroundColor: '#FFB984',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  confirmButtonAccept: {
+    marginRight: 5,
+  },
+  confirmButtonCancel: {
+    marginLeft: 5,
+  },
+  confirmButtonText: {
+    fontSize: 16,
   },
 });
 

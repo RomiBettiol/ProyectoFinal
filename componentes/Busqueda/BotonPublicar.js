@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function BotonPublicar({ onPress, disabled }) {
+export default function BotonPublicar({ onPress, disabled, onDisabled }) {
   const [isDisabled, setIsDisabled] = useState(false);
 
+  useEffect(() => {
+    // Escucha cambios en la prop 'onDisabled' y actualiza el estado interno 'isDisabled' en consecuencia
+    setIsDisabled(onDisabled);
+  }, [onDisabled]);
+
   const handlePress = () => {
-    if (!isDisabled) {
+    if (!isDisabled && !disabled) {
       setIsDisabled(true); // Deshabilitar el botón
-      
+
       // Llamar a la función onPress
       onPress();
-      
+
       // Habilitar el botón nuevamente después de 3 segundos
       setTimeout(() => {
         setIsDisabled(false);
-      }, 4000); // 3000 milisegundos = 3 segundos
+      }, 4000); // 4000 milisegundos = 4 segundos (para que coincida con el tiempo que mencionaste anteriormente)
     }
   };
 

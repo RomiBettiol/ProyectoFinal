@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     container:{
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop:10,
+    marginTop:80,
     backgroundColor: 'white',
    },
 
@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
     elevation: 5,
     justifyContent: 'center',
     alignItems:'center',
-    marginTop:70,
-    marginBottom:70,
+    marginTop:90,
+    marginBottom:150,
   },
 
   imagen: {
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   
   botonRegistro:{
-    marginTop: 60,
+    marginTop: 3000,
     backgroundColor: '#FFB988',
     alignItems: 'center',
     justifyContent: 'center',

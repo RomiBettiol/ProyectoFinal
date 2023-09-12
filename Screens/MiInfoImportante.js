@@ -29,6 +29,7 @@ export default function MiInfoImportante(token) {
     const [informacion, setInformacion] = useState([]);
     const [info, setInfo] = useState(false);
     const [showInfoModal, setShowInfoModal] = useState(false);
+    const [buttonTransform, setButtonTransform] = useState(0);
     
     const [error404, setError404] = useState(false);
 
@@ -114,7 +115,7 @@ export default function MiInfoImportante(token) {
     }, [showSuccessModal]);  
     return (
         <View style={styles.container}>
-            <HeaderScreen />
+            <HeaderScreen  token={token}/>
             <ScrollView style={styles.scroll}>
                 <View style={styles.contentContainer1}>
                     <View style={styles.container1}>
@@ -192,8 +193,6 @@ export default function MiInfoImportante(token) {
             </View>
             )}
            
-           <BotonInformacion onAddInfo={toggleAltaInfoModal} token={token}/>  
-          
              {/* Overlay para opciones */}
              <Overlay
                     isVisible={overlayVisible}
@@ -272,6 +271,9 @@ export default function MiInfoImportante(token) {
                     </View>
                 </View>
             </Modal>
+            <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
+                <BotonInformacion onAddInfo={toggleAltaInfoModal} token={token}/>  
+            </View>
         </View>
     );
 }
@@ -439,6 +441,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
 
     },
-   
-      
+    botonFlotanteContainer: {
+        position: 'absolute',
+        bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
+        right: 20, // Puedes ajustar esta cantidad según tus preferencias
+        transform: [{ translateY: 0 }], // Inicialmente no se desplaza
+      },
 });

@@ -96,7 +96,7 @@ export default function PublicacionBusqueda({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen  token={token}/>
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publica tu mascota</Text>

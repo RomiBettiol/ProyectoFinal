@@ -30,7 +30,7 @@ export function RegistrarseScreen({ navigation }) {
         userName: datosFormulario.nombre,
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
-        name: nombre,
+        name: datosFormulario.nombre,
       }
 
       // Hacer la petición POST al backend usando axios

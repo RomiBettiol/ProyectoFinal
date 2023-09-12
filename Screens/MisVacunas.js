@@ -38,7 +38,6 @@ export default function MisVacunas(token) {
     const [buttonTransform, setButtonTransform] = useState(0);
     const[mensaje, setMensaje] = useState('')
     const [error404, setError404] = useState(false);
-
     
     
         async function fetchVaccines() {
@@ -184,7 +183,7 @@ export default function MisVacunas(token) {
 
     return (
         <View style={styles.container}>
-            <HeaderScreen />
+            <HeaderScreen  token={token}/>
             <ScrollView style={styles.scroll}>
                 <View style={styles.contentContainer1}>
                         <View style={styles.container1}>
@@ -289,7 +288,6 @@ export default function MisVacunas(token) {
                     ))}
             </View>
             )}
-                <BotonVaccine onAddVaccin={toggleAltaVaccinModal} token={token}/>  
             
              {/* Overlay para opciones */}
              <Overlay
@@ -370,8 +368,9 @@ export default function MisVacunas(token) {
                     </View>
                 </Modal>
             </ScrollView>
-            
-            
+            <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
+                 <BotonVaccine onAddVaccin={toggleAltaVaccinModal} token={token}/>   
+            </View>
         </View>
     );
 }
@@ -517,7 +516,11 @@ const styles = StyleSheet.create({
     containerVaccin:{
         alignSelf: 'center',
         alignItems:'center',
-        
     },
-      
+    botonFlotanteContainer: {
+        position: 'absolute',
+        bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
+        right: 20, // Puedes ajustar esta cantidad según tus preferencias
+        transform: [{ translateY: 0 }], // Inicialmente no se desplaza
+      },
 });

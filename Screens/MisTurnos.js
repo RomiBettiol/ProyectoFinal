@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import HeaderScreen from '../componentes/HeaderScreen';
 import BarraBusquedaMascota from '../componentes/MiMascota/BarraBusquedaMascota';
 import BotonTurnos from '../componentes/MiMascota/BotonTurnos';
-import BotonFlotante from '../componentes/BotonFlotante';
 import { Popover, Overlay } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import AltaTurno from '../componentes/MiMascota/AltaTurno';
@@ -34,6 +33,7 @@ export default function MisTurnos(token) {
     const route = useRoute();
     const mascotaId = route.params?.mascotaId;
     const [error404, setError404] = useState(false);
+    const [buttonTransform, setButtonTransform] = useState(0);
 
    
         async function fetchTurnos() {
@@ -149,7 +149,7 @@ export default function MisTurnos(token) {
     }, []);
     return (
         <View style={styles.container}>
-            <HeaderScreen />
+            <HeaderScreen  token={token}/>
             <ScrollView style={styles.scroll}>
                 <View style={styles.contentContainer1}>
                     <View style={styles.container1}>
@@ -251,7 +251,6 @@ export default function MisTurnos(token) {
                     ))}
             </View>
             )}
-           <BotonTurnos onAddTurno={toggleAltaTurnoModal} token={token} />   
              {/* Overlay para opciones */}
              <Overlay
                     isVisible={overlayVisible}
@@ -332,14 +331,21 @@ export default function MisTurnos(token) {
                     </View>
                 </Modal>         
             </ScrollView>
-            
-            
+            <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
+                <BotonTurnos onAddTurno={toggleAltaTurnoModal} token={token} />   
+            </View>
         </View>
     );
 }
            
 
 const styles = StyleSheet.create({
+    botonFlotanteContainer: {
+        position: 'absolute',
+        bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
+        right: 20, // Puedes ajustar esta cantidad según tus preferencias
+        transform: [{ translateY: 0 }], // Inicialmente no se desplaza
+      },
     sinInfo:{
         fontSize: 14,
         color:'grey',
@@ -348,6 +354,7 @@ const styles = StyleSheet.create({
        marginTop:200,        
         justifyContent: 'center', // Para centrar vertical
         alignItems:'center',
+        flex: 1,
     },
     modalContainer: {
         flex: 1,

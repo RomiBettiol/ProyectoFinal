@@ -14,7 +14,7 @@ export default function BusquedaScreen() {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen  token={token}/>
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Encuentra a tu mascota</Text>

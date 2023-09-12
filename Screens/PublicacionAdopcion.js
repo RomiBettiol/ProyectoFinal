@@ -25,14 +25,20 @@ export default function PublicacionBusqueda({ navigation }) {
   const [selectedAnimalId, setSelectedAnimalId] = useState(null);
   const route = useRoute();
   const { token } = route.params;
+  const [isValidPhone, setIsValidPhone] = useState(false);
 
   const handleEndEditing = () => {
-    if (4 < title.length) {
+    if (contactPhone.length === 10) {
+      setIsValidPhone(true); // Si contactPhone tiene 10 caracteres, establece isValidPhone en verdadero
+    } else {
+      setIsValidPhone(false); // Si contactPhone no tiene 10 caracteres, establece isValidPhone en falso
+    }
+
+    if (title.length >= 4) {
       setIsValid(true);
     } else {
       setIsValid(false);
     }
-    console.log(isValid)
   };
 
   const handlePost = async () => {
@@ -84,7 +90,7 @@ export default function PublicacionBusqueda({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen  token={token}/>
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publica tu mascota para adoptar</Text>
@@ -133,8 +139,10 @@ export default function PublicacionBusqueda({ navigation }) {
                   const numericValue = text.replace(/[^0-9]/g, '');
                   setContactPhone(numericValue);
                 }}
+                onEndEditing={handleEndEditing}
               />
             </View>
+            {!isValidPhone && <Text style={styles.errorTextCaracteres}>Ingresa 10 caracteres.</Text>}
         </View>
         <Modal visible={isModalVisible} animationType="slide" transparent={true} onRequestClose={() => setIsModalVisible(false)}>
           <View style={[styles.modalContainer, isSuccessful ? styles.successModalBackground : styles.errorModalBackground]}>
@@ -144,7 +152,7 @@ export default function PublicacionBusqueda({ navigation }) {
           </View>
         </Modal>
       </ScrollView>
-      <BotonPublicar disabled={!isValid} onPress={handlePost}/>
+      <BotonPublicar disabled={!isValid || !isValidPhone} onPress={handlePost}/>
     </View>
   );
 }
