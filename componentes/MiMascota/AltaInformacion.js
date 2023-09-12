@@ -73,7 +73,7 @@ export default function AltaInformacion({ visible, onClose }) {
                               setShowSuccessModal(true);
                             } catch (error) {
                               setShowErrorModal(true);
-                              console.error('Error al hacer la solicitud POST:', error);
+                             
                             }
                             setTimeout(() => {
                               setIsButtonDisabled1(false);
@@ -102,7 +102,7 @@ export default function AltaInformacion({ visible, onClose }) {
       />
       <ErrorModal
         visible={showErrorModal}
-        errorMessage="Hubo un error al crear la información."
+        errorMessage="Complete todos los campos"
         onClose={() => setShowErrorModal(false)}
       />
          

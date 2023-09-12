@@ -64,7 +64,6 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
       console.log(response.data); // Mensaje de éxito desde el backend
       // Puedes hacer algo aquí después de la actualización exitosa, como navegar a otra pantalla
     } catch (error) {
-      console.error('Error al actualizar la mascota:', error);
       setShowErrorModal(true);
     }
     setTimeout(() => {
@@ -175,7 +174,7 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
       />
       <ErrorModal
         visible={showErrorModal}
-        errorMessage="Hubo un error al editar el turno."
+        errorMessage="Complete todos los campos"
         onClose={() => setShowErrorModal(false)}
       />
       </View>

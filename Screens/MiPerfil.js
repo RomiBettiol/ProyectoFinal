@@ -335,7 +335,6 @@ useEffect(() => {
       if (response.status === 200) {
         // Cierre de sesión exitoso, navega a InicioScreen.js
         navigation.navigate('InicioScreen');
-        onClose(); // Cierra el SlideModal
       } else {
         // Mostrar un modal de error en caso de que la llamada no sea exitosa
         setLogoutError('Hubo un error al cerrar sesión.');

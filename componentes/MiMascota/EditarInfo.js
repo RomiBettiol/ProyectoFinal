@@ -26,10 +26,8 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
           titleInformation: updatedData.titleInformation,
           descriptionInformation: updatedData.descriptionInformation,
         });
-        console.log('Info editado:', response.data);
         setShowSuccessModal(true);
     } catch (error) {
-        console.error('Error al editar la info:', error);
         setShowErrorModal(true);
     }
     
@@ -88,7 +86,7 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
             />
             <ErrorModal
                 visible={showErrorModal}
-                errorMessage="Hubo un error al editar la información."
+                errorMessage="Complete todos los campos"
                 onClose={() => setShowErrorModal(false)}
             />
       </View>

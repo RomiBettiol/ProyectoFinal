@@ -55,7 +55,7 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
   const updatedData = {
         titleTurn: titleTurn,
         descriptionTurn: descriptionTurn, // Agregar a los datos actualizados
-        turnDate: `${selectedYear}-${selectedMonth}/${selectedDay} ${hora}:${minutos}:00`,
+        turnDate: `${selectedYear}-${selectedMonth}-${selectedDay} ${hora}:${minutos}:00`,
       };
   const handleEditeTurno = async () => {
     const idTurn = turno.idTurn; // Obtén la ID de la mascota desde los props
@@ -160,7 +160,6 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
                               setShowSuccessModal(true);
                             } catch (error) {
                               setShowErrorModal(true);
-                              console.error('Error al hacer la solicitud POST:', error);
                             }
                            // setOverlayVisible(false); // Cierra el overlay después de eliminar
                           }}
@@ -188,7 +187,7 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
       />
       <ErrorModal
         visible={showErrorModal}
-        errorMessage="Hubo un error al editar el turno."
+        errorMessage="Complete todos los campos"
         onClose={() => setShowErrorModal(false)}
       />
       </View>

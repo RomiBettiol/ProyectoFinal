@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {SafeAreaView, StyleSheet, Modal, TextInput, TouchableOpacity, Text, View, Image, TouchableWithoutFeedback, Alert } from 'react-native';
-import { InicioSesionScreen } from '../Screens/InicioSesionScreen';
 import { useNavigation } from '@react-navigation/native';
-import HomeScreen from '../Screens/HomeScreen';
-import RecuperarContrasenaScreen from '../Screens/RecuperarContrasenaScreen';
-import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
 
 const Registro = () => {

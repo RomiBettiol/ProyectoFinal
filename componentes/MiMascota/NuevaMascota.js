@@ -119,10 +119,9 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
 
       setAddPetSuccess(true);
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage('Complete todos los campos');
       setShowErrorModal(true);
 
-      console.error('Error al hacer la solicitud POST:', error);
     }
     // Habilita el botón nuevamente después de dos segundos
     setTimeout(() => {

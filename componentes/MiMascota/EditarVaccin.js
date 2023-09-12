@@ -55,7 +55,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
   const updatedData = {
         titleVaccine: titleVaccin,
         descriptionVaccine: descriptionVaccin, // Agregar a los datos actualizados
-        vaccineDate: `${selectedYear}-${selectedMonth}/${selectedDay} ${hora}:${minutos}:00`,
+        vaccineDate: `${selectedYear}-${selectedMonth}-${selectedDay} ${hora}:${minutos}:00`,
       };
   const handleEditeVaccin = async () => {
     // Obtén la ID de la mascota desde los props
@@ -164,7 +164,6 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
                               setShowSuccessModal(true);
                             } catch (error) {
                               setShowErrorModal(true);
-                              console.error('Error al hacer la solicitud POST:', error);
                             }
                            // setOverlayVisible(false); // Cierra el overlay después de eliminar
                           }}
@@ -192,7 +191,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
       />
       <ErrorModal
         visible={showErrorModal}
-        errorMessage="Hubo un error al editar la vacuna."
+        errorMessage="Complete todos los campos"
         onClose={() => setShowErrorModal(false)}
       />
       </View>

@@ -144,7 +144,6 @@ export default function AltaVaccin({ visible, onClose }) {
                               setShowSuccessModal(true);
                             } catch (error) {
                               setShowErrorModal(true);
-                              console.error('Error al hacer la solicitud POST:', error);
                             }
                             setTimeout(() => {
                               setIsButtonDisabled(false); // Habilitar el botón nuevamente después de 2 segundos
@@ -174,7 +173,7 @@ export default function AltaVaccin({ visible, onClose }) {
       />
       <ErrorModal
         visible={showErrorModal}
-        errorMessage="Hubo un error al crear la vacunas."
+        errorMessage="Complete todos los campos"
         onClose={() => setShowErrorModal(false)}
       />
       </View>
