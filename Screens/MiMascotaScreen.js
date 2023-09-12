@@ -113,7 +113,7 @@ export default function MiMascotaScreen() {
       setBotonesVisibles(Array(mascotasData.length).fill(false)); // Inicializa el estado
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        // Si el error es 404, establece el estado error404 en true
+       
         setError404(true);
     }
     }
@@ -138,11 +138,7 @@ export default function MiMascotaScreen() {
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Mi mascota</Text>
         </View> 
-        {error404 ? (
-                        <View style={styles.contentContainer22}>
-                            <Text style={styles.sinInfo}>NO HAY INFORMACION CARGADA</Text>
-                        </View>
-                    ) : (
+     
         <View style={styles.contenedor2}>
           {mascotas.map((mascota, index) => (
             <View 
@@ -296,7 +292,7 @@ export default function MiMascotaScreen() {
             </View>  
             
         </View>  
-        )}
+        
          {/* Modal AGREGAR (tarjeta flotante) */}
          <Modal
             transparent={true}
@@ -494,4 +490,4 @@ contentContainer22: {
 
   
   
-}); 
+});

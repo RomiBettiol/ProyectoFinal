@@ -136,11 +136,8 @@ const Registro = () => {
             >
               <Text>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
-      <View style={styles.redes}>
-        <Text style={styles.parrafo}>Ingresa con</Text>
-        <View style={{flexDirection: 'row'}}>
-        </View>
-       </View>
+     
+     
      
     </SafeAreaView>
   );
