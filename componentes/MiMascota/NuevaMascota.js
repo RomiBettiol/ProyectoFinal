@@ -84,7 +84,7 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
         console.log('tipo de mascota obtenido con exito');
       })
       .catch((error) => {
-        console.error('Error al obtener tipos de mascotas:', error);
+        console.log('Error al obtener tipos de mascotas:', error);
       });
   
   }, []);

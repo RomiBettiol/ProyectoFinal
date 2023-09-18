@@ -20,7 +20,7 @@ const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
         }
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET:', error);
+        console.log('Error en la solicitud GET:', error);
         setBreedOptions([]);
       });
   };

@@ -113,8 +113,7 @@ export default function MiMascotaScreen() {
       setBotonesVisibles(Array(mascotasData.length).fill(false)); // Inicializa el estado
     } catch (error) {
       if (error.response && error.response.status === 404) {
-       
-        setError404(true);
+      
     }
     }
     console.log("estoy saliendo del try")                                
