@@ -47,7 +47,7 @@ import AltaInformacion from '../componentes/MiMascota/AltaInformacion';
 import ReportesScreen from '../Screens/ReportesScreen';
 import EditarPublicacionAdopcion from '../componentes/Perfil/EditarPublicacionAdopcion';
 import EditarPublicacionBusqueda from '../componentes/Perfil/EditarPublicacionBusqueda';
-
+import ModalTraza from '../componentes/Busqueda/ModalTraza';
 import InfoModal from '../componentes/MiMascota/InfoModal';
 import BarraBusquedaMascota from '../componentes/MiMascota/BarraBusquedaMascota';
 import BotonVaccine from '../componentes/MiMascota/BotonVaccine';
@@ -291,6 +291,10 @@ export default function MainStack() {
             <Stack.Screen
                 name='EditarVaccin'
                 component={EditarVaccin}
+            />
+            <Stack.Screen
+                name='ModalTraza'
+                component={ModalTraza}
             />
         </Stack.Navigator>
     </NavigationContainer>

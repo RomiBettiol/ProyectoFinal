@@ -14,11 +14,11 @@ const SlideModal = ({ visible, onClose }) => {
   const handleOptionPress = (screenName) => {
     // Verifica si la opción seleccionada coincide con la pantalla actual
     if (route.name === screenName) {
-      handleModalClose(); // Cierra la modal si están en la misma pantalla
+      handleModalClose(); // Cierra el componente si está en la misma pantalla
     } else {
       // Navega a la pantalla correspondiente si no están en la misma pantalla
       navigation.navigate(screenName, { token });
-      handleModalClose(); // Cierra la modal después de navegar
+      handleModalClose(); // Cierra el componente después de navegar
     }
   };
 
@@ -39,7 +39,6 @@ const SlideModal = ({ visible, onClose }) => {
   };
 
   const handleBackgroundPress = () => {
-    // Close the modal when the background is pressed
     handleModalClose();
   };
   const handleLogout = async () => {
@@ -55,9 +54,8 @@ const SlideModal = ({ visible, onClose }) => {
       if (response.status === 200) {
         // Cierre de sesión exitoso, navega a InicioScreen.js
         navigation.navigate('InicioScreen');
-        onClose(); // Cierra el SlideModal
+        onClose(); // Cierra el componente
       } else {
-        // Mostrar un modal de error en caso de que la llamada no sea exitosa
         setLogoutError('Hubo un error al cerrar sesión.');
       }
     } catch (error) {
@@ -131,14 +129,13 @@ const SlideModal = ({ visible, onClose }) => {
                 {
                   translateX: slideAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [-300, 0], // Adjust the value to control the slide distance
+                    outputRange: [-300, 0],
                   }),
                 },
               ],
             },
           ]}
         >
-          {/* Content of the modal */}
           <View style={[styles.usuario]}>
             <Image
                 source={require('../Imagenes/usuario.png')}
@@ -223,7 +220,7 @@ const SlideModal = ({ visible, onClose }) => {
               <TouchableOpacity
                 onPress={() => {
                   setConfirmLogoutModalVisible(false);
-                  handleLogout(); // Esta función aún no está definida, la agregaremos a continuación.
+                  handleLogout();
                 }}
                 style={[styles.confirmButton, styles.confirmButtonAccept]}
               >

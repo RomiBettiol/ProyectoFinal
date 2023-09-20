@@ -42,7 +42,11 @@ const PublicacionDetalle = ({ route }) => {
                 style={styles.iconos}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress = {()=> (
+                  navigation.navigate('ModalTraza')
+                )}
+            >
               <Image
                 source={require('../../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png')}
                 style={styles.iconos}
