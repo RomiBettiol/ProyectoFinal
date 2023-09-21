@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal, ActivityIndicator} from 'react-native';
 import SearchBarExample from './BarraBusqueda';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const FilterButtonsExample = () => {
-  const buddyUrl = 'budy-app.loca.lt';
   const navigation = useNavigation();
   const [selectedFilter, setSelectedFilter] = useState('');
   const [publicaciones, setPublicaciones] = useState([]);
@@ -24,6 +23,8 @@ const FilterButtonsExample = () => {
   const [selectedBreed, setSelectedBreed] = useState(null);
   const [availableBreeds, setAvailableBreeds] = useState([]);
   const [filtrosExtraVisible, setFiltrosExtraVisible] = useState(false);
+  const route = useRoute();
+  const { token } = route.params;
 
   const handleBreedChange = (breed) => {
     setSelectedBreed(breed);
@@ -33,8 +34,7 @@ const FilterButtonsExample = () => {
 
   const filterByBreed = (breed) => {
     setLoading(true);
-  
-    // Filtra las publicaciones en base a la raza
+
     const filteredData = publicaciones.filter((item) =>
       item.petBreed.petBreedName === breed
     );
@@ -221,7 +221,7 @@ const FilterButtonsExample = () => {
       return (
         <TouchableOpacity style={styles.itemContainer}
           onPress = {()=> (
-            navigation.navigate('PublicacionDetalle', { publicacion: item })
+            navigation.navigate('PublicacionDetalle', { publicacion: item, token })
           )}
         >
           <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>

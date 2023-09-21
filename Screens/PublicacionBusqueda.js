@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal, Image } from 'react-native';
 import HeaderScreen from '../componentes/HeaderScreen';
 import ListaValoresColor from '../componentes/Busqueda/ListaValoresColor';
 import ListaValoresAnimal from '../componentes/Busqueda/ListaValoresAnimal';
@@ -137,6 +137,15 @@ export default function PublicacionBusqueda({ navigation }) {
               )}
             </View>
             <Mascotas selectedIsFound={selectedIsFound} onOptionSelect={setSelectedIsFound} />
+            <View style={[styles.traza, {flexDirection: 'row'}]}>
+              <Image
+                source={require('../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png')}
+                style={styles.iconos}
+              />
+              <TouchableOpacity>
+                <Text style={styles.textoTraza}>Agrega la ubicación de extravío</Text>
+              </TouchableOpacity>
+            </View>
           <Text style={styles.textoFecha}>Fecha de extravío</Text>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
           <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
@@ -186,6 +195,11 @@ const styles = StyleSheet.create({
   textoFecha: {
     marginLeft: 37,
     fontSize: 16,
+  },
+  textoTraza: {
+    marginLeft: 37,
+    fontSize: 16,
+    color: '#8B7D76',
   },
   subcontenedor1: {
     marginTop: 25,
@@ -246,5 +260,9 @@ const styles = StyleSheet.create({
   errorTextCaracteres:{
     color: 'red',
     marginLeft: 40,
+  },
+  iconos: {
+    height: 30,
+    width: 30,
   },
 });
