@@ -16,6 +16,10 @@ import ErrorModal from './ErrorModal';
 import axios from 'axios'; // Importa la librería axios
 import { Dropdown } from 'react-native-element-dropdown';
 
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../../src/aws-exports';
+Amplify.configure(awsconfig);
+
 
 export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }) {
   
@@ -37,6 +41,37 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
+  ///// upload image ////
+  const fetchImageUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  }
+  const uploadFile = async (file) => {
+    const img = await fetchImageUri(file.uri);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`,img, {
+      level:'public',
+      contentType:file.type,
+      progressCallback(uploadProgress){
+        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+      }
+    })
+    .then((res) => {
+      Storage.get(res.key)
+      .then((result) => {
+        console.log('RESULT --- ', result);
+        let awsImageUri = result.substring(0,result.indexOf('?'))
+        console.log('RESULT AFTER REMOVED URI --', awsImageUri)
+        setIsLoading(false)
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    }).catch(e => {
+      console.log(e);
+    })
+  }
+  ////end upload img ////
 
   const authtoken = token;
   console.log("token en agregarmascota: "+ token)
