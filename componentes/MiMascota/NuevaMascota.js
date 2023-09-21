@@ -10,7 +10,7 @@ import Mascotas from '../Busqueda/Mascotas';
 import ListaValoresDiasMascota from '../MiMascota/ListaValoresDiasMascota';
 import ListaValoresMesesMascota from '../MiMascota/ListaValoresMesesMascota';
 import ListaValoresAñoMascota from '../MiMascota/ListaValoresAñoMascota';
-import AgregarImagen from '../AgregarImagen';
+import AgregarImagInd from '../AgregarImagen';
 import SuccessModal from './SuccessModal';
 import ErrorModal from './ErrorModal';
 import axios from 'axios'; // Importa la librería axios
@@ -135,7 +135,7 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
       <View style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>AGREGAR MASCOTA</Text>
-          <AgregarImagen/>
+          <AgregarImagInd/>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Nombre</Text>
             <TextInput

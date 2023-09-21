@@ -58,6 +58,11 @@ import ListaValoresDiasMascota from '../componentes/MiMascota/ListaValoresDiasMa
 import ListaValoresMesesMascota from '../componentes/MiMascota/ListaValoresMesesMascota';
 import EditarVaccin from '../componentes/MiMascota/EditarVaccin';
 
+import MisChats from '../Screens/MisChats';
+import BotonSlide from '../componentes/BotonSlide';
+import NuevoChat from '../componentes/ChatsComponentes/NuevoChat';
+import AgregarImagInd from '../componentes/MiMascota/AgregarImagInd';
+
 const Stack = createNativeStackNavigator()
 
 export default function MainStack() {
@@ -291,6 +296,23 @@ export default function MainStack() {
             <Stack.Screen
                 name='EditarVaccin'
                 component={EditarVaccin}
+            />
+
+            <Stack.Screen
+                name='BotonSlide'
+                component={BotonSlide}
+            />
+            <Stack.Screen
+                name='MisChats'
+                component={MisChats}
+            />
+            <Stack.Screen
+                name='NuevoChat'
+                component={NuevoChat}
+            />
+            <Stack.Screen
+                name='AgregarImagInd'
+                component={AgregarImagInd}
             />
         </Stack.Navigator>
     </NavigationContainer>

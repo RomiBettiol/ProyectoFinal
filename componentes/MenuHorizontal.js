@@ -24,7 +24,12 @@ const MenuHorizontal = () => {
                 style={styles.menu}
             />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity 
+          style={styles.menuItem}
+          onPress = {()=> (
+             navigation.navigate('MisChats', {token})
+            )}
+        >
             <Image
                 source={require('../Imagenes/mensaje.png')}
                 style={styles.menu}
