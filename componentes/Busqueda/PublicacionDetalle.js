@@ -50,6 +50,7 @@ const PublicacionDetalle = ({route}) => {
                   navigation.navigate('ModalTraza', {
                     idPublicationSearch: publicacion.idPublicationSearch,
                     token,
+                    userNamePublicacion: publicacion.user.userName,
                   });
                 }}
             >

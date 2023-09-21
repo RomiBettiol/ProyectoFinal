@@ -10,15 +10,52 @@ export default function ModalTraza({ navigation, route}) {
   const [initialLocation, setInitialLocation] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const mapViewRef = useRef(null); // Agregar una referencia al MapView
-  const { idPublicationSearch, token } = route.params;
+  const { idPublicationSearch, token, userNamePublicacion } = route.params;
   const [traces, setTraces] = useState([]);
   const [selectedTrace, setSelectedTrace] = useState(null);
+  const [user, setUser] = useState ('');
+  const [idUser, setIdUser] = useState('');
+  const [userNameTraza, setUserNameTraza] = useState('');
+  
 
   console.log("ModalTraza: ", token);
+  console.log("userName: ", userNamePublicacion)
+
+   //Trae info del usuario
+   const fetchNombre = () => {
+    axios.get(`https://buddy-app2.loca.lt/security/user/`, {
+      headers: {
+        'auth-token': token
+      }
+    })
+    .then(response => {
+      setUser(response.data);
+      setIdUser(response.data[0].idUser);
+      setUserNameTraza(response.data[0].userName);
+  
+      // Mueve cualquier lógica que dependa de los datos del usuario aquí dentro
+      console.log("userModal: ", user);
+      console.log("idUserModal: ", idUser);
+      console.log("userNameModal: ", userNameTraza);
+      
+      // Luego puedes usar idUser como desees en tu componente.
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+  }
+  
+  useEffect(() => {
+    fetchNombre();
+  }, [token, idUser]);
+  
+  console.log("userModal2: ", user);
+  console.log("idUserModal2: ", idUser);
+  console.log("userNameModal2: ", userNameTraza);
 
   const fetchTraces = async () => {
     try {
-      const response = await axios.get(`https://buddy-app1.loca.lt/publications/trace/${idPublicationSearch}`, {
+      const response = await axios.get(`https://buddy-app2.loca.lt/publications/trace/${idPublicationSearch}`, {
         headers: {
           'auth-token': token,
         },
@@ -62,6 +99,31 @@ export default function ModalTraza({ navigation, route}) {
  
     getLocationAsync();
   }, [idPublicationSearch]);
+
+  const onDeleteTrace = async () => {
+    // You can implement the logic to delete the trace here
+    // Make an API request to delete the selected trace
+    try {
+      const response = await axios.delete(
+        `https://buddy-app2.loca.lt/publications/trace/${selectedTrace.idTrace}`,
+        {
+          headers: {
+            'auth-token': token,
+          },
+        }
+      );
+
+      // Check the response and handle it accordingly
+      console.log('Response from delete request:', response.data);
+
+      // If the deletion was successful, you can update the UI or take any other actions as needed
+
+      // Close the modal and navigate back
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error deleting trace:', error);
+    }
+  };
  
   const handleAgregarUbicacion = async () => {
     let locationToSend = selectedLocation || initialLocation; // Utiliza la ubicación seleccionada si está definida, de lo contrario, utiliza la ubicación inicial
@@ -80,7 +142,7 @@ export default function ModalTraza({ navigation, route}) {
   
       try {
         // Realizar la solicitud POST
-        const response = await axios.post('https://buddy-app1.loca.lt/publications/trace/', data, {
+        const response = await axios.post('https://buddy-app2.loca.lt/publications/trace/', data, {
           headers: {
             'auth-token': token, // Asegúrate de que token esté definido
           },
@@ -214,13 +276,23 @@ export default function ModalTraza({ navigation, route}) {
               },
             }}
           />
-          <TouchableOpacity
-            style={styles.botonAgregarUbicacion}
-            onPress={handleAgregarUbicacion}
-          >
-            <Text>Agregar ubicación</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={{flexDirection:'row'}}>
+              <TouchableOpacity
+                style={styles.botonAgregarUbicacion}
+                onPress={handleAgregarUbicacion}
+              >
+                <Text>Agregar ubicación</Text>
+              </TouchableOpacity>
+              {userNameTraza === userNamePublicacion && (
+                <TouchableOpacity
+                  style={styles.botonEliminarTraza}
+                  onPress={onDeleteTrace}
+                >
+                  <Text>Eliminar traza</Text>
+                </TouchableOpacity>
+            )}
+            </View>
+          </View>
       )}
     </View>
   );
@@ -249,8 +321,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    marginLeft: '60%',
+    marginLeft: '5%',
     elevation: 5,
+  },
+  botonEliminarTraza: {
+    margin: 10,
+    backgroundColor: '#EF491F',
+    width: 150,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 5,
+    marginLeft: '15%',
   },
   logo: {
     height: 80,

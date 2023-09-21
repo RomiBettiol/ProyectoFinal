@@ -43,7 +43,7 @@ const SlideModal = ({ visible, onClose }) => {
   };
   const handleLogout = async () => {
     try {
-      const response = await fetch('https://buddy-app1.loca.lt/security/auth/logout', {
+      const response = await fetch('https://buddy-app2.loca.lt/security/auth/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const SlideModal = ({ visible, onClose }) => {
 
   //Trae info del usuario
  const fetchNombre = () => {
-    axios.get(`https://buddy-app1.loca.lt/security/user/`, {
+    axios.get(`https://buddy-app2.loca.lt/security/user/`, {
       headers: {
         'auth-token': token
       }

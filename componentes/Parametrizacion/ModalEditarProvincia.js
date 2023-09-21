@@ -7,7 +7,7 @@ const ModalEditarProvincia = ({ isVisible, onClose, onEdit, editingProvince, onS
 
   const handleEditProvince = () => {
     axios
-      .put(`http://buddy-app1.loca.lt/parameters/province/${editingProvince.idProvince}`, {
+      .put(`http://buddy-app2.loca.lt/parameters/province/${editingProvince.idProvince}`, {
         provinceName: provinceName,
       })
       .then((response) => {

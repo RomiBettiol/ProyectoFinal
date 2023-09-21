@@ -55,7 +55,7 @@
         });
     
         const response = await axios.put(
-          `https://buddy-app1.loca.lt/publications/publication/${idPublicationAdoption}?modelType=adoption`,
+          `https://buddy-app2.loca.lt/publications/publication/${idPublicationAdoption}?modelType=adoption`,
           {
             title: title,
             description: description,
