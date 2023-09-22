@@ -1,27 +1,36 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal } from 'react-native';
-import HeaderScreen from '../componentes/HeaderScreen';
-import ListaValoresColor from '../componentes/Busqueda/ListaValoresColor';
-import ListaValoresAnimal from '../componentes/Busqueda/ListaValoresAnimal';
-import ListaValoresZona from '../componentes/Busqueda/ListaValoresZona';
-import ListaValoresRazaPerros from '../componentes/Busqueda/ListaValoresRazaPerros';
-import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
-import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
-import axios from 'axios';
-import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
+import HeaderScreen from "../componentes/HeaderScreen";
+import ListaValoresColor from "../componentes/Busqueda/ListaValoresColor";
+import ListaValoresAnimal from "../componentes/Busqueda/ListaValoresAnimal";
+import ListaValoresZona from "../componentes/Busqueda/ListaValoresZona";
+import ListaValoresRazaPerros from "../componentes/Busqueda/ListaValoresRazaPerros";
+import ImagePickerComponent from "../componentes/Busqueda/ImagePickerComponent";
+import BotonPublicar from "../componentes/Busqueda/BotonPublicar";
+import axios from "axios";
+import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
 
 export default function PublicacionBusqueda({ navigation }) {
   const [isValid, setIsValid] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
-  const [selectedColorId, setSelectedColorId] = useState('');
-  const [selectedLocality, setSelectedLocality] = useState('');
-  const [selectedBreedId, setSelectedBreedId] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [selectedColorId, setSelectedColorId] = useState("");
+  const [selectedLocality, setSelectedLocality] = useState("");
+  const [selectedBreedId, setSelectedBreedId] = useState("");
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState("");
   const [selectedAnimalId, setSelectedAnimalId] = useState(null);
   const route = useRoute();
   const { token } = route.params;
@@ -43,44 +52,50 @@ export default function PublicacionBusqueda({ navigation }) {
 
   const handlePost = async () => {
     const images = "";
-  
+
     try {
       const postData = {
         title,
         description,
-        images, 
-        idPetType: selectedAnimalId,  
+        images,
+        idPetType: selectedAnimalId,
         idPetBreed: selectedBreedId,
-        idPetColor: selectedColorId,         
+        idPetColor: selectedColorId,
         idLocality: selectedLocality,
         contactPhone,
         newOwnerName: "",
       };
-  
-      console.log('Datos a publicar:', postData);
-      console.log('token :', token)
+
+      console.log("Datos a publicar:", postData);
+      console.log("token :", token);
       const config = {
         headers: {
-          'auth-token': token,
+          "auth-token": token,
         },
       };
-  
-      const response = await axios.post('http://buddy-app1.loca.lt/publications/publication/adoption', postData,config);
-      console.log('Solicitud POST exitosa:', response.data);
+
+      const response = await axios.post(
+        ` https://6557-181-91-230-36.ngrok-free.app/publications/publication/adoption`,
+        postData,
+        config
+      );
+      console.log("Solicitud POST exitosa:", response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);
-      setModalMessage('¡Publicación exitosa!');
+      setModalMessage("¡Publicación exitosa!");
       setTimeout(() => {
         setIsModalVisible(false); // Cierra el modal después de 2 segundos
         setTimeout(() => {
-          navigation.navigate('HomeScreen', {token}); // Navega a 'HomeScreen' después de 5 segundos
+          navigation.navigate("HomeScreen", { token }); // Navega a 'HomeScreen' después de 5 segundos
         }, 1000); // 1000 milisegundos = 1 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
     } catch (error) {
       //console.error('Error al realizar la solicitud POST:', error);
       setIsSuccessful(false);
       setIsModalVisible(true);
-      setModalMessage('Publicación fallida, por favor complete todos los campos');
+      setModalMessage(
+        "Publicación fallida, por favor complete todos los campos"
+      );
       setTimeout(() => {
         setIsModalVisible(false); // Cierra el modal después de 3 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
@@ -90,12 +105,12 @@ export default function PublicacionBusqueda({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen  token={token}/>
+      <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publica tu mascota para adoptar</Text>
           <ImagePickerComponent />
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
             <TextInput
               style={styles.inputTexto}
@@ -104,7 +119,11 @@ export default function PublicacionBusqueda({ navigation }) {
               onEndEditing={handleEndEditing}
             />
           </View>
-          {!isValid && <Text style={styles.errorTextCaracteres}>Ingresa al menos 4 caracteres.</Text>}
+          {!isValid && (
+            <Text style={styles.errorTextCaracteres}>
+              Ingresa al menos 4 caracteres.
+            </Text>
+          )}
           <View style={styles.subcontenedor2}>
             <Text style={styles.descripcionPublicacion}>Descripción</Text>
             <TextInput
@@ -116,43 +135,84 @@ export default function PublicacionBusqueda({ navigation }) {
               maxLength={1000}
             />
           </View>
-            <View style={styles.subcontenedor3}>
-              <Text style={styles.tipoAnimal}>Tipo de animal</Text>
-              <ScrollView
-                horizontal={true} // Hace que el ScrollView sea horizontal
-                contentContainerStyle={{ flexDirection: 'row' }} // Establece la dirección de los elementos hijos como horizontal
-              >
-                <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
-                </ScrollView>
-              <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
-              <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
-              {selectedAnimal && (
-                <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
-              )}
-            </View>
-            <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
-              <Text style={styles.tituloPublicacion}>Celular</Text>
-              <TextInput
-                style={styles.inputTexto}
-                value={contactPhone}
-                onChangeText={text => {
-                  const numericValue = text.replace(/[^0-9]/g, '');
-                  setContactPhone(numericValue);
-                }}
-                onEndEditing={handleEndEditing}
+          <View style={styles.subcontenedor3}>
+            <Text style={styles.tipoAnimal}>Tipo de animal</Text>
+            <ScrollView
+              horizontal={true} // Hace que el ScrollView sea horizontal
+              contentContainerStyle={{ flexDirection: "row" }} // Establece la dirección de los elementos hijos como horizontal
+            >
+              <ListaValoresAnimal
+                selectedAnimal={selectedAnimal}
+                setSelectedAnimal={setSelectedAnimal}
+                setSelectedAnimalId={setSelectedAnimalId}
               />
-            </View>
-            {!isValidPhone && <Text style={styles.errorTextCaracteres}>Ingresa 10 caracteres.</Text>}
+            </ScrollView>
+            <ListaValoresColor
+              selectedColorId={selectedColorId}
+              setSelectedColorId={setSelectedColorId}
+            />
+            <ListaValoresZona
+              selectedLocality={selectedLocality}
+              setSelectedLocality={setSelectedLocality}
+            />
+            {selectedAnimal && (
+              <ListaValoresRazaPerros
+                selectedAnimal={selectedAnimal}
+                setSelectedBreedId={setSelectedBreedId}
+              />
+            )}
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
+            <Text style={styles.tituloPublicacion}>Celular</Text>
+            <TextInput
+              style={styles.inputTexto}
+              value={contactPhone}
+              onChangeText={(text) => {
+                const numericValue = text.replace(/[^0-9]/g, "");
+                setContactPhone(numericValue);
+              }}
+              onEndEditing={handleEndEditing}
+            />
+          </View>
+          {!isValidPhone && (
+            <Text style={styles.errorTextCaracteres}>
+              Ingresa 10 caracteres.
+            </Text>
+          )}
         </View>
-        <Modal visible={isModalVisible} animationType="slide" transparent={true} onRequestClose={() => setIsModalVisible(false)}>
-          <View style={[styles.modalContainer, isSuccessful ? styles.successModalBackground : styles.errorModalBackground]}>
+        <Modal
+          visible={isModalVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View
+            style={[
+              styles.modalContainer,
+              isSuccessful
+                ? styles.successModalBackground
+                : styles.errorModalBackground,
+            ]}
+          >
             <View style={[styles.modalContent, styles.bottomModalContent]}>
-              <Text style={[styles.modalMessage, isSuccessful ? styles.successModalText : styles.errorModalText]}>{modalMessage}</Text>
+              <Text
+                style={[
+                  styles.modalMessage,
+                  isSuccessful
+                    ? styles.successModalText
+                    : styles.errorModalText,
+                ]}
+              >
+                {modalMessage}
+              </Text>
             </View>
           </View>
         </Modal>
       </ScrollView>
-      <BotonPublicar disabled={!isValid || !isValidPhone} onPress={handlePost}/>
+      <BotonPublicar
+        disabled={!isValid || !isValidPhone}
+        onPress={handlePost}
+      />
     </View>
   );
 }
@@ -173,11 +233,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   inputTexto: {
-    backgroundColor: '#EEE9E9',
-    width: '70%',
+    backgroundColor: "#EEE9E9",
+    width: "70%",
     height: 32,
     borderRadius: 100,
-    textAlign: 'center',
+    textAlign: "center",
   },
   tituloPublicacion: {
     marginRight: 20,
@@ -189,27 +249,27 @@ const styles = StyleSheet.create({
   },
   subcontenedor1: {
     marginTop: 25,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   subcontenedor2: {
     marginTop: 25,
-    width: '100%',
-    justifyContent: 'center',
+    width: "100%",
+    justifyContent: "center",
   },
   descripcionPublicacion: {
     fontSize: 16,
-    marginLeft: '8%',
+    marginLeft: "8%",
   },
   inputDescripcion: {
-    backgroundColor: '#EEE9E9',
-    width: '85%',
+    backgroundColor: "#EEE9E9",
+    width: "85%",
     height: 100,
     borderRadius: 30,
     padding: 20,
     marginTop: 15,
-    marginLeft: '8%',
+    marginLeft: "8%",
   },
   subcontenedor3: {
     marginTop: 25,
@@ -217,34 +277,34 @@ const styles = StyleSheet.create({
   },
   subcontenedor4: {
     margin: 15,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   successModalBackground: {
-    backgroundColor: 'green',
-    marginTop: '180%',
+    backgroundColor: "green",
+    marginTop: "180%",
   },
   successModalText: {
-    color: 'white',
-  },  
+    color: "white",
+  },
   errorModalBackground: {
-    backgroundColor: 'red', // Cambiar a azul o el color que desees
-    marginTop: '180%',
+    backgroundColor: "red", // Cambiar a azul o el color que desees
+    marginTop: "180%",
     margin: 20,
     borderRadius: 10,
   },
   errorModalText: {
-    color: 'white', // Cambiar a blanco o el color de texto deseado
+    color: "white", // Cambiar a blanco o el color de texto deseado
   },
   bottomModalContent: {
-    alignItems: 'flex-end', // Alinea el contenido del modal en el extremo inferior
+    alignItems: "flex-end", // Alinea el contenido del modal en el extremo inferior
     padding: 20,
   },
-  errorTextCaracteres:{
-    color: 'red',
+  errorTextCaracteres: {
+    color: "red",
     marginLeft: 40,
   },
   tipoAnimal: {
-    marginLeft: '3%',
+    marginLeft: "3%",
     fontSize: 16,
   },
 });

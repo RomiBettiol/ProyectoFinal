@@ -1,79 +1,72 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
-import { Image } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import FormularioRegistrarse from '../componentes/FormularioRegistrarse';
-import axios, { AxiosError } from 'axios';
-import BotonImagenRegis from '../componentes/BotonImagenRegis';
-
-
+import React, { useState } from "react";
+import { StyleSheet, View, Text, TouchableOpacity, Modal } from "react-native";
+import { Image } from "react-native-elements";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import FormularioRegistrarse from "../componentes/FormularioRegistrarse";
+import axios, { AxiosError } from "axios";
+import BotonImagenRegis from "../componentes/BotonImagenRegis";
 
 export function RegistrarseScreen({ navigation }) {
   const [formValid, setFormValid] = useState(false);
   const [showAlert, setShowAlert] = React.useState(false); // Estado para mostrar/ocultar el cuadro de diálogo personalizado
   const [showAlertServer, setShowAlertServer] = React.useState(false); // Estado para mostrar/ocultar el cuadro de diálogo personalizado del back-end
-  const [error, setError] = React.useState('');
+  const [error, setError] = React.useState("");
   const [datosFormulario, setDatosFormulario] = useState({
-    nombre: '',
-    email: '',
-    usuario: '',
-    contrasena: '',
-    contrasena2: '',
+    email: "",
+    usuario: "",
+    contrasena: "",
+    contrasena2: "",
   });
 
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   const handleSubmit = async () => {
     if (formValid) {
-
       const data = {
         userName: datosFormulario.nombre,
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
-        name: datosFormulario.nombre,
-      }
+      };
 
       // Hacer la petición POST al backend usando axios
       try {
-        const response = await axios.post('https://buddy-app1.loca.lt/security/user/register', data, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await axios.post(
+          ` https://6557-181-91-230-36.ngrok-free.app/security/user/register`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.status === 201) {
-          console.log('Registro exitoso:', response.data);
-          navigation.navigate('ConfirmacionRegistroScreen');
+          console.log("Registro exitoso:", response.data);
+          navigation.navigate("ConfirmacionRegistroScreen");
         } else {
-          setError(response.data.message || 'Error desconocido');
+          setError(response.data.message || "Error desconocido");
           setShowAlertServer(true);
         }
       } catch (error) {
-        console.log('Error:', error);
-        setError(error.response?.data?.message || 'Error desconocido');
+        console.log("Error:", error);
+        setError(error.response?.data?.message || "Error desconocido");
         setShowAlertServer(true);
       }
-    }else {
-      let errorText = 'Revise todos los campos';
-      if (datosFormulario.nombre.trim() === '') {
-        errorText = 'Por favor, complete el nombre.';
+    } else {
+      let errorText = "Revise todos los campos";
+      if (datosFormulario.nombre.trim() === "") {
+        errorText = "Por favor, complete el nombre.";
       } else if (datosFormulario.contrasena !== datosFormulario.contrasena2) {
-        errorText = 'Las contraseñas no coinciden.';
-      } else if (datosFormulario.usuario.trim() === '') {
-        errorText = 'Por favor, complete el nombre de usuario.';
-      }else if(datosFormulario.email.trim() === '') {
-        errorText = 'Por favor, complete el mail.';
+        errorText = "Las contraseñas no coinciden.";
+      } else if (datosFormulario.usuario.trim() === "") {
+        errorText = "Por favor, complete el nombre de usuario.";
+      } else if (datosFormulario.email.trim() === "") {
+        errorText = "Por favor, complete el mail.";
       }
-      
+
       setErrorMessage(errorText);
-      console.log(errorMessage)
-           
+      console.log(errorMessage);
     }
   };
-            
-
-  // const handleDatosChange = (datos) => {
-  //   setDatosFormulario(datos);
-  // };
 
   return (
     <KeyboardAwareScrollView
@@ -82,7 +75,7 @@ export function RegistrarseScreen({ navigation }) {
     >
       <View style={styles.logoContainer}>
         <Image
-          source={require('../Imagenes/logo2.png')}
+          source={require("../Imagenes/logo2.png")}
           style={styles.imagen}
         />
         <Text style={styles.titulo}>REGISTRARSE</Text>
@@ -97,8 +90,11 @@ export function RegistrarseScreen({ navigation }) {
 
       <View style={styles.footerBoton}>
         <TouchableOpacity
-          style={[styles.botonRegistro, !formValid && styles.disabledBotonRegistro]}
-        //  disabled={!formValid}
+          style={[
+            styles.botonRegistro,
+            !formValid && styles.disabledBotonRegistro,
+          ]}
+          //  disabled={!formValid}
           onPress={handleSubmit} // Llamamos a la función handleSubmit al presionar el botón "Registrarse"
         >
           <Text style={styles.textoBoton}>Registrarse</Text>
@@ -115,7 +111,9 @@ export function RegistrarseScreen({ navigation }) {
       >
         <View style={styles.modalContainer}>
           <View style={styles.alertContainer}>
-            <Text style={styles.alertText}>Por favor, completa ambos campos.</Text>
+            <Text style={styles.alertText}>
+              Por favor, completa ambos campos.
+            </Text>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setShowAlert(false)}
@@ -148,14 +146,14 @@ export function RegistrarseScreen({ navigation }) {
         visible={!!errorMessage} // Mostrar modal si errorMessage tiene un valor
         animationType="fade"
         transparent={true}
-        onRequestClose={() => setErrorMessage('')}
+        onRequestClose={() => setErrorMessage("")}
       >
         <View style={styles.modalContainer}>
           <View style={styles.alertContainer}>
             <Text style={styles.alertText}>{errorMessage}</Text>
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setErrorMessage('')}
+              onPress={() => setErrorMessage("")}
             >
               <Text style={styles.closeButtonText}>Cerrar</Text>
             </TouchableOpacity>
@@ -167,33 +165,20 @@ export function RegistrarseScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  
   container: {
     flexGrow: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 80,
   },
 
   titulo: {
     fontSize: 35,
     marginBottom: 30,
-  },
-
-  contenedor2: {
-    height: 57,
-    backgroundColor: '#DDC4B8',
-    width: 90,
-    borderRadius: 30,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.9,
-    shadowRadius: 4,
-    elevation: 5,
   },
 
   textoBoton: {
@@ -206,45 +191,50 @@ const styles = StyleSheet.create({
   },
 
   footerBoton: {
-    width: '100%',
+    width: "100%",
   },
 
   botonRegistro: {
     marginTop: 70,
-    backgroundColor: '#FFB984',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#FFB984",
+    alignItems: "center",
+    justifyContent: "center",
     height: 45,
-    width: '100%',
+    width: "100%",
     marginBottom: 0,
     paddingHorizontal: 20,
   },
+
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
+
   alertContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
     elevation: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
+
   alertText: {
     fontSize: 18,
     marginBottom: 10,
   },
+
   closeButton: {
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
+
   closeButtonText: {
     fontSize: 16,
-    color: '#fff',
+    color: "#fff",
   },
 });
 

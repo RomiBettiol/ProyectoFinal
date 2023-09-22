@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } from 'react-native';
-import { Icon } from 'react-native-elements';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Pressable,
+} from "react-native";
+import { Icon } from "react-native-elements";
+import * as ImagePicker from "expo-image-picker";
 
 const BotonImagenRegis = () => {
   const [selectedImages, setSelectedImages] = useState([]);
@@ -9,11 +17,11 @@ const BotonImagenRegis = () => {
   const [mainImageIndex, setMainImageIndex] = useState(null);
 
   const options = {
-    title: 'Seleccionar imagen',
-    cancelButtonTitle: 'Cancelar',
-    takePhotoButtonTitle: 'Tomar foto',
-    chooseFromLibraryButtonTitle: 'Elegir de la galería',
-    mediaType: 'photo',
+    title: "Seleccionar imagen",
+    cancelButtonTitle: "Cancelar",
+    takePhotoButtonTitle: "Tomar foto",
+    chooseFromLibraryButtonTitle: "Elegir de la galería",
+    mediaType: "photo",
     quality: 1,
   };
 
@@ -59,10 +67,8 @@ const BotonImagenRegis = () => {
 
   return (
     <TouchableOpacity style={styles.botonGaleria} onPress={openGallery}>
-      <Image
-        source={require('../Imagenes/fotos.png')}
-        style={styles.foto}
-      />
+      <Image source={require("../Imagenes/fotos.png")} style={styles.foto} />
+
       <View style={styles.selectedImagesContainer}>
         {selectedImages.map((uri, index) => (
           <TouchableOpacity
@@ -91,7 +97,9 @@ const BotonImagenRegis = () => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>¡Ya elegiste 4 fotos!</Text>
-            <Text style={styles.modalText}>Son suficientes para reconocer a tu mascota</Text>
+            <Text style={styles.modalText}>
+              Son suficientes para reconocer a tu mascota
+            </Text>
             <Pressable style={styles.modalButton} onPress={closeModal}>
               <Text style={styles.modalButtonText}>Entendido</Text>
             </Pressable>
@@ -106,16 +114,15 @@ export default BotonImagenRegis;
 
 const styles = StyleSheet.create({
   botonGaleria: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     height: 80,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 20,
     marginTop: 20,
-    marginBottom:10,
+    marginBottom: 10,
     elevation: 10,
-
   },
   foto: {
     width: 30,
@@ -126,8 +133,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   selectedImagesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     marginTop: 5,
   },
   selectedImage: {
@@ -138,35 +145,35 @@ const styles = StyleSheet.create({
   },
   mainImage: {
     borderWidth: 2,
-    borderColor: '#ffffff', 
+    borderColor: "#ffffff",
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     borderRadius: 20,
     padding: 25,
-    alignItems: 'center',
+    alignItems: "center",
     elevation: 5,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
   },
   modalButton: {
-    backgroundColor: '#EEE9E9',
+    backgroundColor: "#EEE9E9",
     borderRadius: 10,
     padding: 10,
     elevation: 2,
     marginTop: 10,
   },
   modalButtonText: {
-    color: 'grey',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "grey",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
