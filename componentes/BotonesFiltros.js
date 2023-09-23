@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal, Activ
 import SearchBarExample from './BarraBusqueda';
 import axios from 'axios';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import DenunciasModal from './Denuncias/DenunciasModal';
 
 const FilterButtonsExample = () => {
   const navigation = useNavigation();
@@ -23,9 +24,23 @@ const FilterButtonsExample = () => {
   const [selectedBreed, setSelectedBreed] = useState(null);
   const [availableBreeds, setAvailableBreeds] = useState([]);
   const [filtrosExtraVisible, setFiltrosExtraVisible] = useState(false);
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [selectedPublicationToReport, setSelectedPublicationToReport] = useState(null);
   const route = useRoute();
   const { token } = route.params;
+  const [denunciaModalVisible, setDenunciaModalVisible] = useState(false);
 
+  const handleDenunciar = () => {
+    setDenunciaModalVisible(true);
+    setReportModalVisible(false); // Cierra el modal de reporte
+  };
+
+  const handleReportModal = (publication) => {
+    setSelectedPublicationToReport(publication.idPublicationSearch);
+    console.log('selectedPublicationToReport: ', selectedPublicationToReport);
+    setReportModalVisible(true);
+  };
+  
   const handleBreedChange = (breed) => {
     setSelectedBreed(breed);
     filterByBreed(breed);
@@ -223,6 +238,7 @@ const FilterButtonsExample = () => {
           onPress = {()=> (
             navigation.navigate('PublicacionDetalle', { publicacion: item, token })
           )}
+          onLongPress={() => handleReportModal(item)}
         >
           <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>
           {imageUri && <Image source={{ uri: imageUri }} />}
@@ -461,6 +477,32 @@ const FilterButtonsExample = () => {
           </View>
         </View>
       </Modal>
+
+      <Modal visible={reportModalVisible} transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+              <TouchableOpacity
+                onPress={() => handleDenunciar()} // Abre el modal de denuncia al hacer clic en "Denunciar"
+                style={styles.closeModalTextDenunca}
+              >
+                <Text style={styles.modalTitle}>Denunciar publicación</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setReportModalVisible(false)}
+                style={styles.closeModalTextDenuncia}
+              >
+                <Text style={styles.closeText}>Cancelar</Text>
+              </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* Modal de denuncia */}
+      <DenunciasModal
+        visible={denunciaModalVisible}
+        onClose={() => setDenunciaModalVisible(false)}
+        selectedPublicationToReport={selectedPublicationToReport}
+        token={token}
+      />
     </View>
   );
 };
@@ -642,7 +684,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   localityOption: {
     padding: 5,
@@ -666,6 +708,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'center',
     marginLeft: 40,
+  },
+  closeModalTextDenuncia: {
+    backgroundColor: '#DDC4B8',
+    width: '100%',
+    height: 25,
+    borderRadius: 10,
+    textAlign: 'center',
+    justifyContent: 'center',
+    marginLeft: 0,
+    padding: 2,
+    elevation: 5,
+  },
+  closeText: {
+    marginLeft: 5,
+    marginRight: 5,
   },
 });
 

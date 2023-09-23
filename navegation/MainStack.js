@@ -57,6 +57,9 @@ import ListaValoresAñoMascota from '../componentes/MiMascota/ListaValoresAñoMa
 import ListaValoresDiasMascota from '../componentes/MiMascota/ListaValoresDiasMascota';
 import ListaValoresMesesMascota from '../componentes/MiMascota/ListaValoresMesesMascota';
 import EditarVaccin from '../componentes/MiMascota/EditarVaccin';
+import DenunciasModal from '../componentes/Denuncias/DenunciasModal';
+import DenunciaScreen from '../Screens/DenunciaScreen';
+import PreguntasFrecuentes from '../Screens/PreguntasFrecuentes';
 
 const Stack = createNativeStackNavigator()
 
@@ -295,6 +298,18 @@ export default function MainStack() {
             <Stack.Screen
                 name='ModalTraza'
                 component={ModalTraza}
+            />
+            <Stack.Screen
+                name='DenunciasModal'
+                component={DenunciasModal}
+            />
+            <Stack.Screen
+                name='DenunciaScreen'
+                component={DenunciaScreen}
+            />
+            <Stack.Screen
+                name='PreguntasFrecuentes'
+                component={PreguntasFrecuentes}
             />
         </Stack.Navigator>
     </NavigationContainer>

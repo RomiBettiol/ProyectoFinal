@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import MenuHorizontal from '../componentes/MenuHorizontal'
-import MiMascotaScreen from './MiMascotaScreen'
 import { useRoute } from '@react-navigation/native'; // Importa useRoute
 import axios from 'axios';
  
@@ -10,6 +9,7 @@ export default function HomeScreen({navigation}) {
     const [quantity, setQuantity] = useState('');
     const [adoptionQuantity, setAdoptionQuantity] = useState('');
     const [lostPetsQuantity, setLostPetsQuantity] = useState('');
+    const [isModalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         // Realizar la solicitud GET utilizando Axios
@@ -48,6 +48,14 @@ export default function HomeScreen({navigation}) {
 
     // Accede al parámetro token
     const { token } = route.params;
+
+    const openModal = () => {
+        setModalVisible(true);
+      };
+    
+      const closeModal = () => {
+        setModalVisible(false);
+      };
     
     return (
         <ScrollView style={styles.scroll}>
@@ -56,7 +64,7 @@ export default function HomeScreen({navigation}) {
                     source={require('../Imagenes/logo2.png')}
                     style={styles.logo}
                 />
-                <MenuHorizontal token={token} />
+                <MenuHorizontal token={token} openModal={openModal} />
                 <View style={[{flexDirection: 'row'}, styles.primeraFila]}>
                     <TouchableOpacity style={styles.boton1}
                         onPress = {()=> (
@@ -126,6 +134,19 @@ export default function HomeScreen({navigation}) {
                         <Text style={styles.texto}>Reportes</Text>
                     </TouchableOpacity>
                 </View>
+                <View style={[{flexDirection: 'row'}, styles.segundaFila]}>
+                    <TouchableOpacity style={styles.boton1}
+                        onPress = {()=> (
+                            navigation.navigate('DenunciaScreen', {token})
+                        )}
+                    >
+                        <Image
+                            source={require('../Imagenes/denuncias.png')}
+                            style={styles.imagen1}
+                        />
+                        <Text style={styles.texto}>Denuncias</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={[styles.informe1,{flexDirection:'row'}]}>
                     <Text style={styles.textoInforme}>Mascotas encontradas</Text>
                     <Text style={styles.textoInforme}>{quantity}</Text>
@@ -139,6 +160,24 @@ export default function HomeScreen({navigation}) {
                     <Text style={styles.textoInforme}>{lostPetsQuantity}</Text>
                 </View>
             </View>
+
+            <Modal transparent={true} animationType="slide" visible={isModalVisible} onRequestClose={closeModal}>
+                <TouchableWithoutFeedback onPress={closeModal}>
+                    <View style={styles.modalOverlay} />
+                </TouchableWithoutFeedback>
+                <View style={styles.modalContent}>
+                    <TouchableOpacity style={styles.botonAyuda}
+                        onPress = {()=> (
+                          navigation.navigate('PreguntasFrecuentes', {token})
+                        )}
+                    >
+                        <Text  style={styles.textAyuda}>Ayuda</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.botonAyuda} onPress={closeModal}>
+                        <Text style={styles.textAyuda}>Cerrar Sesión</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         </ScrollView>
       ) 
     }
@@ -168,7 +207,7 @@ export default function HomeScreen({navigation}) {
         logo: {
             marginTop: 70,
             width: '50%',
-            height: '20%',
+            height: '15%',
         },
     
         primeraFila: {
@@ -228,7 +267,43 @@ export default function HomeScreen({navigation}) {
         },
     
         scroll: {
-            height: '100%',
-        }
-    
+            flex: 1,
+        },
+        modalOverlay: {
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo transparente
+            justifyContent: 'center', // Centra verticalmente
+            alignItems: 'center', // Centra horizontalmente
+          },
+        
+          modalContent: {
+            backgroundColor: 'white', // Fondo blanco
+            padding: 20,
+            borderRadius: 10,
+            alignItems: 'center', // Centra el contenido horizontalmente
+            width: '35%', // Ancho del modal, puedes ajustarlo según tus necesidades
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: [{ translateX: -Dimensions.get('window').width * 0.15}, { translateY: -Dimensions.get('window').height * 0.12 }],
+          },
+          
+          // Agrega un estilo para el contenido interno del modal
+          modalInnerContent: {
+            backgroundColor: 'white', // Fondo blanco
+            padding: 20,
+            borderRadius: 10,
+            alignItems: 'center', // Centra el contenido horizontalmente
+          },
+
+          botonAyuda: {
+            borderBottomColor: 'gray',
+            borderBottomWidth: 0.5,
+            marginBottom: 20,
+          },
+
+          textAyuda: {
+            fontSize: 16,
+            padding: 5,
+          },
     })
