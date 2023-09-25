@@ -11,15 +11,18 @@ export default function DenunciaScreen({navigation}) {
   const [denuncias, setDenuncias] = useState([]);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [denunciaToReject, setDenunciaToReject] = useState(null);
+  const [bloquearModalVisible, setBloquearModalVisible] = useState(false);
+  const [denunciaToBloquear, setDenunciaToBloquear] = useState(null);
 
-  useEffect(() => {
-    loadDenuncias();
-  }, []);
 
-  function loadDenuncias() {
+  function loadDenuncias(token) {
     // Realiza una solicitud GET al servidor para obtener las denuncias
     axios
-      .get('https://buddy-app2.loca.lt/security/complaint/')
+      .get('https://buddy-app2.loca.lt/security/complaint/', {
+        headers: {
+          'auth-token': token,
+        },
+      })
       .then((response) => {
         setDenuncias(response.data);
       })
@@ -27,6 +30,11 @@ export default function DenunciaScreen({navigation}) {
         console.error('Error al obtener denuncias:', error);
       });
   }
+  
+  useEffect(() => {
+    loadDenuncias(token);
+  }, [token]);
+  
 
   function handleOpenConfirmModal(idComplaint) {
     setDenunciaToReject(idComplaint);
@@ -38,11 +46,22 @@ export default function DenunciaScreen({navigation}) {
     setConfirmModalVisible(false);
   }
 
+  function handleOpenBloquearModal(idComplaint) {
+    setDenunciaToBloquear(idComplaint);
+    setBloquearModalVisible(true);
+  }
+  
+
   function handleRechazar() {
     if (denunciaToReject) {
-      // Realizar una solicitud DELETE al servidor para eliminar la denuncia
+      // Configurar el encabezado con el token de autenticación
+      const headers = {
+        'auth-token': token, // Utiliza el token que tienes en el ámbito superior
+      };
+  
+      // Realizar una solicitud DELETE al servidor para eliminar la denuncia con el encabezado personalizado
       axios
-        .delete(`https://buddy-app2.loca.lt/security/complaint/${denunciaToReject}`)
+        .delete(`https://buddy-app2.loca.lt/security/complaint/${denunciaToReject}`, { headers })
         .then((response) => {
           // Manejar la respuesta del servidor si es necesario
           console.log('Denuncia rechazada con éxito');
@@ -51,7 +70,7 @@ export default function DenunciaScreen({navigation}) {
           // setDenuncias((prevDenuncias) =>
           //   prevDenuncias.filter((denuncia) => denuncia.idComplaint !== denunciaToReject)
           // );
-          loadDenuncias();
+          loadDenuncias(token);
           handleCloseConfirmModal();
         })
         .catch((error) => {
@@ -59,21 +78,31 @@ export default function DenunciaScreen({navigation}) {
           handleCloseConfirmModal();
         });
     }
-  }
+  }  
 
-  function handleBloquear(idComplaint) {
-    // Aquí puedes implementar la lógica para bloquear la denuncia
-    // Por ejemplo, puedes hacer una solicitud POST al servidor
-    // con el idComplaint para marcar la denuncia como bloqueada.
-    axios
-      .post(`http://localhost:4000/security/complaint/${idComplaint}/block`)
-      .then((response) => {
-        // Manejar la respuesta del servidor si es necesario
-      })
-      .catch((error) => {
-        console.error('Error al bloquear la denuncia:', error);
-      });
-  }
+function handleBloquear(idComplaint, token) {
+  const data = { validate: false };
+  console.log('id Denuncia: ', idComplaint);
+  console.log('true or false: ', data.validate);
+  console.log('token desde bloquear: ', token);
+
+  const headers = {
+    'auth-token': token, // Agrega el encabezado auth-token con el valor proporcionado
+  };
+
+  axios
+    .post(`https://buddy-app2.loca.lt//security/complaint/execute/${data.validate}/${idComplaint}`, null, {
+      headers: headers, // Pasa los encabezados con la solicitud
+    })
+    .then((response) => {
+      // Manejar la respuesta del servidor si es necesario
+      loadDenuncias(token);
+      console.log('Denuncia bloqueada con éxito');
+    })
+    .catch((error) => {
+      console.error('Error al bloquear la denuncia:', error);
+    });
+}
 
   console.log('Denuncias: ', token);
 
@@ -96,7 +125,7 @@ export default function DenunciaScreen({navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.botonBloquear}
-                onPress={() => handleBloquear(denuncia.idComplaint)}
+                onPress={() => handleOpenBloquearModal(denuncia.idComplaint)}
               >
                 <Text>Bloquear</Text>
               </TouchableOpacity>
@@ -115,7 +144,7 @@ export default function DenunciaScreen({navigation}) {
           <View style={styles.modalContent}>
             <Text style={styles.tituloModal}>¿Seguro que quieres rechazar la denuncia?</Text>
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity style={styles.botonModal} onPress={handleRechazar}>
+              <TouchableOpacity style={styles.botonModal} onPress={handleRechazar(token)}>
                 <Text>Rechazar</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.botonModal} onPress={handleCloseConfirmModal}>
@@ -124,6 +153,37 @@ export default function DenunciaScreen({navigation}) {
             </View>
           </View>
         </Modal>
+
+        <Modal
+        visible={bloquearModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setBloquearModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setBloquearModalVisible(false)}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.modalContent}>
+          <Text style={styles.tituloModal}>¿Seguro que quieres bloquear la denuncia?</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+              style={styles.botonModal}
+              onPress={() => {
+                handleBloquear(denunciaToBloquear, token);
+                setBloquearModalVisible(false);
+              }}
+            >
+              <Text>Bloquear</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.botonModal}
+              onPress={() => setBloquearModalVisible(false)}
+            >
+              <Text>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       </ScrollView>
       <BotonMenu token = {token}/>
     </View>

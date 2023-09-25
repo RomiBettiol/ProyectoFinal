@@ -26,6 +26,7 @@ const FilterButtonsExample = () => {
   const [filtrosExtraVisible, setFiltrosExtraVisible] = useState(false);
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [selectedPublicationToReport, setSelectedPublicationToReport] = useState(null);
+  const [selectedUserToReport, setSelectedUserToReport] = useState(null);
   const route = useRoute();
   const { token } = route.params;
   const [denunciaModalVisible, setDenunciaModalVisible] = useState(false);
@@ -37,7 +38,9 @@ const FilterButtonsExample = () => {
 
   const handleReportModal = (publication) => {
     setSelectedPublicationToReport(publication.idPublicationSearch);
+    setSelectedUserToReport(publication.user.idUser);
     console.log('selectedPublicationToReport: ', selectedPublicationToReport);
+    console.log('selectedUserToReport: ', selectedUserToReport);
     setReportModalVisible(true);
   };
   
@@ -501,6 +504,7 @@ const FilterButtonsExample = () => {
         visible={denunciaModalVisible}
         onClose={() => setDenunciaModalVisible(false)}
         selectedPublicationToReport={selectedPublicationToReport}
+        selectedUserToReport={selectedUserToReport}
         token={token}
       />
     </View>
