@@ -9,7 +9,7 @@ const ListaValoresZona = ({ setSelectedLocality }) => {
 
   const getZonas = () => {
     axios
-      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/locality/`, {
+      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/locality/`, {
         headers: {
           "Content-Type": "application/json",
         },

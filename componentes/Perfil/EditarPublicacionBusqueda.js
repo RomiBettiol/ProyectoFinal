@@ -77,7 +77,7 @@ export default function EditarPublicacionBusqueda({ route }) {
       });
 
       const response = await axios.put(
-        `https://27fb-181-91-230-36.ngrok-free.app/publications/publication/${idPublicationSearch}?modelType=search`,
+        ` https://e860-181-91-230-36.ngrok-free.app/publications/publication/${idPublicationSearch}?modelType=search`,
         {
           title,
           description,

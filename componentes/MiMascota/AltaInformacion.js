@@ -81,7 +81,7 @@ export default function AltaInformacion({ visible, onClose }) {
                 setIsButtonDisabled1(true);
                 try {
                   const response = await axios.post(
-                    `https://27fb-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}`,
+                    ` https://e860-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}`,
                     data
                   );
                   console.log("console log en alta informacion");

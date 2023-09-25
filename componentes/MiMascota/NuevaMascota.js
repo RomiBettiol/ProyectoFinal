@@ -74,7 +74,7 @@ export default function NuevaMascota({
     console.log(idPetBreed);
     // Obtener tipos de mascotas
     axios
-      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petType`)
+      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/petType`)
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({
@@ -113,7 +113,7 @@ export default function NuevaMascota({
       };
       console.log(data);
       const response = await axios.post(
-        `https://27fb-181-91-230-36.ngrok-free.app/mypet/pet/`,
+        ` https://e860-181-91-230-36.ngrok-free.app/mypet/pet/`,
         data,
         config
       );

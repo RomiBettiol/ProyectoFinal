@@ -75,7 +75,7 @@ export default function PublicacionBusqueda({ navigation }) {
       };
 
       const response = await axios.post(
-        `https://27fb-181-91-230-36.ngrok-free.app/publications/publication/adoption`,
+        ` https://e860-181-91-230-36.ngrok-free.app/publications/publication/adoption`,
         postData,
         config
       );

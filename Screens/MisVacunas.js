@@ -51,7 +51,7 @@ export default function MisVacunas(token) {
   async function fetchVaccines() {
     try {
       const response = await axios.get(
-        `https://27fb-181-91-230-36.ngrok-free.app/mypet/vaccine/${mascotaId}`
+        ` https://e860-181-91-230-36.ngrok-free.app/mypet/vaccine/${mascotaId}`
       );
       console.log("Después de hacer la solicitud GET");
       if (response.data && Array.isArray(response.data.vaccines)) {
@@ -152,7 +152,7 @@ export default function MisVacunas(token) {
     console.log(vaccin.idVaccin);
     try {
       const response = await axios.delete(
-        `https://27fb-181-91-230-36.ngrok-free.app/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`
+        ` https://e860-181-91-230-36.ngrok-free.app/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`
       );
       console.log("Vaccin  eliminado:", response.data);
       setMensaje("Vacuna eliminada correctamente");

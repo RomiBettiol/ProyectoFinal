@@ -58,6 +58,7 @@ import ListaValoresAñoMascota from "../componentes/MiMascota/ListaValoresAñoMa
 import ListaValoresDiasMascota from "../componentes/MiMascota/ListaValoresDiasMascota";
 import ListaValoresMesesMascota from "../componentes/MiMascota/ListaValoresMesesMascota";
 import EditarVaccin from "../componentes/MiMascota/EditarVaccin";
+import ServiciosScreen from "../Screens/ServiciosScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -80,6 +81,7 @@ export default function MainStack() {
         <Stack.Screen name="Registro" component={Registro} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="BusquedaScreen" component={BusquedaScreen} />
+        <Stack.Screen name="ServiciosScreen" component={ServiciosScreen} />
         <Stack.Screen
           name="PublicacionBusqueda"
           component={PublicacionBusqueda}

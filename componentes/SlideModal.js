@@ -67,7 +67,7 @@ const SlideModal = ({ visible, onClose }) => {
   //Trae info del usuario
   const fetchNombre = () => {
     axios
-      .get(`https://27fb-181-91-230-36.ngrok-free.app/security/user/`, {
+      .get(` https://e860-181-91-230-36.ngrok-free.app/security/user/`, {
         headers: {
           "auth-token": token,
         },

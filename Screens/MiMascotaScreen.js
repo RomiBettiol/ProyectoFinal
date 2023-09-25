@@ -101,7 +101,7 @@ export default function MiMascotaScreen() {
   const fetchMascotas = async () => {
     try {
       const response = await axios.get(
-        `https://27fb-181-91-230-36.ngrok-free.app/mypet/pet`,
+        ` https://e860-181-91-230-36.ngrok-free.app/mypet/pet`,
         {
           headers: {
             "auth-token": token,

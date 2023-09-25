@@ -37,7 +37,7 @@ const Registro = () => {
     if (formValid) {
       try {
         const response = await axios.post(
-          `https://27fb-181-91-230-36.ngrok-free.app/security/auth/login`,
+          ` https://e860-181-91-230-36.ngrok-free.app/security/auth/login`,
           {
             headers: {
               "Content-Type": "application/json",

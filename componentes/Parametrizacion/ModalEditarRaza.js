@@ -23,7 +23,7 @@ const ModalEditarRaza = ({
   const handleEditBreed = () => {
     axios
       .put(
-        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petBreed/${editingBreed.idPetBreed}`,
+        ` https://e860-181-91-230-36.ngrok-free.app/parameters/petBreed/${editingBreed.idPetBreed}`,
         {
           petBreedName: breedName,
         }

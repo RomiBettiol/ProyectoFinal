@@ -6,7 +6,7 @@ const EliminarMascotaModal = ({ visible, onCancel, onConfirm, mascotaId }) => {
   const eliminarMascota = async () => {
     try {
       await axios.delete(
-        `https://27fb-181-91-230-36.ngrok-free.app/mypet/pet/${mascotaId}`
+        ` https://e860-181-91-230-36.ngrok-free.app/mypet/pet/${mascotaId}`
       );
       onConfirm();
     } catch (error) {

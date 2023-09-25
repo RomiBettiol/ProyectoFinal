@@ -10,7 +10,7 @@ const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
   const getRazas = () => {
     axios
       .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petBreed/byType/${selectedAnimal}`
+        ` https://e860-181-91-230-36.ngrok-free.app/parameters/petBreed/byType/${selectedAnimal}`
       )
       .then((response) => {
         console.log("Razas exitosas:", response.data);

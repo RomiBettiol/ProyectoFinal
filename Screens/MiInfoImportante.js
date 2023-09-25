@@ -48,7 +48,7 @@ export default function MiInfoImportante(token) {
   async function fetchInformacion() {
     try {
       const response = await axios.get(
-        `https://27fb-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}`
+        ` https://e860-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}`
       );
 
       if (Array.isArray(response.data.information)) {
@@ -93,7 +93,7 @@ export default function MiInfoImportante(token) {
     console.log(info.idInformation);
     try {
       const response = await axios.delete(
-        `https://27fb-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}/${info.idInformation}`
+        ` https://e860-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}/${info.idInformation}`
       );
       console.log("Info eliminado:", response.data);
       setShowSuccessModal(true);

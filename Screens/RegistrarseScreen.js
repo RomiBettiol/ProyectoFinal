@@ -30,7 +30,7 @@ export function RegistrarseScreen({ navigation }) {
       // Hacer la petición POST al backend usando axios
       try {
         const response = await axios.post(
-          `https://27fb-181-91-230-36.ngrok-free.app/security/user/register`,
+          ` https://e860-181-91-230-36.ngrok-free.app/security/user/register`,
           data,
           {
             headers: {

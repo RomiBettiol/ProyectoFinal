@@ -40,7 +40,7 @@ const ModalAgregarRaza = ({
 
     axios
       .post(
-        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petBreed`,
+        ` https://e860-181-91-230-36.ngrok-free.app/parameters/petBreed`,
         newBreed
       )
       .then((response) => {

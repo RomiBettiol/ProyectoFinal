@@ -11,7 +11,7 @@ const ListaValoresAnimal = ({
 
   useEffect(() => {
     axios
-      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petType/`)
+      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/petType/`)
       .then((response) => {
         console.log("Tipos de animal exitosos:", response.data);
         setAnimalOptions(response.data.petTypes);

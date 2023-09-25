@@ -16,7 +16,7 @@ export default function ReportesScreen() {
     // Realizar la solicitud GET utilizando Axios
     axios
       .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/founds-success`
+        ` https://e860-181-91-230-36.ngrok-free.app/reports/count/founds-success`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
@@ -30,7 +30,7 @@ export default function ReportesScreen() {
     // Servicios activos
     axios
       .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/services-actives`
+        ` https://e860-181-91-230-36.ngrok-free.app/reports/count/services-actives`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
@@ -44,7 +44,7 @@ export default function ReportesScreen() {
     // Usuarios activos
     axios
       .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/users-actives`
+        ` https://e860-181-91-230-36.ngrok-free.app/reports/count/users-actives`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
@@ -58,7 +58,7 @@ export default function ReportesScreen() {
     // Mascotas perdidas
     axios
       .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/losts-actives`
+        ` https://e860-181-91-230-36.ngrok-free.app/reports/count/losts-actives`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
@@ -72,7 +72,7 @@ export default function ReportesScreen() {
     // Mascotas en adopción
     axios
       .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/adoptions-actives`
+        ` https://e860-181-91-230-36.ngrok-free.app/reports/count/adoptions-actives`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
@@ -86,7 +86,7 @@ export default function ReportesScreen() {
     // Mascotas adoptadas
     axios
       .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/adoptions-success`
+        ` https://e860-181-91-230-36.ngrok-free.app/reports/count/adoptions-success`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
