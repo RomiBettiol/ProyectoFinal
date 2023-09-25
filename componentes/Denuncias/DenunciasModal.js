@@ -55,10 +55,10 @@ const DenunciasModal = ({ visible, onClose, selectedPublicationToReport, token, 
             numberOfLines={10}
           />
           <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity onPress={handleCancelar} style={styles.denunciarButton}>
+            <TouchableOpacity onPress={() => handleDenunciar(token)} style={styles.denunciarButton}>
               <Text style={styles.cancelarButtonText}>Cancelar</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleDenunciar(token)} style={styles.denunciarButton}>
+            <TouchableOpacity style={styles.denunciarButton}>
               <Text style={styles.cancelarButtonText}>Denunciar</Text>
             </TouchableOpacity>
           </View>

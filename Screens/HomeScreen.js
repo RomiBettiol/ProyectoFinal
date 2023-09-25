@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Modal, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import MenuHorizontal from '../componentes/MenuHorizontal'
-import { useRoute } from '@react-navigation/native'; // Importa useRoute
+import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
  
 export default function HomeScreen({navigation}) {
