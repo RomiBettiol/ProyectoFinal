@@ -91,7 +91,7 @@ export default function HomeScreen({ navigation }) {
 
     axios
       .get(
-        ` https://6557-181-91-230-36.ngrok-free.app/reports/count/founds-success`
+        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/founds-success`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
@@ -105,7 +105,7 @@ export default function HomeScreen({ navigation }) {
     // Mascotas perdidas
     axios
       .get(
-        ` https://6557-181-91-230-36.ngrok-free.app/reports/count/losts-actives`
+        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/losts-actives`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
@@ -119,7 +119,7 @@ export default function HomeScreen({ navigation }) {
     // Mascotas adoptadas
     axios
       .get(
-        ` https://6557-181-91-230-36.ngrok-free.app/reports/count/adoptions-success`
+        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/adoptions-success`
       )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
@@ -142,7 +142,7 @@ export default function HomeScreen({ navigation }) {
       const token = await AsyncStorage.getItem("auth-token");
 
       const response = await axios.get(
-        ` https://6557-181-91-230-36.ngrok-free.app/security/user/permissions`,
+        `https://27fb-181-91-230-36.ngrok-free.app/security/user/permissions`,
         { headers: { "auth-token": token } }
       );
 

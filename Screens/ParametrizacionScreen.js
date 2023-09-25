@@ -171,7 +171,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
     axios
       .post(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/province/`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/province/`,
         newProvince
       )
       .then((response) => {
@@ -201,7 +201,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
     axios
       .post(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/petType/`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petType/`,
         newType
       )
       .then((response) => {
@@ -232,7 +232,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
     axios
       .post(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/petColor/`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/`,
         newColor
       )
       .then((response) => {
@@ -254,7 +254,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleZoneDelete = (zoneId) => {
     axios
       .delete(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/locality/${zoneId}`
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/locality/${zoneId}`
       )
       .then((response) => {
         handleSuccessfulDeletePublication();
@@ -269,7 +269,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleBreedDelete = (breedId) => {
     axios
       .delete(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/petBreed/${breedId}`
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petBreed/${breedId}`
       )
       .then((response) => {
         handleSuccessfulDeletePublication();
@@ -284,7 +284,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleColorDelete = (colorId) => {
     axios
       .delete(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/petColor/${colorId}`
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/${colorId}`
       )
       .then((response) => {
         handleSuccessfulDeletePublication();
@@ -299,7 +299,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleTypeDelete = (typeId) => {
     axios
       .delete(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/petType/${typeId}`
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petType/${typeId}`
       )
       .then((response) => {
         handleSuccessfulDeletePublication();
@@ -314,7 +314,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleProvinceDelete = (provinceId) => {
     axios
       .delete(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/province/${provinceId}`
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/province/${provinceId}`
       )
       .then((response) => {
         handleSuccessfulDeletePublication();
@@ -329,7 +329,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleRegionDelete = (regionId) => {
     axios
       .delete(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/region/${regionId}`
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/region/${regionId}`
       )
       .then((response) => {
         handleSuccessfulDeletePublication();
@@ -431,7 +431,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getZonas = () => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/locality/`, {
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/locality/`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -452,7 +452,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetColors = () => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/petColor/`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/`)
       .then((response) => {
         const colors = response.data.petColors;
         if (colors && Array.isArray(colors)) {
@@ -469,7 +469,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetTypes = () => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/petType/`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petType/`)
       .then((response) => {
         const types = response.data.petTypes;
         if (types && Array.isArray(types)) {
@@ -486,7 +486,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetBreeds = () => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/petBreed/`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petBreed/`)
       .then((response) => {
         const breeds = response.data.petBreeds;
         if (breeds && Array.isArray(breeds)) {
@@ -503,7 +503,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getProvinces = () => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/province/`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/province/`)
       .then((response) => {
         const fetchedProvinces = response.data.provinces;
         if (fetchedProvinces && Array.isArray(fetchedProvinces)) {
@@ -520,7 +520,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getRegions = () => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/region/`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/region/`)
       .then((response) => {
         const fetchedRegions = response.data.regions;
         if (fetchedRegions && Array.isArray(fetchedRegions)) {

@@ -23,15 +23,14 @@ export function RegistrarseScreen({ navigation }) {
   const handleSubmit = async () => {
     if (formValid) {
       const data = {
-        userName: datosFormulario.nombre,
+        userName: datosFormulario.usuario,
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
       };
-
       // Hacer la petición POST al backend usando axios
       try {
         const response = await axios.post(
-          ` https://6557-181-91-230-36.ngrok-free.app/security/user/register`,
+          `https://27fb-181-91-230-36.ngrok-free.app/security/user/register`,
           data,
           {
             headers: {

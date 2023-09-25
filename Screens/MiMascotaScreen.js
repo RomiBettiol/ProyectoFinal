@@ -100,9 +100,8 @@ export default function MiMascotaScreen() {
 
   const fetchMascotas = async () => {
     try {
-      console.log("estoy adentro del try, token:", token);
       const response = await axios.get(
-        ` https://6557-181-91-230-36.ngrok-free.app/mypet/pet`,
+        `https://27fb-181-91-230-36.ngrok-free.app/mypet/pet`,
         {
           headers: {
             "auth-token": token,
@@ -110,15 +109,13 @@ export default function MiMascotaScreen() {
         }
       );
       const mascotasData = response.data.pets;
-      console.log(mascotasData);
       setMascotas(mascotasData);
-      console.log(mascotas);
+
       setBotonesVisibles(Array(mascotasData.length).fill(false)); // Inicializa el estado
     } catch (error) {
       if (error.response && error.response.status === 404) {
       }
     }
-    console.log("estoy saliendo del try");
   };
 
   useEffect(() => {
@@ -127,7 +124,6 @@ export default function MiMascotaScreen() {
 
   const idMascotaSeleccionada = (mascotaId) => {
     setSelectedMascotaId(mascotaId);
-    console.log(selectedMascotaId);
   };
 
   return (
@@ -135,7 +131,7 @@ export default function MiMascotaScreen() {
       <HeaderScreen />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
-          <Text style={styles.titulo}>Mi mascota</Text>
+          <Text style={styles.titulo}>Mi Mascota</Text>
         </View>
 
         <View style={styles.contenedor2}>
@@ -379,6 +375,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
     marginTop: 15,
+    marginBottom: 15,
   },
   imagAgregar: {
     borderRadius: 50,

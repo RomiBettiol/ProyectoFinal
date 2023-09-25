@@ -79,7 +79,7 @@ export default function PublicacionBusqueda({ navigation }) {
         },
       };
       const response = await axios.post(
-        ` https://6557-181-91-230-36.ngrok-free.app/publications/publication/search`,
+        `https://27fb-181-91-230-36.ngrok-free.app/publications/publication/search`,
         postData,
         config
       );

@@ -66,7 +66,7 @@ export default function EditarPublicacionAdopcion({ route }) {
       });
 
       const response = await axios.put(
-        ` https://6557-181-91-230-36.ngrok-free.app/publications/publication/${idPublicationAdoption}?modelType=adoption`,
+        `https://27fb-181-91-230-36.ngrok-free.app/publications/publication/${idPublicationAdoption}?modelType=adoption`,
         {
           title: title,
           description: description,

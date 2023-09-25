@@ -53,7 +53,7 @@ export default function MiPerfil({ navigation }) {
   //Trae info del usuario
   useEffect(() => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/security/user/`, {
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -76,7 +76,7 @@ export default function MiPerfil({ navigation }) {
   useEffect(() => {
     axios
       .get(
-        ` https://6557-181-91-230-36.ngrok-free.app/publications/publication/ByUser`,
+        `https://27fb-181-91-230-36.ngrok-free.app/publications/publication/ByUser`,
         {
           headers: {
             "auth-token": token,
@@ -164,7 +164,7 @@ export default function MiPerfil({ navigation }) {
 
       axios
         .put(
-          ` https://6557-181-91-230-36.ngrok-free.app/security/user/${idUser}`,
+          `https://27fb-181-91-230-36.ngrok-free.app/security/user/${idUser}`,
           updatedUserData,
           {
             headers: {
@@ -203,7 +203,7 @@ export default function MiPerfil({ navigation }) {
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
       .put(
-        ` https://6557-181-91-230-36.ngrok-free.app/security/user/${idUser}`,
+        `https://27fb-181-91-230-36.ngrok-free.app/security/user/${idUser}`,
         updatedUserData,
         {
           headers: {
@@ -307,7 +307,7 @@ export default function MiPerfil({ navigation }) {
       console.log("idPublicacion: ", idPublicationToDelete);
       axios
         .delete(
-          ` https://6557-181-91-230-36.ngrok-free.app/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
+          `https://27fb-181-91-230-36.ngrok-free.app/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
           {
             headers: {
               "auth-token": token,
@@ -334,7 +334,7 @@ export default function MiPerfil({ navigation }) {
       // Realiza la solicitud GET para cargar las publicaciones actualizadas
       axios
         .get(
-          ` https://6557-181-91-230-36.ngrok-free.app/publications/publication/ByUser`,
+          `https://27fb-181-91-230-36.ngrok-free.app/publications/publication/ByUser`,
           {
             headers: {
               "auth-token": token,
@@ -365,7 +365,7 @@ export default function MiPerfil({ navigation }) {
   const handleLogout = async () => {
     try {
       const response = await fetch(
-        ` https://6557-181-91-230-36.ngrok-free.app/security/auth/logout`,
+        `https://27fb-181-91-230-36.ngrok-free.app/security/auth/logout`,
         {
           method: "POST",
           headers: {

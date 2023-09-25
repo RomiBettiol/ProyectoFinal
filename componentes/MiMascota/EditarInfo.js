@@ -34,7 +34,7 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
     console.log(info.idInformation);
     try {
       const response = await axios.put(
-        ` https://6557-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}/${idInformation}`,
+        `https://27fb-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}/${idInformation}`,
         {
           titleInformation: updatedData.titleInformation,
           descriptionInformation: updatedData.descriptionInformation,

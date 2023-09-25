@@ -13,7 +13,7 @@ export default function InicioScreen({ navigation }) {
 
         if (token !== null) {
           const response = await axios.get(
-            ` https://6557-181-91-230-36.ngrok-free.app/security/auth/expire`,
+            `https://27fb-181-91-230-36.ngrok-free.app/security/auth/expire`,
             { headers: { "auth-token": token } }
           );
           if (response.status === 200) {

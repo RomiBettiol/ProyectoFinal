@@ -12,26 +12,7 @@ export default function InicioScreen({ navigation }) {
   const [checkBox1, setCheckBox1] = useState(false);
   const [checkBox2, setCheckBox2] = useState(false);
 
-  useEffect(() => {
-    const verificarAuthToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem("auth-token");
-
-        if (token !== null) {
-          const response = await axios.get(
-            ` https://6557-181-91-230-36.ngrok-free.app/security/auth/expire`,
-            { headers: { "auth-token": token } }
-          );
-          if (response.status == 200) {
-            navigation.navigate("HomeScreen", { token });
-          }
-        }
-      } catch (error) {
-        console.error("Error al obtener datos:", error);
-      }
-    };
-    verificarAuthToken();
-  }, []);
+  useEffect(() => {}, []);
 
   const handleRegistro = () => {
     setModalVisible(true);

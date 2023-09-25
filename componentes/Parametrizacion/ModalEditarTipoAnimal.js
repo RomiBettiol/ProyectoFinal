@@ -23,7 +23,7 @@ const ModalEditarTipoAnimal = ({
   const handleEditType = () => {
     axios
       .put(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/petType/${editingType.idPetType}`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petType/${editingType.idPetType}`,
         {
           petTypeName: typeName,
         }

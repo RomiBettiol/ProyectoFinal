@@ -105,7 +105,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/locality/`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/locality/`)
       .then((response) => {
         if (response.data && response.data.localities) {
           setLocalities(response.data.localities);
@@ -119,7 +119,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/petColor/`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/`)
       .then((response) => {
         if (response.data && response.data.petColors) {
           setPetColors(response.data.petColors);
@@ -133,7 +133,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/petBreed/`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petBreed/`)
       .then((response) => {
         if (response.data && response.data.petBreeds) {
           setAvailableBreeds(
@@ -165,7 +165,7 @@ const BotonesFiltrosAdopcion = () => {
 
     axios
       .get(
-        ` https://6557-181-91-230-36.ngrok-free.app/publications/publication?modelType=adoption`,
+        `https://27fb-181-91-230-36.ngrok-free.app/publications/publication?modelType=adoption`,
         {
           headers: {
             "Content-Type": "application/json",

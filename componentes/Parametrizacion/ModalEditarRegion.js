@@ -23,7 +23,7 @@ const ModalEditarRegion = ({
   const handleEditRegion = () => {
     axios
       .put(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/region/${editingRegion.idRegion}`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/region/${editingRegion.idRegion}`,
         {
           regionName: regionName,
         }

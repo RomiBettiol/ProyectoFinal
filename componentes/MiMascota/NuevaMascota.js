@@ -5,7 +5,6 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  FlatList,
   TouchableOpacity,
 } from "react-native";
 import HeaderScreen from "../HeaderScreen";
@@ -48,8 +47,6 @@ export default function NuevaMascota({
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const authtoken = token;
-  console.log("token en agregarmascota: " + token);
-  console.log("authtoken: " + authtoken);
 
   const [petData, setPetData] = useState({
     petName: "",
@@ -77,7 +74,7 @@ export default function NuevaMascota({
     console.log(idPetBreed);
     // Obtener tipos de mascotas
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/petType`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petType`)
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({
@@ -116,7 +113,7 @@ export default function NuevaMascota({
       };
       console.log(data);
       const response = await axios.post(
-        ` https://6557-181-91-230-36.ngrok-free.app/mypet/pet/`,
+        `https://27fb-181-91-230-36.ngrok-free.app/mypet/pet/`,
         data,
         config
       );
@@ -182,7 +179,12 @@ export default function NuevaMascota({
             </View>
           </ScrollView>
 
-          <View style={[styles.dropdown, { borderRadius: 100 }]}>
+          <View
+            style={[
+              styles.subcontenedor4,
+              { width: "100%", borderRadius: 100 },
+            ]}
+          >
             {selectedAnimal && (
               <ListaValoresRazaPerros
                 selectedAnimal={selectedAnimal}
@@ -230,18 +232,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     marginTop: 35,
-    padding: 5,
   },
   dropdown: {
     backgroundColor: "#EEE9E9",
     width: "90%",
-    margin: 10,
-    padding: 0,
     justifyContent: "center",
   },
 
   titulo: {
-    marginTop: 10,
+    // marginTop: 10,
     fontSize: 22,
   },
   scroll: {
@@ -266,7 +265,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   textoFecha: {
-    marginLeft: 37,
+    marginLeft: 35,
     fontSize: 16,
     marginTop: 10,
   },
@@ -287,8 +286,8 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   subcontenedor4: {
-    marginTop: 15,
-    justifyContent: "center",
+    // marginTop: 15,
+    // justifyContent: "center",
     marginBottom: 25,
   },
   tarjeta: {

@@ -86,7 +86,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
     console.log(vaccin.idVaccin);
     try {
       const response = await axios.put(
-        ` https://6557-181-91-230-36.ngrok-free.app/mypet/vaccine/${mascotaId}/${idVaccin}`,
+        `https://27fb-181-91-230-36.ngrok-free.app/mypet/vaccine/${mascotaId}/${idVaccin}`,
         {
           titleVaccine: updatedData.titleVaccin,
           descriptionVaccine: updatedData.descriptionVaccin,
@@ -184,7 +184,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
 
                 try {
                   const response = await axios.put(
-                    ` https://6557-181-91-230-36.ngrok-free.app/mypet/vaccine/${mascotaId}/${idVaccin}`,
+                    `https://27fb-181-91-230-36.ngrok-free.app/mypet/vaccine/${mascotaId}/${idVaccin}`,
                     updatedData
                   );
                   console.log("Respuesta del servidor:", response.data);

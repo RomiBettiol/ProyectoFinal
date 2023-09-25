@@ -23,7 +23,7 @@ const ModalEditarColor = ({
   const handleEditColor = () => {
     axios
       .put(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/petColor/${editingColor.idPetColor}`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/${editingColor.idPetColor}`,
         {
           petColorName: colorName,
         }

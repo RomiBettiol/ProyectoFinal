@@ -47,7 +47,7 @@ export default function MisTurnos(token) {
   async function fetchTurnos() {
     try {
       const response = await axios.get(
-        ` https://6557-181-91-230-36.ngrok-free.app/mypet/turn/${mascotaId}`
+        `https://27fb-181-91-230-36.ngrok-free.app/mypet/turn/${mascotaId}`
       );
       if (response.data && Array.isArray(response.data.turns)) {
         setTurnos(response.data.turns);
@@ -125,7 +125,7 @@ export default function MisTurnos(token) {
     console.log(turno.idTurn);
     try {
       const response = await axios.delete(
-        ` https://6557-181-91-230-36.ngrok-free.app/mypet/turn/${mascotaId}/${turno.idTurn}`
+        `https://27fb-181-91-230-36.ngrok-free.app/mypet/turn/${mascotaId}/${turno.idTurn}`
       );
       console.log("Turno eliminado:", response.data);
       setShowSuccessModal(true);

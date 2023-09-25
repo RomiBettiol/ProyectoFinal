@@ -23,7 +23,7 @@ const ModalEditar = ({
   const handleEdit = () => {
     axios
       .put(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/locality/${editingZone.idLocality}`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/locality/${editingZone.idLocality}`,
         {
           localityName: localities,
         }

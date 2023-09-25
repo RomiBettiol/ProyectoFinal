@@ -27,7 +27,7 @@ const ModalAgregarRegion = ({
 
   useEffect(() => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/province`)
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/province`)
       .then((response) => {
         setProvinces(response.data.provinces);
       })
@@ -54,7 +54,7 @@ const ModalAgregarRegion = ({
 
     axios
       .post(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/region`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/region`,
         newRegion
       )
       .then((response) => {

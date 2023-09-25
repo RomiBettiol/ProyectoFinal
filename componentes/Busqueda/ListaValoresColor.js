@@ -9,7 +9,7 @@ const ListaValoresColor = ({ setSelectedColorId }) => {
 
   const getColores = () => {
     axios
-      .get(` https://6557-181-91-230-36.ngrok-free.app/parameters/petColor/`, {
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/`, {
         headers: {
           "Content-Type": "application/json",
         },

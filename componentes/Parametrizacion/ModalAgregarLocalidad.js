@@ -42,7 +42,7 @@ const ModalAgregarLocalidad = ({
 
     axios
       .post(
-        ` https://6557-181-91-230-36.ngrok-free.app/parameters/locality`,
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/locality`,
         newLocalidad
       )
       .then((response) => {
