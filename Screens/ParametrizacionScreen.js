@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, ScrollView } from 'react-native';
-import Header from '../componentes/HeaderScreen';
-import axios from 'axios';
-import ModalEditar from '../componentes/Parametrizacion/ModalEditar';
-import ModalEditarColor from '../componentes/Parametrizacion/ModalEditarColor';
-import ModalEditarTipoAnimal from '../componentes/Parametrizacion/ModalEditarTipoAnimal';
-import ModalEditarRaza from '../componentes/Parametrizacion/ModalEditarRaza';
-import ModalAgregarColor from '../componentes/Parametrizacion/ModalAgregarColor';
-import ModalAgregarTipoAnimal from '../componentes/Parametrizacion/ModalAgregarTipoAnimal';
-import ModalEditarProvincia from '../componentes/Parametrizacion/ModalEditarProvincia';
-import ModalAgregarProvincia from '../componentes/Parametrizacion/ModalAgregarProvincia';
-import ModalEditarRegion from '../componentes/Parametrizacion/ModalEditarRegion';
-import ModalAgregarRegion from '../componentes/Parametrizacion/ModalAgregarRegion';
-import ModalAgregarLocalidad from '../componentes/Parametrizacion/ModalAgregarLocalidad';
-import ModalAgregarRaza from '../componentes/Parametrizacion/ModalAgregarRaza';
-import { useRoute } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Modal,
+  ScrollView,
+} from "react-native";
+import Header from "../componentes/HeaderScreen";
+import axios from "axios";
+import ModalEditar from "../componentes/Parametrizacion/ModalEditar";
+import ModalEditarColor from "../componentes/Parametrizacion/ModalEditarColor";
+import ModalEditarTipoAnimal from "../componentes/Parametrizacion/ModalEditarTipoAnimal";
+import ModalEditarRaza from "../componentes/Parametrizacion/ModalEditarRaza";
+import ModalAgregarColor from "../componentes/Parametrizacion/ModalAgregarColor";
+import ModalAgregarTipoAnimal from "../componentes/Parametrizacion/ModalAgregarTipoAnimal";
+import ModalEditarProvincia from "../componentes/Parametrizacion/ModalEditarProvincia";
+import ModalAgregarProvincia from "../componentes/Parametrizacion/ModalAgregarProvincia";
+import ModalEditarRegion from "../componentes/Parametrizacion/ModalEditarRegion";
+import ModalAgregarRegion from "../componentes/Parametrizacion/ModalAgregarRegion";
+import ModalAgregarLocalidad from "../componentes/Parametrizacion/ModalAgregarLocalidad";
+import ModalAgregarRaza from "../componentes/Parametrizacion/ModalAgregarRaza";
+import { useRoute } from "@react-navigation/native";
 
 export default function ParametrizacionScreen({ navigation }) {
   const route = useRoute();
   const { token } = route.params;
+  const { permisos } = route.params;
   const [zoneOptions, setZoneOptions] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [editingZone, setEditingZone] = useState(null);
@@ -33,31 +42,37 @@ export default function ParametrizacionScreen({ navigation }) {
   const [editingBreed, setEditingBreed] = useState(null);
   const [isAddColorModalVisible, setAddColorModalVisible] = useState(false);
   const [newColorName, setNewColorName] = useState("");
-  const [isAddTipoAnimalModalVisible, setAddTipoAnimalModalVisible] = useState(false);
+  const [isAddTipoAnimalModalVisible, setAddTipoAnimalModalVisible] =
+    useState(false);
   const [newTypeName, setNewTypeName] = useState("");
   const [provinces, setProvinces] = useState([]);
-  const [isEditProvinceModalVisible, setEditProvinceModalVisible] = useState(false);
+  const [isEditProvinceModalVisible, setEditProvinceModalVisible] =
+    useState(false);
   const [editingProvince, setEditingProvince] = useState(null);
   const [newProvinceName, setNewProvinceName] = useState("");
-  const [isAddProvinceModalVisible, setAddProvinceModalVisible] = useState(false);
+  const [isAddProvinceModalVisible, setAddProvinceModalVisible] =
+    useState(false);
   const [regions, setRegions] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   const [isEditRegionModalVisible, setEditRegionModalVisible] = useState(false);
   const [editingRegion, setEditingRegion] = useState(null);
   const [isAddRegionModalVisible, setAddRegionModalVisible] = useState(false);
-  const [isAddLocalidadModalVisible, setAddLocalidadModalVisible] = useState(false);
+  const [isAddLocalidadModalVisible, setAddLocalidadModalVisible] =
+    useState(false);
   const [isAddBreedModalVisible, setAddBreedModalVisible] = useState(false);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
-  const [successModalUpdateVisible, setSuccessModalUpdateVisible] = useState(false);
+  const [successModalUpdateVisible, setSuccessModalUpdateVisible] =
+    useState(false);
   const [errorModalUpdateVisible, setErrorModalUpdateVisible] = useState(false);
-  const [successModalDeleteVisible, setSuccessModalDeleteVisible] = useState(false);
+  const [successModalDeleteVisible, setSuccessModalDeleteVisible] =
+    useState(false);
   const [errorModalDeleteVisible, setErrorModalDeleteVisible] = useState(false);
 
   // Cuando la publicación sea exitosa
   const handleSuccessfulRegionPublication = () => {
     setSuccessModalVisible(true);
-  
+
     // Ocultar el modal de éxito después de 1 segundo
     setTimeout(() => {
       setSuccessModalVisible(false);
@@ -68,7 +83,7 @@ export default function ParametrizacionScreen({ navigation }) {
   // Cuando la publicación falle
   const handleFailedRegionPublication = () => {
     setErrorModalVisible(true);
-  
+
     // Ocultar el modal de error después de 1 segundo
     setTimeout(() => {
       setErrorModalVisible(false);
@@ -78,48 +93,48 @@ export default function ParametrizacionScreen({ navigation }) {
 
   //ACTUALIZACIÓN DE FILTROS
 
-    const handleSuccessfulUpdatePublication = () => {
-      setSuccessModalUpdateVisible(true);
-    
-      // Ocultar el modal de éxito después de 1 segundo
-      setTimeout(() => {
-        setSuccessModalUpdateVisible(false);
-        // Puedes hacer otras acciones relacionadas con la publicación exitosa aquí
-      }, 1000);
-    };
-  
-    const handleFailedUpdatePublication = () => {
-      setErrorModalVisible(true);
-    
-      // Ocultar el modal de error después de 1 segundo
-      setTimeout(() => {
-        setErrorModalUpdateVisible(false);
-        // Puedes hacer otras acciones relacionadas con la publicación fallida aquí
-      }, 2000);
-    };
+  const handleSuccessfulUpdatePublication = () => {
+    setSuccessModalUpdateVisible(true);
 
-    //ELIMINCACIÓN DE FILTROS
+    // Ocultar el modal de éxito después de 1 segundo
+    setTimeout(() => {
+      setSuccessModalUpdateVisible(false);
+      // Puedes hacer otras acciones relacionadas con la publicación exitosa aquí
+    }, 1000);
+  };
 
-    const handleSuccessfulDeletePublication = () => {
-      setSuccessModalDeleteVisible(true);
-    
-      // Ocultar el modal de éxito después de 1 segundo
-      setTimeout(() => {
-        setSuccessModalDeleteVisible(false);
-        // Puedes hacer otras acciones relacionadas con la publicación exitosa aquí
-      }, 1000);
-    };
-  
-    const handleFailedDeleteublication = () => {
-      setErrorModalDeleteVisible(true);
-    
-      // Ocultar el modal de error después de 1 segundo
-      setTimeout(() => {
-        setErrorModalDeleteVisible(false);
-        // Puedes hacer otras acciones relacionadas con la publicación fallida aquí
-      }, 2000);
-    };
-  
+  const handleFailedUpdatePublication = () => {
+    setErrorModalVisible(true);
+
+    // Ocultar el modal de error después de 1 segundo
+    setTimeout(() => {
+      setErrorModalUpdateVisible(false);
+      // Puedes hacer otras acciones relacionadas con la publicación fallida aquí
+    }, 2000);
+  };
+
+  //ELIMINCACIÓN DE FILTROS
+
+  const handleSuccessfulDeletePublication = () => {
+    setSuccessModalDeleteVisible(true);
+
+    // Ocultar el modal de éxito después de 1 segundo
+    setTimeout(() => {
+      setSuccessModalDeleteVisible(false);
+      // Puedes hacer otras acciones relacionadas con la publicación exitosa aquí
+    }, 1000);
+  };
+
+  const handleFailedDeleteublication = () => {
+    setErrorModalDeleteVisible(true);
+
+    // Ocultar el modal de error después de 1 segundo
+    setTimeout(() => {
+      setErrorModalDeleteVisible(false);
+      // Puedes hacer otras acciones relacionadas con la publicación fallida aquí
+    }, 2000);
+  };
+
   const handleRegionAdd = (newRegion) => {
     const updatedRegions = [...regions, newRegion];
     setRegions(updatedRegions);
@@ -142,25 +157,27 @@ export default function ParametrizacionScreen({ navigation }) {
   const toggleAddBreedModal = () => {
     setAddBreedModalVisible(!isAddBreedModalVisible);
   };
-  
+
   const handleAddBreed = (newBreed) => {
     const updatedBreeds = [...petBreeds, newBreed];
     setPetBreeds(updatedBreeds);
   };
-  
+
   const handleAddProvince = (newProvinceName) => {
     const newProvince = {
       provinceName: newProvinceName,
-      idCountry: "c4e7c89c-dcdb-4e27-90af-0123456789aa"
+      idCountry: "c4e7c89c-dcdb-4e27-90af-0123456789aa",
     };
-  
+
     axios
-      .post('http://buddy-app1.loca.lt/parameters/province/', newProvince)
+      .post(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/province/`,
+        newProvince
+      )
       .then((response) => {
-        console.log('Provincia agregada exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
         getProvinces(); // Actualizar la lista de provincias después de agregar
-  
+
         // Ocultar el modal de éxito después de 1 segundo
         setTimeout(() => {
           setSuccessModalVisible(false);
@@ -169,7 +186,7 @@ export default function ParametrizacionScreen({ navigation }) {
       .catch((error) => {
         //console.error('Error al agregar provincia:', error);
         setErrorModalVisible(true); // Mostrar el modal de error
-  
+
         // Ocultar el modal de error después de 2 segundos
         setTimeout(() => {
           setErrorModalVisible(false);
@@ -181,14 +198,17 @@ export default function ParametrizacionScreen({ navigation }) {
     const newType = {
       petTypeName: newTypeName,
     };
-  
+
     axios
-      .post('http://buddy-app1.loca.lt/parameters/petType/', newType)
+      .post(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petType/`,
+        newType
+      )
       .then((response) => {
         //console.log('Tipo de animal agregado exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
         getPetTypes(); // Actualizar la lista de tipos de animales después de agregar
-  
+
         // Ocultar el modal de éxito después de 1 segundo
         setTimeout(() => {
           setSuccessModalVisible(false);
@@ -197,23 +217,25 @@ export default function ParametrizacionScreen({ navigation }) {
       .catch((error) => {
         //console.error('Error al agregar tipo de animal:', error);
         setErrorModalVisible(true); // Mostrar el modal de error
-  
+
         // Ocultar el modal de error después de 2 segundos
         setTimeout(() => {
           setErrorModalVisible(false);
         }, 2000);
       });
-  };  
-  
+  };
+
   const handleAddColor = (newColorName) => {
     const newColor = {
       petColorName: newColorName,
     };
-  
+
     axios
-      .post('http://buddy-app1.loca.lt/parameters/petColor/', newColor)
+      .post(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/`,
+        newColor
+      )
       .then((response) => {
-        console.log('Color agregado exitosamente:', response.data);
         getPetColors(); // Actualizar la lista de colores después de agregar
         setSuccessModalVisible(true); // Mostrar mensaje de éxito
         setTimeout(() => {
@@ -227,93 +249,98 @@ export default function ParametrizacionScreen({ navigation }) {
           setErrorModalVisible(false);
         }, 2000); // Puedes ajustar el tiempo según tus preferencias
       });
-  };  
-   
+  };
+
   const handleZoneDelete = (zoneId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/locality/${zoneId}`)
+      .delete(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/locality/${zoneId}`
+      )
       .then((response) => {
-        console.log('Eliminación exitosa:', response.data);
         handleSuccessfulDeletePublication();
         getZonas();
       })
       .catch((error) => {
-        console.error('Error en la solicitud DELETE:', error);
+        console.error("Error en la solicitud DELETE:", error);
         handleFailedDeleteublication();
       });
   };
 
-  const  handleBreedDelete =  async (breedId) => {
-    console.log('ID:', breedId)
-    await axios
-      .delete(`http://buddy-app1.loca.lt/parameters/petBreed/${breedId}`)
+  const handleBreedDelete = (breedId) => {
+    axios
+      .delete(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petBreed/${breedId}`
+      )
       .then((response) => {
-        console.log('Raza eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
         getPetBreeds();
       })
       .catch((error) => {
-        console.error('Error en la solicitud DELETE de raza:', error);
+        console.error("Error en la solicitud DELETE de raza:", error);
         handleFailedDeleteublication();
       });
   };
 
   const handleColorDelete = (colorId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/petColor/${colorId}`)
+      .delete(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/${colorId}`
+      )
       .then((response) => {
-        console.log('Color eliminado exitosamente:', response.data);
         handleSuccessfulDeletePublication();
         getPetColors();
       })
       .catch((error) => {
-        console.error('Error en la solicitud DELETE de color:', error);
+        console.error("Error en la solicitud DELETE de color:", error);
         handleFailedDeleteublication();
       });
   };
 
   const handleTypeDelete = (typeId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/petType/${typeId}`)
+      .delete(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/petType/${typeId}`
+      )
       .then((response) => {
-        console.log('Tipo de animal eliminado exitosamente:', response.data);
         handleSuccessfulDeletePublication();
         getPetTypes();
       })
       .catch((error) => {
-        console.error('Error en la solicitud DELETE de tipo de animal:', error);
+        console.error("Error en la solicitud DELETE de tipo de animal:", error);
         handleFailedDeleteublication();
       });
-  }; 
+  };
 
   const handleProvinceDelete = (provinceId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/province/${provinceId}`)
+      .delete(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/province/${provinceId}`
+      )
       .then((response) => {
-        console.log('Provincia eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
         getProvinces();
       })
       .catch((error) => {
-        console.error('Error en la solicitud DELETE de provincia:', error);
+        console.error("Error en la solicitud DELETE de provincia:", error);
         handleFailedDeleteublication();
       });
-  }; 
+  };
 
   const handleRegionDelete = (regionId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/region/${regionId}`)
+      .delete(
+        `https://27fb-181-91-230-36.ngrok-free.app/parameters/region/${regionId}`
+      )
       .then((response) => {
-        console.log('Región eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
         getRegions();
       })
       .catch((error) => {
-        console.error('Error en la solicitud DELETE de región:', error);
+        console.error("Error en la solicitud DELETE de región:", error);
         handleFailedDeleteublication();
       });
   };
- 
+
   const handleEditRegionPress = (region) => {
     setEditingRegion(region);
     setEditRegionModalVisible(true);
@@ -337,17 +364,17 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleTypeEditPress = (type) => {
     setEditingType(type);
     setEditTypeModalVisible(true);
-  };  
+  };
 
   const handleBreedEditPress = (breed) => {
     setEditingBreed(breed);
     setEditBreedModalVisible(true);
-  };  
+  };
 
   const handleCloseModal = () => {
     setModalVisible(false);
   };
-  
+
   const handleZoneEdit = (editedLocality) => {
     const updatedZones = zoneOptions.map((zone) =>
       zone.localityName === editingZone.localityName
@@ -355,7 +382,7 @@ export default function ParametrizacionScreen({ navigation }) {
         : zone
     );
     setZoneOptions(updatedZones); // Actualizar la lista con el valor editado
-  }; 
+  };
 
   const handleColorEdit = (editedColorName) => {
     const updatedColors = petColors.map((color) =>
@@ -364,7 +391,7 @@ export default function ParametrizacionScreen({ navigation }) {
         : color
     );
     setPetColors(updatedColors);
-  };  
+  };
 
   const handleTypeEdit = (editedTypeName) => {
     const updatedTypes = petTypes.map((type) =>
@@ -373,7 +400,7 @@ export default function ParametrizacionScreen({ navigation }) {
         : type
     );
     setPetTypes(updatedTypes);
-  };  
+  };
 
   const handleBreedEdit = (editedBreedName) => {
     const updatedBreeds = petBreeds.map((breed) =>
@@ -401,16 +428,15 @@ export default function ParametrizacionScreen({ navigation }) {
     );
     setRegions(updatedRegions);
   };
-    
+
   const getZonas = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/locality/', {
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/locality/`, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
-        console.log('Zonas exitosas:', response.data.localities);
         const localities = response.data.localities;
         if (localities && Array.isArray(localities)) {
           setZoneOptions(localities);
@@ -419,16 +445,15 @@ export default function ParametrizacionScreen({ navigation }) {
         }
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET:', error);
+        console.error("Error en la solicitud GET:", error);
         setZoneOptions([]);
       });
-  };  
+  };
 
   const getPetColors = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/petColor/')
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petColor/`)
       .then((response) => {
-        console.log('Colores exitosos:', response.data);
         const colors = response.data.petColors;
         if (colors && Array.isArray(colors)) {
           setPetColors(colors);
@@ -437,16 +462,15 @@ export default function ParametrizacionScreen({ navigation }) {
         }
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET de colores:', error);
+        console.error("Error en la solicitud GET de colores:", error);
         setPetColors([]);
       });
   };
 
   const getPetTypes = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/petType/')
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petType/`)
       .then((response) => {
-        console.log('Tipos de animales exitosos:', response.data);
         const types = response.data.petTypes;
         if (types && Array.isArray(types)) {
           setPetTypes(types);
@@ -455,16 +479,15 @@ export default function ParametrizacionScreen({ navigation }) {
         }
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET de tipos de animales:', error);
+        console.error("Error en la solicitud GET de tipos de animales:", error);
         setPetTypes([]);
       });
   };
 
   const getPetBreeds = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/petBreed/')
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/petBreed/`)
       .then((response) => {
-        console.log('Razas exitosas:', response.data);
         const breeds = response.data.petBreeds;
         if (breeds && Array.isArray(breeds)) {
           setPetBreeds(breeds);
@@ -473,16 +496,15 @@ export default function ParametrizacionScreen({ navigation }) {
         }
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET de razas de animales:', error);
+        console.error("Error en la solicitud GET de razas de animales:", error);
         setPetBreeds([]);
       });
-  }; 
+  };
 
   const getProvinces = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/province/')
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/province/`)
       .then((response) => {
-        console.log('Provincias exitosas:', response.data.provinces);
         const fetchedProvinces = response.data.provinces;
         if (fetchedProvinces && Array.isArray(fetchedProvinces)) {
           setProvinces(fetchedProvinces);
@@ -491,16 +513,15 @@ export default function ParametrizacionScreen({ navigation }) {
         }
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET de provincias:', error);
+        console.error("Error en la solicitud GET de provincias:", error);
         setProvinces([]);
       });
-  }; 
-  
+  };
+
   const getRegions = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/region/')
+      .get(`https://27fb-181-91-230-36.ngrok-free.app/parameters/region/`)
       .then((response) => {
-        console.log('Regiones exitosas:', response.data.regions);
         const fetchedRegions = response.data.regions;
         if (fetchedRegions && Array.isArray(fetchedRegions)) {
           setRegions(fetchedRegions);
@@ -509,259 +530,401 @@ export default function ParametrizacionScreen({ navigation }) {
         }
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET de regiones:', error);
+        console.error("Error en la solicitud GET de regiones:", error);
         setRegions([]);
       });
   };
-  
+
   useEffect(() => {
     getZonas();
     getPetColors();
     getPetTypes();
     getPetBreeds();
-    getProvinces(); 
+    getProvinces();
     getRegions();
-  }, []); 
+  }, [permisos]);
 
   return (
     <ScrollView>
       <Header />
       <Text style={styles.titulo}>Parametrización de filtros</Text>
       <ScrollView style={styles.scrollView}>
-        <View style={[{ flexDirection: 'row' }, styles.filtrosZona]}>
+        <View style={[{ flexDirection: "row" }, styles.filtrosZona]}>
           <Image
-            source={require('../Imagenes/marcador-de-posicion.png')}
-            style={styles.imagenTitulo}
-          />
-          <Text style={styles.nombreFiltros}>Filtros Zona</Text>
-          <TouchableOpacity onPress={toggleAddLocalidadModal}>
-            <Image
-              source={require('../Imagenes/agregar.png')}
-              style={styles.imagenAgregar}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.containerItem}>
-          {zoneOptions.map((zone, index) => (
-            <View key={index} style={[{ flexDirection: 'row', alignItems: 'center'},styles.containerTexto]}>
-              <Text style={styles.zoneItem}>
-                {zone.localityName}
-              </Text>
-              <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() => handleEditPress(zone)}>
-                  <Image
-                    source={require('../Imagenes/editar.png')}
-                    style={styles.imagenbotones}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleZoneDelete(zone.idLocality)}>
-                  <Image
-                    source={require('../Imagenes/eliminar.png')}
-                    style={styles.imagenbotones}
-                  /> 
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-        </View>
-        <View style={[{ flexDirection: 'row' }, styles.filtrosZona]}>
-          <Image
-            source={require('../Imagenes/perroFiltro.png')}
+            source={require("../Imagenes/perroFiltro.png")}
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Razas</Text>
-          <TouchableOpacity onPress={toggleAddBreedModal}>
-            <Image
-              source={require('../Imagenes/agregar.png')}
-              style={styles.imagenAgregar}
-            />
-          </TouchableOpacity>
+          {permisos.includes("WRITE_PARAMETROS") && (
+            <TouchableOpacity onPress={toggleAddBreedModal}>
+              <Image
+                source={require("../Imagenes/agregar.png")}
+                style={styles.imagenAgregar}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.containerItem}>
           {petBreeds.map((breed, index) => (
-            <View key={index} style={[{ flexDirection: 'row', alignItems: 'center' }, styles.containerTexto]}>
-              <Text style={styles.zoneItem}>
-                {breed.petBreedName}
-              </Text>
-              <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() => handleBreedEditPress(breed)}>
-                  <Image
-                    source={require('../Imagenes/editar.png')}
-                    style={styles.imagenbotones}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleBreedDelete(breed.idPetBreed)}>
-                  <Image
-                    source={require('../Imagenes/eliminar.png')}
-                    style={styles.imagenbotones}
-                  /> 
-                </TouchableOpacity>
-              </View>
+            <View
+              key={index}
+              style={[
+                { flexDirection: "row", alignItems: "center" },
+                styles.containerTexto,
+              ]}
+            >
+              <Text style={styles.zoneItem}>{breed.petBreedName}</Text>
+              {permisos.includes("WRITE_PARAMETROS") && (
+                <View style={[styles.botones, { flexDirection: "row" }]}>
+                  <TouchableOpacity onPress={() => handleBreedEditPress(breed)}>
+                    <Image
+                      source={require("../Imagenes/editar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleBreedDelete(breed.idPetBreed)}
+                  >
+                    <Image
+                      source={require("../Imagenes/eliminar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           ))}
         </View>
-        <View style={[{ flexDirection: 'row' }, styles.filtrosZona]}>
+        <View style={[{ flexDirection: "row" }, styles.filtrosZona]}>
           <Image
-            source={require('../Imagenes/paleta-de-color.png')}
+            source={require("../Imagenes/paleta-de-color.png")}
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Colores</Text>
-          <TouchableOpacity onPress={() => setAddColorModalVisible(true)}>
-            <Image
-              source={require('../Imagenes/agregar.png')}
-              style={styles.imagenAgregar}
-            />
-          </TouchableOpacity>
+          {permisos.includes("WRITE_PARAMETROS") && (
+            <TouchableOpacity onPress={() => setAddColorModalVisible(true)}>
+              <Image
+                source={require("../Imagenes/agregar.png")}
+                style={styles.imagenAgregar}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.containerItem}>
           {petColors.map((color, index) => (
-            <View key={index} style={[{ flexDirection: 'row', alignItems: 'center' }, styles.containerTexto]}>
-              <Text style={styles.zoneItem}>
-                {color.petColorName}
-              </Text>
-              <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() => handleColorEditPress(color)}>
-                  <Image
-                    source={require('../Imagenes/editar.png')}
-                    style={styles.imagenbotones}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleColorDelete(color.idPetColor)}>
-                  <Image
-                    source={require('../Imagenes/eliminar.png')}
-                    style={styles.imagenbotones}
-                  /> 
-                </TouchableOpacity>
-              </View>
+            <View
+              key={index}
+              style={[
+                { flexDirection: "row", alignItems: "center" },
+                styles.containerTexto,
+              ]}
+            >
+              <Text style={styles.zoneItem}>{color.petColorName}</Text>
+              {permisos.includes("WRITE_PARAMETROS") && (
+                <View style={[styles.botones, { flexDirection: "row" }]}>
+                  <TouchableOpacity onPress={() => handleColorEditPress(color)}>
+                    <Image
+                      source={require("../Imagenes/editar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleColorDelete(color.idPetColor)}
+                  >
+                    <Image
+                      source={require("../Imagenes/eliminar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           ))}
         </View>
-        <View style={[{ flexDirection: 'row' }, styles.filtrosZona]}>
+        <View style={[{ flexDirection: "row" }, styles.filtrosZona]}>
           <Image
-            source={require('../Imagenes/huella.png')}
+            source={require("../Imagenes/huella.png")}
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Tipo animal</Text>
-          <TouchableOpacity onPress={() => setAddTipoAnimalModalVisible(true)}>
-            <Image
-              source={require('../Imagenes/agregar.png')}
-              style={styles.imagenAgregar}
-            />
-          </TouchableOpacity>
+          {permisos.includes("WRITE_PARAMETROS") && (
+            <TouchableOpacity
+              onPress={() => setAddTipoAnimalModalVisible(true)}
+            >
+              <Image
+                source={require("../Imagenes/agregar.png")}
+                style={styles.imagenAgregar}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.containerItem}>
           {petTypes.map((type, index) => (
-            <View key={index} style={[{ flexDirection: 'row', alignItems: 'center' }, styles.containerTexto]}>
-              <Text style={styles.zoneItem}>
-                {type.petTypeName}
-              </Text>
-              <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() => handleTypeEditPress(type)}>
-                  <Image
-                    source={require('../Imagenes/editar.png')}
-                    style={styles.imagenbotones}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleTypeDelete(type.idPetType)}>
-                  <Image
-                    source={require('../Imagenes/eliminar.png')}
-                    style={styles.imagenbotones}
-                  /> 
-                </TouchableOpacity>
-              </View>
+            <View
+              key={index}
+              style={[
+                { flexDirection: "row", alignItems: "center" },
+                styles.containerTexto,
+              ]}
+            >
+              <Text style={styles.zoneItem}>{type.petTypeName}</Text>
+              {permisos.includes("WRITE_PARAMETROS") && (
+                <View style={[styles.botones, { flexDirection: "row" }]}>
+                  <TouchableOpacity onPress={() => handleTypeEditPress(type)}>
+                    <Image
+                      source={require("../Imagenes/editar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleTypeDelete(type.idPetType)}
+                  >
+                    <Image
+                      source={require("../Imagenes/eliminar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           ))}
         </View>
-        <View style={[{ flexDirection: 'row' }, styles.filtrosZona]}>
+        <View style={[{ flexDirection: "row" }, styles.filtrosZona]}>
           <Image
-            source={require('../Imagenes/marcador-de-posicion.png')}
+            source={require("../Imagenes/marcador-de-posicion.png")}
+            style={styles.imagenTitulo}
+          />
+          <Text style={styles.nombreFiltros}>Filtros Provincias</Text>
+          {permisos.includes("WRITE_PARAMETROS") && (
+            <TouchableOpacity onPress={() => setAddProvinceModalVisible(true)}>
+              <Image
+                source={require("../Imagenes/agregar.png")}
+                style={styles.imagenAgregar}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={styles.containerItem}>
+          {provinces.map((province, index) => (
+            <View
+              key={index}
+              style={[
+                { flexDirection: "row", alignItems: "center" },
+                styles.containerTexto,
+              ]}
+            >
+              <Text style={styles.zoneItem}>{province.provinceName}</Text>
+              {permisos.includes("WRITE_PARAMETROS") && (
+                <View style={[styles.botones, { flexDirection: "row" }]}>
+                  <TouchableOpacity
+                    onPress={() => handleEditProvincePress(province)}
+                  >
+                    <Image
+                      source={require("../Imagenes/editar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleProvinceDelete(province.idProvince)}
+                  >
+                    <Image
+                      source={require("../Imagenes/eliminar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          ))}
+        </View>
+        <View style={[{ flexDirection: "row" }, styles.filtrosZona]}>
+          <Image
+            source={require("../Imagenes/marcador-de-posicion.png")}
+            style={styles.imagenTitulo}
+          />
+          <Text style={styles.nombreFiltros}>Filtros Zona</Text>
+          {permisos.includes("WRITE_PARAMETROS") && (
+            <TouchableOpacity onPress={toggleAddLocalidadModal}>
+              <Image
+                source={require("../Imagenes/agregar.png")}
+                style={styles.imagenAgregar}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={styles.containerItem}>
+          {zoneOptions.map((zone, index) => (
+            <View
+              key={index}
+              style={[
+                { flexDirection: "row", alignItems: "center" },
+                styles.containerTexto,
+              ]}
+            >
+              <Text style={styles.zoneItem}>{zone.localityName}</Text>
+              {permisos.includes("WRITE_PARAMETROS") && (
+                <View style={[styles.botones, { flexDirection: "row" }]}>
+                  <TouchableOpacity onPress={() => handleEditPress(zone)}>
+                    <Image
+                      source={require("../Imagenes/editar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleZoneDelete(zone.idLocality)}
+                  >
+                    <Image
+                      source={require("../Imagenes/eliminar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          ))}
+        </View>
+        <View style={[{ flexDirection: "row" }, styles.filtrosZona]}>
+          <Image
+            source={require("../Imagenes/marcador-de-posicion.png")}
             style={styles.imagenTitulo}
           />
           <Text style={styles.nombreFiltros}>Filtros Departamentos</Text>
-          <TouchableOpacity onPress={toggleAddRegionModal}>
-            <Image
-              source={require('../Imagenes/agregar.png')}
-              style={styles.imagenAgregar}
-            />
-          </TouchableOpacity>
+          {permisos.includes("WRITE_PARAMETROS") && (
+            <TouchableOpacity onPress={toggleAddRegionModal}>
+              <Image
+                source={require("../Imagenes/agregar.png")}
+                style={styles.imagenAgregar}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.containerItem}>
           {regions.map((region, index) => (
             <View
               key={index}
               style={[
-                { flexDirection: 'row', alignItems: 'center' },
+                { flexDirection: "row", alignItems: "center" },
                 styles.containerTexto,
               ]}
             >
               <Text style={styles.zoneItem}>{region.regionName}</Text>
-              <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() =>  handleEditRegionPress(region)}>
-                  <Image
-                    source={require('../Imagenes/editar.png')}
-                    style={styles.imagenbotones}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleRegionDelete(region.idRegion)}>
-                  <Image
-                    source={require('../Imagenes/eliminar.png')}
-                    style={styles.imagenbotones}
-                  /> 
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-        </View>
-        <View style={[{ flexDirection: 'row' }, styles.filtrosZona]}>
-          <Image
-            source={require('../Imagenes/marcador-de-posicion.png')}
-            style={styles.imagenTitulo}
-          />
-          <Text style={styles.nombreFiltros}>Filtros Provincias</Text>
-          <TouchableOpacity onPress={() => setAddProvinceModalVisible(true)}>
-            <Image
-              source={require('../Imagenes/agregar.png')}
-              style={styles.imagenAgregar}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.containerItem}>
-          {provinces.map((province, index) => (
-            <View
-              key={index}
-              style={[{ flexDirection: 'row', alignItems: 'center' }, styles.containerTexto]}
-            >
-              <Text style={styles.zoneItem}>{province.provinceName}</Text>
-              <View style={[styles.botones,{flexDirection:'row'}]}>
-                <TouchableOpacity onPress={() => handleEditProvincePress(province)}>
-                  <Image
-                    source={require('../Imagenes/editar.png')}
-                    style={styles.imagenbotones}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleProvinceDelete(province.idProvince)}>
-                  <Image
-                    source={require('../Imagenes/eliminar.png')}
-                    style={styles.imagenbotones}
-                  /> 
-                </TouchableOpacity>
-              </View>
+              {permisos.includes("WRITE_PARAMETROS") && (
+                <View style={[styles.botones, { flexDirection: "row" }]}>
+                  <TouchableOpacity
+                    onPress={() => handleEditRegionPress(region)}
+                  >
+                    <Image
+                      source={require("../Imagenes/editar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleRegionDelete(region.idRegion)}
+                  >
+                    <Image
+                      source={require("../Imagenes/eliminar.png")}
+                      style={styles.imagenbotones}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           ))}
         </View>
       </ScrollView>
-      <ModalEditar isVisible={isModalVisible} onClose={handleCloseModal} onEdit={handleZoneEdit} editingZone={editingZone} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
-      <ModalEditarColor isVisible={isEditColorModalVisible} onClose={() => setEditColorModalVisible(false)} onEdit={handleColorEdit} editingColor={editingColor} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
-      <ModalEditarTipoAnimal isVisible={isEditTypeModalVisible} onClose={() => setEditTypeModalVisible(false)} onEdit={handleTypeEdit} editingType={editingType} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
-      <ModalEditarRaza isVisible={isEditBreedModalVisible} onClose={() => setEditBreedModalVisible(false)} onEdit={handleBreedEdit} editingBreed={editingBreed} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
-      <ModalAgregarColor isVisible={isAddColorModalVisible} onClose={() => setAddColorModalVisible(false)} onAdd={handleAddColor} newColorName={newColorName} setNewColorName={setNewColorName} />
-      <ModalAgregarTipoAnimal isVisible={isAddTipoAnimalModalVisible} onClose={() => setAddTipoAnimalModalVisible(false)} onAdd={handleAddType} newTypeName={newTypeName} setNewTypeName={setNewTypeName} />
-      <ModalEditarProvincia isVisible={isEditProvinceModalVisible} onClose={() => setEditProvinceModalVisible(false)} onEdit={handleProvinceEdit} editingProvince={editingProvince} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
-      <ModalAgregarProvincia isVisible={isAddProvinceModalVisible} onClose={() => setAddProvinceModalVisible(false)} onAdd={handleAddProvince} newProvinceName={newProvinceName} setNewProvinceName={setNewProvinceName} />
-      <ModalEditarRegion isVisible={isEditRegionModalVisible} onClose={() => setEditRegionModalVisible(false)} onEdit={handleRegionEdit} editingRegion={editingRegion} onSuccessUpdate={handleSuccessfulUpdatePublication} onErrorUpdate={handleFailedUpdatePublication}/>
-      <ModalAgregarRegion isVisible={isAddRegionModalVisible} onClose={toggleAddRegionModal} onAdd={handleRegionAdd} provinces={provinces} onSuccess={handleSuccessfulRegionPublication} onError={handleFailedRegionPublication}/>
-      <ModalAgregarLocalidad isVisible={isAddLocalidadModalVisible} onClose={toggleAddLocalidadModal} onAdd={handleLocalidadAdd} regions={regions} onSuccess={handleSuccessfulRegionPublication} onError={handleFailedRegionPublication}/>
-      <ModalAgregarRaza isVisible={isAddBreedModalVisible} onClose={toggleAddBreedModal} onAdd={handleAddBreed}  petTypes={petTypes} onSuccess={handleSuccessfulRegionPublication} onError={handleFailedRegionPublication} />
+      <ModalEditar
+        isVisible={isModalVisible}
+        onClose={handleCloseModal}
+        onEdit={handleZoneEdit}
+        editingZone={editingZone}
+        onSuccessUpdate={handleSuccessfulUpdatePublication}
+        onErrorUpdate={handleFailedUpdatePublication}
+      />
+      <ModalEditarColor
+        isVisible={isEditColorModalVisible}
+        onClose={() => setEditColorModalVisible(false)}
+        onEdit={handleColorEdit}
+        editingColor={editingColor}
+        onSuccessUpdate={handleSuccessfulUpdatePublication}
+        onErrorUpdate={handleFailedUpdatePublication}
+      />
+      <ModalEditarTipoAnimal
+        isVisible={isEditTypeModalVisible}
+        onClose={() => setEditTypeModalVisible(false)}
+        onEdit={handleTypeEdit}
+        editingType={editingType}
+        onSuccessUpdate={handleSuccessfulUpdatePublication}
+        onErrorUpdate={handleFailedUpdatePublication}
+      />
+      <ModalEditarRaza
+        isVisible={isEditBreedModalVisible}
+        onClose={() => setEditBreedModalVisible(false)}
+        onEdit={handleBreedEdit}
+        editingBreed={editingBreed}
+        onSuccessUpdate={handleSuccessfulUpdatePublication}
+        onErrorUpdate={handleFailedUpdatePublication}
+      />
+      <ModalAgregarColor
+        isVisible={isAddColorModalVisible}
+        onClose={() => setAddColorModalVisible(false)}
+        onAdd={handleAddColor}
+        newColorName={newColorName}
+        setNewColorName={setNewColorName}
+      />
+      <ModalAgregarTipoAnimal
+        isVisible={isAddTipoAnimalModalVisible}
+        onClose={() => setAddTipoAnimalModalVisible(false)}
+        onAdd={handleAddType}
+        newTypeName={newTypeName}
+        setNewTypeName={setNewTypeName}
+      />
+      <ModalEditarProvincia
+        isVisible={isEditProvinceModalVisible}
+        onClose={() => setEditProvinceModalVisible(false)}
+        onEdit={handleProvinceEdit}
+        editingProvince={editingProvince}
+        onSuccessUpdate={handleSuccessfulUpdatePublication}
+        onErrorUpdate={handleFailedUpdatePublication}
+      />
+      <ModalAgregarProvincia
+        isVisible={isAddProvinceModalVisible}
+        onClose={() => setAddProvinceModalVisible(false)}
+        onAdd={handleAddProvince}
+        newProvinceName={newProvinceName}
+        setNewProvinceName={setNewProvinceName}
+      />
+      <ModalEditarRegion
+        isVisible={isEditRegionModalVisible}
+        onClose={() => setEditRegionModalVisible(false)}
+        onEdit={handleRegionEdit}
+        editingRegion={editingRegion}
+        onSuccessUpdate={handleSuccessfulUpdatePublication}
+        onErrorUpdate={handleFailedUpdatePublication}
+      />
+      <ModalAgregarRegion
+        isVisible={isAddRegionModalVisible}
+        onClose={toggleAddRegionModal}
+        onAdd={handleRegionAdd}
+        provinces={provinces}
+        onSuccess={handleSuccessfulRegionPublication}
+        onError={handleFailedRegionPublication}
+      />
+      <ModalAgregarLocalidad
+        isVisible={isAddLocalidadModalVisible}
+        onClose={toggleAddLocalidadModal}
+        onAdd={handleLocalidadAdd}
+        regions={regions}
+        onSuccess={handleSuccessfulRegionPublication}
+        onError={handleFailedRegionPublication}
+      />
+      <ModalAgregarRaza
+        isVisible={isAddBreedModalVisible}
+        onClose={toggleAddBreedModal}
+        onAdd={handleAddBreed}
+        petTypes={petTypes}
+        onSuccess={handleSuccessfulRegionPublication}
+        onError={handleFailedRegionPublication}
+      />
       <Modal
         animationType="slide"
         transparent={true}
@@ -780,7 +943,9 @@ export default function ParametrizacionScreen({ navigation }) {
         onRequestClose={() => setErrorModalVisible(false)}
       >
         <View style={styles.errorModal}>
-          <Text style={styles.modalText}>No se ha agregado, intente de nuevo.</Text>
+          <Text style={styles.modalText}>
+            No se ha agregado, intente de nuevo.
+          </Text>
         </View>
       </Modal>
 
@@ -802,7 +967,9 @@ export default function ParametrizacionScreen({ navigation }) {
         onRequestClose={() => setErrorModalVisible(false)}
       >
         <View style={styles.errorModal}>
-          <Text style={styles.modalText}>No se ha actualizado, intente de nuevo.</Text>
+          <Text style={styles.modalText}>
+            No se ha actualizado, intente de nuevo.
+          </Text>
         </View>
       </Modal>
 
@@ -824,12 +991,14 @@ export default function ParametrizacionScreen({ navigation }) {
         onRequestClose={() => setErrorModalVisible(false)}
       >
         <View style={styles.errorModal}>
-          <Text style={styles.modalText}>No se ha eliminado, intente de nuevo.</Text>
+          <Text style={styles.modalText}>
+            No se ha eliminado, intente de nuevo.
+          </Text>
         </View>
       </Modal>
     </ScrollView>
   );
-};  
+}
 
 const styles = StyleSheet.create({
   titulo: {
@@ -837,7 +1006,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 35,
     borderBottomWidth: 1,
-    borderBottomColor: 'grey',
+    borderBottomColor: "grey",
     padding: 6,
   },
   imagenTitulo: {
@@ -873,37 +1042,37 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   containerTexto: {
-    backgroundColor: '#DDC4B8',
-    width: '50%',
+    backgroundColor: "#DDC4B8",
+    width: "50%",
     height: 30,
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    justifyContent: "space-around",
+    alignItems: "center",
     marginLeft: 83,
     marginTop: 10,
     paddingLeft: 10,
   },
   successModal: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
-    position: 'absolute',
+    alignItems: "center",
+    position: "absolute",
     bottom: 0,
-    width: '100%',
+    width: "100%",
   },
 
   errorModal: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
-    position: 'absolute',
+    alignItems: "center",
+    position: "absolute",
     bottom: 0,
-    width: '100%',
+    width: "100%",
   },
 
   modalText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
   },
 });
