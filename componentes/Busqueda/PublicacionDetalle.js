@@ -3,10 +3,13 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../HeaderScreen';
 import Carousel from 'react-native-snap-carousel';
+import ModalTraza from './ModalTraza';
 
-const PublicacionDetalle = ({ route }) => {
+const PublicacionDetalle = ({route}) => {
   const navigation = useNavigation();
-  const publicacion = route.params?.publicacion;
+  const { publicacion, token } = route.params;
+
+  console.log("PublicacionDetalle: ", token);
 
   const carouselImages = [
     require('../../Imagenes/imagenPublicaciones.jpg'),
@@ -42,7 +45,15 @@ const PublicacionDetalle = ({ route }) => {
                 style={styles.iconos}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ModalTraza', {
+                    idPublicationSearch: publicacion.idPublicationSearch,
+                    token,
+                    userNamePublicacion: publicacion.user.userName,
+                  });
+                }}
+            >
               <Image
                 source={require('../../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png')}
                 style={styles.iconos}

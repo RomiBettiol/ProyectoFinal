@@ -66,7 +66,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
     };
     console.log(vaccin.idVaccin)
     try {
-        const response = await axios.put(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,{
+        const response = await axios.put(`https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,{
           titleVaccine: updatedData.titleVaccin,
           descriptionVaccine: updatedData.descriptionVaccin,
           vaccineDate: updatedData.vaccinDate
@@ -159,7 +159,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
                            
                             try {
                                      
-                              const response = await axios.put(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`, updatedData);
+                              const response = await axios.put(`https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`, updatedData);
                               console.log('Respuesta del servidor:', response.data);
                               setShowSuccessModal(true);
                             } catch (error) {

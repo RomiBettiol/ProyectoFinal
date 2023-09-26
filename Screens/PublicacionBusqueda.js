@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal, Image } from 'react-native';
 import HeaderScreen from '../componentes/HeaderScreen';
 import ListaValoresColor from '../componentes/Busqueda/ListaValoresColor';
 import ListaValoresAnimal from '../componentes/Busqueda/ListaValoresAnimal';
@@ -43,8 +43,6 @@ export default function PublicacionBusqueda({ navigation }) {
   };
 
   const handlePost = async () => {
-    const longitude = 12.09812;
-    const latitude = 34.56789; 
     const images = "";
     const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay}`;
   
@@ -52,8 +50,6 @@ export default function PublicacionBusqueda({ navigation }) {
       const postData = {
         title,
         description,
-        longitude,
-        latitude,
         images, 
         idPetType: selectedAnimalId,  
         idPetBreed: selectedBreedId,
@@ -69,7 +65,7 @@ export default function PublicacionBusqueda({ navigation }) {
           'auth-token': token,
         },
       };
-      const response = await axios.post('https://buddy-app1.loca.lt/publications/publication/search', postData, config);
+      const response = await axios.post('https://buddy-app2.loca.lt/publications/publication/search', postData, config);
       console.log('Solicitud POST exitosa:', response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);
@@ -137,7 +133,7 @@ export default function PublicacionBusqueda({ navigation }) {
               )}
             </View>
             <Mascotas selectedIsFound={selectedIsFound} onOptionSelect={setSelectedIsFound} />
-          <Text style={styles.textoFecha}>Fecha de extravío</Text>
+           <Text style={styles.textoFecha}>Fecha de extravío</Text>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
           <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
           {selectedMonth && <ListaValoresDias selectedMonth={selectedMonth} setSelectedDay={setSelectedDay} />}
@@ -246,5 +242,9 @@ const styles = StyleSheet.create({
   errorTextCaracteres:{
     color: 'red',
     marginLeft: 40,
+  },
+  iconos: {
+    height: 30,
+    width: 30,
   },
 });

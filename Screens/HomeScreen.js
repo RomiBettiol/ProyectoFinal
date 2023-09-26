@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -8,7 +9,6 @@ import {
   ScrollView,
 } from "react-native";
 import MenuHorizontal from "../componentes/MenuHorizontal";
-import MiMascotaScreen from "./MiMascotaScreen";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,6 +19,7 @@ export default function HomeScreen({ navigation }) {
   const [permisos, setPermisos] = useState("");
   const [adoptionQuantity, setAdoptionQuantity] = useState("");
   const [lostPetsQuantity, setLostPetsQuantity] = useState("");
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const buttons = [
     {
@@ -53,7 +54,7 @@ export default function HomeScreen({ navigation }) {
     },
     {
       title: "Denuncias",
-      image: require("../Imagenes/denuncia.png"),
+      image: require("../Imagenes/denuncias.png"),
       permission: "READ_DENUNCIAS",
       onPress: () => navigation.navigate("DenunciaScreen", { token }),
     },
@@ -165,6 +166,14 @@ export default function HomeScreen({ navigation }) {
   // Accede al parámetro token
   const { token } = route.params;
 
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   const renderButtons = () => {
     const rows = [];
     let currentRow = [];
@@ -226,95 +235,149 @@ export default function HomeScreen({ navigation }) {
             Mascotas perdidas: {lostPetsQuantity}
           </Text>
         </View>
-        <TouchableOpacity
-          style={{ marginBottom: 20 }}
-          // onPress={() => navigation.navigate("FAQScreen", { token })}
-        >
-          <Text style={{ marginTop: 5, fontSize: 20 }}>
-            Preguntas Frecuentes
-          </Text>
-        </TouchableOpacity>
       </View>
+      <Modal transparent={true} animationType="slide" visible={isModalVisible} onRequestClose={closeModal}>
+                <TouchableWithoutFeedback onPress={closeModal}>
+                    <View style={styles.modalOverlay} />
+                </TouchableWithoutFeedback>
+                <View style={styles.modalContent}>
+                    <TouchableOpacity style={styles.botonAyuda}
+                        onPress = {()=> (
+                          navigation.navigate('PreguntasFrecuentes', {token})
+                        )}
+                    >
+                        <Text  style={styles.textAyuda}>Ayuda</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.botonAyuda} onPress={closeModal}>
+                        <Text style={styles.textAyuda}>Cerrar Sesión</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
     </ScrollView>
   );
 }
+    const styles = StyleSheet.create({
+        home: {
+            backgroundColor: '#DDC4B8',
+            alignItems: 'center',
+        },
+    
+        imagen1: {
+            width: 60,
+            height: 60,
+        },
+    
+        boton1: {
+            width: '35%',
+            height: 180,
+            backgroundColor: '#ffffff',
+            elevation: 10,
+            borderRadius: 15,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 10,
+        },
+    
+        logo: {
+            marginTop: 70,
+            width: '50%',
+            height: '15%',
+        },
+    
+        primeraFila: {
+            marginTop: 30,
+            marginBottom: 20,
+        },
+    
+        texto: {
+            textAlign: 'center',
+            fontSize: 16,
+            marginTop: 16,
+        },
+    
+        segundaFila: {
+            marginBottom: 20,
+        },
+    
+        informe1: {
+            backgroundColor: '#8ADC58',
+            marginTop: 20,
+            marginBottom: 10,
+            width: '70%',
+            height: 50,
+            borderRadius: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+            elevation: 2,
+        },
+    
+        informe2: {
+            backgroundColor: '#58DCD4',
+            marginTop: 3,
+            marginBottom: 10,
+            width: '70%',
+            height: 50,
+            borderRadius: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+            elevation: 2,
+        },
+    
+        informe3: {
+            backgroundColor: '#9258DC',
+            marginTop: 3,
+            marginBottom: 250,
+            width: '70%',
+            height: 50,
+            borderRadius: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+            elevation: 2,
+        },
+    
+        textoInforme: {
+            fontSize: 20,
+            marginRight: 15,
+        },
+    
+        scroll: {
+            flex: 1,
+        },
+        modalOverlay: {
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo transparente
+            justifyContent: 'center', // Centra verticalmente
+            alignItems: 'center', // Centra horizontalmente
+          },
+        
+          modalContent: {
+            backgroundColor: 'white', // Fondo blanco
+            padding: 20,
+            borderRadius: 10,
+            alignItems: 'center', // Centra el contenido horizontalmente
+            width: '35%', // Ancho del modal, puedes ajustarlo según tus necesidades
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: [{ translateX: -Dimensions.get('window').width * 0.15}, { translateY: -Dimensions.get('window').height * 0.12 }],
+          },
+          
+          // Agrega un estilo para el contenido interno del modal
+          modalInnerContent: {
+            backgroundColor: 'white', // Fondo blanco
+            padding: 20,
+            borderRadius: 10,
+            alignItems: 'center', // Centra el contenido horizontalmente
+          },
 
-const styles = StyleSheet.create({
-  home: {
-    backgroundColor: "#DDC4B8",
-    alignItems: "center",
-  },
+          botonAyuda: {
+            borderBottomColor: 'gray',
+            borderBottomWidth: 0.5,
+            marginBottom: 20,
+          },
 
-  logo: {
-    marginTop: 50,
-    width: 350,
-    height: 350,
-  },
-
-  buttonRow: {
-    flexDirection: "row",
-    marginBottom: 20,
-  },
-
-  button: {
-    backgroundColor: "#ffffff",
-    elevation: 10,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 10,
-    height: 180,
-    width: 180,
-  },
-
-  buttonImage: {
-    width: 70,
-    height: 70,
-  },
-
-  buttonText: {
-    textAlign: "center",
-    fontSize: 16,
-    marginTop: 16,
-  },
-
-  informe1: {
-    backgroundColor: "#8ADC58",
-    marginTop: 10,
-    marginBottom: 10,
-    width: "70%",
-    height: 50,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 2,
-  },
-
-  informe2: {
-    backgroundColor: "#58DCD4",
-    marginTop: 10,
-    marginBottom: 10,
-    width: "70%",
-    height: 50,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 2,
-  },
-
-  informe3: {
-    backgroundColor: "#9258DC",
-    marginTop: 10,
-    marginBottom: 20,
-    width: "70%",
-    height: 50,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 2,
-  },
-
-  textoInforme: {
-    fontSize: 20,
-  },
-});
+          textAyuda: {
+            fontSize: 16,
+            padding: 5,
+          },
+    })

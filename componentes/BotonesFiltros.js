@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal, ActivityIndicator} from 'react-native';
 import SearchBarExample from './BarraBusqueda';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import DenunciasModal from './Denuncias/DenunciasModal';
 
 const FilterButtonsExample = () => {
-  const buddyUrl = 'budy-app.loca.lt';
   const navigation = useNavigation();
   const [selectedFilter, setSelectedFilter] = useState('');
   const [publicaciones, setPublicaciones] = useState([]);
@@ -24,7 +24,26 @@ const FilterButtonsExample = () => {
   const [selectedBreed, setSelectedBreed] = useState(null);
   const [availableBreeds, setAvailableBreeds] = useState([]);
   const [filtrosExtraVisible, setFiltrosExtraVisible] = useState(false);
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [selectedPublicationToReport, setSelectedPublicationToReport] = useState(null);
+  const [selectedUserToReport, setSelectedUserToReport] = useState(null);
+  const route = useRoute();
+  const { token } = route.params;
+  const [denunciaModalVisible, setDenunciaModalVisible] = useState(false);
 
+  const handleDenunciar = () => {
+    setDenunciaModalVisible(true);
+    setReportModalVisible(false); // Cierra el modal de reporte
+  };
+
+  const handleReportModal = (publication) => {
+    setSelectedPublicationToReport(publication.idPublicationSearch);
+    setSelectedUserToReport(publication.user.idUser);
+    console.log('selectedPublicationToReport: ', selectedPublicationToReport);
+    console.log('selectedUserToReport: ', selectedUserToReport);
+    setReportModalVisible(true);
+  };
+  
   const handleBreedChange = (breed) => {
     setSelectedBreed(breed);
     filterByBreed(breed);
@@ -33,8 +52,7 @@ const FilterButtonsExample = () => {
 
   const filterByBreed = (breed) => {
     setLoading(true);
-  
-    // Filtra las publicaciones en base a la raza
+
     const filteredData = publicaciones.filter((item) =>
       item.petBreed.petBreedName === breed
     );
@@ -95,7 +113,7 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
-      .get('https://buddy-app1.loca.lt/parameters/locality/')
+      .get('https://buddy-app2.loca.lt/parameters/locality/')
       .then((response) => {
         if (response.data && response.data.localities) {
           setLocalities(response.data.localities);
@@ -109,7 +127,7 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
-      .get('https://buddy-app1.loca.lt/parameters/petColor/')
+      .get('https://buddy-app2.loca.lt/parameters/petColor/')
       .then((response) => {
         if (response.data && response.data.petColors) {
           setPetColors(response.data.petColors);
@@ -123,7 +141,7 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get('https://buddy-app1.loca.lt/parameters/petBreed/')
+      .get('https://buddy-app2.loca.lt/parameters/petBreed/')
       .then((response) => {
         if (response.data && response.data.petBreeds) {
           setAvailableBreeds(response.data.petBreeds.map((breed) => breed.petBreedName));
@@ -151,7 +169,7 @@ const FilterButtonsExample = () => {
     const getPublicaciones = () => {
       setLoading(true);
   
-      const apiUrl = 'https://buddy-app1.loca.lt/publications/publication?modelType=search';
+      const apiUrl = 'https://buddy-app2.loca.lt/publications/publication?modelType=search';
   
       axios
         .get(apiUrl, {
@@ -221,8 +239,9 @@ const FilterButtonsExample = () => {
       return (
         <TouchableOpacity style={styles.itemContainer}
           onPress = {()=> (
-            navigation.navigate('PublicacionDetalle', { publicacion: item })
+            navigation.navigate('PublicacionDetalle', { publicacion: item, token })
           )}
+          onLongPress={() => handleReportModal(item)}
         >
           <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>
           {imageUri && <Image source={{ uri: imageUri }} />}
@@ -461,6 +480,33 @@ const FilterButtonsExample = () => {
           </View>
         </View>
       </Modal>
+
+      <Modal visible={reportModalVisible} transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+              <TouchableOpacity
+                onPress={() => handleDenunciar()} // Abre el modal de denuncia al hacer clic en "Denunciar"
+                style={styles.closeModalTextDenunca}
+              >
+                <Text style={styles.modalTitle}>Denunciar publicación</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setReportModalVisible(false)}
+                style={styles.closeModalTextDenuncia}
+              >
+                <Text style={styles.closeText}>Cancelar</Text>
+              </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* Modal de denuncia */}
+      <DenunciasModal
+        visible={denunciaModalVisible}
+        onClose={() => setDenunciaModalVisible(false)}
+        selectedPublicationToReport={selectedPublicationToReport}
+        selectedUserToReport={selectedUserToReport}
+        token={token}
+      />
     </View>
   );
 };
@@ -642,7 +688,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   localityOption: {
     padding: 5,
@@ -666,6 +712,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'center',
     marginLeft: 40,
+  },
+  closeModalTextDenuncia: {
+    backgroundColor: '#DDC4B8',
+    width: '100%',
+    height: 25,
+    borderRadius: 10,
+    textAlign: 'center',
+    justifyContent: 'center',
+    marginLeft: 0,
+    padding: 2,
+    elevation: 5,
+  },
+  closeText: {
+    marginLeft: 5,
+    marginRight: 5,
   },
 });
 

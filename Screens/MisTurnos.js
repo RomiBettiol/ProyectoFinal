@@ -38,7 +38,7 @@ export default function MisTurnos(token) {
    
         async function fetchTurnos() {
             try {
-                const response = await axios.get(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}`);
+                const response = await axios.get(`https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`);
                 if (response.data && Array.isArray(response.data.turns)) {
                 setTurnos(response.data.turns);
                 console.log(response.data.turns)
@@ -118,7 +118,7 @@ export default function MisTurnos(token) {
     const handleDeleteTurno = async () => {
         console.log(turno.idTurn)
             try {
-                const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
+                const response = await axios.delete(`https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
                 console.log('Turno eliminado:', response.data);
                 setShowSuccessModal(true);
             } catch (error) {

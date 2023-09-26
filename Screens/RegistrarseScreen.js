@@ -38,6 +38,7 @@ export function RegistrarseScreen({ navigation }) {
             },
           }
         );
+
         if (response.status === 201) {
           console.log("Registro exitoso:", response.data);
           navigation.navigate("ConfirmacionRegistroScreen");
