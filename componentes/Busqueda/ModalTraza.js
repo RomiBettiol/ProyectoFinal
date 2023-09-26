@@ -103,8 +103,7 @@ export default function ModalTraza({ navigation, route }) {
   }, [idPublicationSearch]);
 
   const onDeleteTrace = async () => {
-    // You can implement the logic to delete the trace here
-    // Make an API request to delete the selected trace
+    console.log('información:', selectedTrace.idTrace)
     try {
       const response = await axios.delete(
         ` https://buddy-app2.loca.lt/publications/trace/${selectedTrace.idTrace}`,

@@ -70,7 +70,7 @@ export default function HomeScreen({ navigation }) {
       title: "Lista de servicios",
       image: require("../Imagenes/servicios.png"),
       permission: "READ_LISTA_SERVICIOS",
-      onPress: () => navigation.navigate("ListaServiciosScreen", { token }),
+      onPress: () => navigation.navigate("ServiciosScreen", { token }),
     },
     {
       title: "Back Up",

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-const DenunciasModal = ({ visible, onClose, selectedPublicationToReport, token, selectedUserToReport }) => {
+const DenunciasModalAdopcion = ({ visible, onClose, selectedPublicationToReport, token, selectedUserToReport }) => {
   const [motivo, setMotivo] = useState('');
 
   console.log('idPublication desde denuncia: ', selectedPublicationToReport);
@@ -11,7 +11,7 @@ const DenunciasModal = ({ visible, onClose, selectedPublicationToReport, token, 
 
   const handleDenunciar = (token) => {
     const complaintData = {
-      category: 'SEARCH',
+      category: 'ADOPTION',
       complaintDescription: motivo,
       idUserReported: selectedUserToReport,
       idReference: selectedPublicationToReport,
@@ -68,7 +68,7 @@ const DenunciasModal = ({ visible, onClose, selectedPublicationToReport, token, 
   );
 };
 
-export default DenunciasModal;
+export default DenunciasModalAdopcion;
 
 const styles = {
   modalContainer: {
