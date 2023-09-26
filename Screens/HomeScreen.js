@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,6 +6,9 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Dimensions,
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
 import MenuHorizontal from "../componentes/MenuHorizontal";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
@@ -91,9 +93,7 @@ export default function HomeScreen({ navigation }) {
     obtenerPermisos();
 
     axios
-      .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/founds-success`
-      )
+      .get(` https://buddy-app2.loca.lt/reports/count/founds-success`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -105,9 +105,7 @@ export default function HomeScreen({ navigation }) {
 
     // Mascotas perdidas
     axios
-      .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/losts-actives`
-      )
+      .get(` https://buddy-app2.loca.lt/reports/count/losts-actives`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -119,9 +117,7 @@ export default function HomeScreen({ navigation }) {
 
     // Mascotas adoptadas
     axios
-      .get(
-        `https://27fb-181-91-230-36.ngrok-free.app/reports/count/adoptions-success`
-      )
+      .get(` https://buddy-app2.loca.lt/reports/count/adoptions-success`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -143,7 +139,7 @@ export default function HomeScreen({ navigation }) {
       const token = await AsyncStorage.getItem("auth-token");
 
       const response = await axios.get(
-        `https://27fb-181-91-230-36.ngrok-free.app/security/user/permissions`,
+        ` https://buddy-app2.loca.lt/security/user/permissions`,
         { headers: { "auth-token": token } }
       );
 
@@ -218,7 +214,7 @@ export default function HomeScreen({ navigation }) {
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.home}>
         <Image source={require("../Imagenes/logo2.png")} style={styles.logo} />
-        <MenuHorizontal token={token} />
+        <MenuHorizontal token={token} openModal={openModal} />
         {!permisos[0] ? <Text></Text> : renderButtons()}
         <View style={[styles.informe1, { flexDirection: "row" }]}>
           <Text style={styles.textoInforme}>
@@ -236,148 +232,153 @@ export default function HomeScreen({ navigation }) {
           </Text>
         </View>
       </View>
-      <Modal transparent={true} animationType="slide" visible={isModalVisible} onRequestClose={closeModal}>
-                <TouchableWithoutFeedback onPress={closeModal}>
-                    <View style={styles.modalOverlay} />
-                </TouchableWithoutFeedback>
-                <View style={styles.modalContent}>
-                    <TouchableOpacity style={styles.botonAyuda}
-                        onPress = {()=> (
-                          navigation.navigate('PreguntasFrecuentes', {token})
-                        )}
-                    >
-                        <Text  style={styles.textAyuda}>Ayuda</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.botonAyuda} onPress={closeModal}>
-                        <Text style={styles.textAyuda}>Cerrar Sesión</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={isModalVisible}
+        onRequestClose={closeModal}
+      >
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.modalContent}>
+          <TouchableOpacity
+            style={styles.botonAyuda}
+            onPress={() =>
+              navigation.navigate("PreguntasFrecuentes", { token })
+            }
+          >
+            <Text style={styles.textAyuda}>Ayuda</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botonAyuda} onPress={closeModal}>
+            <Text style={styles.textAyuda}>Cerrar Sesión</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
-    const styles = StyleSheet.create({
-        home: {
-            backgroundColor: '#DDC4B8',
-            alignItems: 'center',
-        },
-    
-        imagen1: {
-            width: 60,
-            height: 60,
-        },
-    
-        boton1: {
-            width: '35%',
-            height: 180,
-            backgroundColor: '#ffffff',
-            elevation: 10,
-            borderRadius: 15,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: 10,
-        },
-    
-        logo: {
-            marginTop: 70,
-            width: '50%',
-            height: '15%',
-        },
-    
-        primeraFila: {
-            marginTop: 30,
-            marginBottom: 20,
-        },
-    
-        texto: {
-            textAlign: 'center',
-            fontSize: 16,
-            marginTop: 16,
-        },
-    
-        segundaFila: {
-            marginBottom: 20,
-        },
-    
-        informe1: {
-            backgroundColor: '#8ADC58',
-            marginTop: 20,
-            marginBottom: 10,
-            width: '70%',
-            height: 50,
-            borderRadius: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            elevation: 2,
-        },
-    
-        informe2: {
-            backgroundColor: '#58DCD4',
-            marginTop: 3,
-            marginBottom: 10,
-            width: '70%',
-            height: 50,
-            borderRadius: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            elevation: 2,
-        },
-    
-        informe3: {
-            backgroundColor: '#9258DC',
-            marginTop: 3,
-            marginBottom: 250,
-            width: '70%',
-            height: 50,
-            borderRadius: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            elevation: 2,
-        },
-    
-        textoInforme: {
-            fontSize: 20,
-            marginRight: 15,
-        },
-    
-        scroll: {
-            flex: 1,
-        },
-        modalOverlay: {
-            flex: 1,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo transparente
-            justifyContent: 'center', // Centra verticalmente
-            alignItems: 'center', // Centra horizontalmente
-          },
-        
-          modalContent: {
-            backgroundColor: 'white', // Fondo blanco
-            padding: 20,
-            borderRadius: 10,
-            alignItems: 'center', // Centra el contenido horizontalmente
-            width: '35%', // Ancho del modal, puedes ajustarlo según tus necesidades
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: [{ translateX: -Dimensions.get('window').width * 0.15}, { translateY: -Dimensions.get('window').height * 0.12 }],
-          },
-          
-          // Agrega un estilo para el contenido interno del modal
-          modalInnerContent: {
-            backgroundColor: 'white', // Fondo blanco
-            padding: 20,
-            borderRadius: 10,
-            alignItems: 'center', // Centra el contenido horizontalmente
-          },
+const styles = StyleSheet.create({
+  home: {
+    backgroundColor: "#DDC4B8",
+    alignItems: "center",
+  },
 
-          botonAyuda: {
-            borderBottomColor: 'gray',
-            borderBottomWidth: 0.5,
-            marginBottom: 20,
-          },
+  buttonRow: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
 
-          textAyuda: {
-            fontSize: 16,
-            padding: 5,
-          },
-    })
+  button: {
+    backgroundColor: "#ffffff",
+    elevation: 10,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+    height: 180,
+    width: 180,
+  },
+
+  buttonImage: {
+    width: 70,
+    height: 70,
+  },
+
+  buttonText: {
+    textAlign: "center",
+    fontSize: 16,
+    marginTop: 16,
+  },
+
+  logo: {
+    marginTop: 50,
+    width: 350,
+    height: 350,
+  },
+
+  informe1: {
+    backgroundColor: "#8ADC58",
+    marginTop: 20,
+    marginBottom: 10,
+    width: "70%",
+    height: 50,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2,
+  },
+
+  informe2: {
+    backgroundColor: "#58DCD4",
+    marginTop: 3,
+    marginBottom: 10,
+    width: "70%",
+    height: 50,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2,
+  },
+
+  informe3: {
+    backgroundColor: "#9258DC",
+    marginTop: 3,
+    marginBottom: 20,
+    width: "70%",
+    height: 50,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2,
+  },
+
+  textoInforme: {
+    fontSize: 20,
+    marginRight: 15,
+  },
+
+  scroll: {
+    flex: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo transparente
+    justifyContent: "center", // Centra verticalmente
+    alignItems: "center", // Centra horizontalmente
+  },
+
+  modalContent: {
+    backgroundColor: "white", // Fondo blanco
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center", // Centra el contenido horizontalmente
+    width: "35%", // Ancho del modal, puedes ajustarlo según tus necesidades
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: [
+      { translateX: -Dimensions.get("window").width * 0.15 },
+      { translateY: -Dimensions.get("window").height * 0.12 },
+    ],
+  },
+
+  // Agrega un estilo para el contenido interno del modal
+  modalInnerContent: {
+    backgroundColor: "white", // Fondo blanco
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center", // Centra el contenido horizontalmente
+  },
+
+  botonAyuda: {
+    borderBottomColor: "gray",
+    borderBottomWidth: 0.5,
+    marginBottom: 20,
+  },
+
+  textAyuda: {
+    fontSize: 16,
+    padding: 5,
+  },
+});
