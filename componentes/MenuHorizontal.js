@@ -2,6 +2,7 @@ import React from 'react'
 import { ScrollView, View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
+import MisChats from '../Screens/MisChats';
 
 const MenuHorizontal = () => {
   const navigation = useNavigation();
@@ -24,7 +25,11 @@ const MenuHorizontal = () => {
                 style={styles.menu}
             />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}
+            onPress = {()=> (
+              navigation.navigate('MisChats', {token})
+          )}
+        >
             <Image
                 source={require('../Imagenes/mensaje.png')}
                 style={styles.menu}

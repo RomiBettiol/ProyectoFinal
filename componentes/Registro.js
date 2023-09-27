@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react';
 import {SafeAreaView, StyleSheet, Modal, TextInput, TouchableOpacity, Text, View, Image, TouchableWithoutFeedback, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 
+
+//web: 970650519121-mk1atfc048ooe2d4l230b8vns4d93t4r.apps.googleusercontent.com
+//ios: 970650519121-qafk3qpin74ce02lqsshjnmo0sp8gniq.apps.googleusercontent.com
+//android: 970650519121-81anru1lvmjddph2vo9j6u9olu2c20tn.apps.googleusercontent.com
+
+WebBrowser.maybeCompleteAuthSession();
 const Registro = () => {
   const [usuario, setUsuario] = React.useState('');
   const [contrasena, setContrasena] = React.useState('');
@@ -11,6 +19,55 @@ const Registro = () => {
   const [showAlertServer, setShowAlertServer] = React.useState(false); // Estado para mostrar/ocultar el cuadro de diálogo personalizado del back-end
   const [error, setError] = React.useState('');
   const navigation = useNavigation();
+
+  //codigo google
+
+{/*
+const [accessToken, setAccessToken] = React.useState(null);
+  const [user, setUser] = React.useState(null);
+  const [request, response, promptAsync]= Google.useIdTokenAuthRequest({
+    clientId:"970650519121-mk1atfc048ooe2d4l230b8vns4d93t4r.apps.googleusercontent.com",
+    androidClientId:"970650519121-81anru1lvmjddph2vo9j6u9olu2c20tn.apps.googleusercontent.com",
+    iosClientId:"970650519121-qafk3qpin74ce02lqsshjnmo0sp8gniq.apps.googleusercontent.com"
+  });
+
+  React.useEffect(() => {
+    if(response?.type === "success"){
+      setAccessToken(response.authentication.accessToken);
+      accessToken && fetchUserInfo();
+    }
+  }, [response, accessToken])
+
+  async function fetchUserInfo(){
+    let response = await fetch("https://www.googleapis.com/userinfo/v2/me",{
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const userinfo = await response.json();
+    setUser(userinfo);
+  }
+
+  const ShowUserInfo = () => {
+    if (user) {
+      return(
+        <View>
+          <Text>
+              Welcom  !
+          </Text>
+          <Image>
+              source={{uri: user.picture}}
+          </Image>
+          <Text>
+              {user.name}
+          </Text>
+        </View>
+      )
+    }
+  }
+*/}
+  
+  //fin codigo google
   
   const handleValidation = () => {
     const isValid = usuario.trim() !== '' && contrasena.trim() !== '';
@@ -132,7 +189,38 @@ const Registro = () => {
             >
               <Text>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
-     
+      {/*
+      <View style={styles.redes}>
+        <Text style={styles.parrafo}>Ingresa con</Text>
+        <View style={{flexDirection: 'row'}}>
+          {user && <ShowUserInfo />}
+          {user === null &&
+            <>
+                       
+            <TouchableOpacity
+              disabled={!request}
+              onPress={() => {
+                promptAsync();
+              } }
+            > 
+            <Image
+            source={require('../Imagenes/social.png')}
+            style={styles.imagen2}
+            />
+                
+                  
+            </TouchableOpacity></>
+          
+
+          }
+         <Image
+                  source={require('../Imagenes/facebook.png')}
+                  style={styles.imagen1} />
+         
+        </View>
+      </View>
+      */}
+      
      
      
     </SafeAreaView>

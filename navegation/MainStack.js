@@ -58,6 +58,12 @@ import ListaValoresDiasMascota from '../componentes/MiMascota/ListaValoresDiasMa
 import ListaValoresMesesMascota from '../componentes/MiMascota/ListaValoresMesesMascota';
 import EditarVaccin from '../componentes/MiMascota/EditarVaccin';
 
+
+
+import BotonSlide from '../componentes/BotonSlide';
+import MisChats from '../Screens/MisChats';
+
+
 const Stack = createNativeStackNavigator()
 
 export default function MainStack() {
@@ -292,6 +298,17 @@ export default function MainStack() {
                 name='EditarVaccin'
                 component={EditarVaccin}
             />
+
+            <Stack.Screen
+                name='BotonSlide'
+                component={BotonSlide}
+            />
+            <Stack.Screen
+                name='MisChats'
+                component={MisChats}
+            />
+
+
         </Stack.Navigator>
     </NavigationContainer>
   )
