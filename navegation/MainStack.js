@@ -57,7 +57,7 @@ import ListaValoresAñoMascota from '../componentes/MiMascota/ListaValoresAñoMa
 import ListaValoresDiasMascota from '../componentes/MiMascota/ListaValoresDiasMascota';
 import ListaValoresMesesMascota from '../componentes/MiMascota/ListaValoresMesesMascota';
 import EditarVaccin from '../componentes/MiMascota/EditarVaccin';
-
+import AgregarImagenRegistro from '../componentes/AgregarImagenRegistro';
 const Stack = createNativeStackNavigator()
 
 export default function MainStack() {
@@ -291,6 +291,10 @@ export default function MainStack() {
             <Stack.Screen
                 name='EditarVaccin'
                 component={EditarVaccin}
+            />
+            <Stack.Screen
+                name='AgregarImagenRegistro'
+                component={AgregarImagenRegistro}
             />
         </Stack.Navigator>
     </NavigationContainer>

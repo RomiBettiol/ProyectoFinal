@@ -219,7 +219,7 @@ const BotonesFiltrosAdopcion = () => {
           <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>
           {imageUri && <Image source={{ uri: imageUri }} />}
           <Image
-            source={require('../../Imagenes/imagenPublicaciones.jpg')}
+            source={{uri: item.images[0]}}
             style={styles.imagenPublicacion}
           />
             <View style={styles.informacion}>

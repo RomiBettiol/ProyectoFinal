@@ -7,7 +7,7 @@ import { Amplify, Storage } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 Amplify.configure(awsconfig);
 
-const AgregarImagen = ( {onImagesSelected } ) => {
+const AgregarImagenRegistro = ( {onImagesSelected } ) => {
   const [selectedImages, setSelectedImages] = React.useState('' );
   const [showModal, setShowModal] = useState(false);
   
@@ -77,13 +77,13 @@ const AgregarImagen = ( {onImagesSelected } ) => {
   );
 };
 
-export default AgregarImagen;
+export default AgregarImagenRegistro;
 
 const styles = StyleSheet.create({
   botonGaleria: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: '#ffffff',
     height: 100,
-    width: '50%',
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,

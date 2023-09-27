@@ -156,7 +156,7 @@ export default function MiMascotaScreen() {
                     style={styles.subcontenedor3}
                 >
                     <Image
-                            source={require('../Imagenes/perrito.jpeg')}
+                            source={{ uri: mascota.image }}
                             style={styles.imagMascota}
                     />
                     <Text style={styles.nombreMascota}>

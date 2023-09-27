@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput, ScrollView, Pressable } from 'react-native';
+import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
 import Header from '../componentes/HeaderScreen';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import BotonFlotante from '../componentes/BotonFlotante';
+
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
+import AgregarImagen from '../componentes/AgregarImagen';
+Amplify.configure(awsconfig);
 
 export default function MiPerfil({ navigation }) {
   const route = useRoute();
@@ -15,6 +21,7 @@ export default function MiPerfil({ navigation }) {
   const [editUserModalVisible, setEditUserModalVisible] = useState(false);
   const [newName, setNewName] = useState('');
   const [newUserName, setNewUserName] = useState('');
+  const [newUserImage, setNewUserImage] = useState('');
   const [user, setUser] = useState ('');
   const [passwordMismatchError, setPasswordMismatchError] = useState(false);
   const [requisitosContrasena, setRequisitosContrasena] = useState(false);
@@ -41,6 +48,42 @@ export default function MiPerfil({ navigation }) {
 
   console.log("perfil: ", token);
 
+  //donde guardo las imagenes
+  const [selectedImages, setSelectedImages] = useState('');
+
+  ///// upload image ////
+  const fetchImageUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  }
+
+  const uploadFile = async (file) => {
+    const img = await fetchImageUri(file);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+      level: 'public',
+      contentType: file.type,
+      progressCallback(uploadProgress) {
+        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+      },
+    })
+      .then((res) => {
+        // Retorna la clave (key) de la imagen en Amazon S3
+        return res.key;
+      })
+      .catch((e) => {
+        console.log(e);
+        throw e; // Lanza una excepción para manejar errores en la función llamante
+      });
+  };
+    // Función para manejar la selección de imágenes
+  const handleImagesSelected = (images) => {
+    console.log("probando esto: ", images);
+    setSelectedImages(images);
+    console.log("probando esto: ", selectedImages);
+  };
+
+
   //Trae info del usuario
   useEffect(() => {
     axios.get(`https://buddy-app1.loca.lt/security/user/`, {
@@ -52,6 +95,7 @@ export default function MiPerfil({ navigation }) {
       setUser(response.data);
       setNewName(response.data[0].name);
       setNewUserName(response.data[0].userName);
+      setNewUserImage(response.data[0].image);
   
       // Declarar la constante idUser
       setIdUser(response.data[0].idUser);
@@ -174,7 +218,9 @@ export default function MiPerfil({ navigation }) {
     }
   };      
 
-  const handleUpdateUser = async () => {
+  const handleUpdateUser = async (images) => {
+    let imag = images;
+    console.log( 'cansada! ',imag)
     if (confirmPassword === '') {
       setContrasenaVacia(true);
       return;
@@ -185,7 +231,9 @@ export default function MiPerfil({ navigation }) {
       name: newName,
       userName: newUserName,
       currentPassword: confirmPassword,
+      image: imag,
     };
+    console.log( 'updateUserData! ',updatedUserData)
   
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
@@ -348,12 +396,51 @@ useEffect(() => {
   const handleConfirmLogout = () => {
     setConfirmLogoutModalVisible(true);
   };
+
+  //imagenes
+
+  const handleSubAddPut = async () => {
+    console.log("Al presionar el boton: ", selectedImages);
+    try {
+      if (selectedImages && selectedImages.length > 0) {
+        console.log("Antes de subirlas: ", selectedImages);
+        let imageUrls = ('');
+        
+        // Subir las imágenes a AWS S3 y obtener las URLs
+        
+          // Subir la imagen a Amazon S3 y obtener el enlace
+          const awsImageKey = await uploadFile(selectedImages);
+          
+          // Construye el enlace completo a la imagen en Amazon S3
+          const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
+          
+          // Guarda el enlace en el estado
+          
+          console.log("Después de subirlas: ", awsImageLink);
+        
+        
+        // Continúa con la solicitud PUT al backend
+        await handleUpdateUser(awsImageLink);
+      } else {
+        // Si no hay imágenes seleccionadas, solo envía la solicitud PUT sin el enlace de la imagen
+        await handleUpdateUser(null);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      // Maneja el error, si es necesario
+    }
+  };
+
+//FIN imagenes
   return (
     <View style={styles.container}>
         <Header />
         <ScrollView>
           <View style={[styles.principal, { flexDirection: 'row' }]}>
-            <Image source={require('../Imagenes/usuario.png')} style={styles.imagenUsuario} />
+          
+            <Image source={{uri: newUserImage}} style={styles.imagenUsuario} />
+           
+            
             <View>
               <Text style={styles.titulo}>MI PERFIL</Text>
               {user ? (
@@ -370,7 +457,7 @@ useEffect(() => {
           {userPublications.adoptions && userPublications.adoptions.length > 0 && userPublications.adoptions.map((adoption, index) => (
             <View style={[styles.publicationContainer, {flexDirection: 'row'}]}>
               <Image
-                source={require('../Imagenes/imagenPublicaciones.jpg')}
+                source={{uri: adoption.images[0]}}
                 style={styles.imagenPublicaciones}
               />
               <View>
@@ -408,7 +495,7 @@ useEffect(() => {
           {userPublications.searchs && userPublications.searchs.length > 0 && userPublications.searchs.map((search, index) => (
             <View style={[styles.publicationContainer, {flexDirection: 'row'}]}>
               <Image
-                source={require('../Imagenes/imagenPublicaciones.jpg')}
+                source={{uri: search.images[0]}}
                 style={styles.imagenPublicaciones}
               />
               <View>
@@ -538,6 +625,7 @@ useEffect(() => {
         <Modal animationType="slide" transparent={true} visible={editUserModalVisible} onRequestClose={() => setEditUserModalVisible(false)}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContentEditarUsuario}>
+            <AgregarImagen onImagesSelected={handleImagesSelected} style={styles.botonGaleria}/>
               <Text style={styles.tituloModal}>Editar Usuario</Text>
               <View style={{flexDirection: 'row'}}>
                   <Text style={styles.contraseñaActual}>Nombre</Text>
@@ -565,7 +653,7 @@ useEffect(() => {
               />
               </View>
               <View style={[styles.contenedorBotones, {flexDirection:'row'}]}>
-                <TouchableOpacity style={styles.botonEditarContraseña} onPress={handleUpdateUser}>
+                <TouchableOpacity style={styles.botonEditarContraseña} onPress={handleSubAddPut}>
                   <Text>Actualizar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.botonEditarContraseña} onPress={() => setEditUserModalVisible(false)}>
@@ -991,5 +1079,15 @@ const styles = StyleSheet.create({
   },
   confirmButtonText1: {
     fontSize: 16,
+  },
+  botonGaleria: {
+    backgroundColor: '#DDC4B8',
+    height: 100,
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    marginTop: 30,
+    elevation: 3,
   },
 });

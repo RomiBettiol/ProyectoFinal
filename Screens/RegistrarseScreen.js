@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
+import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
 import { Image } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FormularioRegistrarse from '../componentes/FormularioRegistrarse';
 import axios, { AxiosError } from 'axios';
 import BotonImagenRegis from '../componentes/BotonImagenRegis';
+
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
+import AgregarImagen from '../componentes/AgregarImagen';
+Amplify.configure(awsconfig);
 
 
 
@@ -19,11 +25,13 @@ export function RegistrarseScreen({ navigation }) {
     usuario: '',
     contrasena: '',
     contrasena2: '',
+    image:'',
   });
 
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const handleSubmit = async () => {
+    
     if (formValid) {
 
       const data = {
@@ -31,6 +39,7 @@ export function RegistrarseScreen({ navigation }) {
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
         name: datosFormulario.nombre,
+        image:datosFormulario.image,
       }
 
       // Hacer la petición POST al backend usando axios

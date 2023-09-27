@@ -7,12 +7,9 @@ import Carousel from 'react-native-snap-carousel';
 const PublicacionDetalle = ({ route }) => {
   const navigation = useNavigation();
   const publicacion = route.params?.publicacion;
-
-  const carouselImages = [
-    require('../../Imagenes/imagenPublicaciones.jpg'),
-    require('../../Imagenes/imagenPublicaciones2.jpg'),
-  ];
-
+  
+  const carouselImages = publicacion.images ;
+  console.log("carrousel setteado: ",carouselImages);
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const year = fechaObj.getFullYear();
@@ -28,7 +25,7 @@ const PublicacionDetalle = ({ route }) => {
           <Carousel
             data={carouselImages}
             renderItem={({ item }) => (
-              <Image source={item} style={styles.imagenPublicacion} />
+              <Image source={{uri: item}} style={styles.imagenPublicacion} />
             )}
             sliderWidth={500}
             itemWidth={500}

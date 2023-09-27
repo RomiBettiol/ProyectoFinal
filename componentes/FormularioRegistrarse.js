@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { TextInput, Text, View, Image, StyleSheet } from 'react-native';
+import { TextInput, Text, View, Image, StyleSheet ,Modal, ScrollView, Pressable } from 'react-native';
+import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
 import BotonImagenRegis from './BotonImagenRegis';
+
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
+import AgregarImagenRegistro from '../componentes/AgregarImagenRegistro';
+Amplify.configure(awsconfig);
 
 const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChange }) => {
   const [email, setEmail] = useState(datosFormulario.email);
@@ -8,6 +14,7 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
   const [usuario, setUsuario] = useState(datosFormulario.usuario);
   const [contrasena, setContrasena] = useState(datosFormulario.contrasena);
   const [contrasena2, setContrasena2] = useState(datosFormulario.contrasena2);
+  const [image, setImage] = useState(datosFormulario.image);
   const [mostrarTexto, setMostrarTexto] = useState(false);
   const [mostrarTextoContrasena2, setMostrarTextoContrasena2] = useState(false);
   const [emailValido, setEmailValido] = useState(true);
@@ -19,10 +26,46 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
     { texto: 'Un carácter especial', cumplido: false },
   ]);
 
+  //donde guardo las imagenes
+  const [selectedImages, setSelectedImages] = useState('');
+
+  ///// upload image ////
+  const fetchImageUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  }
+
+  const uploadFile = async (file) => {
+    const img = await fetchImageUri(file);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+      level: 'public',
+      contentType: file.type,
+      progressCallback(uploadProgress) {
+        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+      },
+    })
+      .then((res) => {
+        // Retorna la clave (key) de la imagen en Amazon S3
+        return res.key;
+      })
+      .catch((e) => {
+        console.log(e);
+        throw e; // Lanza una excepción para manejar errores en la función llamante
+      });
+  };
+    // Función para manejar la selección de imágenes
+  const handleImagesSelected = (images) => {
+    console.log("probando esto: ", images);
+    setSelectedImages(images);
+    console.log("probando esto: ", selectedImages);
+    handleSubAddPut();
+  };
+
   useEffect(() => {
     setFormValid(isFormValid());
     onFormValidChange(isFormValid());
-  }, [nombre, email, usuario, contrasena, contrasena2, onFormValidChange]);
+  }, [nombre, email, usuario, contrasena, contrasena2, image, onFormValidChange]);
 
   useEffect(() => {
     onDatosChange({
@@ -32,8 +75,9 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
       usuario,
       contrasena,
       contrasena2,
+      image,
     });
-  }, [nombre, email, usuario, contrasena, contrasena2, onDatosChange]);
+  }, [nombre, email, usuario, contrasena, contrasena2, image, onDatosChange]);
 
 
   const verificarRequisitosContrasena = (contrasena) => {
@@ -68,17 +112,52 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
       email.trim() !== '' &&
       usuario.trim() !== '' &&
       contrasena.trim() !== '' &&
+      image.trim() !== '' &&
       contrasena === contrasena2 &&
       emailValido &&
       requisitosContrasena.every((requisito) => requisito.cumplido)
     );
   };
 
+
+  //imagenes
+
+  const handleSubAddPut = async () => {
+    console.log("Al presionar el boton: ", selectedImages);
+    try {
+      if (selectedImages && selectedImages.length > 0) {
+        console.log("Antes de subirlas: ", selectedImages);
+        
+        
+        // Subir las imágenes a AWS S3 y obtener las URLs
+        
+          // Subir la imagen a Amazon S3 y obtener el enlace
+          const awsImageKey = await uploadFile(selectedImages);
+          
+          // Construye el enlace completo a la imagen en Amazon S3
+          const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
+          
+          // Guarda el enlace en el estado
+          
+          console.log("Después de subirlas: ", awsImageLink);
+
+          setImage(awsImageLink);
+          console.log("Después de settearlas a image: ", image);
+        
+      } 
+    } catch (error) {
+      console.error('Error:', error);
+      // Maneja el error, si es necesario
+    }
+  };
+
+//FIN imagenes
+
   return (
     <View style={styles.contenedor2}>
       
       <View style={styles.botContainer}>
-        <BotonImagenRegis style={styles.botImag}/>
+        <AgregarImagenRegistro onImagesSelected={handleImagesSelected} style={styles.botImag}/>
       </View>
       <View style={styles.inputContainer}>
         <Image
@@ -250,9 +329,14 @@ const styles = StyleSheet.create({
   botContainer: {
     alignContent: 'center',
     width:300,
-  },
-  biotImag:{
+    justifyContent: 'center',
+    alignItems: 'center',
    
+
+  },
+  botImag:{
+    backgroundColor: '#ffffff',
+    
   },
 });
 

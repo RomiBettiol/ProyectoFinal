@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity,Image, Modal, Pressable } from 'react-native';
+import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
 import ListaValoresDiasMascota from '../MiMascota/ListaValoresDiasMascota';
 import ListaValoresMesesMascota from '../MiMascota/ListaValoresMesesMascota';
 import ListaValoresAñoMascota from '../MiMascota/ListaValoresAñoMascota';
@@ -9,6 +10,10 @@ import AgregarImagen from '../AgregarImagen';
 import axios from 'axios';
 import SuccessModal from './SuccessModal';
 import ErrorModal from './ErrorModal';
+
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../../src/aws-exports';
+Amplify.configure(awsconfig);
 
 export default function EditarMascota({ navigation, mascota, token, onCloseEditarMascota}) {
   const [nombre, setNombre] = useState(mascota.petName || '');
@@ -27,49 +32,12 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
  const[idPetBreed,setIdPetBreed]= useState('');
   const[idPetType, setIdPetType]=useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+ 
 
-  const updateMascota = async () => {
-    setIsButtonDisabled(true);
-    const idPet = mascota.idPet; // Obtén la ID de la mascota desde los props
-    const updatedData = {
-      petName: nombre,
-      day: selectedDay, // Agregar a los datos actualizados
-      idPetType: selectedAnimalId,
-      idPetBreed: selectedBreedId,
-      month: selectedMonth, // Agregar a los datos actualizados
-      year: selectedYear, // Agregar a los datos actualizados
-      // Otras propiedades que quieras actualizar
-      birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
-      
-    };
-    console.log({idPet})
-    console.log(updatedData)
-    try {
-      const response = await axios.put(`https://buddy-app1.loca.lt/mypet/pet/${mascota.idPet}`,{
-        headers: {
-          'auth-token': token
-        },
-        
-        petName: updatedData.petName,
-        birthDate: updatedData.birthDate,
-        idPetType: updatedData.idPetType,
-        idPetBreed: updatedData.idPetBreed,
-        // Otros datos que puedas necesitar
-      
-      }
-      
-      );
-      setShowSuccessModal(true);
-      console.log(response.data); 
-      console.log(response.data); // Mensaje de éxito desde el backend
-      // Puedes hacer algo aquí después de la actualización exitosa, como navegar a otra pantalla
-    } catch (error) {
-      setShowErrorModal(true);
-    }
-    setTimeout(() => {
-      setIsButtonDisabled(false);
-    }, 2000);
-  };
+  const [selectedImage, setSelectedImage] = React.useState(mascota.image || '');
+  const [linkAWS, setLinkAWS] = useState(mascota.image || ''); // Nuevo estado para almacenar el enlace de la imagen en Amazon S3
+
+  
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
     onCloseEditarMascota(); // Cierra el modal NuevaMascota
@@ -111,12 +79,163 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
         console.error('Error al obtener razas de mascotas:', error);
       });
   }, []);
+
+
+  // imagen
+
+  ///// upload image ////
+  const fetchImageUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  }
+
+  const uploadFile = async (file) => {
+    const img = await fetchImageUri(file.uri);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+      level: 'public',
+      contentType: file.type,
+      progressCallback(uploadProgress) {
+        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+      },
+    })
+      .then((res) => {
+        // Retorna la clave (key) de la imagen en Amazon S3
+        return res.key;
+      })
+      .catch((e) => {
+        console.log(e);
+        throw e; // Lanza una excepción para manejar errores en la función llamante
+      });
+  };
+
+  const handleSubAddPet = async () => {
+    try {
+      if (selectedImage) {
+        // Subir la imagen a Amazon S3 y obtener el enlace
+        const awsImageKey = await uploadFile(selectedImage);
+  
+        // Construye el enlace completo a la imagen en Amazon S3
+        const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
+  
+        // Guarda el enlace en el estado
+       
+        setLinkAWS(awsImageLink);
+  
+        // Continúa con la solicitud POST al backend
+        await sendPetData(awsImageLink);
+      } else {
+        // Si no hay imagen seleccionada, solo envía la solicitud POST sin el enlace de la imagen
+        await sendPetData(null);
+      }
+      
+    // Habilita el botón nuevamente después de dos segundos
+    setTimeout(() => {
+      setIsButtonDisabled(false);
+    }, 2000);
+  } catch (error) {
+    console.error('Error:', error);
+    // Maneja el error, si es necesario
+  }
+};
+
+const sendPetData = async (imageLink) => {
+  const authtoken = token;
+  setIsButtonDisabled(true);
+    const idPet = mascota.idPet; // Obtén la ID de la mascota desde los props
+    const updatedData = {
+      petName: nombre,
+      day: selectedDay, // Agregar a los datos actualizados
+      idPetType: selectedAnimalId,
+      idPetBreed: selectedBreedId,
+      month: selectedMonth, // Agregar a los datos actualizados
+      year: selectedYear, // Agregar a los datos actualizados
+      // Otras propiedades que quieras actualizar
+      birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+      image: imageLink,
+      
+    };
+    console.log({idPet})
+    console.log(updatedData)
+    try {
+      const response = await axios.put(`https://buddy-app1.loca.lt/mypet/pet/${mascota.idPet}`,{
+        headers: {
+          'auth-token': token
+        },
+        
+        petName: updatedData.petName,
+        birthDate: updatedData.birthDate,
+        idPetType: updatedData.idPetType,
+        idPetBreed: updatedData.idPetBreed,
+        image:updatedData.image,
+        // Otros datos que puedas necesitar
+      
+      }
+      
+      );
+      setShowSuccessModal(true);
+      console.log(response.data); 
+      console.log(response.data); // Mensaje de éxito desde el backend
+      // Puedes hacer algo aquí después de la actualización exitosa, como navegar a otra pantalla
+    } catch (error) {
+      setShowErrorModal(true);
+    }
+    setTimeout(() => {
+      setIsButtonDisabled(false);
+    }, 2000);
+
+  console.log('Respuesta del servidor:', response.data);
+
+  toggleModal();
+
+  setAddPetSuccess(true);
+};
+
+  const options = {
+    title: 'Seleccionar imagen',
+    cancelButtonTitle: 'Cancelar',
+    takePhotoButtonTitle: 'Tomar foto',
+    chooseFromLibraryButtonTitle: 'Elegir de la galería',
+    mediaType: 'photo',
+    quality: 1,
+  };
+
+   
+
+  
+  const openGallery = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync(options);
+
+    if (!result.cancelled) {
+      setSelectedImage(result);
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const removeImage = () => {
+    setSelectedImage(null);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>EDITAR MASCOTA</Text>
-          <AgregarImagen/>
+            <TouchableOpacity style={styles.botonGaleria} onPress={openGallery}>
+              {selectedImage ? (
+                <Image source={{ uri: linkAWS }} style={styles.selectedImage} />
+              ) : (
+                <>
+                  <Image source={require('../../Imagenes/fotos.png')} style={styles.foto} />
+                  <Text style={styles.botonFoto}>Seleccionar foto</Text>
+                </>
+              )}
+          
+            
+            </TouchableOpacity>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Nombre</Text>
             <TextInput
@@ -156,7 +275,7 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
       <View style={styles.subcontenedor5}>
         <TouchableOpacity
           style={styles.closeButton}
-          onPress={updateMascota}
+          onPress={handleSubAddPet}
         >
           <Text style={styles.closeButtonText} disabled={isButtonDisabled}>Actualizar Mascota</Text>
         </TouchableOpacity>
@@ -269,5 +388,59 @@ const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: 16,
     color: '#fff',
+  },
+
+  botonGaleria: {
+    backgroundColor: '#DDC4B8',
+    height: 100,
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    marginTop: 30,
+    elevation: 3,
+  },
+  foto: {
+    width: 30,
+    height: 30,
+  },
+  botonFoto: {
+    fontSize: 14,
+    marginTop: 10,
+  },
+  selectedImage: {
+    width: 60,
+    height: 60,
+    margin: 5,
+    borderRadius: 40,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    backgroundColor: '#DDC4B8',
+    borderRadius: 20,
+    padding: 25,
+    alignItems: 'center',
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  modalButton: {
+    backgroundColor: '#EEE9E9',
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+    marginTop: 10,
+  },
+  modalButtonText: {
+    color: 'grey',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

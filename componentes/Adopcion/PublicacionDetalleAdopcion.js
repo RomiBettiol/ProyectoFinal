@@ -9,10 +9,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
   const { publicacion, token, userName } = route.params || {};
   console.log(route.params);
 
-  const carouselImages = [
-    require('../../Imagenes/imagenPublicaciones.jpg'),
-    require('../../Imagenes/imagenPublicaciones2.jpg'),
-  ];
+  const carouselImages = publicacion.images;
 
   return (
     <View>
@@ -21,7 +18,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
           <Carousel
             data={carouselImages}
             renderItem={({ item }) => (
-              <Image source={item} style={styles.imagenPublicacion} />
+              <Image source={{uri: item}} style={styles.imagenPublicacion} />
             )}
             sliderWidth={500}
             itemWidth={500}

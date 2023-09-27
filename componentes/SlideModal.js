@@ -75,6 +75,7 @@ const SlideModal = ({ visible, onClose }) => {
   const [newUserName, setNewUserName] = useState('');
   const [user, setUser] = useState ('');
   const [idUser, setIdUser] = useState('');
+  const [newUserImage,setNewUserImage]= useState('');
 
   console.log("perfil: ", token);
 
@@ -89,6 +90,7 @@ const SlideModal = ({ visible, onClose }) => {
       setUser(response.data);
       setNewName(response.data[0].name);
       setNewUserName(response.data[0].userName);
+      setNewUserImage(response.data[0].image)
   
       // Declarar la constante idUser
       setIdUser(response.data[0].idUser);
@@ -141,7 +143,7 @@ const SlideModal = ({ visible, onClose }) => {
           {/* Content of the modal */}
           <View style={[styles.usuario]}>
             <Image
-                source={require('../Imagenes/usuario.png')}
+                source={{uri: newUserImage}}
                 style={styles.imagenUsuario}
             />
             <TouchableOpacity
