@@ -13,7 +13,7 @@ export default function InicioScreen({ navigation }) {
 
         if (token !== null) {
           const response = await axios.get(
-            ` https://buddy-app2.loca.lt/security/auth/expire`,
+            `  https://2f6b-181-91-230-36.ngrok-free.app/security/auth/expire`,
             { headers: { "auth-token": token } }
           );
           if (response.status === 200) {

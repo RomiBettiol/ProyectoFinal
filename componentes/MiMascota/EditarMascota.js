@@ -62,7 +62,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        ` https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
+        `  https://2f6b-181-91-230-36.ngrok-free.app/mypet/pet/${mascota.idPet}`,
         {
           headers: {
             "auth-token": token,
@@ -95,7 +95,7 @@ export default function EditarMascota({
     console.log(raza);
     // Obtener tipos de mascotas
     axios
-      .get(" https://buddy-app2.loca.lt/parameters/petType")
+      .get("  https://2f6b-181-91-230-36.ngrok-free.app/parameters/petType")
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({

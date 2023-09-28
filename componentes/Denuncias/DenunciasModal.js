@@ -35,12 +35,16 @@ const DenunciasModal = ({
 
     // Realizar la solicitud POST utilizando Axios
     axios
-      .post(" https://buddy-app2.loca.lt/security/complaint/", complaintData, {
-        headers: {
-          "Content-Type": "application/json",
-          "auth-token": token,
-        },
-      })
+      .post(
+        "  https://2f6b-181-91-230-36.ngrok-free.app/security/complaint/",
+        complaintData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         console.log("Respuesta del servidor:", response.data); // Imprimir la respuesta del servidor
         onClose();

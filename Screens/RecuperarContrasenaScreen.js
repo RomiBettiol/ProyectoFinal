@@ -42,7 +42,7 @@ export default function RecuperarContrasenaScreen({}) {
 
     try {
       const response = await axios.post(
-        " https://buddy-app2.loca.lt/security/auth/resetPassword",
+        "  https://2f6b-181-91-230-36.ngrok-free.app/security/auth/resetPassword",
         {
           mail: email,
         }
@@ -79,6 +79,7 @@ export default function RecuperarContrasenaScreen({}) {
         <Text style={styles.titulo}>Recuperar contraseña</Text>
       </View>
       <View style={styles.contenedor2}>
+        <Text style={[{ fontSize: 20 }]}>Ingrese su mail</Text>
         <View style={styles.inputContainer}>
           <Image
             source={require("../Imagenes/usuario.png")}
@@ -86,7 +87,7 @@ export default function RecuperarContrasenaScreen({}) {
           />
           <TextInput
             style={styles.input}
-            placeholder="E-mail"
+            placeholder="Mail"
             value={email}
             onChangeText={setEmail}
             onBlur={() => setEmailValido(validarEmail(email))}
@@ -110,7 +111,7 @@ export default function RecuperarContrasenaScreen({}) {
           onPress={handleUpdate}
           disabled={!isFormValid}
         >
-          <Text style={styles.textoBoton}>Actualizar</Text>
+          <Text style={styles.textoBoton}>Enviar enlace</Text>
         </TouchableOpacity>
         <Modal
           visible={showErrorModal}
@@ -147,12 +148,11 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
     backgroundColor: "white",
+    height: "100%",
   },
 
   contenedor2: {
-    //flex: 1,
     height: 300,
     backgroundColor: "#DDC4B8",
     width: 350,
@@ -179,6 +179,8 @@ const styles = StyleSheet.create({
   footerBoton: {
     width: "100%",
     backgroundColor: "#FFFF8",
+    position: "absolute",
+    bottom: 0,
   },
 
   botonRegistro: {
@@ -231,7 +233,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   textoContrasena2: {
-    fontSize: 11,
+    fontSize: 16,
     marginTop: 2,
     color: `#ff0000`,
   },

@@ -49,7 +49,7 @@ export default function MiInfoImportante(token) {
   async function fetchInformacion() {
     try {
       const response = await axios.get(
-        ` https://buddy-app2.loca.lt/mypet/information/${mascotaId}`
+        `  https://2f6b-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}`
       );
 
       if (Array.isArray(response.data.information)) {
@@ -94,7 +94,7 @@ export default function MiInfoImportante(token) {
     console.log(info.idInformation);
     try {
       const response = await axios.delete(
-        ` https://buddy-app2.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`
+        `  https://2f6b-181-91-230-36.ngrok-free.app/mypet/information/${mascotaId}/${info.idInformation}`
       );
       console.log("Info eliminado:", response.data);
       setShowSuccessModal(true);

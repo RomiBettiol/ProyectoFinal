@@ -64,7 +64,7 @@ export default function HomeScreen({ navigation }) {
       title: "Lista de usuarios",
       image: require("../Imagenes/usuario_screen.png"),
       permission: "READ_LISTA_USUARIOS",
-      onPress: () => navigation.navigate("ListUsuariosScreen", { token }),
+      onPress: () => navigation.navigate("ListaUsuariosScreen", { token }),
     },
     {
       title: "Lista de servicios",
@@ -93,7 +93,9 @@ export default function HomeScreen({ navigation }) {
     obtenerPermisos();
 
     axios
-      .get(` https://buddy-app2.loca.lt/reports/count/founds-success`)
+      .get(
+        `https://2f6b-181-91-230-36.ngrok-free.app/reports/count/founds-success`
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -105,7 +107,9 @@ export default function HomeScreen({ navigation }) {
 
     // Mascotas perdidas
     axios
-      .get(` https://buddy-app2.loca.lt/reports/count/losts-actives`)
+      .get(
+        `  https://2f6b-181-91-230-36.ngrok-free.app/reports/count/losts-actives`
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -117,7 +121,9 @@ export default function HomeScreen({ navigation }) {
 
     // Mascotas adoptadas
     axios
-      .get(` https://buddy-app2.loca.lt/reports/count/adoptions-success`)
+      .get(
+        `  https://2f6b-181-91-230-36.ngrok-free.app/reports/count/adoptions-success`
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -134,12 +140,21 @@ export default function HomeScreen({ navigation }) {
     }, [])
   );
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("auth-token");
+      navigation.navigate("InicioScreen");
+    } catch (error) {
+      setLogoutError("Hubo un error al cerrar sesión.");
+    }
+  };
+
   async function obtenerPermisos() {
     try {
       const token = await AsyncStorage.getItem("auth-token");
 
       const response = await axios.get(
-        ` https://buddy-app2.loca.lt/security/user/permissions`,
+        `https://2f6b-181-91-230-36.ngrok-free.app/security/user/permissions`,
         { headers: { "auth-token": token } }
       );
 
@@ -250,7 +265,7 @@ export default function HomeScreen({ navigation }) {
           >
             <Text style={styles.textAyuda}>Ayuda</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botonAyuda} onPress={closeModal}>
+          <TouchableOpacity style={styles.botonAyuda} onPress={handleLogout}>
             <Text style={styles.textAyuda}>Cerrar Sesión</Text>
           </TouchableOpacity>
         </View>

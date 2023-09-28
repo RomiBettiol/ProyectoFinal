@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import InicioScreen from "../Screens/InicioScreen";
 import PreScreen from "../Screens/PreScreen";
+import ListaServiciosScreen from "../Screens/ListaServiciosScreen";
+import ListaUsuariosScreen from "../Screens/ListaUsuariosScreen";
 import Registro from "../componentes/Registro";
 import HomeScreen from "../Screens/HomeScreen";
 import BusquedaScreen from "../Screens/BusquedaScreen";
@@ -86,6 +88,14 @@ export default function MainStack() {
         <Stack.Screen
           name="PublicacionBusqueda"
           component={PublicacionBusqueda}
+        />
+        <Stack.Screen
+          name="ListaUsuariosScreen"
+          component={ListaUsuariosScreen}
+        />
+        <Stack.Screen
+          name="ListaServiciosScreen"
+          component={ListaServiciosScreen}
         />
         <Stack.Screen
           name="PublicacionDetalle"
