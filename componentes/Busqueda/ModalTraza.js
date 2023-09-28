@@ -47,7 +47,7 @@ export default function ModalTraza({ navigation, route }) {
 
   useEffect(() => {
     fetchNombre();
-  }, [token, idUser]);
+  }, [token, idUser,initialLocation]);
 
   console.log("userModal2: ", user);
   console.log("idUserModal2: ", idUser);
@@ -100,7 +100,7 @@ export default function ModalTraza({ navigation, route }) {
     };
 
     getLocationAsync();
-  }, [idPublicationSearch]);
+  }, [idPublicationSearch, initialLocation]);
 
   const onDeleteTrace = async () => {
     console.log('información:', selectedTrace.idTrace)
@@ -212,8 +212,9 @@ export default function ModalTraza({ navigation, route }) {
           source={require("../../Imagenes/logo2.png")}
           style={styles.logo}
         />
-        <Text style={styles.textoTitulo}>¡Agrega una ubicación!</Text>
+        <Text style={styles.textoTitulo}>¡Agregá una ubicación!</Text>
       </View>
+      <Text style={styles.informacionModal}>Si viste una mascota perdida, no dudes en indicar el lugar en el mapa. ¡Haz click en el lugar que la viste!</Text>
       {initialLocation && (
         <View style={styles.mapaContainer}>
           <View style={styles.mapa}>
@@ -294,7 +295,7 @@ export default function ModalTraza({ navigation, route }) {
               style={styles.botonAgregarUbicacion}
               onPress={handleAgregarUbicacion}
             >
-              <Text>Agregar ubicación</Text>
+              <Text>Agregar traza</Text>
             </TouchableOpacity>
             {userNameTraza === userNamePublicacion && (
               <TouchableOpacity
@@ -356,5 +357,10 @@ const styles = StyleSheet.create({
   mapaContainer: {
     flex: 1, // Asegúrate de que mapaContainer tenga flex: 1
     margin: 5,
+  },
+  informacionModal: {
+    fontSize: 16,
+    textAlign: 'center',
+    padding: 10,
   },
 });
