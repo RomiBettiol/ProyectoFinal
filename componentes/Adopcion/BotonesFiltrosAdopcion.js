@@ -11,11 +11,13 @@ import {
 } from "react-native";
 import SearchBarExample from "../BarraBusqueda";
 import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import DenunciasModalAdopcion from "../Denuncias/DenunciasModalAdopcion";
 
 const BotonesFiltrosAdopcion = () => {
-  const buddyUrl = "budy-app.loca.lt";
   const navigation = useNavigation();
+  const route = useRoute();
+  const { token } = route.params;
   const [selectedFilter, setSelectedFilter] = useState("");
   const [publicaciones, setPublicaciones] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,6 +35,26 @@ const BotonesFiltrosAdopcion = () => {
   const [selectedBreed, setSelectedBreed] = useState(null);
   const [availableBreeds, setAvailableBreeds] = useState([]);
   const [filtrosExtraVisible, setFiltrosExtraVisible] = useState(false);
+  const [denunciaModalVisible, setDenunciaModalVisible] = useState(false);
+  const [selectedPublicationToReport, setSelectedPublicationToReport] =
+    useState(null);
+  const [selectedUserToReport, setSelectedUserToReport] = useState(null);
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+
+  console.log("token desde adopción: ", token);
+
+  const handleDenunciar = () => {
+    setDenunciaModalVisible(true);
+    setReportModalVisible(false); // Cierra el modal de reporte
+  };
+
+  const handleReportModal = (publication) => {
+    setSelectedPublicationToReport(publication.idPublicationAdoption);
+    setSelectedUserToReport(publication.user.idUser);
+    console.log("selectedPublicationToReport: ", selectedPublicationToReport);
+    console.log("selectedUserToReport: ", selectedUserToReport);
+    setReportModalVisible(true);
+  };
 
   const handleBreedChange = (breed) => {
     setSelectedBreed(breed);
@@ -106,7 +128,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/locality/")
+      .get("https://buddy-app2.loca.lt/parameters/locality/")
       .then((response) => {
         if (response.data && response.data.localities) {
           setLocalities(response.data.localities);
@@ -120,7 +142,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/petColor/")
+      .get("https://buddy-app2.loca.lt/parameters/petColor/")
       .then((response) => {
         if (response.data && response.data.petColors) {
           setPetColors(response.data.petColors);
@@ -134,7 +156,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/petBreed/")
+      .get("https://buddy-app2.loca.lt/parameters/petBreed/")
       .then((response) => {
         if (response.data && response.data.petBreeds) {
           setAvailableBreeds(
@@ -165,7 +187,7 @@ const BotonesFiltrosAdopcion = () => {
     setLoading(true);
 
     const apiUrl =
-      "  https://buddy-app2.loca.lt/publications/publication?modelType=adoption";
+      "https://buddy-app2.loca.lt/publications/publication?modelType=adoption";
 
     axios
       .get(apiUrl, {
@@ -239,6 +261,7 @@ const BotonesFiltrosAdopcion = () => {
               publicacion: item,
             })
           }
+          onLongPress={() => handleReportModal(item)}
         >
           <View style={[{ flexDirection: "row" }, styles.itemInformacion]}>
             {imageUri && <Image source={{ uri: imageUri }} />}
@@ -532,6 +555,34 @@ const BotonesFiltrosAdopcion = () => {
           </View>
         </View>
       </Modal>
+
+      <Modal visible={reportModalVisible} transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              onPress={() => handleDenunciar()} // Abre el modal de denuncia al hacer clic en "Denunciar"
+              style={styles.closeModalTextDenunca}
+            >
+              <Text style={styles.modalTitle}>Denunciar publicación</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setReportModalVisible(false)}
+              style={styles.closeModalTextDenuncia}
+            >
+              <Text style={styles.closeText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal de denuncia */}
+      <DenunciasModalAdopcion
+        visible={denunciaModalVisible}
+        onClose={() => setDenunciaModalVisible(false)}
+        selectedPublicationToReport={selectedPublicationToReport}
+        selectedUserToReport={selectedUserToReport}
+        token={token}
+      />
     </View>
   );
 };
@@ -740,6 +791,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: "center",
     marginLeft: 40,
+  },
+  closeModalTextDenuncia: {
+    backgroundColor: "#DDC4B8",
+    width: "100%",
+    height: 25,
+    borderRadius: 10,
+    textAlign: "center",
+    justifyContent: "center",
+    marginLeft: 0,
+    padding: 2,
+    elevation: 5,
+  },
+  closeText: {
+    marginLeft: 5,
+    marginRight: 5,
   },
 });
 

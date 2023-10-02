@@ -79,7 +79,7 @@ export default function MiPerfil({ navigation }) {
 
   useEffect(() => {
     axios
-      .get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
+      .get(`http://romibettiol.loca.lt/publications/publication/ByUser`, {
         headers: {
           "auth-token": token,
         },
@@ -337,7 +337,7 @@ export default function MiPerfil({ navigation }) {
     if (deleteSuccess || deleteFailure) {
       // Realiza la solicitud GET para cargar las publicaciones actualizadas
       axios
-        .get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
+        .get(`http://romibettiol.loca.lt/publications/publication/ByUser`, {
           headers: {
             "auth-token": token,
           },

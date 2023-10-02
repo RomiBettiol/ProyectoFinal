@@ -65,6 +65,9 @@ import EditarVaccin from "../componentes/MiMascota/EditarVaccin";
 import DenunciasModal from "../componentes/Denuncias/DenunciasModal";
 import DenunciaScreen from "../Screens/DenunciaScreen";
 import PreguntasFrecuentes from "../Screens/PreguntasFrecuentes";
+import ServiciosScreen from "../Screens/ServiciosScreen";
+import ServiciosDetalles from "../componentes/Serivicios/ServiciosDetalles";
+import PublicarServicio from "../Screens/PublicarServicio";
 
 const Stack = createNativeStackNavigator();
 
@@ -222,6 +225,18 @@ export default function MainStack() {
           name="PreguntasFrecuentes"
           component={PreguntasFrecuentes}
         />
+        <Stack.Screen
+          name="ServiciosScreen"
+          component={ServiciosScreen}
+        />
+        <Stack.Screen
+          name="ServiciosDetalle"
+          component={ServiciosDetalles}
+        />
+        <Stack.Screen
+          name="PublicarServicio"
+          component={PublicarServicio}
+        />        
       </Stack.Navigator>
     </NavigationContainer>
   );

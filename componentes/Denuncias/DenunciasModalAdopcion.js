@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import axios from "axios";
 
-const DenunciasModal = ({
+const DenunciasModalAdopcion = ({
   visible,
   onClose,
   selectedPublicationToReport,
@@ -24,7 +24,7 @@ const DenunciasModal = ({
 
   const handleDenunciar = (token) => {
     const complaintData = {
-      category: "SEARCH",
+      category: "ADOPTION",
       complaintDescription: motivo,
       idUserReported: selectedUserToReport,
       idReference: selectedPublicationToReport,
@@ -88,7 +88,7 @@ const DenunciasModal = ({
   );
 };
 
-export default DenunciasModal;
+export default DenunciasModalAdopcion;
 
 const styles = {
   modalContainer: {
