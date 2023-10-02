@@ -28,7 +28,7 @@ const ModalEditarProvincia = ({
       })
 =======
       .put(
-        ` https://e860-181-91-230-36.ngrok-free.app/parameters/province/${editingProvince.idProvince}`,
+        ` https://buddy-app2.loca.lt/parameters/province/${editingProvince.idProvince}`,
         {
           provinceName: provinceName,
         }

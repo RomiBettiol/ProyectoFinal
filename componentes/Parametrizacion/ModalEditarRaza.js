@@ -28,7 +28,7 @@ const ModalEditarRaza = ({
       })
 =======
       .put(
-        ` https://e860-181-91-230-36.ngrok-free.app/parameters/petBreed/${editingBreed.idPetBreed}`,
+        ` https://buddy-app2.loca.lt/parameters/petBreed/${editingBreed.idPetBreed}`,
         {
           petBreedName: breedName,
         }

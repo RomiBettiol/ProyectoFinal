@@ -28,7 +28,7 @@ const ModalEditarTipoAnimal = ({
       })
 =======
       .put(
-        ` https://e860-181-91-230-36.ngrok-free.app/parameters/petType/${editingType.idPetType}`,
+        ` https://buddy-app2.loca.lt/parameters/petType/${editingType.idPetType}`,
         {
           petTypeName: typeName,
         }

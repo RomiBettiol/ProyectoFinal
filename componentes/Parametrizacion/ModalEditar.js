@@ -28,7 +28,7 @@ const ModalEditar = ({
       })
 =======
       .put(
-        ` https://e860-181-91-230-36.ngrok-free.app/parameters/locality/${editingZone.idLocality}`,
+        ` https://buddy-app2.loca.lt/parameters/locality/${editingZone.idLocality}`,
         {
           localityName: localities,
         }

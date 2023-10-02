@@ -136,7 +136,7 @@ const FilterButtonsExample = () => {
 <<<<<<< HEAD
       .get("  https://buddy-app2.loca.lt/parameters/locality/")
 =======
-      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/locality/`)
+      .get(` https://buddy-app2.loca.lt/parameters/locality/`)
 >>>>>>> feature/servicios
       .then((response) => {
         if (response.data && response.data.localities) {
@@ -154,7 +154,7 @@ const FilterButtonsExample = () => {
 <<<<<<< HEAD
       .get("  https://buddy-app2.loca.lt/parameters/petColor/")
 =======
-      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/petColor/`)
+      .get(` https://buddy-app2.loca.lt/parameters/petColor/`)
 >>>>>>> feature/servicios
       .then((response) => {
         if (response.data && response.data.petColors) {
@@ -172,7 +172,7 @@ const FilterButtonsExample = () => {
 <<<<<<< HEAD
       .get("  https://buddy-app2.loca.lt/parameters/petBreed/")
 =======
-      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/petBreed/`)
+      .get(` https://buddy-app2.loca.lt/parameters/petBreed/`)
 >>>>>>> feature/servicios
       .then((response) => {
         if (response.data && response.data.petBreeds) {
@@ -220,7 +220,7 @@ const FilterButtonsExample = () => {
 =======
     axios
       .get(
-        ` https://e860-181-91-230-36.ngrok-free.app/publications/publication?modelType=search`,
+        ` https://buddy-app2.loca.lt/publications/publication?modelType=search`,
         {
           headers: {
             "Content-Type": "application/json",

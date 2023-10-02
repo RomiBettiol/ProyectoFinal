@@ -72,7 +72,7 @@ const SlideModal = ({ visible, onClose }) => {
 =======
   const fetchNombre = () => {
     axios
-      .get(` https://e860-181-91-230-36.ngrok-free.app/security/user/`, {
+      .get(` https://buddy-app2.loca.lt/security/user/`, {
 >>>>>>> feature/servicios
         headers: {
           "auth-token": token,

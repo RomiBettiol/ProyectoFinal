@@ -28,7 +28,7 @@ const ModalEditarColor = ({
       })
 =======
       .put(
-        ` https://e860-181-91-230-36.ngrok-free.app/parameters/petColor/${editingColor.idPetColor}`,
+        ` https://buddy-app2.loca.lt/parameters/petColor/${editingColor.idPetColor}`,
         {
           petColorName: colorName,
         }

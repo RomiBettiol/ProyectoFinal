@@ -40,7 +40,7 @@ const Registro = () => {
 <<<<<<< HEAD
           `  https://buddy-app2.loca.lt/security/auth/login`,
 =======
-          ` https://e860-181-91-230-36.ngrok-free.app/security/auth/login`,
+          ` https://buddy-app2.loca.lt/security/auth/login`,
 >>>>>>> feature/servicios
           {
             headers: {

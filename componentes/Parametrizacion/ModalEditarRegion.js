@@ -28,7 +28,7 @@ const ModalEditarRegion = ({
       })
 =======
       .put(
-        ` https://e860-181-91-230-36.ngrok-free.app/parameters/region/${editingRegion.idRegion}`,
+        ` https://buddy-app2.loca.lt/parameters/region/${editingRegion.idRegion}`,
         {
           regionName: regionName,
         }

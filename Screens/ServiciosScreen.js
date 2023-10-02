@@ -42,7 +42,7 @@ export default function ServiciosScreen() {
   const getServiceType = async () => {
     try {
       const types = await axios.get(
-        `https://e860-181-91-230-36.ngrok-free.app/parameters/serviceType/`
+        `https://buddy-app2.loca.lt/parameters/serviceType/`
       );
       console.log(types.data.serviceTypes);
       return types.data.serviceTypes;

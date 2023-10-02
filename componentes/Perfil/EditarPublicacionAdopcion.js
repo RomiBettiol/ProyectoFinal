@@ -69,7 +69,7 @@ export default function EditarPublicacionAdopcion({ route }) {
 <<<<<<< HEAD
         `  https://buddy-app2.loca.lt/publications/publication/${idPublicationAdoption}?modelType=adoption`,
 =======
-        ` https://e860-181-91-230-36.ngrok-free.app/publications/publication/${idPublicationAdoption}?modelType=adoption`,
+        ` https://buddy-app2.loca.lt/publications/publication/${idPublicationAdoption}?modelType=adoption`,
 >>>>>>> feature/servicios
         {
           title: title,
