@@ -93,7 +93,7 @@ export default function HomeScreen({ navigation }) {
     obtenerPermisos();
 
     axios
-      .get(` https://romibettiol.loca.lt/reports/count/founds-success`)
+      .get(` https://buddy-app2.loca.lt/reports/count/founds-success`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -105,7 +105,7 @@ export default function HomeScreen({ navigation }) {
 
     // Mascotas perdidas
     axios
-      .get(` https://romibettiol.loca.lt/reports/count/losts-actives`)
+      .get(` https://buddy-app2.loca.lt/reports/count/losts-actives`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -117,7 +117,7 @@ export default function HomeScreen({ navigation }) {
 
     // Mascotas adoptadas
     axios
-      .get(` https://romibettiol.loca.lt/reports/count/adoptions-success`)
+      .get(` https://buddy-app2.loca.lt/reports/count/adoptions-success`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -139,7 +139,7 @@ export default function HomeScreen({ navigation }) {
       const token = await AsyncStorage.getItem("auth-token");
 
       const response = await axios.get(
-        ` https://romibettiol.loca.lt/security/user/permissions`,
+        ` https://buddy-app2.loca.lt/security/user/permissions`,
         { headers: { "auth-token": token } }
       );
 

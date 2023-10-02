@@ -23,7 +23,7 @@ export default function ModalTraza({ navigation, route }) {
   //Trae info del usuario
   const fetchNombre = () => {
     axios
-      .get(` https://romibettiol.loca.lt/security/user/`, {
+      .get(` https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -47,7 +47,7 @@ export default function ModalTraza({ navigation, route }) {
 
   useEffect(() => {
     fetchNombre();
-  }, [token, idUser,initialLocation]);
+  }, [token, idUser, initialLocation]);
 
   console.log("userModal2: ", user);
   console.log("idUserModal2: ", idUser);
@@ -56,7 +56,7 @@ export default function ModalTraza({ navigation, route }) {
   const fetchTraces = async () => {
     try {
       const response = await axios.get(
-        ` https://romibettiol.loca.lt/publications/trace/${idPublicationSearch}`,
+        ` https://buddy-app2.loca.lt/publications/trace/${idPublicationSearch}`,
         {
           headers: {
             "auth-token": token,
@@ -103,10 +103,10 @@ export default function ModalTraza({ navigation, route }) {
   }, [idPublicationSearch, initialLocation]);
 
   const onDeleteTrace = async () => {
-    console.log('información:', selectedTrace.idTrace)
+    console.log("información:", selectedTrace.idTrace);
     try {
       const response = await axios.delete(
-        ` https://romibettiol.loca.lt/publications/trace/${selectedTrace.idTrace}`,
+        ` https://buddy-app2.loca.lt/publications/trace/${selectedTrace.idTrace}`,
         {
           headers: {
             "auth-token": token,
@@ -144,7 +144,7 @@ export default function ModalTraza({ navigation, route }) {
       try {
         // Realizar la solicitud POST
         const response = await axios.post(
-          " https://romibettiol.loca.lt/publications/trace/",
+          " https://buddy-app2.loca.lt/publications/trace/",
           data,
           {
             headers: {
@@ -214,7 +214,10 @@ export default function ModalTraza({ navigation, route }) {
         />
         <Text style={styles.textoTitulo}>¡Agregá una ubicación!</Text>
       </View>
-      <Text style={styles.informacionModal}>Si viste una mascota perdida, no dudes en indicar el lugar en el mapa. ¡Haz click en el lugar que la viste!</Text>
+      <Text style={styles.informacionModal}>
+        Si viste una mascota perdida, no dudes en indicar el lugar en el mapa.
+        ¡Haz click en el lugar que la viste!
+      </Text>
       {initialLocation && (
         <View style={styles.mapaContainer}>
           <View style={styles.mapa}>
@@ -360,7 +363,7 @@ const styles = StyleSheet.create({
   },
   informacionModal: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     padding: 10,
   },
 });
