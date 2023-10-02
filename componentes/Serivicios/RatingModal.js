@@ -40,7 +40,7 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
     };
   
     // Realizar la solicitud POST con el encabezado de autenticación
-    axios.post('https://buddy-app2.loca.lt/services/rating/', requestData, config)
+    axios.post('https://romibettiol.loca.lt/services/rating/', requestData, config)
       .then((response) => {
         // Aquí puedes manejar la respuesta exitosa si es necesario
         console.log('Respuesta del servidor:', response.data);

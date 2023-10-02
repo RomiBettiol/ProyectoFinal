@@ -171,7 +171,7 @@ export default function AltaTurno({ visible, onClose }) {
 
                 try {
                   const response = await axios.post(
-                    ` https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`,
+                    ` https://romibettiol.loca.lt/mypet/turn/${mascotaId}`,
                     data
                   );
                   console.log("Respuesta del servidor:", response.data);

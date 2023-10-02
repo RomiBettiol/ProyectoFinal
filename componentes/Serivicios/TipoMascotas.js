@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal, setSelectedAnimalId }) => {
+const TipoMascota = ({ selectedTypes, setSelectedTypes}) => {
   const [animalOptions, setAnimalOptions] = useState([]);
+  const [animalId, setAnimalId] = useState([]);
 
   useEffect(() => {
     axios
@@ -18,27 +19,42 @@ const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal, setSelectedAnim
       });
   }, []);
 
+  const toggleTypeSelection = (selectedOption) => {
+    const isSelected = selectedTypes.some((option) => option.idPetType === selectedOption.idPetType);
+  
+    if (isSelected) {
+      setSelectedTypes(selectedTypes.filter((option) => option.idPetType !== selectedOption.idPetType));
+    } else {
+      setSelectedTypes([...selectedTypes, selectedOption]);
+    }
+  
+    // Imprimir los IDs de las opciones seleccionadas en la consola
+    const selectedIds = selectedTypes.map((option) => ({
+      idPetType: option.idPetType,
+      petTypeName: option.petTypeName,
+    }));
+    setAnimalId(selectedIds);
+    console.log('IDs y nombres de las opciones seleccionadas:', selectedIds);
+  };
+
+  console.log('Animales elegidos: ', animalId);
+  
   return (
     <View style={styles.container}>
-      
-      
       <View style={styles.optionsContainer}>
         {animalOptions.map((animalOption, index) => (
           <TouchableOpacity
-          key={index}
-          style={[
-            styles.option,
-            selectedAnimal === animalOption.petTypeName && styles.selectedOption,
-          ]}
-          onPress={() => {
-            setSelectedAnimal(animalOption.petTypeName);
-            setSelectedAnimalId(animalOption.idPetType); // Agrega el ID al estado
-          }}
-        >
+            key={index}
+            style={[
+              styles.option,
+              selectedTypes.some((option) => option.idPetType === animalOption.idPetType) && styles.selectedOption,
+            ]}
+            onPress={() => toggleTypeSelection(animalOption)}
+          >
             <Text
               style={[
                 styles.optionText,
-                selectedAnimal === animalOption.petTypeName && styles.selectedOptionText,
+                selectedTypes.some((option) => option.idPetType === animalOption.idPetType) && styles.selectedOptionText,
               ]}
             >
               {animalOption.petTypeName}
@@ -54,13 +70,10 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 10,
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 2,
-  },
   optionsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    flexWrap: 'wrap',
   },
   option: {
     padding: 10,
@@ -80,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListaValoresAnimal;
+export default TipoMascota;

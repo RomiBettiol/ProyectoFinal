@@ -18,7 +18,7 @@ export default function DenunciaScreen({navigation}) {
   function loadDenuncias(token) {
     // Realiza una solicitud GET al servidor para obtener las denuncias
     axios
-      .get('https://buddy-app2.loca.lt/security/complaint/', {
+      .get('https://romibettiol.loca.lt/security/complaint/', {
         headers: {
           'auth-token': token,
         },
@@ -61,7 +61,7 @@ export default function DenunciaScreen({navigation}) {
   
       // Realizar una solicitud DELETE al servidor para eliminar la denuncia con el encabezado personalizado
       axios
-        .delete(`https://buddy-app2.loca.lt/security/complaint/${denunciaToReject}`, { headers })
+        .delete(`https://romibettiol.loca.lt/security/complaint/${denunciaToReject}`, { headers })
         .then((response) => {
           // Manejar la respuesta del servidor si es necesario
           console.log('Denuncia rechazada con éxito');
@@ -91,7 +91,7 @@ function handleBloquear(idComplaint, token) {
   };
 
   axios
-    .post(`https://buddy-app2.loca.lt/security/complaint/execute/${data.validate}/${idComplaint}`, null, {
+    .post(`https://romibettiol.loca.lt/security/complaint/execute/${data.validate}/${idComplaint}`, null, {
       headers: headers, // Pasa los encabezados con la solicitud
     })
     .then((response) => {

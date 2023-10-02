@@ -67,7 +67,7 @@ const SlideModal = ({ visible, onClose }) => {
 
   const fetchNombre = () => {
     axios
-      .get(` https://buddy-app2.loca.lt/security/user/`, {
+      .get(` https://romibettiol.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },

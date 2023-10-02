@@ -21,7 +21,7 @@ const DenunciasModalAdopcion = ({ visible, onClose, selectedPublicationToReport,
     console.log('token: ', token);
   
     // Realizar la solicitud POST utilizando Axios
-    axios.post('https://buddy-app2.loca.lt/security/complaint/', complaintData, {
+    axios.post('https://romibettiol.loca.lt/security/complaint/', complaintData, {
       headers: {
         'Content-Type': 'application/json',
         'auth-token': token,

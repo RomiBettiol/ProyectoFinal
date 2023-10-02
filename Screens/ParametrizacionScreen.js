@@ -170,7 +170,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("http://buddy-app2.loca.lt/parameters/province/", newProvince)
+      .post("http://romibettiol.loca.lt/parameters/province/", newProvince)
       .then((response) => {
         setSuccessModalVisible(true); // Mostrar el modal de éxito
         getProvinces(); // Actualizar la lista de provincias después de agregar
@@ -197,7 +197,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("http://buddy-app2.loca.lt/parameters/petType/", newType)
+      .post("http://romibettiol.loca.lt/parameters/petType/", newType)
       .then((response) => {
         //console.log('Tipo de animal agregado exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
@@ -225,7 +225,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("http://buddy-app2.loca.lt/parameters/petColor/", newColor)
+      .post("http://romibettiol.loca.lt/parameters/petColor/", newColor)
       .then((response) => {
         getPetColors(); // Actualizar la lista de colores después de agregar
         setSuccessModalVisible(true); // Mostrar mensaje de éxito
@@ -244,7 +244,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleZoneDelete = (zoneId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/locality/${zoneId}`)
+      .delete(`http://romibettiol.loca.lt/parameters/locality/${zoneId}`)
       .then((response) => {
         handleSuccessfulDeletePublication();
         getZonas();
@@ -258,7 +258,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleBreedDelete = async (breedId) => {
     console.log("ID:", breedId);
     await axios
-      .delete(`http://buddy-app2.loca.lt/parameters/petBreed/${breedId}`)
+      .delete(`http://romibettiol.loca.lt/parameters/petBreed/${breedId}`)
       .then((response) => {
         handleSuccessfulDeletePublication();
         getPetBreeds();
@@ -271,7 +271,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleColorDelete = (colorId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/petColor/${colorId}`)
+      .delete(`http://romibettiol.loca.lt/parameters/petColor/${colorId}`)
       .then((response) => {
         handleSuccessfulDeletePublication();
         getPetColors();
@@ -284,7 +284,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleTypeDelete = (typeId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/petType/${typeId}`)
+      .delete(`http://romibettiol.loca.lt/parameters/petType/${typeId}`)
       .then((response) => {
         handleSuccessfulDeletePublication();
         getPetTypes();
@@ -297,7 +297,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleProvinceDelete = (provinceId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/province/${provinceId}`)
+      .delete(`http://romibettiol.loca.lt/parameters/province/${provinceId}`)
       .then((response) => {
         handleSuccessfulDeletePublication();
         getProvinces();
@@ -310,7 +310,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleRegionDelete = (regionId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/region/${regionId}`)
+      .delete(`http://romibettiol.loca.lt/parameters/region/${regionId}`)
       .then((response) => {
         handleSuccessfulDeletePublication();
         getRegions();
@@ -411,7 +411,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getZonas = () => {
     axios
-      .get(" https://buddy-app2.loca.lt/parameters/locality/", {
+      .get(" https://romibettiol.loca.lt/parameters/locality/", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -432,7 +432,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetColors = () => {
     axios
-      .get(" https://buddy-app2.loca.lt/parameters/petColor/")
+      .get(" https://romibettiol.loca.lt/parameters/petColor/")
       .then((response) => {
         const colors = response.data.petColors;
         if (colors && Array.isArray(colors)) {
@@ -449,7 +449,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetTypes = () => {
     axios
-      .get(" https://buddy-app2.loca.lt/parameters/petType/")
+      .get(" https://romibettiol.loca.lt/parameters/petType/")
       .then((response) => {
         const types = response.data.petTypes;
         if (types && Array.isArray(types)) {
@@ -466,7 +466,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetBreeds = () => {
     axios
-      .get(" https://buddy-app2.loca.lt/parameters/petBreed/")
+      .get(" https://romibettiol.loca.lt/parameters/petBreed/")
       .then((response) => {
         const breeds = response.data.petBreeds;
         if (breeds && Array.isArray(breeds)) {
@@ -483,7 +483,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getProvinces = () => {
     axios
-      .get(" https://buddy-app2.loca.lt/parameters/province/")
+      .get(" https://romibettiol.loca.lt/parameters/province/")
       .then((response) => {
         const fetchedProvinces = response.data.provinces;
         if (fetchedProvinces && Array.isArray(fetchedProvinces)) {
@@ -500,7 +500,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getRegions = () => {
     axios
-      .get(" https://buddy-app2.loca.lt/parameters/region/")
+      .get(" https://romibettiol.loca.lt/parameters/region/")
       .then((response) => {
         const fetchedRegions = response.data.regions;
         if (fetchedRegions && Array.isArray(fetchedRegions)) {

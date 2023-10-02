@@ -2,46 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import axios from 'axios';
 
-const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal, setSelectedAnimalId }) => {
-  const [animalOptions, setAnimalOptions] = useState([]);
+const ListaValoresTipoServicios = ({ selectedServiceType, setSelectedServiceType, setSelectedServiceTypeId }) => {
+  const [serviceTypeOptions, setServiceTypeOptions] = useState([]);
 
   useEffect(() => {
     axios
-      .get('http://romibettiol.loca.lt/parameters/petType/')
+      .get('https://romibettiol.loca.lt/parameters/serviceType')
       .then((response) => {
-        console.log('Tipos de animal exitosos:', response.data);
-        setAnimalOptions(response.data.petTypes);
+        console.log('Tipos de servicio exitosos:', response.data);
+        setServiceTypeOptions(response.data.serviceTypes);
       })
       .catch((error) => {
         console.error('Error en la solicitud GET:', error);
-        setAnimalOptions([]);
+        setServiceTypeOptions([]);
       });
   }, []);
 
   return (
     <View style={styles.container}>
-      
-      
       <View style={styles.optionsContainer}>
-        {animalOptions.map((animalOption, index) => (
+        {serviceTypeOptions.map((serviceTypeOption, index) => (
           <TouchableOpacity
-          key={index}
-          style={[
-            styles.option,
-            selectedAnimal === animalOption.petTypeName && styles.selectedOption,
-          ]}
-          onPress={() => {
-            setSelectedAnimal(animalOption.petTypeName);
-            setSelectedAnimalId(animalOption.idPetType); // Agrega el ID al estado
-          }}
-        >
+            key={index}
+            style={[
+              styles.option,
+              selectedServiceType === serviceTypeOption.serviceTypeName && styles.selectedOption,
+            ]}
+            onPress={() => {
+              setSelectedServiceType(serviceTypeOption.serviceTypeName);
+              setSelectedServiceTypeId(serviceTypeOption.idServiceType); // Agrega el ID al estado
+            }}
+          >
             <Text
               style={[
                 styles.optionText,
-                selectedAnimal === animalOption.petTypeName && styles.selectedOptionText,
+                selectedServiceType === serviceTypeOption.serviceTypeName && styles.selectedOptionText,
               ]}
             >
-              {animalOption.petTypeName}
+              {serviceTypeOption.serviceTypeName}
             </Text>
           </TouchableOpacity>
         ))}
@@ -53,10 +51,6 @@ const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal, setSelectedAnim
 const styles = StyleSheet.create({
   container: {
     marginBottom: 10,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 2,
   },
   optionsContainer: {
     flexDirection: 'row',
@@ -80,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListaValoresAnimal;
+export default ListaValoresTipoServicios;

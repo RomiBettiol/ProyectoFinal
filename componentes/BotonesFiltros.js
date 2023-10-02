@@ -113,7 +113,7 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
-      .get('https://buddy-app2.loca.lt/parameters/locality/')
+      .get('https://romibettiol.loca.lt/parameters/locality/')
       .then((response) => {
         if (response.data && response.data.localities) {
           setLocalities(response.data.localities);
@@ -127,7 +127,7 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
-      .get('https://buddy-app2.loca.lt/parameters/petColor/')
+      .get('https://romibettiol.loca.lt/parameters/petColor/')
       .then((response) => {
         if (response.data && response.data.petColors) {
           setPetColors(response.data.petColors);
@@ -141,7 +141,7 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get('https://buddy-app2.loca.lt/parameters/petBreed/')
+      .get('https://romibettiol.loca.lt/parameters/petBreed/')
       .then((response) => {
         if (response.data && response.data.petBreeds) {
           setAvailableBreeds(response.data.petBreeds.map((breed) => breed.petBreedName));
@@ -169,7 +169,7 @@ const FilterButtonsExample = () => {
     const getPublicaciones = () => {
       setLoading(true);
   
-      const apiUrl = 'https://buddy-app2.loca.lt/publications/publication?modelType=search';
+      const apiUrl = 'https://romibettiol.loca.lt/publications/publication?modelType=search';
   
       axios
         .get(apiUrl, {

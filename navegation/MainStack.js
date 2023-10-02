@@ -63,6 +63,7 @@ import DenunciaScreen from "../Screens/DenunciaScreen";
 import PreguntasFrecuentes from "../Screens/PreguntasFrecuentes";
 import ServiciosScreen from "../Screens/ServiciosScreen";
 import ServiciosDetalles from "../componentes/Serivicios/ServiciosDetalles";
+import PublicarServicio from "../Screens/PublicarServicio";
 
 const Stack = createNativeStackNavigator();
 
@@ -215,6 +216,10 @@ export default function MainStack() {
           name="ServiciosDetalle"
           component={ServiciosDetalles}
         />
+        <Stack.Screen
+          name="PublicarServicio"
+          component={PublicarServicio}
+        />        
       </Stack.Navigator>
     </NavigationContainer>
   );

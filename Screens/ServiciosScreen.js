@@ -21,7 +21,7 @@ export default function ServiciosScreen({ navigation }) {
     };
 
     // Realizar la solicitud GET al backend cuando el componente se monta
-    axios.get('https://buddy-app2.loca.lt/services/service/', config)
+    axios.get('https://romibettiol.loca.lt/services/service/', config)
       .then((response) => {
         setServicios(response.data);
       })
@@ -79,6 +79,13 @@ export default function ServiciosScreen({ navigation }) {
           ))}
         </View>
       </ScrollView>
+      <TouchableOpacity 
+        onPress={() =>
+          navigation.navigate("PublicarServicio", { token })
+        }
+      >
+          <Text>Publicar servicio</Text>
+      </TouchableOpacity>
     </View>
   );
 }
