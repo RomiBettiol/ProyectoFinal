@@ -50,8 +50,6 @@ export default function MiPerfil({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
 
-  console.log("perfil: ", token);
-
   //Trae info del usuario
   useEffect(() => {
     axios
@@ -130,7 +128,7 @@ export default function MiPerfil({ navigation }) {
     return hasNumber && hasSpecialChar && isLengthValid;
   };
 
-  const handleUpdatePassword = async () => {
+  const handleUpdatePassword = () => {
     if (currentPassword === "" || newPassword === "" || repeatPassword === "") {
       setShowFieldsEmptyMessage(true);
       setPasswordMismatchError(false);
@@ -353,7 +351,7 @@ export default function MiPerfil({ navigation }) {
           );
         });
     }
-  }, [deleteSuccess, deleteFailure]);
+  }, [deleteSuccess, deleteFailure, { URL }]);
 
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);

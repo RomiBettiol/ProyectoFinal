@@ -56,7 +56,7 @@ export default function HomeScreen({ navigation }) {
     },
     {
       title: "Denuncias",
-      image: require("../Imagenes/denuncias.png"),
+      image: require("../Imagenes/denuncia.png"),
       permission: "READ_DENUNCIAS",
       onPress: () => navigation.navigate("DenunciaScreen", { token }),
     },
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
 
   informe2: {
     backgroundColor: "#58DCD4",
-    marginTop: 3,
+    marginTop: 10,
     marginBottom: 10,
     width: "70%",
     height: 50,
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
 
   informe3: {
     backgroundColor: "#9258DC",
-    marginTop: 3,
+    marginTop: 10,
     marginBottom: 20,
     width: "70%",
     height: 50,

@@ -64,10 +64,16 @@ const SlideModal = ({ visible, onClose }) => {
   const [idUser, setIdUser] = useState("");
 
   //Trae info del usuario
+<<<<<<< HEAD
 
   const fetchNombre = () => {
     axios
       .get(`  https://buddy-app2.loca.lt/security/user/`, {
+=======
+  const fetchNombre = () => {
+    axios
+      .get(` https://e860-181-91-230-36.ngrok-free.app/security/user/`, {
+>>>>>>> feature/servicios
         headers: {
           "auth-token": token,
         },

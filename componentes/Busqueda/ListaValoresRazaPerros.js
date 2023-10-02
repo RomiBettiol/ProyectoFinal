@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
+import axios from "axios";
 
 const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
   const [selectedBreed, setSelectedBreed] = useState(null);
@@ -9,9 +9,11 @@ const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
 
   const getRazas = () => {
     axios
-      .get(`http://buddy-app2.loca.lt/parameters/petBreed/byType/${selectedAnimal}`)
+      .get(
+        `http://buddy-app2.loca.lt/parameters/petBreed/byType/${selectedAnimal}`
+      )
       .then((response) => {
-        console.log('Razas exitosas:', response.data);
+        console.log("Razas exitosas:", response.data);
         const petBreeds = response.data;
         if (petBreeds && Array.isArray(petBreeds)) {
           setBreedOptions(petBreeds);
@@ -20,7 +22,7 @@ const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
         }
       })
       .catch((error) => {
-        console.log('Error en la solicitud GET:', error);
+        console.log("Error en la solicitud GET:", error);
         setBreedOptions([]);
       });
   };
@@ -29,7 +31,6 @@ const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
     getRazas();
     setSelectedBreed(null); // Reiniciar selectedBreed cuando cambie el animal seleccionado
   }, [selectedAnimal]);
-
 
   return (
     <Dropdown
@@ -47,7 +48,7 @@ const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
       value={selectedBreed ? selectedBreed.petBreedName : null}
       onChange={(item) => {
         setSelectedBreed(item);
-        setSelectedBreedId(item.idPetBreed)
+        setSelectedBreedId(item.idPetBreed);
       }}
     />
   );
@@ -58,10 +59,10 @@ export default ListaValoresRazaPerros;
 const styles = StyleSheet.create({
   dropdown: {
     height: 40,
-    backgroundColor: '#EEE9E9',
+    backgroundColor: "#EEE9E9",
     padding: 25,
     borderRadius: 40,
-    width: '93%',
+    width: "93%",
     marginTop: 20,
   },
   placeholderStyle: {

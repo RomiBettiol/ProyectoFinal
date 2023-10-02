@@ -53,6 +53,8 @@ export default function PublicacionBusqueda({ navigation }) {
   };
 
   const handlePost = async () => {
+    const longitude = 12.09812;
+    const latitude = 34.56789;
     const images = "";
     const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay}`;
 
@@ -60,6 +62,8 @@ export default function PublicacionBusqueda({ navigation }) {
       const postData = {
         title,
         description,
+        longitude,
+        latitude,
         images,
         idPetType: selectedAnimalId,
         idPetBreed: selectedBreedId,

@@ -115,7 +115,7 @@ const BotonesFiltrosAdopcion = () => {
       .catch((error) => {
         console.error("Error al obtener las zonas desde el backend:", error);
       });
-  }, []);
+  }, [URL]);
 
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
@@ -129,7 +129,7 @@ const BotonesFiltrosAdopcion = () => {
       .catch((error) => {
         console.error("Error al obtener los colores desde el backend:", error);
       });
-  }, []);
+  }, [URL]);
 
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend

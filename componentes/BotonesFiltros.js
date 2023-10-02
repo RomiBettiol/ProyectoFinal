@@ -11,8 +11,12 @@ import {
 } from "react-native";
 import SearchBarExample from "./BarraBusqueda";
 import axios from "axios";
+<<<<<<< HEAD
 import { useNavigation, useRoute } from "@react-navigation/native";
 import DenunciasModal from "./Denuncias/DenunciasModal";
+=======
+import { useNavigation } from "@react-navigation/native";
+>>>>>>> feature/servicios
 
 const FilterButtonsExample = () => {
   const navigation = useNavigation();
@@ -63,6 +67,10 @@ const FilterButtonsExample = () => {
   const filterByBreed = (breed) => {
     setLoading(true);
 
+<<<<<<< HEAD
+=======
+    // Filtra las publicaciones en base a la raza
+>>>>>>> feature/servicios
     const filteredData = publicaciones.filter(
       (item) => item.petBreed.petBreedName === breed
     );
@@ -125,7 +133,11 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
+<<<<<<< HEAD
       .get("  https://buddy-app2.loca.lt/parameters/locality/")
+=======
+      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/locality/`)
+>>>>>>> feature/servicios
       .then((response) => {
         if (response.data && response.data.localities) {
           setLocalities(response.data.localities);
@@ -139,7 +151,11 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
+<<<<<<< HEAD
       .get("  https://buddy-app2.loca.lt/parameters/petColor/")
+=======
+      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/petColor/`)
+>>>>>>> feature/servicios
       .then((response) => {
         if (response.data && response.data.petColors) {
           setPetColors(response.data.petColors);
@@ -153,7 +169,11 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
+<<<<<<< HEAD
       .get("  https://buddy-app2.loca.lt/parameters/petBreed/")
+=======
+      .get(` https://e860-181-91-230-36.ngrok-free.app/parameters/petBreed/`)
+>>>>>>> feature/servicios
       .then((response) => {
         if (response.data && response.data.petBreeds) {
           setAvailableBreeds(
@@ -164,7 +184,11 @@ const FilterButtonsExample = () => {
       .catch((error) => {
         console.error("Error al obtener las razas desde el backend:", error);
       });
+<<<<<<< HEAD
   }, []);
+=======
+  }, [URL]);
+>>>>>>> feature/servicios
 
   const closeModal = () => {
     setModalVisible(false);
@@ -182,6 +206,7 @@ const FilterButtonsExample = () => {
   const getPublicaciones = () => {
     setLoading(true);
 
+<<<<<<< HEAD
     const apiUrl =
       "  https://buddy-app2.loca.lt/publications/publication?modelType=search";
 
@@ -192,6 +217,18 @@ const FilterButtonsExample = () => {
           "Bypass-Tunnel-Reminder": "",
         },
       })
+=======
+    axios
+      .get(
+        ` https://e860-181-91-230-36.ngrok-free.app/publications/publication?modelType=search`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Bypass-Tunnel-Reminder": "",
+          },
+        }
+      )
+>>>>>>> feature/servicios
       .then((response) => {
         if (response.data && Array.isArray(response.data)) {
           setPublicaciones(response.data);
@@ -261,12 +298,17 @@ const FilterButtonsExample = () => {
         <TouchableOpacity
           style={styles.itemContainer}
           onPress={() =>
+<<<<<<< HEAD
             navigation.navigate("PublicacionDetalle", {
               publicacion: item,
               token,
             })
           }
           onLongPress={() => handleReportModal(item)}
+=======
+            navigation.navigate("PublicacionDetalle", { publicacion: item })
+          }
+>>>>>>> feature/servicios
         >
           <View style={[{ flexDirection: "row" }, styles.itemInformacion]}>
             {imageUri && <Image source={{ uri: imageUri }} />}

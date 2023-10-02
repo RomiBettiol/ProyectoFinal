@@ -77,7 +77,11 @@ export default function EditarPublicacionBusqueda({ route }) {
       });
 
       const response = await axios.put(
+<<<<<<< HEAD
         `  https://buddy-app2.loca.lt/publications/publication/${idPublicationSearch}?modelType=search`,
+=======
+        ` https://e860-181-91-230-36.ngrok-free.app/publications/publication/${idPublicationSearch}?modelType=search`,
+>>>>>>> feature/servicios
         {
           title,
           description,

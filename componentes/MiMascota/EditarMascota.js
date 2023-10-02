@@ -128,7 +128,7 @@ export default function EditarMascota({
       .catch((error) => {
         console.error("Error al obtener razas de mascotas:", error);
       });
-  }, []);
+  }, [URL]);
   return (
     <View style={styles.container}>
       <View style={styles.scroll}>

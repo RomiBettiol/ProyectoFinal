@@ -48,8 +48,6 @@ export default function NuevaMascota({
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const authtoken = token;
-  console.log("token en agregarmascota: " + token);
-  console.log("authtoken: " + authtoken);
 
   const [petData, setPetData] = useState({
     petName: "",
@@ -182,7 +180,12 @@ export default function NuevaMascota({
             </View>
           </ScrollView>
 
-          <View style={[styles.dropdown, { borderRadius: 100 }]}>
+          <View
+            style={[
+              styles.subcontenedor4,
+              { width: "100%", borderRadius: 100 },
+            ]}
+          >
             {selectedAnimal && (
               <ListaValoresRazaPerros
                 selectedAnimal={selectedAnimal}
@@ -241,7 +244,7 @@ const styles = StyleSheet.create({
   },
 
   titulo: {
-    marginTop: 10,
+    // marginTop: 10,
     fontSize: 22,
   },
   scroll: {
@@ -266,7 +269,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   textoFecha: {
-    marginLeft: 37,
+    marginLeft: 35,
     fontSize: 16,
     marginTop: 10,
   },

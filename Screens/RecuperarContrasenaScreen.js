@@ -79,7 +79,7 @@ export default function RecuperarContrasenaScreen({}) {
         <Text style={styles.titulo}>Recuperar contraseña</Text>
       </View>
       <View style={styles.contenedor2}>
-        <Text style={[{ fontSize: 20 }]}>Ingrese su mail</Text>
+        <Text>Ingrese su mail</Text>
         <View style={styles.inputContainer}>
           <Image
             source={require("../Imagenes/usuario.png")}
@@ -148,11 +148,12 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 10,
     backgroundColor: "white",
-    height: "100%",
   },
 
   contenedor2: {
+    //flex: 1,
     height: 300,
     backgroundColor: "#DDC4B8",
     width: 350,

@@ -100,9 +100,8 @@ export default function MiMascotaScreen() {
 
   const fetchMascotas = async () => {
     try {
-      console.log("estoy adentro del try, token:", token);
       const response = await axios.get(
-        "  https://buddy-app2.loca.lt/mypet/pet",
+        ` https://e860-181-91-230-36.ngrok-free.app/mypet/pet`,
         {
           headers: {
             "auth-token": token,
@@ -110,15 +109,13 @@ export default function MiMascotaScreen() {
         }
       );
       const mascotasData = response.data.pets;
-      console.log(mascotasData);
       setMascotas(mascotasData);
-      console.log(mascotas);
+
       setBotonesVisibles(Array(mascotasData.length).fill(false)); // Inicializa el estado
     } catch (error) {
       if (error.response && error.response.status === 404) {
       }
     }
-    console.log("estoy saliendo del try");
   };
 
   useEffect(() => {
@@ -127,7 +124,6 @@ export default function MiMascotaScreen() {
 
   const idMascotaSeleccionada = (mascotaId) => {
     setSelectedMascotaId(mascotaId);
-    console.log(selectedMascotaId);
   };
 
   return (
@@ -379,6 +375,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
     marginTop: 15,
+    marginBottom: 15,
   },
   imagAgregar: {
     borderRadius: 50,

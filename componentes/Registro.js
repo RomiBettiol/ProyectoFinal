@@ -37,7 +37,11 @@ const Registro = () => {
     if (formValid) {
       try {
         const response = await axios.post(
+<<<<<<< HEAD
           `  https://buddy-app2.loca.lt/security/auth/login`,
+=======
+          ` https://e860-181-91-230-36.ngrok-free.app/security/auth/login`,
+>>>>>>> feature/servicios
           {
             headers: {
               "Content-Type": "application/json",

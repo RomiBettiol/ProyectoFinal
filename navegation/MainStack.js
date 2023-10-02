@@ -3,10 +3,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import InicioScreen from "../Screens/InicioScreen";
 import PreScreen from "../Screens/PreScreen";
+<<<<<<< HEAD
 import ListaServiciosScreen from "../Screens/ListaServiciosScreen";
 import ListaUsuariosScreen from "../Screens/ListaUsuariosScreen";
 import AltaEstablecimientoScreen from "../Screens/AltaEstablecimientoScreen";
 import RyPScreen from "../Screens/RyPScreen";
+=======
+>>>>>>> feature/servicios
 import Registro from "../componentes/Registro";
 import HomeScreen from "../Screens/HomeScreen";
 import BusquedaScreen from "../Screens/BusquedaScreen";
@@ -52,6 +55,7 @@ import AltaInformacion from "../componentes/MiMascota/AltaInformacion";
 import ReportesScreen from "../Screens/ReportesScreen";
 import EditarPublicacionAdopcion from "../componentes/Perfil/EditarPublicacionAdopcion";
 import EditarPublicacionBusqueda from "../componentes/Perfil/EditarPublicacionBusqueda";
+<<<<<<< HEAD
 import ModalTraza from "../componentes/Busqueda/ModalTraza";
 import InfoModal from "../componentes/MiMascota/InfoModal";
 import BarraBusquedaMascota from "../componentes/MiMascota/BarraBusquedaMascota";
@@ -66,6 +70,20 @@ import DenunciasModal from "../componentes/Denuncias/DenunciasModal";
 import DenunciaScreen from "../Screens/DenunciaScreen";
 import PreguntasFrecuentes from "../Screens/PreguntasFrecuentes";
 
+=======
+
+import InfoModal from "../componentes/MiMascota/InfoModal";
+import BarraBusquedaMascota from "../componentes/MiMascota/BarraBusquedaMascota";
+import BotonVaccine from "../componentes/MiMascota/BotonVaccine";
+import AltaVaccin from "../componentes/MiMascota/AltaVaccin";
+import VaccinModal from "../componentes/MiMascota/VaccinModal";
+import ListaValoresAñoMascota from "../componentes/MiMascota/ListaValoresAñoMascota";
+import ListaValoresDiasMascota from "../componentes/MiMascota/ListaValoresDiasMascota";
+import ListaValoresMesesMascota from "../componentes/MiMascota/ListaValoresMesesMascota";
+import EditarVaccin from "../componentes/MiMascota/EditarVaccin";
+import ServiciosScreen from "../Screens/ServiciosScreen";
+
+>>>>>>> feature/servicios
 const Stack = createNativeStackNavigator();
 
 export default function MainStack() {
@@ -87,11 +105,16 @@ export default function MainStack() {
         <Stack.Screen name="Registro" component={Registro} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="BusquedaScreen" component={BusquedaScreen} />
+<<<<<<< HEAD
+=======
+        <Stack.Screen name="ServiciosScreen" component={ServiciosScreen} />
+>>>>>>> feature/servicios
         <Stack.Screen
           name="PublicacionBusqueda"
           component={PublicacionBusqueda}
         />
         <Stack.Screen
+<<<<<<< HEAD
           name="AltaEstablecimientoScreen"
           component={AltaEstablecimientoScreen}
         />
@@ -105,6 +128,8 @@ export default function MainStack() {
           component={ListaServiciosScreen}
         />
         <Stack.Screen
+=======
+>>>>>>> feature/servicios
           name="PublicacionDetalle"
           component={PublicacionDetalle}
         />
@@ -214,6 +239,7 @@ export default function MainStack() {
           component={ListaValoresMesesMascota}
         />
         <Stack.Screen name="EditarVaccin" component={EditarVaccin} />
+<<<<<<< HEAD
 
         <Stack.Screen name="ModalTraza" component={ModalTraza} />
         <Stack.Screen name="DenunciasModal" component={DenunciasModal} />
@@ -222,6 +248,8 @@ export default function MainStack() {
           name="PreguntasFrecuentes"
           component={PreguntasFrecuentes}
         />
+=======
+>>>>>>> feature/servicios
       </Stack.Navigator>
     </NavigationContainer>
   );
