@@ -23,7 +23,7 @@ export default function ModalTraza({ navigation, route }) {
   //Trae info del usuario
   const fetchNombre = () => {
     axios
-      .get(`  https://2f6b-181-91-230-36.ngrok-free.app/security/user/`, {
+      .get(`  https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -56,7 +56,7 @@ export default function ModalTraza({ navigation, route }) {
   const fetchTraces = async () => {
     try {
       const response = await axios.get(
-        `  https://2f6b-181-91-230-36.ngrok-free.app/publications/trace/${idPublicationSearch}`,
+        `  https://buddy-app2.loca.lt/publications/trace/${idPublicationSearch}`,
         {
           headers: {
             "auth-token": token,
@@ -107,7 +107,7 @@ export default function ModalTraza({ navigation, route }) {
     // Make an API request to delete the selected trace
     try {
       const response = await axios.delete(
-        `  https://2f6b-181-91-230-36.ngrok-free.app/publications/trace/${selectedTrace.idTrace}`,
+        `  https://buddy-app2.loca.lt/publications/trace/${selectedTrace.idTrace}`,
         {
           headers: {
             "auth-token": token,
@@ -145,7 +145,7 @@ export default function ModalTraza({ navigation, route }) {
       try {
         // Realizar la solicitud POST
         const response = await axios.post(
-          "  https://2f6b-181-91-230-36.ngrok-free.app/publications/trace/",
+          "  https://buddy-app2.loca.lt/publications/trace/",
           data,
           {
             headers: {

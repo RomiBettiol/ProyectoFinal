@@ -73,6 +73,19 @@ export default function HomeScreen({ navigation }) {
       onPress: () => navigation.navigate("ListaServiciosScreen", { token }),
     },
     {
+      title: "Alta de establecimientos",
+      image: require("../Imagenes/establecimiento.png"),
+      permission: "READ_ALTA_ESTABLECIMIENTO",
+      onPress: () =>
+        navigation.navigate("AltaEstablecimientoScreen", { token }),
+    },
+    {
+      title: "Roles y permisos",
+      image: require("../Imagenes/roles.png"),
+      permission: "READ_ROLES",
+      onPress: () => navigation.navigate("RyPScreen", { token }),
+    },
+    {
       title: "Back Up",
       image: require("../Imagenes/backup.png"),
       permission: "READ_BACKUP",
@@ -93,9 +106,7 @@ export default function HomeScreen({ navigation }) {
     obtenerPermisos();
 
     axios
-      .get(
-        `https://2f6b-181-91-230-36.ngrok-free.app/reports/count/founds-success`
-      )
+      .get(`https://buddy-app2.loca.lt/reports/count/founds-success`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -107,9 +118,7 @@ export default function HomeScreen({ navigation }) {
 
     // Mascotas perdidas
     axios
-      .get(
-        `  https://2f6b-181-91-230-36.ngrok-free.app/reports/count/losts-actives`
-      )
+      .get(`  https://buddy-app2.loca.lt/reports/count/losts-actives`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -121,9 +130,7 @@ export default function HomeScreen({ navigation }) {
 
     // Mascotas adoptadas
     axios
-      .get(
-        `  https://2f6b-181-91-230-36.ngrok-free.app/reports/count/adoptions-success`
-      )
+      .get(`  https://buddy-app2.loca.lt/reports/count/adoptions-success`)
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -154,7 +161,7 @@ export default function HomeScreen({ navigation }) {
       const token = await AsyncStorage.getItem("auth-token");
 
       const response = await axios.get(
-        `https://2f6b-181-91-230-36.ngrok-free.app/security/user/permissions`,
+        `https://buddy-app2.loca.lt/security/user/permissions`,
         { headers: { "auth-token": token } }
       );
 

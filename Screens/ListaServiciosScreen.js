@@ -34,7 +34,7 @@ const ListaServiciosScreen = () => {
       };
 
       const response = await axios.get(
-        "https://2f6b-181-91-230-36.ngrok-free.app/services/service/every",
+        "https://buddy-app2.loca.lt/services/service/every",
         config
       );
 
@@ -77,16 +77,22 @@ const ListaServiciosScreen = () => {
       let response;
       if (serviceState === "ACTIVO") {
         response = await axios.delete(
-          `https://2f6b-181-91-230-36.ngrok-free.app/services/service/${serviceId}`,
+          `https://buddy-app2.loca.lt/services/service/${serviceId}`,
           config
         );
       } else {
         // response = await axios.post(
-        //   `https://2f6b-181-91-230-36.ngrok-free.app/services/service/changeState/${serviceId}/ACTIVO`,
+        //   `https://buddy-app2.loca.lt/services/service/changeState/${serviceId}/ACTIVO`,
         //   {},
         //   config
         // );
         console.log("aun no");
+        setTimeout(() => {
+          setConfirming(false);
+          setConfirmationModalVisible(false);
+          setServiceId(null);
+        }, 2000);
+        return;
       }
 
       if (response.status === 200) {
@@ -100,6 +106,7 @@ const ListaServiciosScreen = () => {
         setConfirmationModalVisible(false);
         setServiceId(null);
       }, 2000);
+      return;
     } catch (error) {
       console.error("Error al cambiar de estado al servicio:", error);
     }

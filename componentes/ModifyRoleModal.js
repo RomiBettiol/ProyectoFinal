@@ -35,7 +35,7 @@ const ModifyRoleModal = ({
       };
 
       const response = await axios.get(
-        "https://2f6b-181-91-230-36.ngrok-free.app/security/role/",
+        "https://buddy-app2.loca.lt/security/role/",
         config
       );
 

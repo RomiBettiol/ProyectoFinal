@@ -79,7 +79,7 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
     console.log(turno.idTurn);
     try {
       const response = await axios.put(
-        `  https://2f6b-181-91-230-36.ngrok-free.app/mypet/turn/${mascotaId}/${idTurn}`,
+        `  https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
         {
           titleTurn: updatedData.titleTurn,
           descriptionTurn: updatedData.descriptionTurn,
@@ -177,7 +177,7 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
 
                 try {
                   const response = await axios.put(
-                    `  https://2f6b-181-91-230-36.ngrok-free.app/mypet/turn/${mascotaId}/${idTurn}`,
+                    `  https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
                     updatedData
                   );
                   console.log("Respuesta del servidor:", response.data);

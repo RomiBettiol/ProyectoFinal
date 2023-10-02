@@ -5,6 +5,8 @@ import InicioScreen from "../Screens/InicioScreen";
 import PreScreen from "../Screens/PreScreen";
 import ListaServiciosScreen from "../Screens/ListaServiciosScreen";
 import ListaUsuariosScreen from "../Screens/ListaUsuariosScreen";
+import AltaEstablecimientoScreen from "../Screens/AltaEstablecimientoScreen";
+import RyPScreen from "../Screens/RyPScreen";
 import Registro from "../componentes/Registro";
 import HomeScreen from "../Screens/HomeScreen";
 import BusquedaScreen from "../Screens/BusquedaScreen";
@@ -89,6 +91,11 @@ export default function MainStack() {
           name="PublicacionBusqueda"
           component={PublicacionBusqueda}
         />
+        <Stack.Screen
+          name="AltaEstablecimientoScreen"
+          component={AltaEstablecimientoScreen}
+        />
+        <Stack.Screen name="RyPScreen" component={RyPScreen} />
         <Stack.Screen
           name="ListaUsuariosScreen"
           component={ListaUsuariosScreen}

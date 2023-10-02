@@ -102,7 +102,7 @@ export default function MiMascotaScreen() {
     try {
       console.log("estoy adentro del try, token:", token);
       const response = await axios.get(
-        "  https://2f6b-181-91-230-36.ngrok-free.app/mypet/pet",
+        "  https://buddy-app2.loca.lt/mypet/pet",
         {
           headers: {
             "auth-token": token,
