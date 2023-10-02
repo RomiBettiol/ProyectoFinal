@@ -148,49 +148,64 @@ export default function PublicarServicio({setAnimalId, animalId}) {
     const openTime = `${formattedNumero1}:${formattedNumero2}:00`;
     const closeTime = `${formattedNumero3}:${formattedNumero4}:00`;
 
-    
+    // Mostrar la información que se va a enviar en la consola
+    console.log('Información que se va a enviar:', {
+        serviceTitle: title,
+        serviceDescription: description,
+        address: address,
+        open24hs: abierto24h,
+        emailService: email,
+        images: '',
+        idServiceType: selectedServiceTypeId,
+        idLocality: selectedLocality,
+        openTime: openTime,
+        closeTime: closeTime,
+        petTypes: '',
+    });
+
     try {
-      const response = await axios.post(
-        'https://romibettiol.loca.lt/services/service/',
-        {
-          serviceTitle: title,
-          serviceDescription: description,
-          address: address,
-          open24hs: abierto24h,
-          emailService: email,
-          images: '',
-          idServiceType: selectedServiceTypeId,
-          idLocality: selectedLocality,
-          openTime: openTime,
-          closeTime: closeTime,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'auth-token': token,
-          },
-        }
-      );
-  
-      console.log('Información que se envía:', response.data);
-      console.log('PetTypes:', response.data.petTypes);
-      console.log('Éxito', 'El servicio ha sido publicado correctamente.');
-      setIsSuccessModalVisible(true);
+        const response = await axios.post(
+            'https://romibettiol.loca.lt/services/service/',
+            {
+                serviceTitle: title,
+                serviceDescription: description,
+                address: address,
+                open24hs: abierto24h,
+                emailService: email,
+                images: '',
+                idServiceType: selectedServiceTypeId,
+                idLocality: selectedLocality,
+                openTime: openTime,
+                closeTime: closeTime,
+                petTypes: [''],
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': token,
+                },
+            }
+        );
+
+        console.log('Información que se envía:', response.data);
+        console.log('PetTypes:', response.data.petTypes);
+        console.log('Éxito', 'El servicio ha sido publicado correctamente.');
+        setIsSuccessModalVisible(true);
     } catch (error) {
-      if (error.response) {
-        // La solicitud fue hecha y el servidor respondió con un código de estado
-        // que no está en el rango de 2xx
-        //console.error('Error del servidor:', error.response.data);
-        setIsErrorModalVisible(true);
-      } else if (error.request) {
-        // La solicitud fue hecha pero no se recibió respuesta
-        console.error('No se recibió respuesta del servidor');
-      } else {
-        // Algo más causó un error
-        console.error('Error al realizar la solicitud:', error.message);
-      }
+        if (error.response) {
+            // La solicitud fue hecha y el servidor respondió con un código de estado
+            // que no está en el rango de 2xx
+            //console.error('Error del servidor:', error.response.data);
+            setIsErrorModalVisible(true);
+        } else if (error.request) {
+            // La solicitud fue hecha pero no se recibió respuesta
+            console.error('No se recibió respuesta del servidor');
+        } else {
+            // Algo más causó un error
+            console.error('Error al realizar la solicitud:', error.message);
+        }
     }
-  };  
+};
 
   return (
     <View style={styles.container}>

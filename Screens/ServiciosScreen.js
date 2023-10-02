@@ -5,11 +5,13 @@ import axios from 'axios'; // Importar Axios
 import { useRoute } from '@react-navigation/native'; 
 import BotonesFiltroServicios from '../componentes/Serivicios/BotonesFiltroServicios';
 import BarraBusquedaServicios from '../componentes/Serivicios/BarraBusquedaServicios';
+import BotonFlotante from '../componentes/BotonFlotante';
 
 export default function ServiciosScreen({ navigation }) {
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
   const [servicios, setServicios] = useState([]);
+  const [buttonTransform, setButtonTransform] = useState(0);
 
   console.log('Token servicios: ', token);
 
@@ -49,7 +51,6 @@ export default function ServiciosScreen({ navigation }) {
   return (
     <View>
       <HeaderScreen />
-      <ScrollView horizontal={true}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Servicios para tu mascota</Text>
           <BotonesFiltroServicios />
@@ -78,7 +79,6 @@ export default function ServiciosScreen({ navigation }) {
             </View>
           ))}
         </View>
-      </ScrollView>
       <TouchableOpacity 
         onPress={() =>
           navigation.navigate("PublicarServicio", { token })
@@ -86,6 +86,14 @@ export default function ServiciosScreen({ navigation }) {
       >
           <Text>Publicar servicio</Text>
       </TouchableOpacity>
+      <View
+          style={[
+            styles.botonFlotanteContainer,
+            { transform: [{ translateY: buttonTransform }] },
+          ]}
+        >
+          <BotonFlotante token={token} />
+        </View>
     </View>
   );
 }
@@ -132,5 +140,11 @@ const styles = StyleSheet.create({
   cartelitoTexto: {
     color: 'black', // Puedes cambiar el color del texto
     fontWeight: 'bold',
+  },
+  botonFlotanteContainer: {
+    position: "absolute",
+    bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
+    right: 20, // Puedes ajustar esta cantidad según tus preferencias
+    transform: [{ translateY: 0 }], // Inicialmente no se desplaza
   },
 });

@@ -23,7 +23,7 @@ export default function BusquedaScreen() {
       </ScrollView>
       <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
             <BotonFlotante token={token} />
-          </View>
+      </View>
     </View>
   );
 }
