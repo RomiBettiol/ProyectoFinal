@@ -20,12 +20,12 @@ export default function InicioScreen() {
       };
 
       const roles = await axios.get(
-        "https://buddy-app2.loca.lt/security/role/every",
+        "https://romibettiol.loca.lt/security/role/every",
         config
       );
 
       const permisos = await axios.get(
-        "https://buddy-app2.loca.lt/security/permission/",
+        "https://romibettiol.loca.lt/security/permission/",
         config
       );
 

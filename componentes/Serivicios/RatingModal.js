@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
+
 
 const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
   const route = useRoute();
@@ -16,6 +18,8 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
   const [rating, setRating] = useState(0); // Valor inicial de la puntuación
   const [title, setTitle] = useState(""); // Estado para el título
   const [description, setDescription] = useState(""); // Estado para la descripción
+  const navigation = useNavigation();
+
 
   console.log("RatingModal: ", token);
 
@@ -48,7 +52,7 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
 
     // Realizar la solicitud POST con el encabezado de autenticación
     axios
-      .post("https://buddy-app2.loca.lt/services/rating/", requestData, config)
+      .post("https://romibettiol.loca.lt/services/rating/", requestData, config)
       .then((response) => {
         // Aquí puedes manejar la respuesta exitosa si es necesario
         console.log("Respuesta del servidor:", response.data);
@@ -60,6 +64,7 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
 
     // Cerrar el modal después de enviar la calificación
     onClose();
+    navigation.navigate('HomeScreen', {token});
   };
 
   return (

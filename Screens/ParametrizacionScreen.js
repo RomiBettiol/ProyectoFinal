@@ -411,7 +411,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getZonas = () => {
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/locality/", {
+      .get("  https://romibettiol.loca.lt/parameters/locality/", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -432,7 +432,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetColors = () => {
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/petColor/")
+      .get("  https://romibettiol.loca.lt/parameters/petColor/")
       .then((response) => {
         const colors = response.data.petColors;
         if (colors && Array.isArray(colors)) {
@@ -449,7 +449,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetTypes = () => {
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/petType/")
+      .get("  https://romibettiol.loca.lt/parameters/petType/")
       .then((response) => {
         const types = response.data.petTypes;
         if (types && Array.isArray(types)) {
@@ -466,7 +466,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetBreeds = () => {
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/petBreed/")
+      .get("  https://romibettiol.loca.lt/parameters/petBreed/")
       .then((response) => {
         const breeds = response.data.petBreeds;
         if (breeds && Array.isArray(breeds)) {
@@ -483,7 +483,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getProvinces = () => {
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/province/")
+      .get("  https://romibettiol.loca.lt/parameters/province/")
       .then((response) => {
         const fetchedProvinces = response.data.provinces;
         if (fetchedProvinces && Array.isArray(fetchedProvinces)) {
@@ -500,7 +500,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getRegions = () => {
     axios
-      .get("  https://buddy-app2.loca.lt/parameters/region/")
+      .get("  https://romibettiol.loca.lt/parameters/region/")
       .then((response) => {
         const fetchedRegions = response.data.regions;
         if (fetchedRegions && Array.isArray(fetchedRegions)) {

@@ -13,32 +13,42 @@ import { useRoute } from "@react-navigation/native";
 import BotonesFiltroServicios from "../componentes/Serivicios/BotonesFiltroServicios";
 import BarraBusquedaServicios from "../componentes/Serivicios/BarraBusquedaServicios";
 import BotonFlotante from "../componentes/BotonFlotante";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ServiciosScreen({ navigation }) {
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
   const [servicios, setServicios] = useState([]);
   const [buttonTransform, setButtonTransform] = useState(0);
+  const [originalServicios, setOriginalServicios] = useState([]);
+  const [filtro, setFiltro] = useState(null);
 
   console.log("Token servicios: ", token);
 
   useEffect(() => {
-    const config = {
-      headers: {
-        "auth-token": token,
-      },
-    };
-
-    // Realizar la solicitud GET al backend cuando el componente se monta
-    axios
-      .get("https://buddy-app2.loca.lt/services/service/", config)
-      .then((response) => {
-        setServicios(response.data);
-      })
-      .catch((error) => {
+    const obtenerServicios = async () => {
+      try {
+        const response = await axios.get("https://romibettiol.loca.lt/services/service/", {
+          headers: {
+            "auth-token": token,
+          },
+        });
+  
+        if (response && response.data) {
+          const data = response.data;
+          setServicios(data);
+          setOriginalServicios(data); // Almacena la copia original
+        } else {
+          console.log("No hay servicios disponibles.");
+        }
+      } catch (error) {
         console.error("Error al obtener los servicios:", error);
-      });
-  }, []);
+      }
+    };
+  
+    obtenerServicios();
+  }, [token]);
+  
 
   // Función para manejar la navegación a ServiciosDetalle y pasar el servicio seleccionado
   const navigateToServicioDetalle = (servicio) => {
@@ -56,13 +66,42 @@ export default function ServiciosScreen({ navigation }) {
     return agrupados;
   }, {});
 
+  const handleSearch = (text) => {
+    // Si el campo de búsqueda está vacío, mostrar todos los servicios
+    if (!text || text.trim() === "") {
+      setServicios(originalServicios); // Restaura la lista original
+    } else {
+      // Filtrar los servicios por título
+      const serviciosFiltrados = originalServicios.filter((servicio) =>
+        servicio.serviceTitle.toLowerCase().includes(text.toLowerCase())
+      );
+      // Actualizar el estado con los servicios filtrados
+      setServicios(serviciosFiltrados);
+    }
+  };
+
+  const handleFilterChange = (filtro) => {
+    // Si filtro es null, muestra todos los servicios originales
+    if (filtro === null) {
+      setServicios(originalServicios);
+    } else {
+      // Filtra los servicios según el tipo de servicio seleccionado
+      const serviciosFiltrados = originalServicios.filter((servicio) =>
+        servicio.serviceTypeName === filtro
+      );
+      // Actualiza el estado con los servicios filtrados
+      setServicios(serviciosFiltrados);
+    }
+  };
+  
+
   return (
     <View>
       <HeaderScreen />
       <View style={styles.contenedor1}>
         <Text style={styles.titulo}>Servicios para tu mascota</Text>
-        <BotonesFiltroServicios />
-        <BarraBusquedaServicios />
+        <BotonesFiltroServicios onFilterChange={handleFilterChange} />
+        <BarraBusquedaServicios onSearch={handleSearch} />
 
         {Object.keys(serviciosAgrupados).map((typeName) => (
           <View key={typeName}>
@@ -91,11 +130,6 @@ export default function ServiciosScreen({ navigation }) {
           </View>
         ))}
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("PublicarServicio", { token })}
-      >
-        <Text>Publicar servicio</Text>
-      </TouchableOpacity>
       <View
         style={[
           styles.botonFlotanteContainer,

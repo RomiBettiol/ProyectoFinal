@@ -103,47 +103,38 @@ export default function HomeScreen({ navigation }) {
   ];
 
   useEffect(() => {
+    obtenerInformes();
     obtenerPermisos();
-
-    axios
-      .get(`https://buddy-app2.loca.lt/reports/count/founds-success`)
-      .then((response) => {
-        // Extraer el valor quantity de la respuesta
-        const { quantity } = response.data;
-        setQuantity(quantity); // Actualizar el estado con el valor quantity
-      })
-      .catch((error) => {
-        console.error("Error al obtener el contador:", error);
-      });
-
-    // Mascotas perdidas
-    axios
-      .get(`  https://buddy-app2.loca.lt/reports/count/losts-actives`)
-      .then((response) => {
-        // Extraer el valor quantity de la respuesta
-        const { quantity } = response.data;
-        setLostPetsQuantity(quantity); // Actualizar el estado con el valor quantity
-      })
-      .catch((error) => {
-        console.error("Error al obtener el contador:", error);
-      });
-
-    // Mascotas adoptadas
-    axios
-      .get(`  https://buddy-app2.loca.lt/reports/count/adoptions-success`)
-      .then((response) => {
-        // Extraer el valor quantity de la respuesta
-        const { quantity } = response.data;
-        setAdoptionQuantity(quantity); // Actualizar el estado con el valor quantity
-      })
-      .catch((error) => {
-        console.error("Error al obtener el contador:", error);
-      });
   }, []);
 
+  const obtenerInformes = async () => {
+    try {
+      const responseFounds = await axios.get(
+        `https://romibettiol.loca.lt/reports/count/founds-success`
+      );
+      const foundsQuantity = responseFounds.data.quantity;
+      setQuantity(foundsQuantity);
+
+      const responseLosts = await axios.get(
+        `https://romibettiol.loca.lt/reports/count/losts-actives`
+      );
+      const lostsQuantity = responseLosts.data.quantity;
+      setLostPetsQuantity(lostsQuantity);
+
+      const responseAdoptions = await axios.get(
+        `https://romibettiol.loca.lt/reports/count/adoptions-success`
+      );
+      const adoptionsQuantity = responseAdoptions.data.quantity;
+      setAdoptionQuantity(adoptionsQuantity);
+    } catch (error) {
+      console.error("Error al obtener los reportes:", error);
+    }
+  }; // No hay dependencias, se ejecutará en cada renderizado del componente
+  
   useFocusEffect(
     React.useCallback(() => {
       obtenerPermisos();
+      obtenerInformes();
     }, [])
   );
 
@@ -161,7 +152,7 @@ export default function HomeScreen({ navigation }) {
       const token = await AsyncStorage.getItem("auth-token");
 
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/security/user/permissions`,
+        `https://romibettiol.loca.lt/security/user/permissions`,
         { headers: { "auth-token": token } }
       );
 

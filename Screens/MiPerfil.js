@@ -35,6 +35,7 @@ export default function MiPerfil({ navigation }) {
   const [contrasenaVacia, setContrasenaVacia] = useState(false);
   const [currentPasswordError, setCurrentPasswordError] = useState(false);
   const [userPublications, setUserPublications] = useState([]);
+  const [userService, setUserService] = useState([]);
   const [optionsModalVisible, setOptionsModalVisible] = useState(false);
   const [confirmationModalVisible, setConfirmationModalVisible] =
     useState(false);
@@ -55,7 +56,7 @@ export default function MiPerfil({ navigation }) {
   //Trae info del usuario
   useEffect(() => {
     axios
-      .get(`  https://buddy-app2.loca.lt/security/user/`, {
+      .get(`  https://romibettiol.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -91,6 +92,21 @@ export default function MiPerfil({ navigation }) {
       .catch((error) => {
         console.error("Error fetching user publications:", error);
       });
+
+      axios
+      .get(`http://romibettiol.loca.lt/services/service/ByUser`, {
+        headers: {
+          "auth-token": token,
+        },
+      })
+      .then((response) => {
+        setUserService(response.data); // Almacena las publicaciones en el estado
+        console.log("Publicaciones", response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user publications:", error);
+      });
+
   }, []);
 
   console.log("idUser: ", idUser);
@@ -168,7 +184,7 @@ export default function MiPerfil({ navigation }) {
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
         .put(
-          `  https://buddy-app2.loca.lt/security/user/${idUser}`,
+          `  https://romibettiol.loca.lt/security/user/${idUser}`,
           updatedUserData,
           {
             headers: {
@@ -207,7 +223,7 @@ export default function MiPerfil({ navigation }) {
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
       .put(
-        `  https://buddy-app2.loca.lt/security/user/${idUser}`,
+        `  https://romibettiol.loca.lt/security/user/${idUser}`,
         updatedUserData,
         {
           headers: {
@@ -311,7 +327,7 @@ export default function MiPerfil({ navigation }) {
       console.log("idPublicacion: ", idPublicationToDelete);
       axios
         .delete(
-          `  https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
+          `  https://romibettiol.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
           {
             headers: {
               "auth-token": token,
@@ -366,7 +382,7 @@ export default function MiPerfil({ navigation }) {
   const handleLogout = async () => {
     try {
       const response = await fetch(
-        "  https://buddy-app2.loca.lt/security/auth/logout",
+        "  https://romibettiol.loca.lt/security/auth/logout",
         {
           method: "POST",
           headers: {
@@ -417,6 +433,46 @@ export default function MiPerfil({ navigation }) {
           </TouchableOpacity>
         </View>
         <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
+        {userService.map((servicio, index) => (
+          <View
+              style={[styles.publicationContainer, { flexDirection: "row" }]}
+            >
+              <Image
+                source={require("../Imagenes/imagenPublicaciones.jpg")}
+                style={styles.imagenPublicaciones}
+              />
+              <View>
+                <View
+                  style={[
+                    styles.informacionPublicacion,
+                    { flexDirection: "row" },
+                  ]}
+                >
+                  <TouchableOpacity style={styles.botonInformacion}>
+                    <Text>Servicio</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => openOptionsModalService(servicio.idService)}>
+                    <Image
+                      source={require("../Imagenes/opciones.png")}
+                      style={styles.imagenOpcionesPublicaciones}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.publicationTitle}>{servicio.serviceTitle}</Text>
+                <View
+                  style={[styles.containerfiltros, { flexDirection: "row" }]}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("../Imagenes/marcador-de-posicion.png")}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{servicio.address}</Text>
+                  </View>
+                </View>
+              </View>
+            </View>  
+        ))}
         {userPublications.adoptions &&
           userPublications.adoptions.length > 0 &&
           userPublications.adoptions.map((adoption, index) => (

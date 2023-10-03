@@ -67,7 +67,7 @@ const SlideModal = ({ visible, onClose }) => {
 
   const fetchNombre = () => {
     axios
-      .get(`  https://buddy-app2.loca.lt/security/user/`, {
+      .get(`  https://romibettiol.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -153,7 +153,9 @@ const SlideModal = ({ visible, onClose }) => {
                 <Text style={styles.textoModal}>Adoptar mascota</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.opciones}>
+            <TouchableOpacity style={styles.opciones}
+            onPress={() => handleOptionPress("ServiciosScreen")}
+            >
               <View style={[{ flexDirection: "row" }, styles.view]}>
                 <Image
                   source={require("../Imagenes/perro.png")}

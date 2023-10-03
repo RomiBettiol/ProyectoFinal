@@ -11,7 +11,7 @@ const ListaValoresTipoServicios = ({
 
   useEffect(() => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/serviceType")
+      .get("https://romibettiol.loca.lt/parameters/serviceType")
       .then((response) => {
         console.log("Tipos de servicio exitosos:", response.data);
         setServiceTypeOptions(response.data.serviceTypes);

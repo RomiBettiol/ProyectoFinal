@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import RatingModal from './RatingModal';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import BotonMenu from '../BotonMenu';
 
 export default function ServiciosDetalles({ route }) {
   const navigation = useNavigation();
   const { servicio, token } = route.params;
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
-  const [selectedServiceId, setSelectedServiceId] = useState(null); // Estado para almacenar el ID del servicio seleccionado
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  
+  
 
   const ratingsImages = {
     1: {
@@ -101,19 +104,13 @@ export default function ServiciosDetalles({ route }) {
         </View>
         <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
             <Image
-                source={require("../../Imagenes/hueso.png")}
-                style={styles.imagenInformacionFiltros}
-            />
-            <Text style={styles.textoInformacionFiltros}>{servicio.petTypesName}</Text>
-        </View>
-        <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
-            <Image
                 source={require("../../Imagenes/reloj.png")}
                 style={styles.imagenInformacionFiltros}
             />
             <Text style={styles.textoInformacionFiltros}>{servicio.openTime} - {servicio.closeTime}</Text>
         </View>
       </View>
+        <BotonMenu token={token} style={styles.contenedorBoton} />
     </View>
   );
 }
@@ -124,6 +121,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
+    position: 'relative',
   },
   imagenServicio: {
     width: 200,

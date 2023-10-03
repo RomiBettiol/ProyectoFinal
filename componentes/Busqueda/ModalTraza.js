@@ -16,14 +16,32 @@ export default function ModalTraza({ navigation, route }) {
   const [user, setUser] = useState("");
   const [idUser, setIdUser] = useState("");
   const [userNameTraza, setUserNameTraza] = useState("");
-
+  const [mapRegion, setMapRegion] = useState(null);
+  const [markers, setMarkers] = useState([]);
+  
+  useEffect(() => {
+    if (traces.length > 0 && user && initialLocation) {
+      // Inicializa el mapa aquí
+      setMapRegion({
+        ...initialLocation,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+      });
+      setMarkers(traces.map(trace => ({
+        latitude: trace.latitude,
+        longitude: trace.longitude,
+      })));
+    }
+  }, [traces, user, initialLocation]);
+  
+  
   console.log("ModalTraza: ", token);
   console.log("userName: ", userNamePublicacion);
 
   //Trae info del usuario
   const fetchNombre = () => {
     axios
-      .get(`  https://buddy-app2.loca.lt/security/user/`, {
+      .get(`  https://romibettiol.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -56,7 +74,7 @@ export default function ModalTraza({ navigation, route }) {
   const fetchTraces = async () => {
     try {
       const response = await axios.get(
-        `  https://buddy-app2.loca.lt/publications/trace/${idPublicationSearch}`,
+        `  https://romibettiol.loca.lt/publications/trace/${idPublicationSearch}`,
         {
           headers: {
             "auth-token": token,
@@ -100,13 +118,13 @@ export default function ModalTraza({ navigation, route }) {
     };
 
     getLocationAsync();
-  }, [idPublicationSearch, initialLocation]);
+  }, [idPublicationSearch]);
 
   const onDeleteTrace = async () => {
     console.log("información:", selectedTrace.idTrace);
     try {
       const response = await axios.delete(
-        `  https://buddy-app2.loca.lt/publications/trace/${selectedTrace.idTrace}`,
+        `  https://romibettiol.loca.lt/publications/trace/${selectedTrace.idTrace}`,
         {
           headers: {
             "auth-token": token,
@@ -144,7 +162,7 @@ export default function ModalTraza({ navigation, route }) {
       try {
         // Realizar la solicitud POST
         const response = await axios.post(
-          "  https://buddy-app2.loca.lt/publications/trace/",
+          "  https://romibettiol.loca.lt/publications/trace/",
           data,
           {
             headers: {
