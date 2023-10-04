@@ -21,23 +21,64 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
   const [tipo, setTipo] = useState(mascota.petType|| '');
   const [selectedMonth, setSelectedMonth] = useState(mascota.birthDate.month || null); // Agregar estados para día y año
   const [selectedDay, setSelectedDay] = useState(mascota.birthDate.day || null);
-  const [selectedYear, setSelectedYear] = useState(mascota.birthDate.year || null);
+  const [selectedYear, setSelectedYear] = useState(
+    mascota.birthDate.year || null
+  );
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [petTypeOptions, setPetTypeOptions] = useState([]);
   const [petBreedOptions, setPetBreedOptions] = useState([]);
-  const[selectedAnimal, setSelectedAnimal]=useState([]);
-  const[selectedAnimalId,setSelectedAnimalId] =useState('')
- const [selectedBreedId, setSelectedBreedId] = useState('');
- const[idPetBreed,setIdPetBreed]= useState('');
-  const[idPetType, setIdPetType]=useState('');
+  const [selectedAnimal, setSelectedAnimal] = useState([]);
+  const [selectedAnimalId, setSelectedAnimalId] = useState("");
+  const [selectedBreedId, setSelectedBreedId] = useState("");
+  const [idPetBreed, setIdPetBreed] = useState("");
+  const [idPetType, setIdPetType] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
- 
-
   const [selectedImage, setSelectedImage] = React.useState(mascota.image || '');
   const [linkAWS, setLinkAWS] = useState(mascota.image || ''); // Nuevo estado para almacenar el enlace de la imagen en Amazon S3
+ 
 
-  
+  const updateMascota = async () => {
+    setIsButtonDisabled(true);
+    const idPet = mascota.idPet; // Obtén la ID de la mascota desde los props
+    const updatedData = {
+      petName: nombre,
+      day: selectedDay, // Agregar a los datos actualizados
+      idPetType: selectedAnimalId,
+      idPetBreed: selectedBreedId,
+      month: selectedMonth, // Agregar a los datos actualizados
+      year: selectedYear, // Agregar a los datos actualizados
+      // Otras propiedades que quieras actualizar
+      birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+    };
+    console.log({ idPet });
+    console.log(updatedData);
+    try {
+      const response = await axios.put(
+        `  https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+
+          petName: updatedData.petName,
+          birthDate: updatedData.birthDate,
+          idPetType: updatedData.idPetType,
+          idPetBreed: updatedData.idPetBreed,
+          // Otros datos que puedas necesitar
+        }
+      );
+      setShowSuccessModal(true);
+      console.log(response.data);
+      console.log(response.data); // Mensaje de éxito desde el backend
+      // Puedes hacer algo aquí después de la actualización exitosa, como navegar a otra pantalla
+    } catch (error) {
+      setShowErrorModal(true);
+    }
+    setTimeout(() => {
+      setIsButtonDisabled(false);
+    }, 2000);
+  };
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
     onCloseEditarMascota(); // Cierra el modal NuevaMascota
@@ -56,12 +97,12 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
         // Guardar las opciones en el estado
         setPetTypeOptions(petTypeOptions);
         console.log(petTypeOptions);
-        console.log('tipo de mascota obtenido con exito');
+        console.log("tipo de mascota obtenido con exito");
       })
       .catch((error) => {
-        console.error('Error al obtener tipos de mascotas:', error);
+        console.error("Error al obtener tipos de mascotas:", error);
       });
-  
+
     // Obtener razas de mascotas
     axios.get('https://buddy-app2.loca.lt/parameters/petBreed')
       .then((response) => {
@@ -73,10 +114,10 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
         // Guardar las opciones en el estado
         setPetBreedOptions(petBreedOptions);
         console.log(petBreedOptions);
-        console.log('tipo de raza obtenido con exito');
+        console.log("tipo de raza obtenido con exito");
       })
       .catch((error) => {
-        console.error('Error al obtener razas de mascotas:', error);
+        console.error("Error al obtener razas de mascotas:", error);
       });
   }, []);
 
@@ -242,48 +283,57 @@ const sendPetData = async (imageLink) => {
               style={styles.inputTexto}
               value={nombre}
               onChangeText={setNombre}
-             
             />
-         </View>
-      {/* Campo de edición para la fecha */}
-      <Text style={styles.textoFecha}>Fecha de nacimiento:</Text>
-      <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
-        <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
-        {selectedMonth && <ListaValoresDiasMascota
-          selectedMonth={selectedMonth} // Pasa el mes seleccionado
-          selectedValue={selectedDay} // Pasa el día seleccionado
-          setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
-        />}
-       <ListaValoresAñoMascota setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
-      </View>
-      <ScrollView horizontal={true}>
-          <View >
-            
-          <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
-
           </View>
+          {/* Campo de edición para la fecha */}
+          <Text style={styles.textoFecha}>Fecha de nacimiento:</Text>
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
+            <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
+            {selectedMonth && (
+              <ListaValoresDiasMascota
+                selectedMonth={selectedMonth} // Pasa el mes seleccionado
+                selectedValue={selectedDay} // Pasa el día seleccionado
+                setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
+              />
+            )}
+            <ListaValoresAñoMascota
+              setSelectedValue={setSelectedYear}
+              selectedValue={selectedYear}
+            />
+          </View>
+          <ScrollView horizontal={true}>
+            <View>
+              <ListaValoresAnimal
+                selectedAnimal={selectedAnimal}
+                setSelectedAnimal={setSelectedAnimal}
+                setSelectedAnimalId={setSelectedAnimalId}
+              />
+            </View>
           </ScrollView>
-          
-          <View style={[styles.dropdown,{ borderRadius: 100 }]}>
-           
-          {selectedAnimal && (
-                <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
-              )}
-          </View>
-      {/* Botón para actualizar */}
 
-      <View style={styles.subcontenedor5}>
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={handleSubAddPet}
-        >
-          <Text style={styles.closeButtonText} disabled={isButtonDisabled}>Actualizar Mascota</Text>
-        </TouchableOpacity>
-      </View>
-      
-      </View>
+          <View style={[styles.dropdown, { borderRadius: 100 }]}>
+            {selectedAnimal && (
+              <ListaValoresRazaPerros
+                selectedAnimal={selectedAnimal}
+                setSelectedBreedId={setSelectedBreedId}
+              />
+            )}
+          </View>
+          {/* Botón para actualizar */}
+
+          <View style={styles.subcontenedor5}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={updateMascota}
+            >
+              <Text style={styles.closeButtonText} disabled={isButtonDisabled}>
+                Actualizar Mascota
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <SuccessModal
+      </View>
+      <SuccessModal
         visible={showSuccessModal}
         onClose={() => {
           setShowSuccessModal(false);
@@ -296,26 +346,24 @@ const sendPetData = async (imageLink) => {
         errorMessage="Complete todos los campos"
         onClose={() => setShowErrorModal(false)}
       />
-      </View>
-   
+    </View>
   );
-}            
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"#FFFFFF",
-    marginTop:35,
+    backgroundColor: "#FFFFFF",
+    marginTop: 35,
   },
 
   dropdown: {
-    backgroundColor: '#EEE9E9',
-    width: '90%',
+    backgroundColor: "#EEE9E9",
+    width: "90%",
     height: 50,
     margin: 10,
-    padding:0,
-    justifyContent:'center',
- 
+    padding: 0,
+    justifyContent: "center",
   },
   titulo: {
     marginTop: 10,
@@ -326,16 +374,16 @@ const styles = StyleSheet.create({
   },
   contenedor1: {
     paddingTop: 0,
-    justifyContent:'center',
-    alignContent:'center',
-    alignItems:'center',
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
   },
   inputTexto: {
-    backgroundColor: '#EEE9E9',
-    width: '70%',
+    backgroundColor: "#EEE9E9",
+    width: "70%",
     height: 32,
     borderRadius: 100,
-    textAlign: 'center',
+    textAlign: "center",
   },
   tituloPublicacion: {
     marginRight: 20,
@@ -348,46 +396,45 @@ const styles = StyleSheet.create({
   },
   subcontenedor1: {
     marginTop: 25,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   subcontenedor2: {
     marginTop: 25,
-    width: '100%',
-    justifyContent: 'center',
+    width: "100%",
+    justifyContent: "center",
   },
 
- 
   subcontenedor3: {
     marginTop: 25,
     marginLeft: 30,
   },
   subcontenedor4: {
     marginTop: 15,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   tarjeta: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     elevation: 10,
     borderRadius: 25,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 15,
     padding: 15,
   },
-  subcontenedor5:{
-    alignItems: 'center'
+  subcontenedor5: {
+    alignItems: "center",
   },
   closeButton: {
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginTop:35,
+    marginTop: 35,
   },
   closeButtonText: {
     fontSize: 16,
-    color: '#fff',
+    color: "#fff",
   },
 
   botonGaleria: {

@@ -42,7 +42,7 @@ export default function MisVacunas(token) {
     
         async function fetchVaccines() {
             try {
-                const response = await axios.get(`https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`);
+                const response = await axios.get(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}`);
                 console.log('Después de hacer la solicitud GET');
                 if (response.data && Array.isArray(response.data.vaccines)) {
                     
@@ -148,7 +148,7 @@ export default function MisVacunas(token) {
     const handleDeleteVaccin = async () => {
         console.log(vaccin.idVaccin )
         try {
-            const response = await axios.delete(`https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`);
+            const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`);
             console.log('Vaccin  eliminado:', response.data);
             setMensaje('Vacuna eliminada correctamente')
             setShowSuccessModal(true);
@@ -179,348 +179,353 @@ export default function MisVacunas(token) {
     
     useEffect(() => {
         fetchVaccines();
-    }, []);    
+    }, []); 
 
-    return (
-        <View style={styles.container}>
-            <HeaderScreen  token={token}/>
-            <ScrollView style={styles.scroll}>
-                <View style={styles.contentContainer1}>
-                        <View style={styles.container1}>
-                            <Image
-                                source={require('../Imagenes/perrito.jpeg')}
-                                style={styles.imagMascota}
-                            />
-                            <View style={styles.containerTitulo}>
-                                <Text style={styles.titulo}>
-                                    MIS VACUNAS
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                <View>
-                    <View style={styles.containerBarra}>
-                        <BarraBusquedaMascota
-                            searchText={searchText}
-                            onSearchTextChange={setSearchText}
-                        />
-                        
-                    </View>
-                    
-                    <View style={styles.yearPickerContainer}>
-                        <Text>Seleccionar año: </Text>
-                        <Picker
-                            selectedValue={selectedYear}
-                            onValueChange={(itemValue, itemIndex) => setSelectedYear(itemValue)}
-                            style={{ height: 50, width: 130 }}
-                        >
-                            
-                            {/* Generar las opciones de años dinámicamente */}
-                            {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                                <Picker.Item key={year} label={year.toString()} value={year} />
-                            ))}
-                        </Picker>
-                    </View>
-                </View>
-                {error404 ? (
-                        <View style={styles.contentContainer22}>
-                            <Text style={styles.sinInfo}>NO HAY VACUNAS CARGADAS</Text>
-                        </View>
-                    ) : (
-                    <View style={styles.contentContainer2}>
-                    {Object.keys(filteredVaccinesAgrupados)
-                        .sort((a, b) => {
-                            const mesesOrdenados = [
-                                "enero", "febrero", "marzo", "abril",
-                                "mayo", "junio", "julio", "agosto",
-                                "septiembre", "octubre", "noviembre", "diciembre"
-                            ];
-                            return mesesOrdenados.indexOf(a) - mesesOrdenados.indexOf(b);
-                        })
-                        .map(mes => (
-                            <View style={styles.contentContainer3} key={mes}>
-                                <Text style={styles.subtitulo}>
-                                    {mes}
-                                </Text>
-                                <ScrollView horizontal={true}>
-                                    {filteredVaccinesAgrupados[mes].map((vaccin, index) => (
-                                       
-                                        <View style={styles.contenedorVaccin} key={index}>
-                                              
-                                                <TouchableOpacity
-                                                    style={styles.containerVaccin}
-                                                    onPress={() => {
-                                                        setVaccin(vaccin); // Esto ya lo tienes en tu código
-                                                        setShowVaccinModal(true); // Abre el modal TurnoModal
-                                                      }}
-                                                > 
-                                                    <TouchableOpacity
-                                                        style={styles.botonOpc}
-                                                        onPress={() => {
-                                                            setSelectedVaccinIndex(index);
-                                                            setOverlayVisible(true);
-                                                            setVaccin(vaccin);
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            source={require('../Imagenes/opciones.png')}
-                                                            style={styles.opciones}
-                                                        />
-                                                    </TouchableOpacity>
-                                                                                                              
-                                                    <View style={styles.dia}>
-                                                        <Text style={styles.numero}>
-                                                         {dia(vaccin)}                                                          
-                                                        </Text>
-                                                    </View>
-                                                    <Text>
-                                                        {vaccin.vaccineHour}
-                                                    </Text>
-                                                    <Text style={styles.detalle}>
-                                                      {vaccin.titleVaccine}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        
-                                ))}
-                            </ScrollView>
-                        </View>
-                    ))}
+  return (
+    <View style={styles.container}>
+      <HeaderScreen token={token} />
+      <ScrollView style={styles.scroll}>
+        <View style={styles.contentContainer1}>
+          <View style={styles.container1}>
+            <Image
+              source={require("../Imagenes/perrito.jpeg")}
+              style={styles.imagMascota}
+            />
+            <View style={styles.containerTitulo}>
+              <Text style={styles.titulo}>MIS VACUNAS</Text>
             </View>
-            )}
-            
-             {/* Overlay para opciones */}
-             <Overlay
-                    isVisible={overlayVisible}
-                    onBackdropPress={() => {
-                        setOverlayVisible(false);
-                        setSelectedVaccinIndex(null);
-                    }}
-                    overlayStyle={styles.overlayContent}
-                >
-                    <TouchableOpacity
-                        style={styles.overlayOption}
-                        onPress={toggleEditarVaccinModal}
-                    >
-                        <Text>Editar</Text>
-                    </TouchableOpacity>
-                    {/* Modal de edición de mascota */}
-                    <Modal
-                        visible={showEditarVaccinModal}
-                        animationType="slide"
-                        transparent={true}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <EditarVaccin mascotaId={mascotaId} vaccin={vaccin} onClose={toggleEditarVaccinModal} />
-                           
-                            </View>
-                        </View>
-                    </Modal>
-                    <TouchableOpacity                                               
-                        style={styles.overlayOption}
-                        onPress={handleDeleteVaccin} // Llama a la función de eliminación
-                        
-                    >
-                        <Text>Eliminar</Text>
-                    </TouchableOpacity>
-                </Overlay>
-                 {/* Modal (tarjeta flotante) */}
-                <Modal
-                    visible={showAltaVaccinModal}
-                    animationType="slide"
-                    transparent={true}
-                >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                        
-                            <AltaVaccin onClose={toggleAltaVaccinModal} />
-                        
-                        </View>
-                    </View>
-                </Modal>
-                <SuccessModal
-                    visible={showSuccessModal}
-                    onClose={() => {
-                    setShowSuccessModal(false);
-                    handleSuccessModalClose(); // Cerrar el modal EditarTurno
-                    }}
-                    message={mensaje}
-                />
-                <ErrorModal
-                    visible={showErrorModal}
-                    errorMessage={mensaje}
-                    onClose={() => setShowErrorModal(false)}
-                />
-                <Modal
-                    visible={showVaccinModal}
-                    animationType="slide"
-                    transparent={true}
-                    onClose={() => {
-                        setShowVaccinModal(false);
-                        handleSuccessModalClose();
-                    }}
-                    >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>                 
-                            <VaccinModal vaccin={vaccin} onClose={() => setShowVaccinModal(false)}  />
-                        </View>
-                    </View>
-                </Modal>
-            </ScrollView>
-            <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
-                 <BotonVaccine onAddVaccin={toggleAltaVaccinModal} token={token}/>   
-            </View>
+          </View>
         </View>
-    );
+        <View>
+          <View style={styles.containerBarra}>
+            <BarraBusquedaMascota
+              searchText={searchText}
+              onSearchTextChange={setSearchText}
+            />
+          </View>
+
+          <View style={styles.yearPickerContainer}>
+            <Text>Seleccionar año: </Text>
+            <Picker
+              selectedValue={selectedYear}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedYear(itemValue)
+              }
+              style={{ height: 50, width: 130 }}
+            >
+              {/* Generar las opciones de años dinámicamente */}
+              {Array.from(
+                { length: 10 },
+                (_, i) => new Date().getFullYear() - i
+              ).map((year) => (
+                <Picker.Item key={year} label={year.toString()} value={year} />
+              ))}
+            </Picker>
+          </View>
+        </View>
+        {error404 ? (
+          <View style={styles.contentContainer22}>
+            <Text style={styles.sinInfo}>NO HAY VACUNAS CARGADAS</Text>
+          </View>
+        ) : (
+          <View style={styles.contentContainer2}>
+            {Object.keys(filteredVaccinesAgrupados)
+              .sort((a, b) => {
+                const mesesOrdenados = [
+                  "enero",
+                  "febrero",
+                  "marzo",
+                  "abril",
+                  "mayo",
+                  "junio",
+                  "julio",
+                  "agosto",
+                  "septiembre",
+                  "octubre",
+                  "noviembre",
+                  "diciembre",
+                ];
+                return mesesOrdenados.indexOf(a) - mesesOrdenados.indexOf(b);
+              })
+              .map((mes) => (
+                <View style={styles.contentContainer3} key={mes}>
+                  <Text style={styles.subtitulo}>{mes}</Text>
+                  <ScrollView horizontal={true}>
+                    {filteredVaccinesAgrupados[mes].map((vaccin, index) => (
+                      <View style={styles.contenedorVaccin} key={index}>
+                        <TouchableOpacity
+                          style={styles.containerVaccin}
+                          onPress={() => {
+                            setVaccin(vaccin); // Esto ya lo tienes en tu código
+                            setShowVaccinModal(true); // Abre el modal TurnoModal
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={styles.botonOpc}
+                            onPress={() => {
+                              setSelectedVaccinIndex(index);
+                              setOverlayVisible(true);
+                              setVaccin(vaccin);
+                            }}
+                          >
+                            <Image
+                              source={require("../Imagenes/opciones.png")}
+                              style={styles.opciones}
+                            />
+                          </TouchableOpacity>
+
+                          <View style={styles.dia}>
+                            <Text style={styles.numero}>{dia(vaccin)}</Text>
+                          </View>
+                          <Text>{vaccin.vaccineHour}</Text>
+                          <Text style={styles.detalle}>
+                            {vaccin.titleVaccine}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </ScrollView>
+                </View>
+              ))}
+          </View>
+        )}
+
+        {/* Overlay para opciones */}
+        <Overlay
+          isVisible={overlayVisible}
+          onBackdropPress={() => {
+            setOverlayVisible(false);
+            setSelectedVaccinIndex(null);
+          }}
+          overlayStyle={styles.overlayContent}
+        >
+          <TouchableOpacity
+            style={styles.overlayOption}
+            onPress={toggleEditarVaccinModal}
+          >
+            <Text>Editar</Text>
+          </TouchableOpacity>
+          {/* Modal de edición de mascota */}
+          <Modal
+            visible={showEditarVaccinModal}
+            animationType="slide"
+            transparent={true}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <EditarVaccin
+                  mascotaId={mascotaId}
+                  vaccin={vaccin}
+                  onClose={toggleEditarVaccinModal}
+                />
+              </View>
+            </View>
+          </Modal>
+          <TouchableOpacity
+            style={styles.overlayOption}
+            onPress={handleDeleteVaccin} // Llama a la función de eliminación
+          >
+            <Text>Eliminar</Text>
+          </TouchableOpacity>
+        </Overlay>
+        {/* Modal (tarjeta flotante) */}
+        <Modal
+          visible={showAltaVaccinModal}
+          animationType="slide"
+          transparent={true}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <AltaVaccin onClose={toggleAltaVaccinModal} />
+            </View>
+          </View>
+        </Modal>
+        <SuccessModal
+          visible={showSuccessModal}
+          onClose={() => {
+            setShowSuccessModal(false);
+            handleSuccessModalClose(); // Cerrar el modal EditarTurno
+          }}
+          message={mensaje}
+        />
+        <ErrorModal
+          visible={showErrorModal}
+          errorMessage={mensaje}
+          onClose={() => setShowErrorModal(false)}
+        />
+        <Modal
+          visible={showVaccinModal}
+          animationType="slide"
+          transparent={true}
+          onClose={() => {
+            setShowVaccinModal(false);
+            handleSuccessModalClose();
+          }}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <VaccinModal
+                vaccin={vaccin}
+                onClose={() => setShowVaccinModal(false)}
+              />
+            </View>
+          </View>
+        </Modal>
+      </ScrollView>
+      <View
+        style={[
+          styles.botonFlotanteContainer,
+          { transform: [{ translateY: buttonTransform }] },
+        ]}
+      >
+        <BotonVaccine onAddVaccin={toggleAltaVaccinModal} token={token} />
+      </View>
+    </View>
+  );
 }
-           
 
 const styles = StyleSheet.create({
-    sinInfo:{
-        fontSize: 14,
-        color:'grey',
-    },
-    contentContainer22: {
-       marginTop:200,        
-        justifyContent: 'center', // Para centrar vertical
-        alignItems:'center',
-    },
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        
-    },
-    modalContent: {
-      backgroundColor: '#FFFFFF',
-      elevation: 10,
-      borderRadius: 25,
-      padding: 20,
-      width: windowWidth * 0.95,
-      height:windowHeight * 0.65,
-      textAlign: 'center',
-      alignItems: 'center', // Para centrar horizont
+  sinInfo: {
+    fontSize: 14,
+    color: "grey",
   },
-    scroll: {
-        flex: 1,
-    },
-    titulo: {
-        fontSize: 16,
-    },
-    contentContainer1: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20, // Añade espacios a los lados si es necesario
-        marginTop: 20,
-    },
-    contentContainer2: {
-        marginHorizontal: 15,
-     
-    },
-    contentContainer3: {
-       // marginTop: 10,
-    },
-    container1: {
-        width: '100%',
-        height: 70,
-        backgroundColor: '#B8F7B7',
-        borderRadius: 20,
-        justifyContent: 'flex-start', // Para centrar vertical
-        alignItems: 'center', // Para centrar horizontal
-        flexDirection: 'row',
-        elevation: 20,
-    },
-    containerTitulo: {
-        alignItems: 'center', // Para centrar horizontal
-        width: '80%',
-    },
-    subtitulo: {
-        fontSize: 16,
-        marginTop: 10,
-    },
-    imagMascota: {
-        borderRadius: 50,
-        height: 50,
-        width: 50,
-        marginHorizontal: 10,
-        marginBottom: 2,
-    },
-    contenedorVaccin: {
-        backgroundColor: 'white',
-        width: 100,
-        height: 145,
-        borderColor: '#a9a9a9',
-        borderWidth: 1,
-        borderRadius: 15,
-        elevation: 3,
-        alignItems: 'center', // Para centrar horizontal
-        marginTop: 10,
-        marginHorizontal: 10,
-        paddingHorizontal:4,
-    },
-    botonOpc: {
-        margin: 2,
-    },
-    opciones: {
-        height: 15,
-        width: 15,
-        marginLeft: 60,
-        marginTop: 5,
-    },
-    dia: {
-        backgroundColor: '#47D3CB',
-        height: 50,
-        width: 50,
-        borderRadius: 50,
-        justifyContent: 'center', // Para centrar vertical
-        alignItems: 'center', // Para centrar horizontal
-        marginBottom: 10,
-    },
-    numero: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 24,
-    },
-    detalle: {
-        fontSize: 12,
-    },
-    overlayContent: {
-        borderRadius: 10,
-        padding: 10,
-        backgroundColor: 'white',
-        elevation: 4,
-    },
-    overlayOption: {
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-    },
-    yearPickerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 0,
-        marginLeft:20,
-    },
-    containerBarra:{
-        marginVertical:20,
-        width:'90%',
-        alignSelf: 'center',
-
-    },
-    containerVaccin:{
-        alignSelf: 'center',
-        alignItems:'center',
-    },
-    botonFlotanteContainer: {
-        position: 'absolute',
-        bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
-        right: 20, // Puedes ajustar esta cantidad según tus preferencias
-        transform: [{ translateY: 0 }], // Inicialmente no se desplaza
-      },
+  contentContainer22: {
+    marginTop: 200,
+    justifyContent: "center", // Para centrar vertical
+    alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#FFFFFF",
+    elevation: 10,
+    borderRadius: 25,
+    padding: 20,
+    width: windowWidth * 0.95,
+    height: windowHeight * 0.65,
+    textAlign: "center",
+    alignItems: "center", // Para centrar horizont
+  },
+  scroll: {
+    flex: 1,
+  },
+  titulo: {
+    fontSize: 16,
+  },
+  contentContainer1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20, // Añade espacios a los lados si es necesario
+    marginTop: 20,
+  },
+  contentContainer2: {
+    marginHorizontal: 15,
+  },
+  contentContainer3: {
+    // marginTop: 10,
+  },
+  container1: {
+    width: "100%",
+    height: 70,
+    backgroundColor: "#B8F7B7",
+    borderRadius: 20,
+    justifyContent: "flex-start", // Para centrar vertical
+    alignItems: "center", // Para centrar horizontal
+    flexDirection: "row",
+    elevation: 20,
+  },
+  containerTitulo: {
+    alignItems: "center", // Para centrar horizontal
+    width: "80%",
+  },
+  subtitulo: {
+    fontSize: 16,
+    marginTop: 10,
+  },
+  imagMascota: {
+    borderRadius: 50,
+    height: 50,
+    width: 50,
+    marginHorizontal: 10,
+    marginBottom: 2,
+  },
+  contenedorVaccin: {
+    backgroundColor: "white",
+    width: 100,
+    height: 145,
+    borderColor: "#a9a9a9",
+    borderWidth: 1,
+    borderRadius: 15,
+    elevation: 3,
+    alignItems: "center", // Para centrar horizontal
+    marginTop: 10,
+    marginHorizontal: 10,
+    paddingHorizontal: 4,
+  },
+  botonOpc: {
+    margin: 2,
+  },
+  opciones: {
+    height: 15,
+    width: 15,
+    marginLeft: 60,
+    marginTop: 5,
+  },
+  dia: {
+    backgroundColor: "#47D3CB",
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+    justifyContent: "center", // Para centrar vertical
+    alignItems: "center", // Para centrar horizontal
+    marginBottom: 10,
+  },
+  numero: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+  detalle: {
+    fontSize: 12,
+  },
+  overlayContent: {
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "white",
+    elevation: 4,
+  },
+  overlayOption: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  yearPickerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 0,
+    marginLeft: 20,
+  },
+  containerBarra: {
+    marginVertical: 20,
+    width: "90%",
+    alignSelf: "center",
+  },
+  containerVaccin: {
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  botonFlotanteContainer: {
+    position: "absolute",
+    bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
+    right: 20, // Puedes ajustar esta cantidad según tus preferencias
+    transform: [{ translateY: 0 }], // Inicialmente no se desplaza
+  },
 });

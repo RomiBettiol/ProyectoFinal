@@ -15,7 +15,8 @@ export default function MiPerfil({ navigation }) {
   const route = useRoute();
   const { token } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
-  const [editPasswordModalVisible, setEditPasswordModalVisible] = useState(false);
+  const [editPasswordModalVisible, setEditPasswordModalVisible] =
+    useState(false);
   const [areFieldsEmpty, setAreFieldsEmpty] = useState(true);
   const [showFieldsEmptyMessage, setShowFieldsEmptyMessage] = useState(false);
   const [editUserModalVisible, setEditUserModalVisible] = useState(false);
@@ -27,24 +28,27 @@ export default function MiPerfil({ navigation }) {
   const [requisitosContrasena, setRequisitosContrasena] = useState(false);
   const [contrasenaIgual, setContrasenaIgual] = useState(false);
   const [passwordUpdated, setPasswordUpdated] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [userUpdated, setUserUpdated] = useState(false);
   const [contrasenaVacia, setContrasenaVacia] = useState(false);
   const [currentPasswordError, setCurrentPasswordError] = useState(false);
   const [userPublications, setUserPublications] = useState([]);
+  const [userService, setUserService] = useState([]);
   const [optionsModalVisible, setOptionsModalVisible] = useState(false);
-  const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const [confirmationModalVisible, setConfirmationModalVisible] =
+    useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteFailure, setDeleteFailure] = useState(false);
-  const [idUser, setIdUser] = useState('');
+  const [idUser, setIdUser] = useState("");
   const [buttonTransform, setButtonTransform] = useState(0);
-  const [confirmLogoutModalVisible, setConfirmLogoutModalVisible] = useState(false);
+  const [confirmLogoutModalVisible, setConfirmLogoutModalVisible] =
+    useState(false);
   const [logoutError, setLogoutError] = useState(null);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [isModalServiceVisible, setModalServiceVisible] = useState(false);
 
   console.log("perfil: ", token);
 
@@ -107,24 +111,47 @@ export default function MiPerfil({ navigation }) {
     });
   }, [token, idUser]);
 
-  console.log('idUser1: ', idUser);
+  console.log("idUser1: ", idUser);
 
   useEffect(() => {
     axios.get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
         headers: {
-          'auth-token': token
-        }
+          "auth-token": token,
+        },
       })
-      .then(response => {
+      .then((response) => {
         setUserPublications(response.data); // Almacena las publicaciones en el estado
-        console.log('Publicaciones', response.data)
+        console.log("Publicaciones", response.data);
       })
-      .catch(error => {
-        console.error('Error fetching user publications:', error);
+      .catch((error) => {
+        console.error("Error fetching user publications:", error);
       });
-  },[]);
 
-  console.log('idUser: ', idUser);
+      axios
+      .get(`http://buddy-app2.loca.lt/services/service/ByUser`, {
+        headers: {
+          "auth-token": token,
+        },
+      })
+      .then((response) => {
+        setUserService(response.data); // Almacena las publicaciones en el estado
+        console.log("Publicaciones", response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user publications:", error);
+      });
+
+  }, []);
+
+  console.log("idUser: ", idUser);
+
+  const openModalService = () => {
+    setModalServiceVisible(true);
+  };
+
+  const closeModalService = () => {
+    setModalServiceVisible(false);
+  };
 
   const openModal = () => {
     setModalVisible(true);
@@ -135,11 +162,11 @@ export default function MiPerfil({ navigation }) {
   };
 
   const openEditPasswordModal = () => {
-     setCurrentPassword('');
-    setNewPassword('');
-    setRepeatPassword('');
+    setCurrentPassword("");
+    setNewPassword("");
+    setRepeatPassword("");
     setCurrentPasswordError(false);
-    
+
     setEditPasswordModalVisible(true);
     closeModal();
   };
@@ -157,12 +184,12 @@ export default function MiPerfil({ navigation }) {
     const hasNumber = /\d/.test(password); // Comprueba si hay al menos un número
     const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(password); // Comprueba si hay al menos un carácter especial
     const isLengthValid = password.length >= 8; // Comprueba si la longitud es al menos 8 caracteres
-  
+
     return hasNumber && hasSpecialChar && isLengthValid;
   };
 
   const handleUpdatePassword = async () => {
-    if (currentPassword === '' || newPassword === '' || repeatPassword === '') {
+    if (currentPassword === "" || newPassword === "" || repeatPassword === "") {
       setShowFieldsEmptyMessage(true);
       setPasswordMismatchError(false);
       setRequisitosContrasena(false);
@@ -195,7 +222,7 @@ export default function MiPerfil({ navigation }) {
         password: newPassword,
         currentPassword: currentPassword,
       };
-  
+
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
         .put(`https://buddy-app2.loca.lt/security/user/${idUser}`, updatedUserData, {
@@ -211,16 +238,15 @@ export default function MiPerfil({ navigation }) {
             setPasswordUpdated(false);
           }, 2000);
         })
-        .catch(error => {
-          console.error('Error al actualizar la contraseña:', error);
+        .catch((error) => {
+          console.error("Error al actualizar la contraseña:", error);
           setCurrentPasswordError(true);
         });
     }
-  };      
+  };
 
   const handleUpdateUser = async (images) => {
     let imag = images;
-    console.log( 'cansada! ',imag)
     if (confirmPassword === '') {
       setContrasenaVacia(true);
       return;
@@ -250,27 +276,27 @@ export default function MiPerfil({ navigation }) {
           setUserUpdated(false); // Desactiva el mensaje de confirmación después de 2 segundos
         }, 2000);
       })
-      .catch(error => {
-        console.error('Error al actualizar los datos de usuario:', error);
+      .catch((error) => {
+        console.error("Error al actualizar los datos de usuario:", error);
         setCurrentPasswordError(true);
       });
-  };  
-  
+  };
+
   const openEditUserModal = () => {
     // Cerrar el modal de opciones si está abierto
     setModalVisible(false);
-    setConfirmPassword('');
+    setConfirmPassword("");
     // Abrir el modal de editar usuario
     setEditUserModalVisible(true);
   };
-  
+
   const openOptionsModal = (publication) => {
     setSelectedPublication(publication);
     setOptionsModalVisible(true);
-  }
+  };
   useEffect(() => {
-    console.log('selectedPublication (after update): ', selectedPublication);
-  }, [selectedPublication]); 
+    console.log("selectedPublication (after update): ", selectedPublication);
+  }, [selectedPublication]);
 
   const closeOptionsModal = () => {
     setSelectedPublication(null);
@@ -280,10 +306,10 @@ export default function MiPerfil({ navigation }) {
   const openConfirmationModal = () => {
     setConfirmationModalVisible(true);
   };
-  
+
   const closeConfirmationModal = () => {
     setConfirmationModalVisible(false);
-  }; 
+  };
 
   const showSuccessModal = () => {
     setDeleteSuccess(true);
@@ -301,27 +327,41 @@ export default function MiPerfil({ navigation }) {
   };
 
   const editPublication = (publicationToEdit) => {
-    console.log('Mostrar edicion', selectedPublication);
-    const idPublicationToEdit = publicationToEdit.idPublicationAdoption || publicationToEdit.idPublicationSearch;
-    const modalType = publicationToEdit.idPublicationAdoption ? 'adoption' : 'search';
-    console.log('modalType:', modalType);
-    console.log('idPublicationToEdit:', idPublicationToEdit);
+    console.log("Mostrar edicion", selectedPublication);
+    const idPublicationToEdit =
+      publicationToEdit.idPublicationAdoption ||
+      publicationToEdit.idPublicationSearch;
+    const modalType = publicationToEdit.idPublicationAdoption
+      ? "adoption"
+      : "search";
+    console.log("modalType:", modalType);
+    console.log("idPublicationToEdit:", idPublicationToEdit);
 
-    if (modalType === 'adoption') {
-      navigation.navigate('EditarPublicacionAdopcion', {publicationToEdit : selectedPublication, token });
-    } else if (modalType === 'search') {
-      navigation.navigate('EditarPublicacionBusqueda', {publicationToEdit : selectedPublication, token });
-      console.log('Mostrar desde mi perfil el id: ', selectedPublication);
+    if (modalType === "adoption") {
+      navigation.navigate("EditarPublicacionAdopcion", {
+        publicationToEdit: selectedPublication,
+        token,
+      });
+    } else if (modalType === "search") {
+      navigation.navigate("EditarPublicacionBusqueda", {
+        publicationToEdit: selectedPublication,
+        token,
+      });
+      console.log("Mostrar desde mi perfil el id: ", selectedPublication);
     }
   };
 
   const handleDeletePublication = (publicationToDelete) => {
-    console.log('Mostrar en el handle: ', selectedPublication);
+    console.log("Mostrar en el handle: ", selectedPublication);
     if (publicationToDelete) {
-      const idPublicationToDelete = publicationToDelete.idPublicationAdoption || publicationToDelete.idPublicationSearch;
-      const modalType = publicationToDelete.idPublicationAdoption ? 'adoption' : 'search';
-      console.log('modalType:', modalType);
-      console.log('idPublicacion: ', idPublicationToDelete);
+      const idPublicationToDelete =
+        publicationToDelete.idPublicationAdoption ||
+        publicationToDelete.idPublicationSearch;
+      const modalType = publicationToDelete.idPublicationAdoption
+        ? "adoption"
+        : "search";
+      console.log("modalType:", modalType);
+      console.log("idPublicacion: ", idPublicationToDelete);
       axios
        .delete(`https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`, {
           headers: {
@@ -333,15 +373,37 @@ export default function MiPerfil({ navigation }) {
           showSuccessModal(); 
           closeConfirmationModal();
         })
-        .catch(error => {
-          console.error('Error al eliminar la publicación:', error);
+        .catch((error) => {
+          console.error("Error al eliminar la publicación:", error);
           showFailureModal();
           closeConfirmationModal();
         });
     } else {
-      console.error('La publicación a eliminar es nula');
+      console.error("La publicación a eliminar es nula");
     }
-};   
+  };
+
+  useEffect(() => {
+    if (deleteSuccess || deleteFailure) {
+      // Realiza la solicitud GET para cargar las publicaciones actualizadas
+      axios
+        .get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
+          headers: {
+            "auth-token": token,
+          },
+        })
+        .then((response) => {
+          setUserPublications(response.data); // Actualiza las publicaciones en el estado
+          console.log("Publicaciones actualizadas", response.data);
+        })
+        .catch((error) => {
+          console.error(
+            "Error al cargar las publicaciones actualizadas:",
+            error
+          );
+        });
+    }
+  }, [deleteSuccess, deleteFailure]);
 
 useEffect(() => {
   if (deleteSuccess || deleteFailure) {
@@ -365,8 +427,8 @@ useEffect(() => {
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const year = fechaObj.getFullYear();
-    const month = String(fechaObj.getMonth() + 1).padStart(2, '0');
-    const day = String(fechaObj.getDate()).padStart(2, '0');
+    const month = String(fechaObj.getMonth() + 1).padStart(2, "0");
+    const day = String(fechaObj.getDate()).padStart(2, "0");
     return `${day}-${month}-${year}`;
   };
 
@@ -382,14 +444,14 @@ useEffect(() => {
   
       if (response.status === 200) {
         // Cierre de sesión exitoso, navega a InicioScreen.js
-        navigation.navigate('InicioScreen');
+        navigation.navigate("InicioScreen");
       } else {
         // Mostrar un modal de error en caso de que la llamada no sea exitosa
-        setLogoutError('Hubo un error al cerrar sesión.');
+        setLogoutError("Hubo un error al cerrar sesión.");
       }
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-      setLogoutError('Hubo un error al cerrar sesión.');
+      console.error("Error al cerrar sesión:", error);
+      setLogoutError("Hubo un error al cerrar sesión.");
     }
   };
 
@@ -434,56 +496,107 @@ useEffect(() => {
 //FIN imagenes
   return (
     <View style={styles.container}>
-        <Header />
-        <ScrollView>
-          <View style={[styles.principal, { flexDirection: 'row' }]}>
-          
-            <Image source={{uri: newUserImage}} style={styles.imagenUsuario} />
-           
-            
-            <View>
-              <Text style={styles.titulo}>MI PERFIL</Text>
-              {user ? (
-                <Text style={styles.textoUsuario}>{user[0].userName}</Text>
-              ) : (
-                <Text style={styles.textoUsuario}>Cargando...</Text>
-              )}
-            </View>
-            <TouchableOpacity onPress={openModal}>
-              <Image source={require('../Imagenes/opciones.png')} style={styles.imagenOpciones} />
-            </TouchableOpacity>
+      <Header />
+      <ScrollView>
+        <View style={[styles.principal, { flexDirection: "row" }]}>
+          <Image source={{uri: newUserImage}} style={styles.imagenUsuario} />
+          <View>
+            <Text style={styles.titulo}>MI PERFIL</Text>
+            {user ? (
+              <Text style={styles.textoUsuario}>{user[0].userName}</Text>
+            ) : (
+              <Text style={styles.textoUsuario}>Cargando...</Text>
+            )}
           </View>
-          <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
-          {userPublications.adoptions && userPublications.adoptions.length > 0 && userPublications.adoptions.map((adoption, index) => (
-            <View style={[styles.publicationContainer, {flexDirection: 'row'}]}>
+          <TouchableOpacity onPress={openModal}>
+            <Image
+              source={require("../Imagenes/opciones.png")}
+              style={styles.imagenOpciones}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
+        {userService.map((servicio, index) => (
+          <View
+              style={[styles.publicationContainer, { flexDirection: "row" }]}
+            >
               <Image
                 source={{uri: adoption.images[0]}}
                 style={styles.imagenPublicaciones}
               />
               <View>
-                <View style={[styles.informacionPublicacion, {flexDirection: 'row'}]}>
+                <View
+                  style={[
+                    styles.informacionPublicacion,
+                    { flexDirection: "row" },
+                  ]}
+                >
                   <TouchableOpacity style={styles.botonInformacion}>
-                  <Text>En adopción</Text>
-                </TouchableOpacity>
+                    <Text>Servicio</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('OptionModalService', { idService: servicio.idService, token })}>
+                    <Image
+                      source={require("../Imagenes/opciones.png")}
+                      style={styles.imagenOpcionesPublicaciones}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.publicationTitle}>{servicio.serviceTitle}</Text>
+                <View
+                  style={[styles.containerfiltros, { flexDirection: "row" }]}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("../Imagenes/marcador-de-posicion.png")}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{servicio.address}</Text>
+                  </View>
+                </View>
+              </View>
+            </View>  
+        ))}
+        {userPublications.adoptions &&
+          userPublications.adoptions.length > 0 &&
+          userPublications.adoptions.map((adoption, index) => (
+            <View
+              style={[styles.publicationContainer, { flexDirection: "row" }]}
+            >
+              <Image
+                source={require("../Imagenes/imagenPublicaciones.jpg")}
+                style={styles.imagenPublicaciones}
+              />
+              <View>
+                <View
+                  style={[
+                    styles.informacionPublicacion,
+                    { flexDirection: "row" },
+                  ]}
+                >
+                  <TouchableOpacity style={styles.botonInformacion}>
+                    <Text>En adopción</Text>
+                  </TouchableOpacity>
                   <TouchableOpacity onPress={() => openOptionsModal(adoption)}>
                     <Image
-                      source={require('../Imagenes/opciones.png')}
+                      source={require("../Imagenes/opciones.png")}
                       style={styles.imagenOpcionesPublicaciones}
                     />
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.publicationTitle}>{adoption.title}</Text>
-                <View style={[styles.containerfiltros, {flexDirection: 'row'}]}>
-                  <View style={{flexDirection: 'row'}}>
+                <View
+                  style={[styles.containerfiltros, { flexDirection: "row" }]}
+                >
+                  <View style={{ flexDirection: "row" }}>
                     <Image
-                      source={require('../Imagenes/marcador-de-posicion.png')}
+                      source={require("../Imagenes/marcador-de-posicion.png")}
                       style={styles.imagenFiltros}
                     />
                     <Text>{adoption.locality.localityName}</Text>
                   </View>
-                  <View style={{flexDirection: 'row'}}>
+                  <View style={{ flexDirection: "row" }}>
                     <Image
-                      source={require('../Imagenes/hueso.png')}
+                      source={require("../Imagenes/hueso.png")}
                       style={styles.imagenFiltros}
                     />
                     <Text>{adoption.petBreed.petBreedName}</Text>
@@ -492,44 +605,55 @@ useEffect(() => {
               </View>
             </View>
           ))}
-          {userPublications.searchs && userPublications.searchs.length > 0 && userPublications.searchs.map((search, index) => (
-            <View style={[styles.publicationContainer, {flexDirection: 'row'}]}>
+        {userPublications.searchs &&
+          userPublications.searchs.length > 0 &&
+          userPublications.searchs.map((search, index) => (
+            <View
+              style={[styles.publicationContainer, { flexDirection: "row" }]}
+            >
               <Image
                 source={{uri: search.images[0]}}
                 style={styles.imagenPublicaciones}
               />
               <View>
-                <View style={[styles.informacionPublicacion, {flexDirection: 'row'}]}>
+                <View
+                  style={[
+                    styles.informacionPublicacion,
+                    { flexDirection: "row" },
+                  ]}
+                >
                   <TouchableOpacity style={styles.botonInformacion}>
                     <Text>En búsqueda</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => openOptionsModal(search)}>
-                      <Image
-                        source={require('../Imagenes/opciones.png')}
-                        style={styles.imagenOpcionesPublicaciones}
-                      />
+                    <Image
+                      source={require("../Imagenes/opciones.png")}
+                      style={styles.imagenOpcionesPublicaciones}
+                    />
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.publicationTitle}>{search.title}</Text>
-                <View style={[styles.containerfiltros, {flexDirection: 'row'}]}>
-                    <View style={{flexDirection: 'row'}}>
-                      <Image
-                        source={require('../Imagenes/marcador-de-posicion.png')}
-                        style={styles.imagenFiltros}
-                      />
-                      <Text>{search.locality.localityName}</Text>
-                    </View>
-                    <View style={{flexDirection: 'row'}}>
-                      <Image
-                        source={require('../Imagenes/hueso.png')}
-                        style={styles.imagenFiltros}
-                      />
-                      <Text>{search.petBreed.petBreedName}</Text>
-                    </View>
+                <View
+                  style={[styles.containerfiltros, { flexDirection: "row" }]}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("../Imagenes/marcador-de-posicion.png")}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{search.locality.localityName}</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("../Imagenes/hueso.png")}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{search.petBreed.petBreedName}</Text>
+                  </View>
                 </View>
-                <View style={[{flexDirection: 'row'},styles.containerFecha]}>
+                <View style={[{ flexDirection: "row" }, styles.containerFecha]}>
                   <Image
-                    source={require('../Imagenes/calendario.png')}
+                    source={require("../Imagenes/calendario.png")}
                     style={styles.imagenFiltros}
                   />
                   <Text>{formatLostDate(search.lostDate)}</Text>
@@ -540,131 +664,202 @@ useEffect(() => {
                         : styles.textoInformacionBusquedaPerdida // Usar el estilo para "Perdida"
                     }
                   >
-                    {search.isFound ? 'Encontrada' : 'Perdida'}
+                    {search.isFound ? "Encontrada" : "Perdida"}
                   </Text>
                 </View>
               </View>
             </View>
           ))}
 
-          {/* Modal */}
-          <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={closeModal}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <TouchableOpacity style={styles.opcionesModal} onPress={openEditPasswordModal}>
-                  <Text>Editar Contraseña</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.opcionesModal} onPress={openEditUserModal}>
-                  <Text>Editar Usuario</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.opcionesModal} onPress={handleConfirmLogout}>
-                  <Text>Cerrar Sesión</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelarModal} onPress={closeModal}>
-                  <Text>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
+        {/* Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={closeModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TouchableOpacity
+                style={styles.opcionesModal}
+                onPress={openEditPasswordModal}
+              >
+                <Text>Editar Contraseña</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.opcionesModal}
+                onPress={openEditUserModal}
+              >
+                <Text>Editar Usuario</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.opcionesModal}
+                onPress={handleConfirmLogout}
+              >
+                <Text>Cerrar Sesión</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.cancelarModal}
+                onPress={closeModal}
+              >
+                <Text>Cancelar</Text>
+              </TouchableOpacity>
             </View>
-          </Modal>
+          </View>
+        </Modal>
 
-          {/* Editar Contraseña Modal */}
-          <Modal animationType="slide" transparent={true} visible={editPasswordModalVisible} onRequestClose={closeEditPasswordModal}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContentEditarContraseña}>
-                <Text style={styles.tituloModal}>Actualizar contraseña</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.contraseñaActual}>Contraseña actual</Text>
-                  <TextInput style={styles.passwordInput} secureTextEntry={true} value={currentPassword} onChangeText={setCurrentPassword} />
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.contraseñaActual}>Nueva contraseña</Text>
-                  <TextInput style={styles.passwordInput} secureTextEntry={true}  value={newPassword} onChangeText={setNewPassword} />
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.contraseñaActual}>Repetir contraseña</Text>
-                  <TextInput style={styles.passwordInput} secureTextEntry={true}  value={repeatPassword} onChangeText={setRepeatPassword}/>
-                </View>
-                <View style={{flexDirection: 'row'}}>
+        {/* Editar Contraseña Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={editPasswordModalVisible}
+          onRequestClose={closeEditPasswordModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContentEditarContraseña}>
+              <Text style={styles.tituloModal}>Actualizar contraseña</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.contraseñaActual}>Contraseña actual</Text>
+                <TextInput
+                  style={styles.passwordInput}
+                  secureTextEntry={true}
+                  value={currentPassword}
+                  onChangeText={setCurrentPassword}
+                />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.contraseñaActual}>Nueva contraseña</Text>
+                <TextInput
+                  style={styles.passwordInput}
+                  secureTextEntry={true}
+                  value={newPassword}
+                  onChangeText={setNewPassword}
+                />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.contraseñaActual}>Repetir contraseña</Text>
+                <TextInput
+                  style={styles.passwordInput}
+                  secureTextEntry={true}
+                  value={repeatPassword}
+                  onChangeText={setRepeatPassword}
+                />
+              </View>
+              <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
-                  style={[styles.botonEditarContraseña, areFieldsEmpty && styles.disabledButton]}
+                  style={[
+                    styles.botonEditarContraseña,
+                    areFieldsEmpty && styles.disabledButton,
+                  ]}
                   onPress={handleUpdatePassword}
                 >
                   <Text>Actualizar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.botonEditarContraseña} onPress={closeEditPasswordModal}>
+                <TouchableOpacity
+                  style={styles.botonEditarContraseña}
+                  onPress={closeEditPasswordModal}
+                >
                   <Text>Cancelar</Text>
                 </TouchableOpacity>
               </View>
               {currentPasswordError && (
-                <Text style={styles.fieldsEmptyMessage}>La contraseña actual es incorrecta</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  La contraseña actual es incorrecta
+                </Text>
               )}
               {areFieldsEmpty && showFieldsEmptyMessage && (
-                <Text style={styles.fieldsEmptyMessage}>Por favor, completar todos los campos</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  Por favor, completar todos los campos
+                </Text>
               )}
               {passwordMismatchError && (
-                <Text style={styles.fieldsEmptyMessage}>Las contraseñas no coinciden.</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  Las contraseñas no coinciden.
+                </Text>
               )}
               {requisitosContrasena && (
-                <Text style={styles.fieldsEmptyMessage}>La contraseña debe tener:</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  La contraseña debe tener:
+                </Text>
               )}
               {requisitosContrasena && (
-                <Text style={styles.fieldsEmptyMessage}>8 caracteres como mínimo.</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  8 caracteres como mínimo.
+                </Text>
               )}
               {requisitosContrasena && (
-                <Text style={styles.fieldsEmptyMessage}>Un número como mínimo.</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  Un número como mínimo.
+                </Text>
               )}
               {requisitosContrasena && (
-                <Text style={styles.fieldsEmptyMessage}>Un caracter especial.</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  Un caracter especial.
+                </Text>
               )}
               {contrasenaIgual && (
-                <Text style={styles.fieldsEmptyMessage}>La contraseña debe ser diferente a la actual</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  La contraseña debe ser diferente a la actual
+                </Text>
               )}
             </View>
           </View>
         </Modal>
-        <Modal animationType="slide" transparent={true} visible={editUserModalVisible} onRequestClose={() => setEditUserModalVisible(false)}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={editUserModalVisible}
+          onRequestClose={() => setEditUserModalVisible(false)}
+        >
           <View style={styles.modalContainer}>
             <View style={styles.modalContentEditarUsuario}>
             <AgregarImagen onImagesSelected={handleImagesSelected} style={styles.botonGaleria}/>
               <Text style={styles.tituloModal}>Editar Usuario</Text>
-              <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.contraseñaActual}>Nombre</Text>
-                  <TextInput
-                    style={styles.passwordInput}
-                    value={newName}
-                    onChangeText={setNewName}
-                  />
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.contraseñaActual}>Nombre</Text>
+                <TextInput
+                  style={styles.passwordInput}
+                  value={newName}
+                  onChangeText={setNewName}
+                />
               </View>
-              <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.contraseñaActual}>Usuario</Text>
-                  <TextInput
-                    style={styles.passwordInput}
-                    value={newUserName}
-                    onChangeText={setNewUserName}
-                  />
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.contraseñaActual}>Usuario</Text>
+                <TextInput
+                  style={styles.passwordInput}
+                  value={newUserName}
+                  onChangeText={setNewUserName}
+                />
               </View>
               <View>
-              <TextInput
-                placeholder='Ingrese contraseña para confirmar'
-                style={styles.contraseñaConfirmar}
-                secureTextEntry={true}
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-              />
+                <TextInput
+                  placeholder="Ingrese contraseña para confirmar"
+                  style={styles.contraseñaConfirmar}
+                  secureTextEntry={true}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                />
               </View>
               <View style={[styles.contenedorBotones, {flexDirection:'row'}]}>
                 <TouchableOpacity style={styles.botonEditarContraseña} onPress={handleSubAddPut}>
                   <Text>Actualizar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.botonEditarContraseña} onPress={() => setEditUserModalVisible(false)}>
+                <TouchableOpacity
+                  style={styles.botonEditarContraseña}
+                  onPress={() => setEditUserModalVisible(false)}
+                >
                   <Text>Cancelar</Text>
                 </TouchableOpacity>
               </View>
               {contrasenaVacia && (
-                <Text style={styles.fieldsEmptyMessage}>Por favor, ingrese la contraseña para confirmar.</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  Por favor, ingrese la contraseña para confirmar.
+                </Text>
               )}
               {currentPasswordError && (
-                <Text style={styles.fieldsEmptyMessage}>La contraseña actual es incorrecta</Text>
+                <Text style={styles.fieldsEmptyMessage}>
+                  La contraseña actual es incorrecta
+                </Text>
               )}
             </View>
           </View>
@@ -700,18 +895,20 @@ useEffect(() => {
               <TouchableOpacity
                 style={styles.opcionesModal}
                 onPress={() => {
-                  const modelType = selectedPublication.idPublicationAdoption ? 'adoption' : 'search';
-                  console.log('Model Type:', modelType);
-                  console.log('selectedPublication: ', selectedPublication);
-                  if (modelType === 'adoption') {
-                    navigation.navigate('PublicacionDetalleAdopcion', { 
+                  const modelType = selectedPublication.idPublicationAdoption
+                    ? "adoption"
+                    : "search";
+                  console.log("Model Type:", modelType);
+                  console.log("selectedPublication: ", selectedPublication);
+                  if (modelType === "adoption") {
+                    navigation.navigate("PublicacionDetalleAdopcion", {
                       publicacion: selectedPublication,
-                      token
+                      token,
                     });
                   } else {
-                    navigation.navigate('PublicacionDetalle', {
+                    navigation.navigate("PublicacionDetalle", {
                       publicacion: selectedPublication,
-                      token
+                      token,
                     });
                   }
                   closeOptionsModal();
@@ -719,7 +916,10 @@ useEffect(() => {
               >
                 <Text>Ver publicación</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.cancelarModal} onPress={closeOptionsModal}>
+              <TouchableOpacity
+                style={styles.cancelarModal}
+                onPress={closeOptionsModal}
+              >
                 <Text>Cancelar</Text>
               </TouchableOpacity>
             </View>
@@ -754,43 +954,48 @@ useEffect(() => {
         </Modal>
       </ScrollView>
       <Modal
-          animationType="slide"
-          transparent={true}
-          visible={deleteSuccess}
-          onRequestClose={() => {
-            setDeleteSuccess(false);
-          }}
-        >
-          <View style={[styles.modalContainer, { justifyContent: 'flex-end' }]}>
-            <View style={styles.successModal}>
-              <Text style={styles.confirmationText}>¡Publicación eliminada!</Text>
-            </View>
+        animationType="slide"
+        transparent={true}
+        visible={deleteSuccess}
+        onRequestClose={() => {
+          setDeleteSuccess(false);
+        }}
+      >
+        <View style={[styles.modalContainer, { justifyContent: "flex-end" }]}>
+          <View style={styles.successModal}>
+            <Text style={styles.confirmationText}>¡Publicación eliminada!</Text>
           </View>
-        </Modal>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={deleteFailure}
-          onRequestClose={() => {
-            setDeleteFailure(false);
-          }}
-        >
-          <View style={[styles.modalContainer, { justifyContent: 'flex-end' }]}>
-            <View style={styles.failureModal}>
-              <Text style={styles.confirmationText}>¡Eliminación fallida!</Text>
-            </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={deleteFailure}
+        onRequestClose={() => {
+          setDeleteFailure(false);
+        }}
+      >
+        <View style={[styles.modalContainer, { justifyContent: "flex-end" }]}>
+          <View style={styles.failureModal}>
+            <Text style={styles.confirmationText}>¡Eliminación fallida!</Text>
           </View>
-        </Modal>
-      <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
-            <BotonFlotante token={token} />
+        </View>
+      </Modal>
+      <View
+        style={[
+          styles.botonFlotanteContainer,
+          { transform: [{ translateY: buttonTransform }] },
+        ]}
+      >
+        <BotonFlotante token={token} />
       </View>
       {logoutError && (
-            <View style={styles.errorContainer1}>
-              <Text>{logoutError}</Text>
-              <TouchableOpacity onPress={() => setLogoutError(null)}>
-                <Text>OK</Text>
-              </TouchableOpacity>
-            </View>
+        <View style={styles.errorContainer1}>
+          <Text>{logoutError}</Text>
+          <TouchableOpacity onPress={() => setLogoutError(null)}>
+            <Text>OK</Text>
+          </TouchableOpacity>
+        </View>
       )}
       <Modal
         visible={confirmLogoutModalVisible}
@@ -822,18 +1027,20 @@ useEffect(() => {
         </View>
       </Modal>
       {userUpdated && (
-          <View style={styles.confirmationMessage}>
-            <Text style={styles.confirmationText}>¡Usuario actualizado!</Text>
-          </View>
+        <View style={styles.confirmationMessage}>
+          <Text style={styles.confirmationText}>¡Usuario actualizado!</Text>
+        </View>
       )}
       {passwordUpdated && (
-          <View style={styles.confirmationMessage}>
-            <Text style={styles.confirmationText}>¡Contraseña actualizada correctamente!</Text>
-          </View>
+        <View style={styles.confirmationMessage}>
+          <Text style={styles.confirmationText}>
+            ¡Contraseña actualizada correctamente!
+          </Text>
+        </View>
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   principal: {
@@ -854,7 +1061,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 30,
     marginTop: 25,
-    marginLeft: '55%',
+    marginLeft: "55%",
   },
   textoUsuario: {
     marginLeft: 15,
@@ -867,112 +1074,112 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
     elevation: 5,
   },
   opcionesModal: {
-    borderBottomColor: '#EEE9E9',
+    borderBottomColor: "#EEE9E9",
     borderBottomWidth: 1,
     width: 160,
     height: 30,
     padding: 5,
-    marginTop:10,
+    marginTop: 10,
   },
-  cancelarModal:{
+  cancelarModal: {
     marginTop: 15,
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
     height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 5,
   },
   passwordInput: {
     marginBottom: 10,
     marginLeft: 10,
     padding: 5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     width: 150,
     height: 25,
     borderRadius: 30,
   },
-  contraseñaActual:{
+  contraseñaActual: {
     marginTop: 2,
   },
   modalContentEditarContraseña: {
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
     padding: 10,
     borderRadius: 10,
   },
   botonEditarContraseña: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     marginRight: 5,
     padding: 5,
     borderRadius: 5,
     width: 120,
-    alignItems: 'center',
+    alignItems: "center",
     marginLeft: 10,
   },
   tituloModal: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 15,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   fieldsEmptyMessage: {
-    color: 'red',
-    textAlign: 'center',
+    color: "red",
+    textAlign: "center",
     marginTop: 10,
   },
   modalContentEditarUsuario: {
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   contraseñaConfirmar: {
     width: 225,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 15,
     padding: 2,
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   confirmationMessage: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     padding: 10,
-    marginTop: '145%',
+    marginTop: "145%",
   },
   confirmationText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
   },
-  publicationContainer:{
+  publicationContainer: {
     padding: 1,
     paddingRight: 15,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     margin: 5,
     borderRadius: 15,
     elevation: 4,
-    width: '90%',
+    width: "90%",
     marginLeft: 25,
     marginTop: 15,
-    alignItems: 'center',
+    alignItems: "center",
   },
-  imagenOpcionesPublicaciones:{
+  imagenOpcionesPublicaciones: {
     width: 20,
     height: 20,
     marginTop: 15,
     marginLeft: 20,
   },
   botonInformacion: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     elevation: 5,
     height: 30,
     padding: 5,
@@ -981,7 +1188,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   informacionPublicacion: {
-    justifyContent: 'space-between'
+    justifyContent: "space-between",
   },
   imagenFiltros: {
     width: 20,
@@ -1005,40 +1212,40 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   imagenPublicaciones: {
-    width: '30%',
+    width: "30%",
     height: 100,
     borderRadius: 15,
   },
   textoInformacionBusquedaEncontrada: {
     marginLeft: 15,
-    backgroundColor: '#CBC2C2',
+    backgroundColor: "#CBC2C2",
     padding: 5,
   },
 
   textoInformacionBusquedaPerdida: {
     marginLeft: 15,
-    backgroundColor: '#58DCD4',
+    backgroundColor: "#58DCD4",
     padding: 5,
   },
 
   successModal: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20, // Ajusta el margen inferior según tus preferencias
   },
 
   // Estilos para el modal de confirmación fallida
   failureModal: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20, // Ajusta el margen inferior según tus preferencias
   },
   botonFlotanteContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
     right: 20, // Puedes ajustar esta cantidad según tus preferencias
     transform: [{ translateY: 0 }], // Inicialmente no se desplaza
@@ -1048,26 +1255,26 @@ const styles = StyleSheet.create({
   },
   modalContainer1: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent1: {
-    width: '80%',
-    backgroundColor: '#fff',
+    width: "80%",
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
     elevation: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   confirmButtons1: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
   },
   confirmButton1: {
     flex: 1,
-    backgroundColor: '#FFB984',
-    alignItems: 'center',
+    backgroundColor: "#FFB984",
+    alignItems: "center",
     paddingVertical: 10,
     borderRadius: 5,
   },

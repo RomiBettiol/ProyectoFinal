@@ -19,6 +19,8 @@ const BotonFlotante = () => {
       navigation.navigate('PublicacionAdopcion', { token });
     } else if (route.name === 'MiPerfil') {
       handleOpenModalOptionsPublications();
+    } else if (route.name === 'ServiciosScreen') { 
+      navigation.navigate('PublicarServicio', { token });
     }
   };
 

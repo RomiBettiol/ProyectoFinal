@@ -38,7 +38,7 @@ export default function MisTurnos(token) {
    
         async function fetchTurnos() {
             try {
-                const response = await axios.get(`https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`);
+                const response = await axios.get(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}`);
                 if (response.data && Array.isArray(response.data.turns)) {
                 setTurnos(response.data.turns);
                 console.log(response.data.turns)
@@ -118,7 +118,7 @@ export default function MisTurnos(token) {
     const handleDeleteTurno = async () => {
         console.log(turno.idTurn)
             try {
-                const response = await axios.delete(`https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
+                const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`);
                 console.log('Turno eliminado:', response.data);
                 setShowSuccessModal(true);
             } catch (error) {
@@ -147,346 +147,354 @@ export default function MisTurnos(token) {
         fetchTurnos();
 
     }, []);
-    return (
-        <View style={styles.container}>
-            <HeaderScreen  token={token}/>
-            <ScrollView style={styles.scroll}>
-                <View style={styles.contentContainer1}>
-                    <View style={styles.container1}>
-                        <Image
-                            source={require('../Imagenes/perrito.jpeg')}
-                            style={styles.imagMascota}
-                        />
-                        <View style={styles.containerTitulo}>
-                            <Text style={styles.titulo}>
-                                MIS TURNOS
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-                <View>
-                    <View style={styles.containerBarra}>
-                        <BarraBusquedaMascota
-                            searchText={searchText}
-                            onSearchTextChange={setSearchText}
-                        />
-                    </View>
-                    
-                    <View style={styles.yearPickerContainer}>
-                        <Text>Seleccionar año: </Text>
-                        <Picker
-                            selectedValue={selectedYear}
-                            onValueChange={(itemValue, itemIndex) => setSelectedYear(itemValue)}
-                            style={{ height: 50, width: 130 }}
-                        >
-                            {/* Generar las opciones de años dinámicamente */}
-                            {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                                <Picker.Item key={year} label={year.toString()} value={year} />
-                            ))}
-                        </Picker>
-                    </View>
-                </View>
-                {error404 ? (
-                        <View style={styles.contentContainer22}>
-                            <Text style={styles.sinInfo}>NO HAY TURNOS CARGADOS</Text>
-                        </View>
-                    ) : (
-                <View style={styles.contentContainer2}>
-                    {Object.keys(filteredTurnosAgrupados)
-                        .sort((a, b) => {
-                            const mesesOrdenados = [
-                                "enero", "febrero", "marzo", "abril",
-                                "mayo", "junio", "julio", "agosto",
-                                "septiembre", "octubre", "noviembre", "diciembre"
-                            ];
-                            return mesesOrdenados.indexOf(a) - mesesOrdenados.indexOf(b);
-                        })
-                        .map(mes => (
-                            <View style={styles.contentContainer3} key={mes}>
-                                <Text style={styles.subtitulo}>
-                                    {mes}
-                                </Text>
-                                <ScrollView horizontal={true}>
-                                    {filteredTurnosAgrupados[mes].map((turno, index) => (
-                                        <View style={styles.contenedorTurno} key={index}>
-                                            
-                                                <TouchableOpacity
-                                                    style={styles.containerTurno}
-                                                    onPress={() => {
-                                                        setTurno(turno);
-                                                        setShowTurnoModal(true);
-                                                    }}
-                                                > 
-                                                    <TouchableOpacity
-                                                        style={styles.botonOpc}
-                                                        onPress={() => {
-                                                            setSelectedTurnIndex(index);
-                                                            setOverlayVisible(true);
-                                                            setTurno(turno);
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            source={require('../Imagenes/opciones.png')}
-                                                            style={styles.opciones}
-                                                        />
-                                                    </TouchableOpacity>
-                                                                                                              
-                                                    <View style={styles.dia}>
-                                                        <Text style={styles.numero}>
-                                                        {dia(turno)} 
-                                                        </Text>
-                                                    </View>
-                                                    <Text>
-                                                        {turno.turnHour}
-                                                    </Text>
-                                                    <Text style={styles.detalle}>
-                                                       {turno.titleTurn}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        
-                                ))}
-                            </ScrollView>
-                        </View>
-                    ))}
-            </View>
-            )}
-             {/* Overlay para opciones */}
-             <Overlay
-                    isVisible={overlayVisible}
-                    onBackdropPress={() => {
-                        setOverlayVisible(false);
-                        setSelectedTurnIndex(null);
-                    }}
-                    overlayStyle={styles.overlayContent}
-                >
-                    <TouchableOpacity
-                        style={styles.overlayOption}
-                        onPress={toggleEditarTurnoModal}
-                    >
-                        <Text>Editar</Text>
-                    </TouchableOpacity>
-                    {/* Modal de edición de mascota */}
-                    <Modal
-                        visible={showEditarTurnoModal}
-                        animationType="slide"
-                        transparent={true}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <EditarTurno mascotaId={mascotaId} turno={turno} onClose={toggleEditarTurnoModal} />
-                            </View>
-                        </View>
-                    </Modal>
-                    <TouchableOpacity                                               
-                        style={styles.overlayOption}
-                        onPress={handleDeleteTurno} // Llama a la función de eliminación                   
-                    >
-                        <Text>Eliminar</Text>
-                    </TouchableOpacity>
-                </Overlay>
-                 {/* Modal (tarjeta flotante) */}
-                <Modal
-                visible={showAltaTurnoModal}
-                animationType="slide"
-                transparent={true}
-               
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <AltaTurno onClose={toggleAltaTurnoModal} />
-                    </View>
-                </View>
-            </Modal>
-            <SuccessModal
-                    visible={showSuccessModal}
-                    onClose={() => {
-                    setShowSuccessModal(false);
-                    handleSuccessModalClose(); // Cerrar el modal EditarTurno
-                    }}
-                    message="Turno eliminado correctamente"
-                />
-
-            <ErrorModal
-                visible={showErrorModal}
-                errorMessage="Hubo un error al eliminar el turno."
-                onClose={() => {
-                    setShowErrorModal(false);
-                    handleSuccessModalClose();
-                    }}
+    
+  return (
+    <View style={styles.container}>
+      <HeaderScreen token={token} />
+      <ScrollView style={styles.scroll}>
+        <View style={styles.contentContainer1}>
+          <View style={styles.container1}>
+            <Image
+              source={require("../Imagenes/perrito.jpeg")}
+              style={styles.imagMascota}
             />
-                <Modal
-                    visible={showTurnoModal}
-                    animationType="slide"
-                    transparent={true}
-                    onClose={() => {
-                        setShowTurnoModal(false);
-                        handleSuccessModalClose();
-                    }}
-                    >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>                 
-                            <TurnoModal turno={turno} onClose={() => setShowTurnoModal(false)}  />
-                        </View>
-                    </View>
-                </Modal>         
-            </ScrollView>
-            <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
-                <BotonTurnos onAddTurno={toggleAltaTurnoModal} token={token} />   
+            <View style={styles.containerTitulo}>
+              <Text style={styles.titulo}>MIS TURNOS</Text>
             </View>
+          </View>
         </View>
-    );
+        <View>
+          <View style={styles.containerBarra}>
+            <BarraBusquedaMascota
+              searchText={searchText}
+              onSearchTextChange={setSearchText}
+            />
+          </View>
+
+          <View style={styles.yearPickerContainer}>
+            <Text>Seleccionar año: </Text>
+            <Picker
+              selectedValue={selectedYear}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedYear(itemValue)
+              }
+              style={{ height: 50, width: 130 }}
+            >
+              {/* Generar las opciones de años dinámicamente */}
+              {Array.from(
+                { length: 10 },
+                (_, i) => new Date().getFullYear() - i
+              ).map((year) => (
+                <Picker.Item key={year} label={year.toString()} value={year} />
+              ))}
+            </Picker>
+          </View>
+        </View>
+        {error404 ? (
+          <View style={styles.contentContainer22}>
+            <Text style={styles.sinInfo}>NO HAY TURNOS CARGADOS</Text>
+          </View>
+        ) : (
+          <View style={styles.contentContainer2}>
+            {Object.keys(filteredTurnosAgrupados)
+              .sort((a, b) => {
+                const mesesOrdenados = [
+                  "enero",
+                  "febrero",
+                  "marzo",
+                  "abril",
+                  "mayo",
+                  "junio",
+                  "julio",
+                  "agosto",
+                  "septiembre",
+                  "octubre",
+                  "noviembre",
+                  "diciembre",
+                ];
+                return mesesOrdenados.indexOf(a) - mesesOrdenados.indexOf(b);
+              })
+              .map((mes) => (
+                <View style={styles.contentContainer3} key={mes}>
+                  <Text style={styles.subtitulo}>{mes}</Text>
+                  <ScrollView horizontal={true}>
+                    {filteredTurnosAgrupados[mes].map((turno, index) => (
+                      <View style={styles.contenedorTurno} key={index}>
+                        <TouchableOpacity
+                          style={styles.containerTurno}
+                          onPress={() => {
+                            setTurno(turno);
+                            setShowTurnoModal(true);
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={styles.botonOpc}
+                            onPress={() => {
+                              setSelectedTurnIndex(index);
+                              setOverlayVisible(true);
+                              setTurno(turno);
+                            }}
+                          >
+                            <Image
+                              source={require("../Imagenes/opciones.png")}
+                              style={styles.opciones}
+                            />
+                          </TouchableOpacity>
+
+                          <View style={styles.dia}>
+                            <Text style={styles.numero}>{dia(turno)}</Text>
+                          </View>
+                          <Text>{turno.turnHour}</Text>
+                          <Text style={styles.detalle}>{turno.titleTurn}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </ScrollView>
+                </View>
+              ))}
+          </View>
+        )}
+        {/* Overlay para opciones */}
+        <Overlay
+          isVisible={overlayVisible}
+          onBackdropPress={() => {
+            setOverlayVisible(false);
+            setSelectedTurnIndex(null);
+          }}
+          overlayStyle={styles.overlayContent}
+        >
+          <TouchableOpacity
+            style={styles.overlayOption}
+            onPress={toggleEditarTurnoModal}
+          >
+            <Text>Editar</Text>
+          </TouchableOpacity>
+          {/* Modal de edición de mascota */}
+          <Modal
+            visible={showEditarTurnoModal}
+            animationType="slide"
+            transparent={true}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <EditarTurno
+                  mascotaId={mascotaId}
+                  turno={turno}
+                  onClose={toggleEditarTurnoModal}
+                />
+              </View>
+            </View>
+          </Modal>
+          <TouchableOpacity
+            style={styles.overlayOption}
+            onPress={handleDeleteTurno} // Llama a la función de eliminación
+          >
+            <Text>Eliminar</Text>
+          </TouchableOpacity>
+        </Overlay>
+        {/* Modal (tarjeta flotante) */}
+        <Modal
+          visible={showAltaTurnoModal}
+          animationType="slide"
+          transparent={true}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <AltaTurno onClose={toggleAltaTurnoModal} />
+            </View>
+          </View>
+        </Modal>
+        <SuccessModal
+          visible={showSuccessModal}
+          onClose={() => {
+            setShowSuccessModal(false);
+            handleSuccessModalClose(); // Cerrar el modal EditarTurno
+          }}
+          message="Turno eliminado correctamente"
+        />
+
+        <ErrorModal
+          visible={showErrorModal}
+          errorMessage="Hubo un error al eliminar el turno."
+          onClose={() => {
+            setShowErrorModal(false);
+            handleSuccessModalClose();
+          }}
+        />
+        <Modal
+          visible={showTurnoModal}
+          animationType="slide"
+          transparent={true}
+          onClose={() => {
+            setShowTurnoModal(false);
+            handleSuccessModalClose();
+          }}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TurnoModal
+                turno={turno}
+                onClose={() => setShowTurnoModal(false)}
+              />
+            </View>
+          </View>
+        </Modal>
+      </ScrollView>
+      <View
+        style={[
+          styles.botonFlotanteContainer,
+          { transform: [{ translateY: buttonTransform }] },
+        ]}
+      >
+        <BotonTurnos onAddTurno={toggleAltaTurnoModal} token={token} />
+      </View>
+    </View>
+  );
 }
-           
 
 const styles = StyleSheet.create({
-    botonFlotanteContainer: {
-        position: 'absolute',
-        bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
-        right: 20, // Puedes ajustar esta cantidad según tus preferencias
-        transform: [{ translateY: 0 }], // Inicialmente no se desplaza
-      },
-    sinInfo:{
-        fontSize: 14,
-        color:'grey',
-    },
-    contentContainer22: {
-       marginTop:200,        
-        justifyContent: 'center', // Para centrar vertical
-        alignItems:'center',
-        flex: 1,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        
-    },
-    modalContent: {
-      backgroundColor: '#FFFFFF',
-      elevation: 10,
-      borderRadius: 25,
-      padding: 20,
-      width: windowWidth * 0.95,
-      height:windowHeight * 0.65,
-      textAlign: 'center',
-      alignItems: 'center', // Para centrar horizont
+  botonFlotanteContainer: {
+    position: "absolute",
+    bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
+    right: 20, // Puedes ajustar esta cantidad según tus preferencias
+    transform: [{ translateY: 0 }], // Inicialmente no se desplaza
   },
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
-    scroll: {
-        flex: 1,
-    },
-    titulo: {
-        fontSize: 16,
-    },
-    contentContainer1: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20, // Añade espacios a los lados si es necesario
-        marginTop: 20,
-    },
-    contentContainer2: {
-        marginHorizontal: 15,
-     
-    },
-    contentContainer3: {
-       // marginTop: 10,
-    },
-    container1: {
-        width: '100%',
-        height: 70,
-        backgroundColor: '#B8F7B7',
-        borderRadius: 20,
-        justifyContent: 'flex-start', // Para centrar vertical
-        alignItems: 'center', // Para centrar horizontal
-        flexDirection: 'row',
-        elevation: 20,
-    },
-    containerTitulo: {
-        alignItems: 'center', // Para centrar horizontal
-        width: '80%',
-    },
-    subtitulo: {
-        fontSize: 16,
-        marginTop: 10,
-    },
-    imagMascota: {
-        borderRadius: 50,
-        height: 50,
-        width: 50,
-        marginHorizontal: 10,
-        marginBottom: 2,
-    },
-    contenedorTurno: {
-        backgroundColor: 'white',
-        width: 100,
-        height: 145,
-        borderColor: '#a9a9a9',
-        borderWidth: 1,
-        borderRadius: 15,
-        elevation: 3,
-        alignItems: 'center', // Para centrar horizontal
-        marginTop: 10,
-        marginHorizontal: 10,
-        paddingHorizontal:4,
-    },
-    botonOpc: {
-        margin: 2,
-    },
-    opciones: {
-        height: 15,
-        width: 15,
-        marginLeft: 60,
-        marginTop: 5,
-    },
-    dia: {
-        backgroundColor: '#47D3CB',
-        height: 50,
-        width: 50,
-        borderRadius: 50,
-        justifyContent: 'center', // Para centrar vertical
-        alignItems: 'center', // Para centrar horizontal
-        marginBottom: 10,
-    },
-    numero: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 24,
-    },
-    detalle: {
-        fontSize: 12,
-    },
-    overlayContent: {
-        borderRadius: 10,
-        padding: 10,
-        backgroundColor: 'white',
-        elevation: 4,
-    },
-    overlayOption: {
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-    },
-    yearPickerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 0,
-        marginLeft:20,
-    },
-    containerBarra:{
-        marginVertical:20,
-        width:'90%',
-        alignSelf: 'center',
-
-    },
-    containerTurno:{
-        alignSelf: 'center',
-        alignItems:'center',
-        
-    },
-      
+  sinInfo: {
+    fontSize: 14,
+    color: "grey",
+  },
+  contentContainer22: {
+    marginTop: 200,
+    justifyContent: "center", // Para centrar vertical
+    alignItems: "center",
+    flex: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#FFFFFF",
+    elevation: 10,
+    borderRadius: 25,
+    padding: 20,
+    width: windowWidth * 0.95,
+    height: windowHeight * 0.65,
+    textAlign: "center",
+    alignItems: "center", // Para centrar horizont
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  scroll: {
+    flex: 1,
+  },
+  titulo: {
+    fontSize: 16,
+  },
+  contentContainer1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20, // Añade espacios a los lados si es necesario
+    marginTop: 20,
+  },
+  contentContainer2: {
+    marginHorizontal: 15,
+  },
+  contentContainer3: {
+    // marginTop: 10,
+  },
+  container1: {
+    width: "100%",
+    height: 70,
+    backgroundColor: "#B8F7B7",
+    borderRadius: 20,
+    justifyContent: "flex-start", // Para centrar vertical
+    alignItems: "center", // Para centrar horizontal
+    flexDirection: "row",
+    elevation: 20,
+  },
+  containerTitulo: {
+    alignItems: "center", // Para centrar horizontal
+    width: "80%",
+  },
+  subtitulo: {
+    fontSize: 16,
+    marginTop: 10,
+  },
+  imagMascota: {
+    borderRadius: 50,
+    height: 50,
+    width: 50,
+    marginHorizontal: 10,
+    marginBottom: 2,
+  },
+  contenedorTurno: {
+    backgroundColor: "white",
+    width: 100,
+    height: 145,
+    borderColor: "#a9a9a9",
+    borderWidth: 1,
+    borderRadius: 15,
+    elevation: 3,
+    alignItems: "center", // Para centrar horizontal
+    marginTop: 10,
+    marginHorizontal: 10,
+    paddingHorizontal: 4,
+  },
+  botonOpc: {
+    margin: 2,
+  },
+  opciones: {
+    height: 15,
+    width: 15,
+    marginLeft: 60,
+    marginTop: 5,
+  },
+  dia: {
+    backgroundColor: "#47D3CB",
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+    justifyContent: "center", // Para centrar vertical
+    alignItems: "center", // Para centrar horizontal
+    marginBottom: 10,
+  },
+  numero: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+  detalle: {
+    fontSize: 12,
+  },
+  overlayContent: {
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "white",
+    elevation: 4,
+  },
+  overlayOption: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  yearPickerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 0,
+    marginLeft: 20,
+  },
+  containerBarra: {
+    marginVertical: 20,
+    width: "90%",
+    alignSelf: "center",
+  },
+  containerTurno: {
+    alignSelf: "center",
+    alignItems: "center",
+  },
 });

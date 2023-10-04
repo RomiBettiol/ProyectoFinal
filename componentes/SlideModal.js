@@ -1,33 +1,36 @@
-import React, { useRef, useState, useEffect} from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, Animated, TouchableWithoutFeedback, Image} from 'react-native';
-import axios from 'axios';
+import React, { useRef, useState, useEffect } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+  Animated,
+  TouchableWithoutFeedback,
+  Image,
+} from "react-native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SlideModal = ({ visible, onClose }) => {
   const slideAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
   const route = useRoute();
   const { token } = route.params;
-  const [confirmLogoutModalVisible, setConfirmLogoutModalVisible] = useState(false);
+  const [confirmLogoutModalVisible, setConfirmLogoutModalVisible] =
+    useState(false);
   const [logoutError, setLogoutError] = useState(null);
 
   const handleOptionPress = (screenName) => {
     // Verifica si la opción seleccionada coincide con la pantalla actual
     if (route.name === screenName) {
-      handleModalClose(); // Cierra la modal si están en la misma pantalla
+      handleModalClose(); // Cierra el componente si está en la misma pantalla
     } else {
       // Navega a la pantalla correspondiente si no están en la misma pantalla
       navigation.navigate(screenName, { token });
-      handleModalClose(); // Cierra la modal después de navegar
+      handleModalClose(); // Cierra el componente después de navegar
     }
-  };
-
-  const handleModalOpen = () => {
-    Animated.timing(slideAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
   };
 
   const handleModalClose = () => {
@@ -39,33 +42,18 @@ const SlideModal = ({ visible, onClose }) => {
   };
 
   const handleBackgroundPress = () => {
-    // Close the modal when the background is pressed
     handleModalClose();
   };
+
   const handleLogout = async () => {
     try {
-      const response = await fetch('https://buddy-app2.loca.lt/security/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'auth-token': token,
-        },
-      });
-  
-      if (response.status === 200) {
-        // Cierre de sesión exitoso, navega a InicioScreen.js
-        navigation.navigate('InicioScreen');
-        onClose(); // Cierra el SlideModal
-      } else {
-        // Mostrar un modal de error en caso de que la llamada no sea exitosa
-        setLogoutError('Hubo un error al cerrar sesión.');
-      }
+      await AsyncStorage.removeItem("auth-token");
+      navigation.navigate("InicioScreen");
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-      setLogoutError('Hubo un error al cerrar sesión.');
+      setLogoutError("Hubo un error al cerrar sesión.");
     }
   };
-  
+
   const handleConfirmLogout = () => {
     setConfirmLogoutModalVisible(true);
   };
@@ -107,12 +95,7 @@ const SlideModal = ({ visible, onClose }) => {
   }
       useEffect(()=>{
     fetchNombre();
-
- 
   }, [token, idUser]);
-
-  console.log('idUser1: ', idUser);
-
 
   return (
     <Modal
@@ -133,84 +116,92 @@ const SlideModal = ({ visible, onClose }) => {
                 {
                   translateX: slideAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [-300, 0], // Adjust the value to control the slide distance
+                    outputRange: [-300, 0],
                   }),
                 },
               ],
             },
           ]}
         >
-          {/* Content of the modal */}
           <View style={[styles.usuario]}>
             <Image
                 source={{uri: newUserImage}}
                 style={styles.imagenUsuario}
             />
             <TouchableOpacity
-                onPress = {()=> (
-                  navigation.navigate('MiPerfil', {token})
-              )}
+              onPress={() => navigation.navigate("MiPerfil", { token })}
             >
-                <Text style={styles.textoUsuario}>{newUserName}</Text>
+              <Text style={styles.textoUsuario}>{newUserName}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.menu}>
-            <TouchableOpacity style={styles.opciones} onPress={() => handleOptionPress('BusquedaScreen')}>
-                <View style={[{flexDirection: 'row'}, styles.view]}>
+            <TouchableOpacity
+              style={styles.opciones}
+              onPress={() => handleOptionPress("BusquedaScreen")}
+            >
+              <View style={[{ flexDirection: "row" }, styles.view]}>
                 <Image
-                    source={require('../Imagenes/lupa.png')}
-                    style={styles.imagenMenu}
+                  source={require("../Imagenes/lupa.png")}
+                  style={styles.imagenMenu}
                 />
                 <Text style={styles.textoModal}>Buscar mascota</Text>
-                </View>
+              </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleOptionPress('AdoptarScreen')} style={styles.opciones}>
-                <View style={[{flexDirection: 'row'}, styles.view]}>
+            <TouchableOpacity
+              onPress={() => handleOptionPress("AdoptarScreen")}
+              style={styles.opciones}
+            >
+              <View style={[{ flexDirection: "row" }, styles.view]}>
                 <Image
-                    source={require('../Imagenes/mascota.png')}
-                    style={styles.imagenMenu}
+                  source={require("../Imagenes/mascota.png")}
+                  style={styles.imagenMenu}
                 />
                 <Text style={styles.textoModal}>Adoptar mascota</Text>
-                </View>
+              </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.opciones}>
-                <View style={[{flexDirection: 'row'}, styles.view]}>
+            <TouchableOpacity style={styles.opciones}
+            onPress={() => handleOptionPress("ServiciosScreen")}
+            >
+              <View style={[{ flexDirection: "row" }, styles.view]}>
                 <Image
-                    source={require('../Imagenes/perro.png')}
-                    style={styles.imagenMenu}
+                  source={require("../Imagenes/perro.png")}
+                  style={styles.imagenMenu}
                 />
                 <Text style={styles.textoModal}>Servicios</Text>
-                </View>
+              </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.opciones} 
-                        onPress = {()=> (
-                            navigation.navigate('MiMascotaScreen', {token})
-                        )}>
-                <View style={[{flexDirection: 'row'}, styles.view]}>
+            <TouchableOpacity
+              style={styles.opciones}
+              onPress={() => navigation.navigate("MiMascotaScreen", { token })}
+            >
+              <View style={[{ flexDirection: "row" }, styles.view]}>
                 <Image
-                    source={require('../Imagenes/huella.png')}
-                    style={styles.imagenMenu}
+                  source={require("../Imagenes/huella.png")}
+                  style={styles.imagenMenu}
                 />
                 <Text style={styles.textoModal}>Mi mascota</Text>
-                </View>
+              </View>
             </TouchableOpacity>
           </View>
           <View style={styles.viewCerrarSesion}>
-          <TouchableOpacity style={styles.touchableCerrarSesion} onPress={handleConfirmLogout}>
-                <View style={styles.viewCerrarSesion}>
-                    <Text style={styles.cerrarSesion}>Cerrar sesión</Text>
-                </View>
+            <TouchableOpacity
+              style={styles.touchableCerrarSesion}
+              onPress={handleConfirmLogout}
+            >
+              <View style={styles.viewCerrarSesion}>
+                <Text style={styles.cerrarSesion}>Cerrar sesión</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </Animated.View>
       </View>
-            {logoutError && (
-            <View style={styles.errorContainer}>
-              <Text>{logoutError}</Text>
-              <TouchableOpacity onPress={() => setLogoutError(null)}>
-                <Text>OK</Text>
-              </TouchableOpacity>
-            </View>
+      {logoutError && (
+        <View style={styles.errorContainer}>
+          <Text>{logoutError}</Text>
+          <TouchableOpacity onPress={() => setLogoutError(null)}>
+            <Text>OK</Text>
+          </TouchableOpacity>
+        </View>
       )}
       <Modal
         visible={confirmLogoutModalVisible}
@@ -225,7 +216,7 @@ const SlideModal = ({ visible, onClose }) => {
               <TouchableOpacity
                 onPress={() => {
                   setConfirmLogoutModalVisible(false);
-                  handleLogout(); // Esta función aún no está definida, la agregaremos a continuación.
+                  handleLogout();
                 }}
                 style={[styles.confirmButton, styles.confirmButtonAccept]}
               >
@@ -238,11 +229,9 @@ const SlideModal = ({ visible, onClose }) => {
                 <Text style={styles.confirmButtonText}>Cancelar</Text>
               </TouchableOpacity>
             </View>
-            
           </View>
         </View>
       </Modal>
-
     </Modal>
   );
 };
@@ -250,29 +239,29 @@ const SlideModal = ({ visible, onClose }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   background: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modal: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     padding: 16,
     width: 650,
-    height: '100%',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    height: "100%",
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
   },
   modalText: {
     fontSize: 16,
-    color: '#ffffff',
-    textAlign: 'right',
+    color: "#ffffff",
+    textAlign: "right",
   },
   textoModal: {
-    color: 'black',
-    textAlign: 'right',
+    color: "black",
+    textAlign: "right",
     fontSize: 20,
   },
   imagenMenu: {
@@ -302,39 +291,39 @@ const styles = StyleSheet.create({
   usuario: {
     width: 210,
     height: 100,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 140,
   },
-  imagenUsuario:{
+  imagenUsuario: {
     width: 60,
     height: 60,
     marginLeft: 8,
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     borderRadius: 30,
     marginBottom: 10,
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: '80%',
-    backgroundColor: '#fff',
+    width: "80%",
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
     elevation: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   confirmButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
   },
   confirmButton: {
     flex: 1,
-    backgroundColor: '#FFB984',
-    alignItems: 'center',
+    backgroundColor: "#FFB984",
+    alignItems: "center",
     paddingVertical: 10,
     borderRadius: 5,
   },

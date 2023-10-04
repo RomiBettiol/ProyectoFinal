@@ -1,27 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Modal, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import HeaderScreen from '../componentes/HeaderScreen';
-import BarraBusqueda from '../componentes/BarraBusqueda';
-import BotonesFiltros from '../componentes/BotonesFiltros';
-import BotonFlotante from '../componentes/BotonFlotante';
-import Mascotas from '../componentes/MiMascota/Mascotas';
-import NuevaMascota from '../componentes/MiMascota/NuevaMascota';
-import axios from 'axios';
-import EditarMascota from '../componentes/MiMascota/EditarMascota'
-import EliminarMascotaModal from '../componentes/MiMascota/EliminarMascotaModal'; // Ruta a tu componente de modal de eliminación
-import MisTurnos from './MisTurnos';
-import MisVacunas from './MisVacunas';
-import MiInfoImportante from './MiInfoImportante';
-import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Dimensions,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import HeaderScreen from "../componentes/HeaderScreen";
+import BarraBusqueda from "../componentes/BarraBusqueda";
+import BotonesFiltros from "../componentes/BotonesFiltros";
+import BotonFlotante from "../componentes/BotonFlotante";
+import Mascotas from "../componentes/MiMascota/Mascotas";
+import NuevaMascota from "../componentes/MiMascota/NuevaMascota";
+import axios from "axios";
+import EditarMascota from "../componentes/MiMascota/EditarMascota";
+import EliminarMascotaModal from "../componentes/MiMascota/EliminarMascotaModal"; // Ruta a tu componente de modal de eliminación
+import MisTurnos from "./MisTurnos";
+import MisVacunas from "./MisVacunas";
+import MiInfoImportante from "./MiInfoImportante";
+import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
 
+import ImagePickerComponent from "../componentes/AgregarImagen";
+import { Ionicons } from "@expo/vector-icons"; // Importa los íconos de Ionicons
 
-import ImagePickerComponent from '../componentes/AgregarImagen';
-import { Ionicons } from '@expo/vector-icons'; // Importa los íconos de Ionicons
-
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function MiMascotaScreen() {
   const navigation = useNavigation();
@@ -35,7 +42,7 @@ export default function MiMascotaScreen() {
   const [showNuevaMascotaModal, setShowNuevaMascotaModal] = useState(false);
   const [error404, setError404] = useState(false);
   const route = useRoute(); // Obtiene la prop route
- const { token } = route.params;
+  const { token } = route.params;
 
   const toggleNuevaMascotaModal = () => {
     setShowNuevaMascotaModal(!showNuevaMascotaModal);
@@ -43,9 +50,6 @@ export default function MiMascotaScreen() {
     setShowModalEliminar(false); // Cierra el modal de eliminación
     fetchMascotas();
   };
-  
-  
-  
 
   const colores = ["#B8F7B7", "#DB3D63", "#6a89db"];
   let colorIndex = 0;
@@ -61,7 +65,6 @@ export default function MiMascotaScreen() {
     setShowTarjetaEditar(true);
   };
 
-
   //botones
   const [showBotonesFlotantes, setShowBotonesFlotantes] = useState(false);
 
@@ -72,10 +75,10 @@ export default function MiMascotaScreen() {
   const toggleBotonesVisibles = (mascotaId) => {
     setBotonesVisibles((prevVisibles) => ({
       ...prevVisibles,
-      [mascotaId]: !prevVisibles[mascotaId] // Invierte el valor de visibilidad para la mascota seleccionada
+      [mascotaId]: !prevVisibles[mascotaId], // Invierte el valor de visibilidad para la mascota seleccionada
     }));
   };
-  
+
   //Editar
   const toggleTarjetaEditar = () => {
     setShowTarjetaEditar(!showTarjetaEditar);
@@ -84,8 +87,6 @@ export default function MiMascotaScreen() {
     fetchMascotas();
   };
   //Eliminar
-  
- 
 
   const toggleModalEliminar = (mascotaId) => {
     setSelectedMascotaId(mascotaId);
@@ -98,28 +99,26 @@ export default function MiMascotaScreen() {
   };
 
   const fetchMascotas = async () => {
-    
     try {
-      console.log("estoy adentro del try, token:", token);                             
-      const response = await axios.get('https://buddy-app2.loca.lt/mypet/pet',{
-        headers: {
-          'auth-token': token
+      const response = await axios.get(
+        "  https://buddy-app2.loca.lt/mypet/pet",
+        {
+          headers: {
+            "auth-token": token,
+          },
         }
-      });
+      );
       const mascotasData = response.data.pets;
-      console.log(mascotasData)
+      console.log(mascotasData);
       setMascotas(mascotasData);
-     console.log(mascotas)
+      console.log(mascotas);
       setBotonesVisibles(Array(mascotasData.length).fill(false)); // Inicializa el estado
     } catch (error) {
       if (error.response && error.response.status === 404) {
-      
+      }
     }
-    }
-    console.log("estoy saliendo del try")                                
+    console.log("estoy saliendo del try");
   };
-  
-  
 
   useEffect(() => {
     fetchMascotas();
@@ -127,7 +126,7 @@ export default function MiMascotaScreen() {
 
   const idMascotaSeleccionada = (mascotaId) => {
     setSelectedMascotaId(mascotaId);
-    console.log(selectedMascotaId)
+    console.log(selectedMascotaId);
   };
 
   return (
@@ -318,69 +317,67 @@ export default function MiMascotaScreen() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
-  sinInfo:{
+  sinInfo: {
     fontSize: 14,
-    color:'grey',
-},
-contentContainer22: {
-   marginTop:400,        
-    justifyContent: 'center', // Para centrar vertical
-    alignItems:'center',
-},
+    color: "grey",
+  },
+  contentContainer22: {
+    marginTop: 400,
+    justifyContent: "center", // Para centrar vertical
+    alignItems: "center",
+  },
   container: {
     flex: 1,
-    backgroundColor:'#DDC4B8',
+    backgroundColor: "#DDC4B8",
   },
   titulo: {
     marginTop: 20,
     fontSize: 22,
     marginLeft: 15,
-    marginBottom:10,
+    marginBottom: 10,
   },
   scroll: {
     flex: 1,
   },
   contenedor1: {
     paddingTop: 10,
-    alignItems:'center',
+    alignItems: "center",
   },
   contenedor2: {
-    alignItems:'center',
-    marginTop:5,
+    alignItems: "center",
+    marginTop: 5,
   },
   contenedor3: {
-    width:180,
-    height:180,
+    width: 180,
+    height: 180,
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     elevation: 10,
     borderRadius: 25,
-    alignItems: 'center',
+    alignItems: "center",
     marginLeft: 10,
-    alignItems:'center',
-    position: 'relative',
-    marginTop:15,
-   
+    alignItems: "center",
+    position: "relative",
+    marginTop: 15,
   },
-  imagAgregar:{
-    borderRadius:50,
-    height:100,
-    width:100,
-    margin:15,
+  imagAgregar: {
+    borderRadius: 50,
+    height: 100,
+    width: 100,
+    margin: 15,
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo con opacidad
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo con opacidad
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContent: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     elevation: 10,
     borderRadius: 25,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 15,
     padding: 5,
     width: windowWidth * 0.95, // Aproximadamente la mitad del ancho de la pantalla
@@ -390,103 +387,94 @@ contentContainer22: {
     marginTop: 10,
   },
   closeButtonText: {
-    color: 'gray',
+    color: "gray",
   },
   closeIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: 2,
     right: 10,
   },
-  iconoCruz:{
-    marginBottom:10,
-   // padding:0,
+  iconoCruz: {
+    marginBottom: 10,
+    // padding:0,
   },
-  imagMascota:{
-    borderRadius:50,
-    height:100,
-    width:100,
-    margin:10,
-    marginBottom:2,
+  imagMascota: {
+    borderRadius: 50,
+    height: 100,
+    width: 100,
+    margin: 10,
+    marginBottom: 2,
   },
-  nombreMascota:{
-    fontSize:14,
-    marginBottom:35,
+  nombreMascota: {
+    fontSize: 14,
+    marginBottom: 35,
   },
-  iconos:{
-    width:'100%',
-    flexDirection: 'row', // Alinear los iconos en fila
+  iconos: {
+    width: "100%",
+    flexDirection: "row", // Alinear los iconos en fila
     flex: 1,
-    justifyContent: 'space-between',
-    alignContent:'flex-end',
-    position: 'absolute', // Posicionamiento absoluto para los iconos
+    justifyContent: "space-between",
+    alignContent: "flex-end",
+    position: "absolute", // Posicionamiento absoluto para los iconos
     bottom: 0, // Alinear en la parte inferior
     //right: 0, // Alinear en la parte izquierda
-    
-    
   },
-  icono:{
-    height:25,
-    width:25,
-    margin:5,
-    padding:3,
-    
+  icono: {
+    height: 25,
+    width: 25,
+    margin: 5,
+    padding: 3,
   },
   botonesFlotantes: {
-    position: 'absolute',
-    right:40,
+    position: "absolute",
+    right: 40,
     top: 10,
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: "column",
+    alignItems: "center",
   },
   botonFlotante2: {
     width: 50,
     height: 50,
     borderRadius: 25,
     marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:120 ,
+    justifyContent: "center",
+    alignItems: "center",
+    left: 120,
   },
   botonFlotante: {
     width: 50,
     height: 50,
     borderRadius: 25,
     marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left:100 ,
+    justifyContent: "center",
+    alignItems: "center",
+    left: 100,
   },
-  botonFlot:{
-    height:20,
-    width:20,
-    
+  botonFlot: {
+    height: 20,
+    width: 20,
   },
-  subcontenedor3:{
-    alignItems: 'center',
-    width:'88%',
-    height:'99%',
+  subcontenedor3: {
+    alignItems: "center",
+    width: "88%",
+    height: "99%",
   },
   confirmButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
   },
   confirmButton: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 10,
     borderRadius: 5,
   },
   confirmButtonAccept: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
     marginRight: 5,
   },
   confirmButtonCancel: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     marginLeft: 5,
   },
-  
-
-
-  
-  
 });

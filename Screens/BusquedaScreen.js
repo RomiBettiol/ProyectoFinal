@@ -18,12 +18,12 @@ export default function BusquedaScreen() {
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Encuentra a tu mascota</Text>
-          <BotonesFiltros />
+          <BotonesFiltros token={token} />
         </View>
       </ScrollView>
       <View style={[styles.botonFlotanteContainer, { transform: [{ translateY: buttonTransform }] }]}>
             <BotonFlotante token={token} />
-          </View>
+      </View>
     </View>
   );
 }

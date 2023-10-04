@@ -29,15 +29,15 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
   const [showModal, setShowModal] = useState(false); // Agrega el estado para el modal
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [addPetSuccess, setAddPetSuccess] = useState(false);
-  const[idPetBreed,setIdPetBreed]= useState('');
-  const[idPetType, setIdPetType]=useState('');
-  const[selectedAnimal, setSelectedAnimal]=useState([]);
-  const[selectedAnimalId,setSelectedAnimalId] =useState('')
+  const [idPetBreed, setIdPetBreed] = useState("");
+  const [idPetType, setIdPetType] = useState("");
+  const [selectedAnimal, setSelectedAnimal] = useState([]);
+  const [selectedAnimalId, setSelectedAnimalId] = useState("");
   const [petTypeOptions, setPetTypeOptions] = useState();
   const [petBreedOptions, setPetBreedOptions] = useState([]);
-  const [selectedBreedId, setSelectedBreedId] = useState('');
+  const [selectedBreedId, setSelectedBreedId] = useState("");
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedImage, setSelectedImage] = React.useState(null);
@@ -55,30 +55,26 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
   ////end upload img ////
 
   const authtoken = token;
-  console.log("token en agregarmascota: "+ token)
-  console.log("authtoken: "+ authtoken)
-
+  console.log("token en agregarmascota: " + token);
+  console.log("authtoken: " + authtoken);
 
   const [petData, setPetData] = useState({
-    petName: '',
-    birthDate: '',
+    petName: "",
+    birthDate: "",
   });
 
-
-  
   const toggleModal = () => {
     setShowModal(!showModal); // Cambiar el estado del modal
   };
 
   useEffect(() => {
-    
     if (addPetSuccess) {
       // Espera un breve momento antes de mostrar el modal de éxito
       const timer = setTimeout(() => {
         setShowSuccessModal(true);
         setAddPetSuccess(false); // Reinicia la variable de éxito
       }, 500); // Puedes ajustar el tiempo según tus preferencias
-  
+
       // Limpia el temporizador si el componente se desmonta antes de que se complete
       return () => clearTimeout(timer);
     }
@@ -97,15 +93,14 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
         // Guardar las opciones en el estado
         setPetTypeOptions(petTypeOptions);
         console.log(petTypeOptions);
-        console.log('tipo de mascota obtenido con exito');
+        console.log("tipo de mascota obtenido con exito");
       })
       .catch((error) => {
-        console.log('Error al obtener tipos de mascotas:', error);
+        console.log("Error al obtener tipos de mascotas:", error);
       });
       console.log(linkAWS)
   
   }, []);
-  
 
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
@@ -225,7 +220,6 @@ const sendPetData = async (imageLink) => {
   };
   return (
     <View style={styles.container}>
-     
       <View style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>AGREGAR MASCOTA</Text>
@@ -252,34 +246,43 @@ const sendPetData = async (imageLink) => {
           <View style={styles.subtitulo}>
             <Text style={styles.label}>Fecha de nacimiento:</Text>
           </View>
-          
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
+
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
             <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
-            {selectedMonth && <ListaValoresDiasMascota
-              selectedMonth={selectedMonth} // Pasa el mes seleccionado
-              selectedValue={selectedDay} // Pasa el día seleccionado
-              setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
-            />}
-          <ListaValoresAñoMascota setSelectedValue={setSelectedYear} selectedValue={selectedYear} />
+            {selectedMonth && (
+              <ListaValoresDiasMascota
+                selectedMonth={selectedMonth} // Pasa el mes seleccionado
+                selectedValue={selectedDay} // Pasa el día seleccionado
+                setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
+              />
+            )}
+            <ListaValoresAñoMascota
+              setSelectedValue={setSelectedYear}
+              selectedValue={selectedYear}
+            />
           </View>
           
           <View style={styles.subtitulo}>
             <Text style={styles.label}>Tipo de Animal</Text>
           </View>
-          
-          <ScrollView horizontal={true}>
-          <View >
-            
-          <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
 
-          </View>
+          <ScrollView horizontal={true}>
+            <View>
+              <ListaValoresAnimal
+                selectedAnimal={selectedAnimal}
+                setSelectedAnimal={setSelectedAnimal}
+                setSelectedAnimalId={setSelectedAnimalId}
+              />
+            </View>
           </ScrollView>
-          
-          <View style={[styles.dropdown,{ borderRadius: 100 }]}>
-           
-          {selectedAnimal && (
-                <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
-              )}
+
+          <View style={[styles.dropdown, { borderRadius: 100 }]}>
+            {selectedAnimal && (
+              <ListaValoresRazaPerros
+                selectedAnimal={selectedAnimal}
+                setSelectedBreedId={setSelectedBreedId}
+              />
+            )}
           </View>
 
           <View style={styles.subcontenedor5}>
@@ -289,40 +292,44 @@ const sendPetData = async (imageLink) => {
           </View>
         </View>
       </View>
-      <SuccessModal visible={showSuccessModal} onClose={handleSuccessModalClose} message="Mascota creada correctamente" />
-      <ErrorModal visible={showErrorModal} errorMessage={errorMessage} onClose={() => setShowErrorModal(false)} />
+      <SuccessModal
+        visible={showSuccessModal}
+        onClose={handleSuccessModalClose}
+        message="Mascota creada correctamente"
+      />
+      <ErrorModal
+        visible={showErrorModal}
+        errorMessage={errorMessage}
+        onClose={() => setShowErrorModal(false)}
+      />
     </View>
   );
-  
 }
 
 const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 2,
-    
-    
   },
-  subtitulo:{
-    textAlign:'left',
-    width:'90%',
-    margin:5,
+  subtitulo: {
+    textAlign: "left",
+    width: "90%",
+    margin: 5,
   },
   container: {
     flex: 1,
-    backgroundColor:"#FFFFFF",
-    marginTop:35,
-    padding:5,
+    backgroundColor: "#FFFFFF",
+    marginTop: 35,
+    padding: 5,
   },
   dropdown: {
-    backgroundColor: '#EEE9E9',
-    width: '90%',
+    backgroundColor: "#EEE9E9",
+    width: "90%",
     margin: 10,
-    padding:0,
-    justifyContent:'center',
- 
+    padding: 0,
+    justifyContent: "center",
   },
-  
+
   titulo: {
     marginTop: 10,
     fontSize: 22,
@@ -332,17 +339,17 @@ const styles = StyleSheet.create({
   },
   contenedor1: {
     paddingTop: 0,
-    justifyContent:'center',
-    alignContent:'center',
-    alignItems:'center',
-    width:'100%',
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   inputTexto: {
-    backgroundColor: '#EEE9E9',
-    width: '70%',
+    backgroundColor: "#EEE9E9",
+    width: "70%",
     height: 32,
     borderRadius: 100,
-    textAlign: 'center',
+    textAlign: "center",
   },
   tituloPublicacion: {
     marginRight: 20,
@@ -355,47 +362,46 @@ const styles = StyleSheet.create({
   },
   subcontenedor1: {
     marginTop: 25,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   subcontenedor2: {
     marginTop: 25,
-    width: '100%',
-    justifyContent: 'center',
+    width: "100%",
+    justifyContent: "center",
   },
 
- 
   subcontenedor3: {
     marginTop: 25,
     marginLeft: 30,
   },
   subcontenedor4: {
     marginTop: 15,
-    justifyContent: 'center',
+    justifyContent: "center",
     marginBottom: 25,
   },
   tarjeta: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     elevation: 10,
     borderRadius: 25,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 15,
     padding: 15,
   },
-  subcontenedor5:{
-    alignItems: 'center'
+  subcontenedor5: {
+    alignItems: "center",
   },
   closeButton: {
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginTop:35,
+    marginTop: 35,
   },
   closeButtonText: {
     fontSize: 16,
-    color: '#fff',
+    color: "#fff",
   },
   botonGaleria: {
     backgroundColor: '#DDC4B8',

@@ -97,7 +97,6 @@ const ImagePickerComponent = ({ onImagesSelected }) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>¡Ya elegiste 4 fotos!</Text>
-            <Text style={styles.modalText}>Son suficientes para reconocer a tu mascota</Text>
             <Pressable style={styles.modalButton} onPress={closeModal}>
               <Text style={styles.modalButtonText}>Entendido</Text>
             </Pressable>
