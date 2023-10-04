@@ -12,7 +12,7 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
 
   useEffect(() => {
     axios
-      .get('http://buddy-app2.loca.lt/parameters/province')
+      .get('https://buddy-app2.loca.lt/parameters/province')
       .then((response) => {
         setProvinces(response.data.provinces);
       })
@@ -35,7 +35,7 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
     };
 
     axios
-      .post('http://buddy-app2.loca.lt/parameters/region', newRegion)
+      .post('https://buddy-app2.loca.lt/parameters/region', newRegion)
       .then((response) => {
         onAdd(newRegion);
         setRegionName('');

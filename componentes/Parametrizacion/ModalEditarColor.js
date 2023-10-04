@@ -7,7 +7,7 @@ const ModalEditarColor = ({ isVisible, onClose, onEdit, editingColor, onSuccessU
 
   const handleEditColor = () => {
     axios
-      .put(`http://buddy-app2.loca.lt/parameters/petColor/${editingColor.idPetColor}`, {
+      .put(`https://buddy-app2.loca.lt/parameters/petColor/${editingColor.idPetColor}`, {
         petColorName: colorName,
       })
       .then((response) => {

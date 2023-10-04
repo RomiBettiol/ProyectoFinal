@@ -155,7 +155,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://buddy-app2.loca.lt/parameters/province/', newProvince)
+      .post('https://buddy-app2.loca.lt/parameters/province/', newProvince)
       .then((response) => {
         console.log('Provincia agregada exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
@@ -183,7 +183,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://buddy-app2.loca.lt/parameters/petType/', newType)
+      .post('https://buddy-app2.loca.lt/parameters/petType/', newType)
       .then((response) => {
         //console.log('Tipo de animal agregado exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
@@ -211,7 +211,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://buddy-app2.loca.lt/parameters/petColor/', newColor)
+      .post('https://buddy-app2.loca.lt/parameters/petColor/', newColor)
       .then((response) => {
         console.log('Color agregado exitosamente:', response.data);
         getPetColors(); // Actualizar la lista de colores después de agregar
@@ -231,7 +231,7 @@ export default function ParametrizacionScreen({ navigation }) {
    
   const handleZoneDelete = (zoneId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/locality/${zoneId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/locality/${zoneId}`)
       .then((response) => {
         console.log('Eliminación exitosa:', response.data);
         handleSuccessfulDeletePublication();
@@ -246,7 +246,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const  handleBreedDelete =  async (breedId) => {
     console.log('ID:', breedId)
     await axios
-      .delete(`http://buddy-app2.loca.lt/parameters/petBreed/${breedId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/petBreed/${breedId}`)
       .then((response) => {
         console.log('Raza eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -260,7 +260,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleColorDelete = (colorId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/petColor/${colorId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/petColor/${colorId}`)
       .then((response) => {
         console.log('Color eliminado exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -274,7 +274,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleTypeDelete = (typeId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/petType/${typeId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/petType/${typeId}`)
       .then((response) => {
         console.log('Tipo de animal eliminado exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -288,7 +288,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleProvinceDelete = (provinceId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/province/${provinceId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/province/${provinceId}`)
       .then((response) => {
         console.log('Provincia eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -302,7 +302,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleRegionDelete = (regionId) => {
     axios
-      .delete(`http://buddy-app2.loca.lt/parameters/region/${regionId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/region/${regionId}`)
       .then((response) => {
         console.log('Región eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -404,7 +404,7 @@ export default function ParametrizacionScreen({ navigation }) {
     
   const getZonas = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/locality/', {
+      .get('https://buddy-app2.loca.lt/parameters/locality/', {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -426,7 +426,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetColors = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/petColor/')
+      .get('https://buddy-app2.loca.lt/parameters/petColor/')
       .then((response) => {
         console.log('Colores exitosos:', response.data);
         const colors = response.data.petColors;
@@ -444,7 +444,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetTypes = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/petType/')
+      .get('https://buddy-app2.loca.lt/parameters/petType/')
       .then((response) => {
         console.log('Tipos de animales exitosos:', response.data);
         const types = response.data.petTypes;
@@ -462,7 +462,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetBreeds = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/petBreed/')
+      .get('https://buddy-app2.loca.lt/parameters/petBreed/')
       .then((response) => {
         console.log('Razas exitosas:', response.data);
         const breeds = response.data.petBreeds;
@@ -480,7 +480,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getProvinces = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/province/')
+      .get('https://buddy-app2.loca.lt/parameters/province/')
       .then((response) => {
         console.log('Provincias exitosas:', response.data.provinces);
         const fetchedProvinces = response.data.provinces;
@@ -498,7 +498,7 @@ export default function ParametrizacionScreen({ navigation }) {
   
   const getRegions = () => {
     axios
-      .get('https://buddy-app1.loca.lt/parameters/region/')
+      .get('https://buddy-app2.loca.lt/parameters/region/')
       .then((response) => {
         console.log('Regiones exitosas:', response.data.regions);
         const fetchedRegions = response.data.regions;

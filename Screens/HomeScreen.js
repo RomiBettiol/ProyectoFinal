@@ -13,7 +13,7 @@ export default function HomeScreen({navigation}) {
 
     useEffect(() => {
         // Realizar la solicitud GET utilizando Axios
-        axios.get('http://buddy-app2.loca.lt/reports/count/founds-success')
+        axios.get('https://buddy-app2.loca.lt/reports/count/founds-success')
           .then((response) => {
             // Extraer el valor quantity de la respuesta
             const { quantity } = response.data;
@@ -24,7 +24,7 @@ export default function HomeScreen({navigation}) {
           });
 
         // Mascotas perdidas
-        axios.get('http://buddy-app2.loca.lt/reports/count/losts-actives')
+        axios.get('https://buddy-app2.loca.lt/reports/count/losts-actives')
         .then((response) => {
           // Extraer el valor quantity de la respuesta
           const { quantity } = response.data;
@@ -35,7 +35,7 @@ export default function HomeScreen({navigation}) {
         });
 
         // Mascotas adoptadas
-        axios.get('http://buddy-app2.loca.lt/reports/count/adoptions-success')
+        axios.get('https://buddy-app2.loca.lt/reports/count/adoptions-success')
         .then((response) => {
           // Extraer el valor quantity de la respuesta
           const { quantity } = response.data;

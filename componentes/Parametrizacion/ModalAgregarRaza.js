@@ -20,7 +20,7 @@ const ModalAgregarRaza = ({ isVisible, onClose, onAdd, petTypes, onSuccess, onEr
     };
 
     await axios
-      .post('http://buddy-app2.loca.lt/parameters/petBreed', newBreed)
+      .post('https://buddy-app2.loca.lt/parameters/petBreed', newBreed)
       .then((response) => {
         console.log(response);
         onAdd(newBreed);

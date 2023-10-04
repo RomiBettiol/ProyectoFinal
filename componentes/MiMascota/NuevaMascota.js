@@ -87,7 +87,7 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
     console.log(idPetType);
     console.log(idPetBreed);
     // Obtener tipos de mascotas
-    axios.get('https://buddy-app1.loca.lt/parameters/petType')
+    axios.get('https://buddy-app2.loca.lt/parameters/petType')
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({
@@ -187,7 +187,7 @@ const sendPetData = async (imageLink) => {
 
   console.log(data);
 
-  const response = await axios.post('https://buddy-app1.loca.lt/mypet/pet/', data, config);
+  const response = await axios.post('https://buddy-app2.loca.lt/mypet/pet/', data, config);
 
   console.log('Respuesta del servidor:', response.data);
 

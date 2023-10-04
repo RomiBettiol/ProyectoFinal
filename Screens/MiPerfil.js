@@ -86,7 +86,7 @@ export default function MiPerfil({ navigation }) {
 
   //Trae info del usuario
   useEffect(() => {
-    axios.get(`https://buddy-app1.loca.lt/security/user/`, {
+    axios.get(`https://buddy-app2.loca.lt/security/user/`, {
       headers: {
         'auth-token': token
       }
@@ -110,7 +110,7 @@ export default function MiPerfil({ navigation }) {
   console.log('idUser1: ', idUser);
 
   useEffect(() => {
-    axios.get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
+    axios.get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
         headers: {
           'auth-token': token
         }
@@ -198,7 +198,7 @@ export default function MiPerfil({ navigation }) {
   
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
-        .put(`https://buddy-app1.loca.lt/security/user/${idUser}`, updatedUserData, {
+        .put(`https://buddy-app2.loca.lt/security/user/${idUser}`, updatedUserData, {
           headers: {
             'auth-token': token,
           },
@@ -237,7 +237,7 @@ export default function MiPerfil({ navigation }) {
   
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
-      .put(`https://buddy-app1.loca.lt/security/user/${idUser}`, updatedUserData, {
+      .put(`https://buddy-app2.loca.lt/security/user/${idUser}`, updatedUserData, {
         headers: {
           'auth-token': token,
         },
@@ -323,7 +323,7 @@ export default function MiPerfil({ navigation }) {
       console.log('modalType:', modalType);
       console.log('idPublicacion: ', idPublicationToDelete);
       axios
-       .delete(`https://buddy-app1.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`, {
+       .delete(`https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`, {
           headers: {
             'auth-token': token,
           },
@@ -347,7 +347,7 @@ useEffect(() => {
   if (deleteSuccess || deleteFailure) {
     // Realiza la solicitud GET para cargar las publicaciones actualizadas
     axios
-      .get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
+      .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
         headers: {
           'auth-token': token
         }
@@ -372,7 +372,7 @@ useEffect(() => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('https://buddy-app1.loca.lt/security/auth/logout', {
+      const response = await fetch('https://buddy-app2.loca.lt/security/auth/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

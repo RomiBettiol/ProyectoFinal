@@ -9,7 +9,7 @@ const ListaValoresColor = ({setSelectedColorId}) => {
 
   const getColores = () => {
     axios
-      .get('http://buddy-app2.loca.lt/parameters/petColor/', {
+      .get('https://buddy-app2.loca.lt/parameters/petColor/', {
         headers: {
           'Content-Type': 'application/json',
         },

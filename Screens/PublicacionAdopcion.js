@@ -106,7 +106,7 @@ export default function PublicacionBusqueda({ navigation }) {
         },
       };
   
-      const response = await axios.post('http://buddy-app2.loca.lt/publications/publication/adoption', postData,config);
+      const response = await axios.post('https://buddy-app2.loca.lt/publications/publication/adoption', postData,config);
       console.log('Solicitud POST exitosa:', response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);
