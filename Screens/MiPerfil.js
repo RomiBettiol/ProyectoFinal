@@ -110,7 +110,7 @@ export default function MiPerfil({ navigation }) {
   console.log('idUser1: ', idUser);
 
   useEffect(() => {
-    axios.get(`http://buddy-app1.loca.lt/publications/publication/ByUser`, {
+    axios.get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
         headers: {
           'auth-token': token
         }
@@ -347,7 +347,7 @@ useEffect(() => {
   if (deleteSuccess || deleteFailure) {
     // Realiza la solicitud GET para cargar las publicaciones actualizadas
     axios
-      .get(`http://buddy-app1.loca.lt/publications/publication/ByUser`, {
+      .get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
         headers: {
           'auth-token': token
         }

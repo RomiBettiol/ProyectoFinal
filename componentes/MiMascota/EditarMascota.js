@@ -63,7 +63,7 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
       });
   
     // Obtener razas de mascotas
-    axios.get('http://buddy-app1.loca.lt/parameters/petBreed')
+    axios.get('http://buddy-app2.loca.lt/parameters/petBreed')
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petBreedOptions = response.data.petBreeds.map((petBreed) => ({

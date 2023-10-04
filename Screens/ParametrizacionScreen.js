@@ -155,7 +155,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://buddy-app1.loca.lt/parameters/province/', newProvince)
+      .post('http://buddy-app2.loca.lt/parameters/province/', newProvince)
       .then((response) => {
         console.log('Provincia agregada exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
@@ -183,7 +183,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://buddy-app1.loca.lt/parameters/petType/', newType)
+      .post('http://buddy-app2.loca.lt/parameters/petType/', newType)
       .then((response) => {
         //console.log('Tipo de animal agregado exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
@@ -211,7 +211,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post('http://buddy-app1.loca.lt/parameters/petColor/', newColor)
+      .post('http://buddy-app2.loca.lt/parameters/petColor/', newColor)
       .then((response) => {
         console.log('Color agregado exitosamente:', response.data);
         getPetColors(); // Actualizar la lista de colores después de agregar
@@ -231,7 +231,7 @@ export default function ParametrizacionScreen({ navigation }) {
    
   const handleZoneDelete = (zoneId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/locality/${zoneId}`)
+      .delete(`http://buddy-app2.loca.lt/parameters/locality/${zoneId}`)
       .then((response) => {
         console.log('Eliminación exitosa:', response.data);
         handleSuccessfulDeletePublication();
@@ -246,7 +246,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const  handleBreedDelete =  async (breedId) => {
     console.log('ID:', breedId)
     await axios
-      .delete(`http://buddy-app1.loca.lt/parameters/petBreed/${breedId}`)
+      .delete(`http://buddy-app2.loca.lt/parameters/petBreed/${breedId}`)
       .then((response) => {
         console.log('Raza eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -260,7 +260,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleColorDelete = (colorId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/petColor/${colorId}`)
+      .delete(`http://buddy-app2.loca.lt/parameters/petColor/${colorId}`)
       .then((response) => {
         console.log('Color eliminado exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -274,7 +274,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleTypeDelete = (typeId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/petType/${typeId}`)
+      .delete(`http://buddy-app2.loca.lt/parameters/petType/${typeId}`)
       .then((response) => {
         console.log('Tipo de animal eliminado exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -288,7 +288,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleProvinceDelete = (provinceId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/province/${provinceId}`)
+      .delete(`http://buddy-app2.loca.lt/parameters/province/${provinceId}`)
       .then((response) => {
         console.log('Provincia eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
@@ -302,7 +302,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleRegionDelete = (regionId) => {
     axios
-      .delete(`http://buddy-app1.loca.lt/parameters/region/${regionId}`)
+      .delete(`http://buddy-app2.loca.lt/parameters/region/${regionId}`)
       .then((response) => {
         console.log('Región eliminada exitosamente:', response.data);
         handleSuccessfulDeletePublication();
