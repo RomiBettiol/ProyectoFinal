@@ -85,7 +85,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
     console.log(vaccin.idVaccin);
     try {
       const response = await axios.put(
-        `  https://romibettiol.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
+        `  https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
         {
           titleVaccine: updatedData.titleVaccin,
           descriptionVaccine: updatedData.descriptionVaccin,
@@ -183,7 +183,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
 
                 try {
                   const response = await axios.put(
-                    `  https://romibettiol.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
+                    `  https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
                     updatedData
                   );
                   console.log("Respuesta del servidor:", response.data);

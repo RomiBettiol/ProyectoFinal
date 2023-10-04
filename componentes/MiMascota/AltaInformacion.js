@@ -81,7 +81,7 @@ export default function AltaInformacion({ visible, onClose }) {
                 setIsButtonDisabled1(true);
                 try {
                   const response = await axios.post(
-                    `  https://romibettiol.loca.lt/mypet/information/${mascotaId}`,
+                    `  https://buddy-app2.loca.lt/mypet/information/${mascotaId}`,
                     data
                   );
                   console.log("console log en alta informacion");

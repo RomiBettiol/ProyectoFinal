@@ -76,7 +76,7 @@ export default function PublicacionBusqueda({ navigation }) {
         },
       };
       const response = await axios.post(
-        "  https://romibettiol.loca.lt/publications/publication/search",
+        "  https://buddy-app2.loca.lt/publications/publication/search",
         postData,
         config
       );
