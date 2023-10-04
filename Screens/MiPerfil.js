@@ -461,7 +461,7 @@ export default function MiPerfil({ navigation }) {
                   <TouchableOpacity style={styles.botonInformacion}>
                     <Text>Servicio</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate('OptionModalService', { idService: servicio.idService })}>
+                  <TouchableOpacity onPress={() => navigation.navigate('OptionModalService', { idService: servicio.idService, token })}>
                     <Image
                       source={require("../Imagenes/opciones.png")}
                       style={styles.imagenOpcionesPublicaciones}

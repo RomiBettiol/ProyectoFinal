@@ -69,6 +69,7 @@ import ServiciosScreen from "../Screens/ServiciosScreen";
 import ServiciosDetalles from "../componentes/Serivicios/ServiciosDetalles";
 import PublicarServicio from "../Screens/PublicarServicio";
 import OptionModalService from "../componentes/Perfil/OptionModalService";
+import EditarPublicacionServicio from "../componentes/Perfil/EditarPublicacionServicio";
 
 const Stack = createNativeStackNavigator();
 
@@ -242,6 +243,10 @@ export default function MainStack() {
           name="OptionModalService"
           component={OptionModalService}
         />         
+        <Stack.Screen
+          name="EditarPublicacionServicio"
+          component={EditarPublicacionServicio}
+        />             
       </Stack.Navigator>
     </NavigationContainer>
   );
