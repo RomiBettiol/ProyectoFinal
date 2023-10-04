@@ -70,7 +70,7 @@ export default function HomeScreen({ navigation }) {
       title: "Lista de servicios",
       image: require("../Imagenes/servicios.png"),
       permission: "READ_LISTA_SERVICIOS",
-      onPress: () => navigation.navigate("ServiciosScreen", { token }),
+      onPress: () => navigation.navigate("ListaServiciosScreen", { token }),
     },
     {
       title: "Alta de establecimientos",
@@ -83,7 +83,7 @@ export default function HomeScreen({ navigation }) {
       title: "Roles y permisos",
       image: require("../Imagenes/roles.png"),
       permission: "READ_ROLES",
-      onPress: () => navigation.navigate("RyPScreen", { token }),
+      onPress: () => navigation.navigate("RyPScreen", { token, permisos }),
     },
     {
       title: "Back Up",

@@ -81,18 +81,11 @@ const ListaServiciosScreen = () => {
           config
         );
       } else {
-        // response = await axios.post(
-        //   `https://buddy-app2.loca.lt/services/service/changeState/${serviceId}/ACTIVO`,
-        //   {},
-        //   config
-        // );
-        console.log("aun no");
-        setTimeout(() => {
-          setConfirming(false);
-          setConfirmationModalVisible(false);
-          setServiceId(null);
-        }, 2000);
-        return;
+        response = await axios.post(
+          `https://buddy-app2.loca.lt/services/serviceState/changeState/${serviceId}/ACTIVO`,
+          {},
+          config
+        );
       }
 
       if (response.status === 200) {
@@ -109,6 +102,11 @@ const ListaServiciosScreen = () => {
       return;
     } catch (error) {
       console.error("Error al cambiar de estado al servicio:", error);
+      setTimeout(() => {
+        setConfirming(false);
+        setConfirmationModalVisible(false);
+        setServiceId(null);
+      }, 2000);
     }
   };
 
