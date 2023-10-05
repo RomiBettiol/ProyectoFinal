@@ -7,7 +7,7 @@ const ModalEditarRegion = ({ isVisible, onClose, onEdit, editingRegion, onSucces
 
   const handleEditRegion = () => {
     axios
-      .put(`http://buddy-app2.loca.lt/parameters/region/${editingRegion.idRegion}`, {
+      .put(`http://romibettiol.loca.lt/parameters/region/${editingRegion.idRegion}`, {
         regionName: regionName,
       })
       .then((response) => {

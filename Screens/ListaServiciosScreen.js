@@ -34,7 +34,7 @@ const ListaServiciosScreen = () => {
       };
 
       const response = await axios.get(
-        "https://buddy-app2.loca.lt/services/service/every",
+        "https://romibettiol.loca.lt/services/service/every",
         config
       );
 
@@ -77,12 +77,12 @@ const ListaServiciosScreen = () => {
       let response;
       if (serviceState === "ACTIVO") {
         response = await axios.delete(
-          `https://buddy-app2.loca.lt/services/service/${serviceId}`,
+          `https://romibettiol.loca.lt/services/service/${serviceId}`,
           config
         );
       } else {
         // response = await axios.post(
-        //   `https://buddy-app2.loca.lt/services/service/changeState/${serviceId}/ACTIVO`,
+        //   `https://romibettiol.loca.lt/services/service/changeState/${serviceId}/ACTIVO`,
         //   {},
         //   config
         // );

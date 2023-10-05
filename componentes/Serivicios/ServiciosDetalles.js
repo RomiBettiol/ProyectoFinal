@@ -6,11 +6,18 @@ import BotonMenu from '../BotonMenu';
 
 export default function ServiciosDetalles({ route }) {
   const navigation = useNavigation();
-  const { servicio, token } = route.params;
+  const { servicio, token, source } = route.params;
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
-  
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const servicioTitle = source === 'MiPerfil' ? servicio?.[0]?.serviceTitle : servicio?.serviceTitle;
+  const servicioDescription = source === 'MiPerfil' ? servicio?.[0]?.serviceDescription : servicio?.serviceDescription;
+  const servicioAddress = source === 'MiPerfil' ? servicio?.[0]?.address : servicio?.address;
+  const servicioOpenTime = source === 'MiPerfil' ? servicio?.[0]?.openTime : servicio?.openTime;
+  const servicioCloseTime = source === 'MiPerfil' ? servicio?.[0]?.closeTime : servicio?.closeTime;
+
+  console.log('servicio: ', servicio);
+  console.log('info: ', servicioTitle, servicioAddress, servicioDescription, servicioCloseTime, servicioOpenTime);
 
   const ratingsImages = {
     1: {
@@ -67,7 +74,7 @@ export default function ServiciosDetalles({ route }) {
         style={styles.imagenServicio}
       />
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.titulo}>{servicio.serviceTitle}</Text>
+        <Text style={styles.titulo}>{servicioTitle}</Text>
         <TouchableOpacity onPress={() => handleOpenRatingModal(servicio.idService)}>
           <Image
             source={require("../../Imagenes/estrella.png")}
@@ -85,29 +92,29 @@ export default function ServiciosDetalles({ route }) {
           token={token}
         />
       </View>
-      {servicio.avgRating !== null ? (
-        <View style={styles.ratingContainer}>
-          <Image
-            source={ratingsImages[servicio.avgRating].source}
-            style={[styles.imagenCalificacionEstrellas, ratingsImages[servicio.avgRating].style]}
-          />
-        </View>
-      ) : null}
+      {servicio.avgRating !== null && ratingsImages[servicio.avgRating] ? (
+          <View style={styles.ratingContainer}>
+            <Image
+              source={ratingsImages[servicio.avgRating].source}
+              style={[styles.imagenCalificacionEstrellas, ratingsImages[servicio.avgRating].style]}
+            />
+          </View>
+        ) : null}
       <View style={styles.informacionServicio}>
-        <Text style={styles.descripcion}>{servicio.serviceDescription}</Text>
+        <Text style={styles.descripcion}>{servicioDescription}</Text>
         <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
             <Image
                 source={require("../../Imagenes/posicion.png")}
                 style={styles.imagenInformacionFiltros}
             />
-            <Text style={styles.textoInformacionFiltros}>{servicio.address}</Text>
+            <Text style={styles.textoInformacionFiltros}>{servicioAddress}</Text>
         </View>
         <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
             <Image
                 source={require("../../Imagenes/reloj.png")}
                 style={styles.imagenInformacionFiltros}
             />
-            <Text style={styles.textoInformacionFiltros}>{servicio.openTime} - {servicio.closeTime}</Text>
+            <Text style={styles.textoInformacionFiltros}>{servicioOpenTime} - {servicioCloseTime}</Text>
         </View>
       </View>
         <BotonMenu token={token} style={styles.contenedorBoton} />
