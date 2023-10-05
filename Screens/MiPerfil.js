@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput, ScrollView, Pressable } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
-import Header from '../componentes/HeaderScreen';
-import { useRoute } from '@react-navigation/native';
-import axios from 'axios';
-import BotonFlotante from '../componentes/BotonFlotante';
-
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../src/aws-exports';
-import AgregarImagen from '../componentes/AgregarImagen';
-Amplify.configure(awsconfig);
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  ScrollView,
+} from "react-native";
+import Header from "../componentes/HeaderScreen";
+import { useRoute } from "@react-navigation/native";
+import axios from "axios";
+import BotonFlotante from "../componentes/BotonFlotante";
+import OptionModalService from '../componentes/Perfil/OptionModalService';
 
 export default function MiPerfil({ navigation }) {
   const route = useRoute();
@@ -20,10 +24,9 @@ export default function MiPerfil({ navigation }) {
   const [areFieldsEmpty, setAreFieldsEmpty] = useState(true);
   const [showFieldsEmptyMessage, setShowFieldsEmptyMessage] = useState(false);
   const [editUserModalVisible, setEditUserModalVisible] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [newUserName, setNewUserName] = useState('');
-  const [newUserImage, setNewUserImage] = useState('');
-  const [user, setUser] = useState ('');
+  const [newName, setNewName] = useState("");
+  const [newUserName, setNewUserName] = useState("");
+  const [user, setUser] = useState("");
   const [passwordMismatchError, setPasswordMismatchError] = useState(false);
   const [requisitosContrasena, setRequisitosContrasena] = useState(false);
   const [contrasenaIgual, setContrasenaIgual] = useState(false);
@@ -52,69 +55,34 @@ export default function MiPerfil({ navigation }) {
 
   console.log("perfil: ", token);
 
-  //donde guardo las imagenes
-  const [selectedImages, setSelectedImages] = useState('');
-
-  ///// upload image ////
-  const fetchImageUri = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  }
-
-  const uploadFile = async (file) => {
-    const img = await fetchImageUri(file);
-    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
-      level: 'public',
-      contentType: file.type,
-      progressCallback(uploadProgress) {
-        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
-      },
-    })
-      .then((res) => {
-        // Retorna la clave (key) de la imagen en Amazon S3
-        return res.key;
-      })
-      .catch((e) => {
-        console.log(e);
-        throw e; // Lanza una excepción para manejar errores en la función llamante
-      });
-  };
-    // Función para manejar la selección de imágenes
-  const handleImagesSelected = (images) => {
-    console.log("probando esto: ", images);
-    setSelectedImages(images);
-    console.log("probando esto: ", selectedImages);
-  };
-
-
   //Trae info del usuario
   useEffect(() => {
-    axios.get(`https://buddy-app2.loca.lt/security/user/`, {
-      headers: {
-        'auth-token': token
-      }
-    })
-    .then(response => {
-      setUser(response.data);
-      setNewName(response.data[0].name);
-      setNewUserName(response.data[0].userName);
-      setNewUserImage(response.data[0].image);
-  
-      // Declarar la constante idUser
-      setIdUser(response.data[0].idUser);
-      
-      // Luego puedes usar idUser como desees en tu componente.
-    })
-    .catch(error => {
-      console.error('Error fetching user data:', error);
-    });
+    axios
+      .get(`  https://romibettiol.loca.lt/security/user/`, {
+        headers: {
+          "auth-token": token,
+        },
+      })
+      .then((response) => {
+        setUser(response.data);
+        setNewName(response.data[0].name);
+        setNewUserName(response.data[0].userName);
+
+        // Declarar la constante idUser
+        setIdUser(response.data[0].idUser);
+
+        // Luego puedes usar idUser como desees en tu componente.
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
   }, [token, idUser]);
 
   console.log("idUser1: ", idUser);
 
   useEffect(() => {
-    axios.get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
+    axios
+      .get(`http://romibettiol.loca.lt/publications/publication/ByUser`, {
         headers: {
           "auth-token": token,
         },
@@ -128,7 +96,7 @@ export default function MiPerfil({ navigation }) {
       });
 
       axios
-      .get(`http://buddy-app2.loca.lt/services/service/ByUser`, {
+      .get(`http://romibettiol.loca.lt/services/service/ByUser`, {
         headers: {
           "auth-token": token,
         },
@@ -225,13 +193,17 @@ export default function MiPerfil({ navigation }) {
 
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
-        .put(`https://buddy-app2.loca.lt/security/user/${idUser}`, updatedUserData, {
-          headers: {
-            'auth-token': token,
-          },
-        })
-        .then(response => {
-          console.log('Contraseña actualizada con éxito:', response.data);
+        .put(
+          `  https://romibettiol.loca.lt/security/user/${idUser}`,
+          updatedUserData,
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Contraseña actualizada con éxito:", response.data);
           closeEditPasswordModal();
           setPasswordUpdated(true);
           setTimeout(() => {
@@ -245,9 +217,8 @@ export default function MiPerfil({ navigation }) {
     }
   };
 
-  const handleUpdateUser = async (images) => {
-    let imag = images;
-    if (confirmPassword === '') {
+  const handleUpdateUser = async () => {
+    if (confirmPassword === "") {
       setContrasenaVacia(true);
       return;
     }
@@ -257,19 +228,21 @@ export default function MiPerfil({ navigation }) {
       name: newName,
       userName: newUserName,
       currentPassword: confirmPassword,
-      image: imag,
     };
-    console.log( 'updateUserData! ',updatedUserData)
-  
+
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
-      .put(`https://buddy-app2.loca.lt/security/user/${idUser}`, updatedUserData, {
-        headers: {
-          'auth-token': token,
-        },
-      })
-      .then(response => {
-        console.log('Datos de usuario actualizados con éxito:', response.data);
+      .put(
+        `  https://romibettiol.loca.lt/security/user/${idUser}`,
+        updatedUserData,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Datos de usuario actualizados con éxito:", response.data);
         setEditUserModalVisible(false); // Cierra el modal después de actualizar
         setUserUpdated(true); // Activa el estado para mostrar el mensaje de confirmación
         setTimeout(() => {
@@ -363,14 +336,17 @@ export default function MiPerfil({ navigation }) {
       console.log("modalType:", modalType);
       console.log("idPublicacion: ", idPublicationToDelete);
       axios
-       .delete(`https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`, {
-          headers: {
-            'auth-token': token,
-          },
-        })
-        .then(response => {
-          console.log('Publicación eliminada con éxito:', response.data);
-          showSuccessModal(); 
+        .delete(
+          `  https://romibettiol.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Publicación eliminada con éxito:", response.data);
+          showSuccessModal();
           closeConfirmationModal();
         })
         .catch((error) => {
@@ -387,7 +363,7 @@ export default function MiPerfil({ navigation }) {
     if (deleteSuccess || deleteFailure) {
       // Realiza la solicitud GET para cargar las publicaciones actualizadas
       axios
-        .get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
+        .get(`http://romibettiol.loca.lt/publications/publication/ByUser`, {
           headers: {
             "auth-token": token,
           },
@@ -405,25 +381,6 @@ export default function MiPerfil({ navigation }) {
     }
   }, [deleteSuccess, deleteFailure]);
 
-useEffect(() => {
-  if (deleteSuccess || deleteFailure) {
-    // Realiza la solicitud GET para cargar las publicaciones actualizadas
-    axios
-      .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
-        headers: {
-          'auth-token': token
-        }
-      })
-      .then(response => {
-        setUserPublications(response.data); // Actualiza las publicaciones en el estado
-        console.log('Publicaciones actualizadas', response.data);
-      })
-      .catch(error => {
-        console.error('Error al cargar las publicaciones actualizadas:', error);
-      });
-  }
-}, [deleteSuccess, deleteFailure]);
-    
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const year = fechaObj.getFullYear();
@@ -434,14 +391,17 @@ useEffect(() => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('https://buddy-app2.loca.lt/security/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'auth-token': token,
-        },
-      });
-  
+      const response = await fetch(
+        "  https://romibettiol.loca.lt/security/auth/logout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": token,
+          },
+        }
+      );
+
       if (response.status === 200) {
         // Cierre de sesión exitoso, navega a InicioScreen.js
         navigation.navigate("InicioScreen");
@@ -458,48 +418,15 @@ useEffect(() => {
   const handleConfirmLogout = () => {
     setConfirmLogoutModalVisible(true);
   };
-
-  //imagenes
-
-  const handleSubAddPut = async () => {
-    console.log("Al presionar el boton: ", selectedImages);
-    try {
-      if (selectedImages && selectedImages.length > 0) {
-        console.log("Antes de subirlas: ", selectedImages);
-        let imageUrls = ('');
-        
-        // Subir las imágenes a AWS S3 y obtener las URLs
-        
-          // Subir la imagen a Amazon S3 y obtener el enlace
-          const awsImageKey = await uploadFile(selectedImages);
-          
-          // Construye el enlace completo a la imagen en Amazon S3
-          const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
-          
-          // Guarda el enlace en el estado
-          
-          console.log("Después de subirlas: ", awsImageLink);
-        
-        
-        // Continúa con la solicitud PUT al backend
-        await handleUpdateUser(awsImageLink);
-      } else {
-        // Si no hay imágenes seleccionadas, solo envía la solicitud PUT sin el enlace de la imagen
-        await handleUpdateUser(null);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      // Maneja el error, si es necesario
-    }
-  };
-
-//FIN imagenes
   return (
     <View style={styles.container}>
       <Header />
       <ScrollView>
         <View style={[styles.principal, { flexDirection: "row" }]}>
-          <Image source={{uri: newUserImage}} style={styles.imagenUsuario} />
+          <Image
+            source={require("../Imagenes/usuario.png")}
+            style={styles.imagenUsuario}
+          />
           <View>
             <Text style={styles.titulo}>MI PERFIL</Text>
             {user ? (
@@ -521,7 +448,7 @@ useEffect(() => {
               style={[styles.publicationContainer, { flexDirection: "row" }]}
             >
               <Image
-                source={{uri: adoption.images[0]}}
+                source={require("../Imagenes/imagenPublicaciones.jpg")}
                 style={styles.imagenPublicaciones}
               />
               <View>
@@ -612,7 +539,7 @@ useEffect(() => {
               style={[styles.publicationContainer, { flexDirection: "row" }]}
             >
               <Image
-                source={{uri: search.images[0]}}
+                source={require("../Imagenes/imagenPublicaciones.jpg")}
                 style={styles.imagenPublicaciones}
               />
               <View>
@@ -813,7 +740,6 @@ useEffect(() => {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContentEditarUsuario}>
-            <AgregarImagen onImagesSelected={handleImagesSelected} style={styles.botonGaleria}/>
               <Text style={styles.tituloModal}>Editar Usuario</Text>
               <View style={{ flexDirection: "row" }}>
                 <Text style={styles.contraseñaActual}>Nombre</Text>
@@ -840,8 +766,13 @@ useEffect(() => {
                   onChangeText={setConfirmPassword}
                 />
               </View>
-              <View style={[styles.contenedorBotones, {flexDirection:'row'}]}>
-                <TouchableOpacity style={styles.botonEditarContraseña} onPress={handleSubAddPut}>
+              <View
+                style={[styles.contenedorBotones, { flexDirection: "row" }]}
+              >
+                <TouchableOpacity
+                  style={styles.botonEditarContraseña}
+                  onPress={handleUpdateUser}
+                >
                   <Text>Actualizar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -1286,15 +1217,5 @@ const styles = StyleSheet.create({
   },
   confirmButtonText1: {
     fontSize: 16,
-  },
-  botonGaleria: {
-    backgroundColor: '#DDC4B8',
-    height: 100,
-    width: '50%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    marginTop: 30,
-    elevation: 3,
   },
 });
