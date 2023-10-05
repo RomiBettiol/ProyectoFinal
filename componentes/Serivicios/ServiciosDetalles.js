@@ -10,6 +10,7 @@ export default function ServiciosDetalles({ route }) {
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [buttonTransform, setButtonTransform] = useState(0);
   const servicioTitle = source === 'MiPerfil' ? servicio?.[0]?.serviceTitle : servicio?.serviceTitle;
   const servicioDescription = source === 'MiPerfil' ? servicio?.[0]?.serviceDescription : servicio?.serviceDescription;
   const servicioAddress = source === 'MiPerfil' ? servicio?.[0]?.address : servicio?.address;
@@ -117,7 +118,14 @@ export default function ServiciosDetalles({ route }) {
             <Text style={styles.textoInformacionFiltros}>{servicioOpenTime} - {servicioCloseTime}</Text>
         </View>
       </View>
+      <View
+        style={[
+          styles.botonFlotanteContainer,
+          { transform: [{ translateY: buttonTransform }] },
+        ]}
+      >
         <BotonMenu token={token} style={styles.contenedorBoton} />
+      </View>
     </View>
   );
 }
@@ -180,5 +188,11 @@ const styles = StyleSheet.create({
   ratingContainer:{
     width: '100%',
     marginLeft: '70%',
+  },
+  botonFlotanteContainer: {
+    position: "absolute",
+    bottom: 80, // Puedes ajustar esta cantidad según tus preferencias
+    right: 20, // Puedes ajustar esta cantidad según tus preferencias
+    transform: [{ translateY: 0 }], // Inicialmente no se desplaza
   },
 });

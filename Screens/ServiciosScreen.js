@@ -93,10 +93,23 @@ export default function ServiciosScreen({ navigation }) {
       setServicios(serviciosFiltrados);
     }
   };
+
+  const handleDenunciar = () => {
+    setDenunciaModalVisible(true);
+    setReportModalVisible(false); // Cierra el modal de reporte
+  };
+
+  const handleReportModal = (servicio) => {
+    setSelectedPublicationToReport(servicio.idService);
+    setSelectedUserToReport(servicio.user.idUser);
+    console.log("selectedPublicationToReport: ", selectedPublicationToReport);
+    console.log("selectedUserToReport: ", selectedUserToReport);
+    setReportModalVisible(true);
+  };
   
 
   return (
-    <View>
+    <View style={styles.container}>
       <HeaderScreen />
       <View style={styles.contenedor1}>
         <Text style={styles.titulo}>Servicios para tu mascota</Text>
@@ -112,6 +125,7 @@ export default function ServiciosScreen({ navigation }) {
                   key={servicio.idService}
                   style={styles.contenedorServicio}
                   onPress={() => navigateToServicioDetalle(servicio)}
+                  onLongPress={() => handleReportModal(item)}
                 >
                   <Image
                     source={require("../Imagenes/imagenPublicaciones.jpg")}
