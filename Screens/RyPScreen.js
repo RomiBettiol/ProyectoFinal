@@ -35,8 +35,9 @@ export default function InicioScreen() {
   const [newTokenClaim, setNewTokenClaim] = useState("");
   const [inputError, setInputError] = useState(false);
   const [isModifyModalVisible, setModifyModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editItem, setEditItem] = useState(null);
+  const [isEditPermissionModalVisible, setEditPermissionModalVisible] =
+    useState(false);
+  const [permissionRole, setPermissionRole] = useState("");
 
   const fetchData = async () => {
     try {
@@ -123,14 +124,6 @@ export default function InicioScreen() {
       } else {
         setResponseMessage(response.data.message);
       }
-
-      setTimeout(() => {
-        setConfirming(false);
-        setConfirmationModalVisible(false);
-        setId(null);
-        setState(null);
-      }, 2000);
-      return;
     } catch (error) {
       console.error(
         `Error al cambiar de estado al ${
@@ -138,6 +131,7 @@ export default function InicioScreen() {
         }: `,
         error
       );
+    } finally {
       setTimeout(() => {
         setConfirming(false);
         setConfirmationModalVisible(false);
@@ -198,25 +192,17 @@ export default function InicioScreen() {
         setResponseMessage(
           `Se ha creado correctamente el nuevo ${
             type === "role" ? "rol" : "permiso"
-          }: `
+          }`
         );
       } else {
         setResponseMessage(response.data.message);
       }
-
-      setTimeout(() => {
-        setConfirming(false);
-        setAddModalVisible(false);
-        setNewName("");
-        setNewDescription("");
-        setNewTokenClaim("");
-      }, 2000);
-      return;
     } catch (error) {
       console.error(
         `Error al crear un nuevo ${type === "role" ? "rol" : "permiso"}`,
         error
       );
+    } finally {
       setTimeout(() => {
         setConfirming(false);
         setAddModalVisible(false);
@@ -227,96 +213,126 @@ export default function InicioScreen() {
     }
   };
 
-  const openEditModal = (item) => {
-    setEditItem(item);
-    setEditModalVisible(true);
+  const handleModify = async () => {
+    if (!newName || isConfirming) {
+      setInputError(true);
+      return;
+    }
+    setConfirming(true);
+
+    try {
+      const config = {
+        headers: {
+          "auth-token": token,
+        },
+      };
+
+      let response;
+
+      if (type === "role") {
+        const data = {
+          roleName: newName.trim(),
+        };
+
+        response = await axios.put(
+          `https://buddy-app2.loca.lt/security/${type}/${id}`,
+          data,
+          config
+        );
+      } else {
+        if (!newTokenClaim) {
+          setInputError(true);
+          return;
+        } else {
+          const data = {
+            permissionName: newName.trim(),
+            tokenClaim: newTokenClaim.trim(),
+          };
+
+          response = await axios.put(
+            `https://buddy-app2.loca.lt/security/${type}/${id}`,
+            data,
+            config
+          );
+        }
+      }
+
+      if (response.status === 200) {
+        setResponseMessage(
+          `Se ha modifcado correctamente el ${
+            type === "role" ? "rol" : "permiso"
+          }`
+        );
+      } else {
+        setResponseMessage(response.data.message);
+      }
+    } catch (error) {
+      console.error(
+        `Error al modficar el ${type === "role" ? "rol" : "permiso"}`,
+        error
+      );
+    } finally {
+      setTimeout(() => {
+        setConfirming(false);
+        setModifyModalVisible(false);
+        setNewName("");
+        setNewDescription("");
+        setNewTokenClaim("");
+        setId("");
+      }, 2000);
+    }
   };
 
-  const renderRoles = ({ item }) => {
-    return (
-      <View style={styles.ItemContainer}>
-        <View style={styles.Item}>
-          <View style={styles.ItemInfo}>
-            <Text style={styles.Name}>{item.roleName}</Text>
-            <Text style={styles.ItemText}>
-              Estado: {item.active ? "ACTIVO" : "INACTIVO"}
-            </Text>
-          </View>
-          <View style={styles.optionsContainer}>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => {
-                setNewName(item.roleName);
-                setNewDescription(item.roleDescription);
-                setType("role");
-                setModifyModalVisible(true);
-              }}
-            >
-              <Text style={styles.optionButtonText}>Editar rol</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton} onPress={() => {}}>
-              <Text style={styles.optionButtonText}>Modificar permisos</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => {
-                setState(item.active ? "ACTIVO" : "INACTIVO");
-                setId(item.idRole);
-                setType("role");
-                setConfirmationModalVisible(true);
-              }}
-            >
-              <Text style={styles.optionButtonText}>
-                {item.active ? "Dar de Baja" : "Activar rol"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
-  };
+  const managePermission = async (idPermission, tokenClaim) => {
+    setConfirming(true);
 
-  const renderPermisos = ({ item }) => {
-    return (
-      <View style={styles.ItemContainer}>
-        <View style={styles.Item}>
-          <View style={styles.ItemInfo}>
-            <Text style={styles.ItemName}>{item.permissionName}</Text>
-            <Text style={styles.ItemText}>{item.tokenClaim}</Text>
-            <Text style={styles.ItemText}>
-              Estado: {item.active ? "ACTIVO" : "INACTIVO"}
-            </Text>
-          </View>
-          <View style={styles.optionsContainer}>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => {
-                setNewName(item.permissionName),
-                  setNewDescription(item.roleDescription);
-                setNewTokenClaim(item.tokenClaim);
-                setType("permission");
-                setModifyModalVisible(true);
-              }}
-            >
-              <Text style={styles.optionButtonText}>Editar permiso</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton} onPress={() => {}}>
-              <Text
-                style={styles.optionButtonText}
-                onPress={() => {
-                  setState(item.active ? "ACTIVO" : "INACTIVO");
-                  setId(item.idPermission);
-                  setType("permission");
-                  setConfirmationModalVisible(true);
-                }}
-              >
-                {item.active ? "Dar de Baja" : "Activar permiso"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
+    try {
+      const config = {
+        headers: {
+          "auth-token": token,
+        },
+      };
+
+      const data = {
+        idPermission,
+      };
+
+      let response;
+
+      if (permissionRole.includes(tokenClaim)) {
+        response = await axios.delete(
+          `https://buddy-app2.loca.lt/security/role/take/${id}/${idPermission}`,
+          config
+        );
+      } else {
+        response = await axios.post(
+          `https://buddy-app2.loca.lt/security/role/add/${id}`,
+          data,
+          config
+        );
+      }
+
+      if (response.status === 200) {
+        setResponseMessage(response.data.message);
+      } else {
+        setResponseMessage(response.data.message);
+      }
+    } catch (error) {
+      console.error(
+        `Error al ${
+          permissionRole.includes(newTokenClaim) ? "quitar" : "agregar"
+        } el permiso`,
+        error
+      );
+    } finally {
+      setTimeout(() => {
+        setConfirming(false);
+        setEditPermissionModalVisible(false);
+        setNewName("");
+        setId("");
+        setPermissionRole("");
+      }, 2000);
+    }
   };
 
   return (
@@ -339,11 +355,61 @@ export default function InicioScreen() {
         )}
       </View>
       <View>
-        <FlatList
-          data={roles}
-          keyExtractor={(item) => item.idRole.toString()}
-          renderItem={renderRoles}
-        />
+        {roles.map((item) => (
+          <View key={item.idRole} style={styles.ItemContainer}>
+            <View style={styles.Item}>
+              <View style={styles.ItemInfo}>
+                <Text style={styles.ItemName}>{item.roleName}</Text>
+                <Text style={styles.ItemText}>
+                  Estado: {item.active ? "ACTIVO" : "INACTIVO"}
+                </Text>
+              </View>
+              <View style={styles.optionsContainer}>
+                {item.active == true && (
+                  <>
+                    <TouchableOpacity
+                      style={styles.optionButton}
+                      onPress={() => {
+                        setId(item.idRole);
+                        setNewName(item.roleName);
+                        setType("role");
+                        setModifyModalVisible(true);
+                      }}
+                    >
+                      <Text style={styles.optionButtonText}>Editar rol</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.optionButton}
+                      onPress={() => {
+                        setId(item.idRole);
+                        setEditPermissionModalVisible(true);
+                        setPermissionRole(item.permisos ? item.permisos : "-");
+                        setNewName(item.roleName);
+                      }}
+                    >
+                      <Text style={styles.optionButtonText}>
+                        Gestionar permisos
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+                <TouchableOpacity
+                  style={styles.optionButton}
+                  onPress={() => {
+                    setState(item.active ? "ACTIVO" : "INACTIVO");
+                    setId(item.idRole);
+                    setType("role");
+                    setConfirmationModalVisible(true);
+                  }}
+                >
+                  <Text style={styles.optionButtonText}>
+                    {item.active ? "Dar de Baja" : "Activar rol"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        ))}
       </View>
       <View style={styles.rowContainer}>
         <Text style={styles.titulo}>Permisos</Text>
@@ -362,13 +428,57 @@ export default function InicioScreen() {
         )}
       </View>
       <View>
-        <FlatList
-          data={permisos}
-          keyExtractor={(item) => item.idPermission.toString()}
-          renderItem={renderPermisos}
-          scrollEnabled={false}
-        />
+        {permisos.map((item) => (
+          <View key={item.idPermission} style={styles.ItemContainer}>
+            <View style={styles.Item}>
+              <View style={styles.ItemInfo}>
+                <Text style={styles.ItemName}>{item.permissionName}</Text>
+                <Text style={styles.ItemText}>{item.tokenClaim}</Text>
+                <Text style={styles.ItemText}>
+                  Estado: {item.active ? "ACTIVO" : "INACTIVO"}
+                </Text>
+              </View>
+              <View style={styles.optionsContainer}>
+                {item.active == true && (
+                  <>
+                    <TouchableOpacity
+                      style={styles.optionButton}
+                      onPress={() => {
+                        setId(item.idPermission);
+                        setNewName(item.permissionName);
+                        setNewTokenClaim(item.tokenClaim);
+                        setType("permission");
+                        setModifyModalVisible(true);
+                      }}
+                    >
+                      <Text style={styles.optionButtonText}>
+                        Editar permiso
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+                <TouchableOpacity
+                  style={styles.optionButton}
+                  onPress={() => {}}
+                >
+                  <Text
+                    style={styles.optionButtonText}
+                    onPress={() => {
+                      setState(item.active ? "ACTIVO" : "INACTIVO");
+                      setId(item.idPermission);
+                      setType("permission");
+                      setConfirmationModalVisible(true);
+                    }}
+                  >
+                    {item.active ? "Dar de Baja" : "Activar permiso"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        ))}
       </View>
+      {/* Modal para dar de Baja */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -411,6 +521,7 @@ export default function InicioScreen() {
           </View>
         </View>
       </Modal>
+      {/* Modal de mensaje */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -434,6 +545,7 @@ export default function InicioScreen() {
           </View>
         </View>
       </Modal>
+      {/* Modal para crear */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -517,6 +629,7 @@ export default function InicioScreen() {
           </View>
         </View>
       </Modal>
+      {/* Modal para editar */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -525,6 +638,7 @@ export default function InicioScreen() {
           setModifyModalVisible(false);
           setNewName("");
           setNewTokenClaim("");
+          setInputError(false);
         }}
       >
         <View style={styles.modalContainer}>
@@ -537,10 +651,11 @@ export default function InicioScreen() {
             </Text>
             <TextInput
               placeholder="Ingrese el nombre"
-              style={styles.input} // Agrega estilos de error si es necesario
+              style={[styles.input, inputError && styles.inputError]}
               value={newName}
               onChangeText={(text) => {
                 setNewName(text);
+                setInputError(false);
               }}
             />
             {type === "permission" && (
@@ -548,13 +663,17 @@ export default function InicioScreen() {
                 <Text style={styles.modalText}>Token claim del permiso</Text>
                 <TextInput
                   placeholder="Ingrese el token claim"
-                  style={styles.input}
+                  style={[styles.input, inputError && styles.inputError]}
                   value={newTokenClaim}
                   onChangeText={(text) => {
                     setNewTokenClaim(text);
+                    setInputError(false);
                   }}
                 />
               </>
+            )}
+            {inputError && (
+              <Text style={styles.textError}>Complete todos los campos</Text>
             )}
             <View style={styles.modalButtons}>
               <TouchableOpacity
@@ -562,13 +681,14 @@ export default function InicioScreen() {
                   setModifyModalVisible(false);
                   setNewName("");
                   setNewTokenClaim("");
+                  setInputError(false);
                 }}
               >
                 <Text style={styles.cancelButton}>Cancelar</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  handleAdd();
+                  handleModify();
                 }}
               >
                 <Text style={styles.confirmButton}>Guardar cambios</Text>
@@ -577,6 +697,62 @@ export default function InicioScreen() {
           </View>
         </View>
       </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isEditPermissionModalVisible}
+        onRequestClose={() => {
+          setEditPermissionModalVisible(false);
+          setId("");
+          setPermissionRole("");
+          setNewName("");
+        }}
+      >
+        <ScrollView>
+          <View style={styles.editModalContainer}>
+            <View style={styles.editModalContent}>
+              <Text style={styles.editModalTitle}>
+                Gestionar permisos del rol: {newName}
+              </Text>
+              {permisos.map((item) => (
+                <View key={item.idPermission} style={styles.editItemContainer}>
+                  <View style={styles.editItem}>
+                    <View style={styles.editItemInfo}>
+                      <Text style={styles.editItemText}>{item.tokenClaim}</Text>
+                    </View>
+                    <View style={styles.editOptionsContainer}>
+                      <TouchableOpacity
+                        style={styles.editOptionButton}
+                        onPress={() => {
+                          managePermission(item.idPermission, item.tokenClaim);
+                        }}
+                      >
+                        <Text style={styles.editOptionButtonText}>
+                          {permissionRole.includes(item.tokenClaim)
+                            ? "Quitar"
+                            : "Agregar"}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              ))}
+              <View style={styles.editModalButtons}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setEditPermissionModalVisible(false);
+                    setId("");
+                    setPermissionRole("");
+                    setNewName("");
+                  }}
+                >
+                  <Text style={styles.editCancelButton}>Salir</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </Modal>
     </ScrollView>
   );
 }
@@ -584,7 +760,7 @@ export default function InicioScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#f0f0f0",
   },
   rowContainer: {
     flexDirection: "row",
@@ -618,7 +794,7 @@ const styles = StyleSheet.create({
   ItemInfo: {
     flex: 2,
   },
-  Name: {
+  ItemName: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
@@ -631,11 +807,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   optionButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#FFB988",
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,
     marginBottom: 5,
+    marginLeft: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
   optionButtonText: {
     color: "white",
@@ -695,5 +874,61 @@ const styles = StyleSheet.create({
   closeButton: {
     fontSize: 16,
     color: "#007AFF",
+  },
+  editModalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  editModalContent: {
+    backgroundColor: "#f0f0f0",
+    padding: 10,
+    borderRadius: 10,
+    width: "90%",
+  },
+  editModalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  editItemContainer: {
+    marginBottom: 10,
+  },
+  editItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    backgroundColor: "white",
+  },
+  editItemInfo: {
+    flex: 1,
+  },
+  editItemText: {
+    fontSize: 16,
+  },
+  editOptionsContainer: {
+    marginLeft: 10,
+  },
+  editOptionButton: {
+    backgroundColor: "#007bff",
+    padding: 5,
+    borderRadius: 5,
+  },
+  editOptionButtonText: {
+    color: "white",
+  },
+  editModalButtons: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  editCancelButton: {
+    color: "red",
+    fontSize: 16,
   },
 });
