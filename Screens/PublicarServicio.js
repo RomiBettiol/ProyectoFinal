@@ -10,11 +10,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import HeaderScreen from "../../componentes/HeaderScreen";
-import ImagePickerComponent from "../../componentes/Busqueda/ImagePickerComponent";
-import ListaValoresZona from "../../componentes/Busqueda/ListaValoresZona";
-import BotonPublicar from "../../componentes/Busqueda/BotonPublicar";
-import ListaValoresTipoServicios from "../../componentes/Serivicios/ListaValoresTipoServicios";
+import HeaderScreen from "../componentes/HeaderScreen";
+import ImagePickerComponent from "../componentes/Busqueda/ImagePickerComponent";
+import ListaValoresZona from "../componentes/Busqueda/ListaValoresZona";
+import BotonPublicar from "../componentes/Busqueda/BotonPublicar";
+import ListaValoresTipoServicios from "../componentes/Serivicios/ListaValoresTipoServicios";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
@@ -43,7 +43,7 @@ export default function PublicarServicio() {
   const [isSuccessful, setIsSuccessful] = useState(false);
 
   console.log("Token desde publicación servicios: ", token);
-  console.log('ID Service desde editar servicio: ', idService);
+  console.log("ID Service desde editar servicio: ", idService);
 
   const handlePublicarClick = async () => {
     // Formatear los números para tener dos dígitos
@@ -54,7 +54,7 @@ export default function PublicarServicio() {
     const openTime = `${formattedNumero1}:${formattedNumero2}:00`;
     const closeTime = `${formattedNumero3}:${formattedNumero4}:00`;
     const petTypesData = [
-      { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" }
+      { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" },
     ];
 
     // Mostrar la información que se va a enviar en la consola
@@ -208,28 +208,31 @@ export default function PublicarServicio() {
     // Hacer la solicitud GET al servidor con el idService
     const fetchServiceDetails = async () => {
       try {
-        const response = await axios.get(`https://romibettiol.loca.lt/services/service/${idService}`, {
-          headers: {
-            "auth-token": token,
-          },
-        });
-  
+        const response = await axios.get(
+          `https://romibettiol.loca.lt/services/service/${idService}`,
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        );
+
         // Manejar los datos de la respuesta aquí
         const serviceDetails = response.data;
         console.log("Detalles del servicio:", serviceDetails);
         setTitle(serviceDetails[0].serviceTitle);
         setDescription(serviceDetails[0].serviceDescription);
         setAddress(serviceDetails[0].address);
-        console.log('titulo: ', title);
+        console.log("titulo: ", title);
       } catch (error) {
         console.error("Error al obtener detalles del servicio:", error);
       }
     };
 
     fetchServiceDetails();
-  }, []); 
-  
-  console.log('Titulo: ', title);
+  }, []);
+
+  console.log("Titulo: ", title);
 
   const handleTipoServicioSeleccionado = (idServiceType) => {
     // Manejar el ID del tipo de servicio seleccionado aquí
@@ -366,34 +369,32 @@ export default function PublicarServicio() {
         onPress={handlePublicarClick}
         disabled={!isValid || !isEmailValid || !isHourValid || !isMinuteValid}
       />
-        <Modal
-          visible={isModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setIsModalVisible(false)}
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View
+          style={[
+            styles.modalContainer,
+            isSuccessful
+              ? styles.successModalBackground
+              : styles.errorModalBackground,
+          ]}
         >
-          <View
-            style={[
-              styles.modalContainer,
-              isSuccessful
-                ? styles.successModalBackground
-                : styles.errorModalBackground,
-            ]}
-          >
-            <View style={[styles.modalContent, styles.bottomModalContent]}>
-              <Text
-                style={[
-                  styles.modalMessage,
-                  isSuccessful
-                    ? styles.successModalText
-                    : styles.errorModalText,
-                ]}
-              >
-                {modalMessage}
-              </Text>
-            </View>
+          <View style={[styles.modalContent, styles.bottomModalContent]}>
+            <Text
+              style={[
+                styles.modalMessage,
+                isSuccessful ? styles.successModalText : styles.errorModalText,
+              ]}
+            >
+              {modalMessage}
+            </Text>
           </View>
-        </Modal>
+        </View>
+      </Modal>
     </View>
   );
 }
