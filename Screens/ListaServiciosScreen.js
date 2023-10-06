@@ -81,18 +81,11 @@ const ListaServiciosScreen = () => {
           config
         );
       } else {
-        // response = await axios.post(
-        //   `https://buddy-app2.loca.lt/services/service/changeState/${serviceId}/ACTIVO`,
-        //   {},
-        //   config
-        // );
-        console.log("aun no");
-        setTimeout(() => {
-          setConfirming(false);
-          setConfirmationModalVisible(false);
-          setServiceId(null);
-        }, 2000);
-        return;
+        response = await axios.post(
+          `https://buddy-app2.loca.lt/services/serviceState/changeState/${serviceId}/ACTIVO`,
+          {},
+          config
+        );
       }
 
       if (response.status === 200) {
@@ -109,17 +102,22 @@ const ListaServiciosScreen = () => {
       return;
     } catch (error) {
       console.error("Error al cambiar de estado al servicio:", error);
+      setTimeout(() => {
+        setConfirming(false);
+        setConfirmationModalVisible(false);
+        setServiceId(null);
+      }, 2000);
     }
   };
 
   const renderItem = ({ item }) => {
-    const isUserActive = item.serviceStateName === "ACTIVO";
+    const isServiceActive = item.serviceStateName === "ACTIVO";
 
     return (
       <View style={styles.serviceItemContainer}>
         <View style={styles.serviceItem}>
           <Image source={MessiImage} style={styles.serviceImage} />
-          <View style={styles.userInfo}>
+          <View style={styles.serviceInfo}>
             <Text style={styles.serviceName}>{item.serviceTitle}</Text>
             <Text style={styles.serviceInfoText}>{item.emailService}</Text>
             <Text style={styles.serviceInfoText}>
@@ -139,7 +137,7 @@ const ListaServiciosScreen = () => {
               }}
             >
               <Text style={styles.optionButtonText}>
-                {isUserActive ? "Dar de Baja" : "Activar Servicio"}
+                {isServiceActive ? "Dar de Baja" : "Activar Servicio"}
               </Text>
             </TouchableOpacity>
           </View>
@@ -151,7 +149,7 @@ const ListaServiciosScreen = () => {
   return (
     <View style={styles.container}>
       <HeaderScreen />
-      <Text style={styles.titulo}>Lista de Servicios</Text>
+      <Text style={styles.title}>Lista de Servicios</Text>
       <FlatList
         data={services}
         keyExtractor={(item) => item.idService.toString()}
@@ -226,28 +224,30 @@ const ListaServiciosScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f0f0f0",
   },
-  titulo: {
+  title: {
     fontSize: 25,
     marginTop: 20,
     marginHorizontal: 15,
     marginBottom: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "gray",
-    padding: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+    padding: 10,
+    fontWeight: "bold",
+    color: "#333",
   },
   serviceItem: {
     padding: 5,
     flexDirection: "row",
     alignItems: "center",
-    borderColor: "#000000",
+    borderColor: "#ddd",
     borderWidth: 1,
-    marginHorizontal: 5,
+    marginHorizontal: 15,
     elevation: 5,
     backgroundColor: "#fff",
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 15,
   },
   serviceItemContainer: {
     alignItems: "center",
@@ -257,31 +257,38 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    marginRight: 5,
+    marginRight: 10,
   },
-  userInfo: {
+  serviceInfo: {
     flex: 1,
   },
   serviceName: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#333",
   },
   serviceInfoText: {
     fontSize: 14,
     color: "#888",
+    marginTop: 5,
   },
   optionsContainer: {
     flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
   },
   optionButton: {
     backgroundColor: "#FFB988",
-    padding: 4,
+    padding: 5,
     marginHorizontal: 2,
     borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
   optionButtonText: {
-    fontSize: 13,
+    fontSize: 14,
     color: "#fff",
+    fontWeight: "bold",
   },
   modalContainer: {
     flex: 1,
@@ -290,7 +297,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
@@ -300,30 +307,34 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 16,
     marginBottom: 20,
+    textAlign: "center",
   },
   modalButtons: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   confirmButton: {
     backgroundColor: "#FFB988",
-    marginLeft: 10,
+    marginHorizontal: 10,
     padding: 10,
     borderRadius: 5,
-    color: "white",
+    color: "#fff",
+    fontWeight: "bold",
   },
   cancelButton: {
     backgroundColor: "#CCCCCC",
     padding: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
     borderRadius: 5,
-    color: "white",
+    color: "#fff",
+    fontWeight: "bold",
   },
   closeButton: {
     backgroundColor: "#CCCCCC",
     padding: 10,
     borderRadius: 5,
-    color: "white",
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 

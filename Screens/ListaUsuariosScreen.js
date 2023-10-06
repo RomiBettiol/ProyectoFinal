@@ -8,11 +8,11 @@ import {
   Image,
   Modal,
 } from "react-native";
-import HeaderScreen from "../componentes/HeaderScreen";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import MessiImage from "../Imagenes/MESSI.jpg";
 import ModifyRoleModal from "../componentes/ModifyRoleModal";
+import HeaderScreen from "../componentes/HeaderScreen";
 
 const ListaUsuariosScreen = () => {
   const [users, setUsers] = useState([]);
@@ -185,7 +185,7 @@ const ListaUsuariosScreen = () => {
   return (
     <View style={styles.container}>
       <HeaderScreen />
-      <Text style={styles.titulo}>Lista de Usuarios</Text>
+      <Text style={styles.title}>Lista de Usuarios</Text>
       <FlatList
         data={users}
         keyExtractor={(item) => item.idUser.toString()}
@@ -266,24 +266,26 @@ const ListaUsuariosScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#f0f0f0",
   },
-  titulo: {
+  title: {
     fontSize: 25,
     marginTop: 20,
     marginHorizontal: 15,
     marginBottom: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "gray",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
     padding: 5,
+    fontWeight: "bold",
+    color: "#333",
   },
   userItem: {
     padding: 5,
     flexDirection: "row",
     alignItems: "center",
-    borderColor: "#000000",
+    borderColor: "#ddd",
     borderWidth: 1,
-    marginHorizontal: 5,
+    marginHorizontal: 10,
     elevation: 5,
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -297,7 +299,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    marginRight: 5,
+    marginRight: 10,
   },
   userInfo: {
     flex: 1,
@@ -305,6 +307,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#333",
   },
   userInfoText: {
     fontSize: 14,
@@ -312,16 +315,20 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     flexDirection: "row",
+    alignItems: "center",
   },
   optionButton: {
     backgroundColor: "#FFB988",
-    padding: 4,
+    padding: 5,
     marginHorizontal: 2,
     borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
   optionButtonText: {
-    fontSize: 13,
+    fontSize: 14,
     color: "#fff",
+    fontWeight: "bold",
   },
   modalContainer: {
     flex: 1,
@@ -330,7 +337,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
@@ -340,30 +347,34 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 16,
     marginBottom: 20,
+    textAlign: "center",
   },
   modalButtons: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   confirmButton: {
     backgroundColor: "#FFB988",
-    marginLeft: 10,
+    marginHorizontal: 10,
     padding: 10,
     borderRadius: 5,
-    color: "white",
+    color: "#fff",
+    fontWeight: "bold",
   },
   cancelButton: {
     backgroundColor: "#CCCCCC",
     padding: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
     borderRadius: 5,
-    color: "white",
+    color: "#fff",
+    fontWeight: "bold",
   },
   closeButton: {
     backgroundColor: "#CCCCCC",
     padding: 10,
     borderRadius: 5,
-    color: "white",
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 
