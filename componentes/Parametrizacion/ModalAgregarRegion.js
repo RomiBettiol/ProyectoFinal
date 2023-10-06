@@ -35,11 +35,7 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
     };
 
     axios
-<<<<<<< HEAD
       .post('https://buddy-app2.loca.lt/parameters/region', newRegion)
-=======
-      .post('http://buddy-app2.loca.lt/parameters/region', newRegion)
->>>>>>> feature/admin
       .then((response) => {
         onAdd(newRegion);
         setRegionName('');
