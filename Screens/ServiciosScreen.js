@@ -14,6 +14,7 @@ import BotonesFiltroServicios from "../componentes/Serivicios/BotonesFiltroServi
 import BarraBusquedaServicios from "../componentes/Serivicios/BarraBusquedaServicios";
 import BotonFlotante from "../componentes/BotonFlotante";
 import { useFocusEffect } from '@react-navigation/native';
+import DenunciasModalServicio from "../componentes/Denuncias/DenunciasModalServcios";
 
 export default function ServiciosScreen({ navigation }) {
   const route = useRoute(); // Obtiene la prop route
@@ -21,7 +22,12 @@ export default function ServiciosScreen({ navigation }) {
   const [servicios, setServicios] = useState([]);
   const [buttonTransform, setButtonTransform] = useState(0);
   const [originalServicios, setOriginalServicios] = useState([]);
-  const [filtro, setFiltro] = useState(null);
+  const [denunciaModalVisible, setDenunciaModalVisible] = useState(false);
+  const [selectedPublicationToReport, setSelectedPublicationToReport] =
+    useState(null);
+  const [selectedUserToReport, setSelectedUserToReport] = useState(null);
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   console.log("Token servicios: ", token);
 
@@ -101,10 +107,11 @@ export default function ServiciosScreen({ navigation }) {
 
   const handleReportModal = (servicio) => {
     setSelectedPublicationToReport(servicio.idService);
-    setSelectedUserToReport(servicio.user.idUser);
+    setSelectedUserToReport(servicio.idUser);
     console.log("selectedPublicationToReport: ", selectedPublicationToReport);
     console.log("selectedUserToReport: ", selectedUserToReport);
-    setReportModalVisible(true);
+    setSelectedService(servicio);
+    setDenunciaModalVisible(true);
   };
   
 
@@ -125,7 +132,7 @@ export default function ServiciosScreen({ navigation }) {
                   key={servicio.idService}
                   style={styles.contenedorServicio}
                   onPress={() => navigateToServicioDetalle(servicio)}
-                  onLongPress={() => handleReportModal(item)}
+                  onLongPress={() => handleReportModal(servicio)}
                 >
                   <Image
                     source={require("../Imagenes/imagenPublicaciones.jpg")}
@@ -144,6 +151,8 @@ export default function ServiciosScreen({ navigation }) {
           </View>
         ))}
       </View>
+      <DenunciasModalServicio visible={denunciaModalVisible} onClose={() => setDenunciaModalVisible(false)} selectedPublicationToReport={selectedService ? selectedService.idService : null} token={token} selectedUserToReport={selectedService ? selectedService.idUser : null} />
+
       <View
         style={[
           styles.botonFlotanteContainer,

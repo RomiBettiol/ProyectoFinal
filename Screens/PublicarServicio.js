@@ -10,18 +10,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import HeaderScreen from "../../componentes/HeaderScreen";
-import ImagePickerComponent from "../../componentes/Busqueda/ImagePickerComponent";
-import ListaValoresZona from "../../componentes/Busqueda/ListaValoresZona";
-import BotonPublicar from "../../componentes/Busqueda/BotonPublicar";
-import ListaValoresTipoServicios from "../../componentes/Serivicios/ListaValoresTipoServicios";
+import HeaderScreen from "../componentes/HeaderScreen";
+import ImagePickerComponent from "../componentes/Busqueda/ImagePickerComponent";
+import ListaValoresZona from "../componentes/Busqueda/ListaValoresZona";
+import BotonPublicar from "../componentes/Busqueda/BotonPublicar";
+import ListaValoresTipoServicios from "../componentes/Serivicios/ListaValoresTipoServicios";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-export default function PublicarServicio() {
+export default function PublicarServicio({ setAnimalId, animalId }) {
   const navigation = useNavigation();
   const route = useRoute(); // Obtiene la prop route
-  const { token, idService } = route.params;
+  const { token } = route.params;
   const [isValid, setIsValid] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -35,101 +35,15 @@ export default function PublicarServicio() {
   const [abierto24h, setAbierto24h] = useState(false);
   const [selectedServiceType, setSelectedServiceType] = useState("");
   const [selectedServiceTypeId, setSelectedServiceTypeId] = useState(null);
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
   const [isHourValid, setIsHourValid] = useState(true);
   const [isMinuteValid, setIsMinuteValid] = useState(true);
-  const [modalMessage, setModalMessage] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isSuccessful, setIsSuccessful] = useState(false);
 
   console.log("Token desde publicación servicios: ", token);
-  console.log('ID Service desde editar servicio: ', idService);
-
-  const handlePublicarClick = async () => {
-    // Formatear los números para tener dos dígitos
-    const formattedNumero1 = numero1.padStart(2, "0");
-    const formattedNumero2 = numero2.padStart(2, "0");
-    const formattedNumero3 = numero3.padStart(2, "0");
-    const formattedNumero4 = numero4.padStart(2, "0");
-    const openTime = `${formattedNumero1}:${formattedNumero2}:00`;
-    const closeTime = `${formattedNumero3}:${formattedNumero4}:00`;
-    const petTypesData = [
-      { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" }
-    ];
-
-    // Mostrar la información que se va a enviar en la consola
-    console.log("Información que se va a enviar:", {
-      serviceTitle: title,
-      serviceDescription: description,
-      address: address,
-      open24hs: abierto24h,
-      emailService: email,
-      images: "",
-      idServiceType: selectedServiceTypeId,
-      idLocality: selectedLocality,
-      openTime: openTime,
-      closeTime: closeTime,
-      petTypes: petTypesData,
-    });
-
-    try {
-      const response = await axios.put(
-        `https://romibettiol.loca.lt/services/service/${idService}`,
-        {
-          serviceTitle: title,
-          serviceDescription: description,
-          address: address,
-          open24hs: abierto24h,
-          emailService: email,
-          images: "",
-          idServiceType: selectedServiceTypeId,
-          idLocality: selectedLocality,
-          openTime: openTime,
-          closeTime: closeTime,
-          petTypes: petTypesData,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": token,
-          },
-        }
-      );
-      console.log("Información que se envía:", response.data);
-      console.log("Éxito", "El servicio ha sido editado correctamente.");
-
-      setIsModalVisible(true);
-
-      if (response.status === 200) {
-        setIsSuccessful(true);
-        setModalMessage("Publicación actualizada con éxito");
-      } else {
-        setIsSuccessful(false);
-        setModalMessage("Hubo un error al actualizar la publicación");
-      }
-
-      setTimeout(() => {
-        setIsModalVisible(false); // Cierra el modal después de 1 segundo
-        navigation.navigate("HomeScreen", { token }); // Redirige al perfil
-      }, 1000); // 1000 milisegundos = 1 segundo
-    } catch (error) {
-      if (error.response) {
-        setIsSuccessful(false);
-        setModalMessage("Por favor, complete todos los campos");
-        setIsModalVisible(true);
-      } else if (error.request) {
-        setIsSuccessful(false);
-        setModalMessage("Por favor, complete todos los campos");
-        setIsModalVisible(true);
-        //console.error("No se recibió respuesta del servidor");
-      } else {
-        setIsSuccessful(false);
-        setModalMessage("Por favor, complete todos los campos");
-        setIsModalVisible(true);
-        //console.error("Error al realizar la solicitud:", error.message);
-      }
-    }
-  };
+  console.log("animales: ", selectedTypes);
 
   const isValidEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -161,6 +75,24 @@ export default function PublicarServicio() {
       console.log("Error", "Por favor, escriba un e-mail válido.");
     }
   };
+
+  useEffect(() => {
+    let timer;
+    if (isSuccessModalVisible) {
+      timer = setTimeout(() => {
+        setIsSuccessModalVisible(false);
+        navigation.navigate("HomeScreen", { token }); // Navegar a la pantalla de inicio después de 2 segundos
+      }, 2000);
+    } else if (isErrorModalVisible) {
+      timer = setTimeout(() => {
+        setIsErrorModalVisible(false); // Ocultar el modal de error después de 2 segundos
+      }, 2000);
+    }
+
+    return () => {
+      clearTimeout(timer); // Limpiar el temporizador al desmontar el componente
+    };
+  }, [isSuccessModalVisible, isErrorModalVisible, navigation]);
 
   const handleNumero1Change = (text) => {
     console.log("handleNumero1Change:", text);
@@ -204,36 +136,80 @@ export default function PublicarServicio() {
     }
   };
 
-  useEffect(() => {
-    // Hacer la solicitud GET al servidor con el idService
-    const fetchServiceDetails = async () => {
-      try {
-        const response = await axios.get(`https://romibettiol.loca.lt/services/service/${idService}`, {
-          headers: {
-            "auth-token": token,
-          },
-        });
-  
-        // Manejar los datos de la respuesta aquí
-        const serviceDetails = response.data;
-        console.log("Detalles del servicio:", serviceDetails);
-        setTitle(serviceDetails[0].serviceTitle);
-        setDescription(serviceDetails[0].serviceDescription);
-        setAddress(serviceDetails[0].address);
-        console.log('titulo: ', title);
-      } catch (error) {
-        console.error("Error al obtener detalles del servicio:", error);
-      }
-    };
-
-    fetchServiceDetails();
-  }, []); 
-  
-  console.log('Titulo: ', title);
-
   const handleTipoServicioSeleccionado = (idServiceType) => {
     // Manejar el ID del tipo de servicio seleccionado aquí
     setSelectedServiceTypeId(idServiceType);
+  };
+
+  const handlePublicarClick = async () => {
+    // Formatear los números para tener dos dígitos
+    const formattedNumero1 = numero1.padStart(2, "0");
+    const formattedNumero2 = numero2.padStart(2, "0");
+    const formattedNumero3 = numero3.padStart(2, "0");
+    const formattedNumero4 = numero4.padStart(2, "0");
+    const openTime = `${formattedNumero1}:${formattedNumero2}:00`;
+    const closeTime = `${formattedNumero3}:${formattedNumero4}:00`;
+    const petTypesData = [
+      { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" }
+    ];
+
+    // Mostrar la información que se va a enviar en la consola
+    console.log("Información que se va a enviar:", {
+      serviceTitle: title,
+      serviceDescription: description,
+      address: address,
+      open24hs: abierto24h,
+      emailService: email,
+      images: "",
+      idServiceType: selectedServiceTypeId,
+      idLocality: selectedLocality,
+      openTime: openTime,
+      closeTime: closeTime,
+      petTypes: petTypesData,
+    });
+
+    try {
+      const response = await axios.post(
+        "https://buddy-app2.loca.lt/services/service/",
+        {
+          serviceTitle: title,
+          serviceDescription: description,
+          address: address,
+          open24hs: abierto24h,
+          emailService: email,
+          images: "",
+          idServiceType: selectedServiceTypeId,
+          idLocality: selectedLocality,
+          openTime: openTime,
+          closeTime: closeTime,
+          petTypes: petTypesData,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": token,
+          },
+        }
+      );
+
+      console.log("Información que se envía:", response.data);
+      console.log("PetTypes:", response.data.petTypes);
+      console.log("Éxito", "El servicio ha sido publicado correctamente.");
+      setIsSuccessModalVisible(true);
+    } catch (error) {
+      if (error.response) {
+        // La solicitud fue hecha y el servidor respondió con un código de estado
+        // que no está en el rango de 2xx
+        //console.error('Error del servidor:', error.response.data);
+        setIsErrorModalVisible(true);
+      } else if (error.request) {
+        // La solicitud fue hecha pero no se recibió respuesta
+        console.error("No se recibió respuesta del servidor");
+      } else {
+        // Algo más causó un error
+        console.error("Error al realizar la solicitud:", error.message);
+      }
+    }
   };
 
   return (
@@ -241,14 +217,14 @@ export default function PublicarServicio() {
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
-          <Text style={styles.titulo}>Editá tu servicio</Text>
+          <Text style={styles.titulo}>Publicá tu servicio</Text>
           <ImagePickerComponent />
           <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
             <TextInput
               style={[styles.inputTexto, !isValid && styles.inputError]}
-              value={title} // Usar el estado local 'title' como valor del input
-              onChangeText={setTitle} // Puedes eliminar esta línea si no necesitas que el input sea editable
+              value={title}
+              onChangeText={setTitle}
               onEndEditing={handleEndEditing}
             />
           </View>
@@ -366,34 +342,26 @@ export default function PublicarServicio() {
         onPress={handlePublicarClick}
         disabled={!isValid || !isEmailValid || !isHourValid || !isMinuteValid}
       />
-        <Modal
-          visible={isModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setIsModalVisible(false)}
-        >
-          <View
-            style={[
-              styles.modalContainer,
-              isSuccessful
-                ? styles.successModalBackground
-                : styles.errorModalBackground,
-            ]}
-          >
-            <View style={[styles.modalContent, styles.bottomModalContent]}>
-              <Text
-                style={[
-                  styles.modalMessage,
-                  isSuccessful
-                    ? styles.successModalText
-                    : styles.errorModalText,
-                ]}
-              >
-                {modalMessage}
-              </Text>
-            </View>
+
+      <Modal transparent={true} visible={isErrorModalVisible}>
+        <View style={[styles.modalContainer, styles.errorModalContainer]}>
+          <View style={styles.modalContentError}>
+            <Text style={styles.modalText}>
+              Error al publicar el servicio. Por favor, inténtalo de nuevo.
+            </Text>
           </View>
-        </Modal>
+        </View>
+      </Modal>
+
+      <Modal transparent={true} visible={isSuccessModalVisible}>
+        <View style={[styles.modalContainer, styles.successModalContainer]}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              ¡El servicio ha sido publicado correctamente!
+            </Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -527,12 +495,5 @@ const styles = StyleSheet.create({
   modalButton: {
     fontSize: 16,
     color: "#007BFF", // Color del enlace para cerrar el modal
-  },
-  successModal: {
-    backgroundColor: "green",
-    padding: 20,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 50, // Ajusta el margen inferior según tus preferencias
   },
 });
