@@ -74,7 +74,7 @@ export default function PublicarServicio() {
 
     try {
       const response = await axios.put(
-        `https://buddy-app2.loca.lt/services/service/${idService}`,
+        `https://romibettiol.loca.lt/services/service/${idService}`,
         {
           serviceTitle: title,
           serviceDescription: description,
@@ -208,7 +208,7 @@ export default function PublicarServicio() {
     // Hacer la solicitud GET al servidor con el idService
     const fetchServiceDetails = async () => {
       try {
-        const response = await axios.get(`https://buddy-app2.loca.lt/services/service/${idService}`, {
+        const response = await axios.get(`https://romibettiol.loca.lt/services/service/${idService}`, {
           headers: {
             "auth-token": token,
           },

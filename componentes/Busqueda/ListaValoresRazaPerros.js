@@ -9,7 +9,7 @@ const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
 
   const getRazas = () => {
     axios
-      .get(`https://buddy-app2.loca.lt/parameters/petBreed/byType/${selectedAnimal}`)
+      .get(`https://romibettiol.loca.lt/parameters/petBreed/byType/${selectedAnimal}`)
       .then((response) => {
         console.log('Razas exitosas:', response.data);
         const petBreeds = response.data;

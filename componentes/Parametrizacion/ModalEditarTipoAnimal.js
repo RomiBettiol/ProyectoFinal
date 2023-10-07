@@ -7,7 +7,7 @@ const ModalEditarTipoAnimal = ({ isVisible, onClose, onEdit, editingType, onSucc
 
   const handleEditType = () => {
     axios
-      .put(`https://buddy-app2.loca.lt/parameters/petType/${editingType.idPetType}`, {
+      .put(`https://romibettiol.loca.lt/parameters/petType/${editingType.idPetType}`, {
         petTypeName: typeName,
       })
       .then((response) => {

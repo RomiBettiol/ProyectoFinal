@@ -170,7 +170,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
 
     try {
       const response = await axios.post(
-        "https://buddy-app2.loca.lt/services/service/",
+        "https://romibettiol.loca.lt/services/service/",
         {
           serviceTitle: title,
           serviceDescription: description,

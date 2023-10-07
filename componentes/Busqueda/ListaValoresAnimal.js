@@ -7,7 +7,7 @@ const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal, setSelectedAnim
 
   useEffect(() => {
     axios
-      .get('https://buddy-app2.loca.lt/parameters/petType/')
+      .get('https://romibettiol.loca.lt/parameters/petType/')
       .then((response) => {
         console.log('Tipos de animal exitosos:', response.data);
         setAnimalOptions(response.data.petTypes);

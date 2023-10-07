@@ -18,7 +18,7 @@ const OptionModalService = ({ visible, onClose, route }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://buddy-app2.loca.lt/services/service/${idService}`, {
+        const response = await axios.get(`https://romibettiol.loca.lt/services/service/${idService}`, {
           headers: {
             'auth-token': token // Agrega el token en el encabezado
           }
@@ -53,7 +53,7 @@ const OptionModalService = ({ visible, onClose, route }) => {
 
   const handleConfirmDelete = () => {
     // Realiza la solicitud DELETE utilizando Axios con el token de autorización
-    axios.delete(`https://buddy-app2.loca.lt/services/service/${idService}`, {
+    axios.delete(`https://romibettiol.loca.lt/services/service/${idService}`, {
       headers: {
         'auth-token': token, // Incluye el token en el encabezado de autorización
       },

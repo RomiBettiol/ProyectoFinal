@@ -22,7 +22,7 @@ const ModalAgregarLocalidad = ({ isVisible, onClose, onAdd, regions, onSuccess, 
     };
 
     axios
-      .post('https://buddy-app2.loca.lt/parameters/locality', newLocalidad)
+      .post('https://romibettiol.loca.lt/parameters/locality', newLocalidad)
       .then((response) => {
         onAdd(newLocalidad);
         setLocalityName('');
