@@ -17,12 +17,6 @@ const SearchBarExample = ({ data, onSearch }) => {
         onChangeText={handleSearch}
         value={searchText}
       />
-      <TouchableOpacity>
-        <Image
-            source={require('../../Imagenes/filtros.png')}
-            style={styles.imagenFiltrar}
-        />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -34,7 +28,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 40,
-    width: '88%',
+    width: '95%',
     borderColor: '#EEE9E9',
     backgroundColor: '#EEE9E9',
     borderWidth: 1,

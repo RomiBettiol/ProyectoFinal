@@ -22,6 +22,8 @@ export default function HomeScreen({ navigation }) {
   const [adoptionQuantity, setAdoptionQuantity] = useState("");
   const [lostPetsQuantity, setLostPetsQuantity] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
+  const [notificacion, setNotifications] = useState(false);
+  const [notificacionReaded, setNotificationsReaded] = useState(false);
 
   const buttons = [
     {
@@ -102,9 +104,34 @@ export default function HomeScreen({ navigation }) {
     // Agrega más botones aquí
   ];
 
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get('https://romibettiol.loca.lt/reports/notification/', {
+        headers: {
+          'auth-token': token,
+        },
+      });
+
+      if (response.status === 200) {
+        setNotifications(response.data.notifications);
+
+        // Contar notificaciones con el atributo 'readed' en true
+        const readNotificationsCount = response.data.notifications.filter(notification => notification.readed === true).length;
+        setNotificationsReaded(readNotificationsCount);
+        // Mostrar la cantidad de notificaciones con 'readed' en true en la consola
+        console.log('Cantidad de notificaciones con readed en true:', readNotificationsCount);
+      } else {
+        console.error('Error al obtener las notificaciones');
+      }
+    } catch (error) {
+      console.error('Error de red:', error);
+    }
+  };
+
   useEffect(() => {
     obtenerInformes();
     obtenerPermisos();
+    fetchNotifications();
   }, []);
 
   const obtenerInformes = async () => {
@@ -227,7 +254,7 @@ export default function HomeScreen({ navigation }) {
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.home}>
         <Image source={require("../Imagenes/logo2.png")} style={styles.logo} />
-        <MenuHorizontal token={token} openModal={openModal} />
+        <MenuHorizontal token={token} openModal={openModal} notificacionReaded={notificacionReaded} />
         {!permisos[0] ? <Text></Text> : renderButtons()}
         <View style={[styles.informe1, { flexDirection: "row" }]}>
           <Text style={styles.textoInforme}>
