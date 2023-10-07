@@ -21,7 +21,7 @@ const MenuHorizontal = ({ openModal }) => {
       <TouchableOpacity style={styles.menuItem}>
         <Image source={require('../Imagenes/mensaje.png')} style={styles.menu} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.menuItem}>
+      <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('NotificacionesScreen', { token })}>
         <Image source={require('../Imagenes/notificacion.png')} style={styles.menu} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.menuItem} onPress={handleOpenModal}>
