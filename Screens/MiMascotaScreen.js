@@ -377,6 +377,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
     marginTop: 15,
+    marginBottom: 20,
   },
   imagAgregar: {
     borderRadius: 50,

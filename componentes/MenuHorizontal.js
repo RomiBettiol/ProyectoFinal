@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   View,
@@ -85,7 +85,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
         style={styles.menuItem}
         onPress={() => navigation.navigate("MiPerfil", { token })}
       >
-        <Image source={{ uri: user.image }} style={styles.menu} />
+        <Image source={{ uri: user.image }} style={styles.imagenMenu} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.menuItem}>
         <Image
@@ -138,6 +138,12 @@ const styles = StyleSheet.create({
   },
 
   menu: {
+    width: 40,
+    height: 40,
+    // borderRadius: 20,
+  },
+
+  imagenMenu: {
     width: 40,
     height: 40,
     borderRadius: 20,

@@ -15,6 +15,7 @@ import BotonImagenRegis from "./BotonImagenRegis";
 import { Amplify, Storage } from "aws-amplify";
 import awsconfig from "../src/aws-exports";
 import AgregarImagenRegistro from "../componentes/AgregarImagenRegistro";
+
 Amplify.configure(awsconfig);
 
 const FormularioRegistrarse = ({
@@ -22,8 +23,7 @@ const FormularioRegistrarse = ({
   datosFormulario,
   onDatosChange,
 }) => {
-  const [nombre, setNombre] = useState(datosFormulario.email);
-
+  const [nombre, setNombre] = useState(datosFormulario.nombre);
   const [email, setEmail] = useState(datosFormulario.email);
   const [usuario, setUsuario] = useState(datosFormulario.usuario);
   const [contrasena, setContrasena] = useState(datosFormulario.contrasena);
@@ -71,6 +71,7 @@ const FormularioRegistrarse = ({
         throw e; // Lanza una excepción para manejar errores en la función llamante
       });
   };
+
   // Función para manejar la selección de imágenes
   const handleImagesSelected = (images) => {
     console.log("probando esto: ", images);
@@ -82,7 +83,15 @@ const FormularioRegistrarse = ({
   useEffect(() => {
     setFormValid(isFormValid());
     onFormValidChange(isFormValid());
-  }, [email, usuario, contrasena, contrasena2, image, onFormValidChange]);
+  }, [
+    nombre,
+    email,
+    usuario,
+    contrasena,
+    contrasena2,
+    image,
+    onFormValidChange,
+  ]);
 
   useEffect(() => {
     onDatosChange({
@@ -94,7 +103,7 @@ const FormularioRegistrarse = ({
       contrasena2,
       image,
     });
-  }, [email, usuario, contrasena, contrasena2, image, onDatosChange]);
+  }, [nombre, email, usuario, contrasena, contrasena2, image, onDatosChange]);
 
   const verificarRequisitosContrasena = (contrasena) => {
     const regexNumero = /\d/;
@@ -174,6 +183,7 @@ const FormularioRegistrarse = ({
           style={styles.botImag}
         />
       </View>
+
       <View style={styles.inputContainer}>
         <Image
           source={require("../Imagenes/usuario.png")}
@@ -293,13 +303,12 @@ const styles = StyleSheet.create({
     borderColor: "#ffffff",
     textAlign: "center",
     fontSize: 16,
-    elevation: 10,
+    // elevation: 10,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
   },
 
   contenedor2: {
-    height: 450,
     backgroundColor: "#DDC4B8",
     width: 350,
     borderRadius: 30,
@@ -348,6 +357,10 @@ const styles = StyleSheet.create({
 
   controlContainer: {
     alignItems: "center",
+  },
+
+  textoModal: {
+    fontSize: 20,
   },
 
   botContainer: {

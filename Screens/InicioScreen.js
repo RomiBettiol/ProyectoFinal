@@ -12,8 +12,6 @@ export default function InicioScreen({ navigation }) {
   const [checkBox1, setCheckBox1] = useState(false);
   const [checkBox2, setCheckBox2] = useState(false);
 
-  useEffect(() => {}, []);
-
   const handleRegistro = () => {
     setModalVisible(true);
   };
@@ -59,10 +57,10 @@ export default function InicioScreen({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.texto}>¿Todavía no te unis?</Text>
           <TouchableOpacity
-            style={[styles.boton, styles.shadowProp]}
+            style={[styles.registrarse]}
             onPress={handleRegistro}
           >
-            <Text style={styles.texto}>Regístrate</Text>
+            <Text style={styles.textoRegistrase}>Regístrate</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -128,7 +126,7 @@ const styles = StyleSheet.create({
 
   boton: {
     borderRadius: 10,
-    marginTop: "5%",
+    marginTop: 10,
     backgroundColor: "#FFB984",
     width: "50%",
     height: "15%",
@@ -167,7 +165,13 @@ const styles = StyleSheet.create({
   },
 
   texto: {
-    fontSize: 16,
+    fontSize: 20,
+  },
+
+  textoRegistrase: {
+    fontSize: 20,
+    marginTop: 10,
+    textDecorationLine: "underline",
   },
 
   backgroundImage: {

@@ -17,8 +17,8 @@ import ListaValoresTipoServicios from "../../componentes/Serivicios/ListaValores
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../../src/aws-exports';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../../src/aws-exports";
 Amplify.configure(awsconfig);
 
 export default function PublicarServicio() {
@@ -47,7 +47,7 @@ export default function PublicarServicio() {
   const idService = servicio.idService;
 
   console.log("Token desde publicación servicios: ", token);
-  console.log('ID Service desde editar servicio: ', idService);
+  console.log("ID Service desde editar servicio: ", idService);
 
   //donde guardo las imagenes
   const [selectedImages, setSelectedImages] = useState([]);
@@ -57,15 +57,18 @@ export default function PublicarServicio() {
     const response = await fetch(uri);
     const blob = await response.blob();
     return blob;
-  }
+  };
 
   const uploadFile = async (file) => {
     const img = await fetchImageUri(file);
     return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
-      level: 'public',
+      level: "public",
       contentType: file.type,
       progressCallback(uploadProgress) {
-        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+        console.log(
+          "PROGRESS--",
+          uploadProgress.loaded + "/" + uploadProgress.total
+        );
       },
     })
       .then((res) => {
@@ -77,7 +80,7 @@ export default function PublicarServicio() {
         throw e; // Lanza una excepción para manejar errores en la función llamante
       });
   };
-    // Función para manejar la selección de imágenes
+  // Función para manejar la selección de imágenes
   const handleImagesSelected = (images) => {
     console.log("probando esto: ", images);
     setSelectedImages(images);
@@ -93,7 +96,7 @@ export default function PublicarServicio() {
     const openTime = `${formattedNumero1}:${formattedNumero2}:00`;
     const closeTime = `${formattedNumero3}:${formattedNumero4}:00`;
     const petTypesData = [
-      { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" }
+      { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" },
     ];
     const images = imagenes;
 
@@ -179,20 +182,20 @@ export default function PublicarServicio() {
       if (selectedImages && selectedImages.length > 0) {
         console.log("Antes de subirlas: ", selectedImages);
         let imageUrls = [];
-        
+
         // Subir las imágenes a AWS S3 y obtener las URLs
         for (const selectedImage of selectedImages) {
           // Subir la imagen a Amazon S3 y obtener el enlace
           const awsImageKey = await uploadFile(selectedImage);
-          
+
           // Construye el enlace completo a la imagen en Amazon S3
           const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
-          
+
           // Guarda el enlace en el estado
           imageUrls.push(awsImageLink);
           console.log("Después de subirlas: ", imageUrls);
         }
-        
+
         // Continúa con la solicitud PUT al backend
         await handlePublicarClick(imageUrls);
       } else {
@@ -200,7 +203,7 @@ export default function PublicarServicio() {
         await handlePublicarClick(null);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Maneja el error, si es necesario
     }
   };
@@ -282,28 +285,31 @@ export default function PublicarServicio() {
     // Hacer la solicitud GET al servidor con el idService
     const fetchServiceDetails = async () => {
       try {
-        const response = await axios.get(`https://buddy-app2.loca.lt/services/service/${idService}`, {
-          headers: {
-            "auth-token": token,
-          },
-        });
-  
+        const response = await axios.get(
+          `https://buddy-app2.loca.lt/services/service/${idService}`,
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        );
+
         // Manejar los datos de la respuesta aquí
         const serviceDetails = response.data;
         console.log("Detalles del servicio:", serviceDetails);
         setTitle(serviceDetails[0].serviceTitle);
         setDescription(serviceDetails[0].serviceDescription);
         setAddress(serviceDetails[0].address);
-        console.log('titulo: ', title);
+        console.log("titulo: ", title);
       } catch (error) {
         console.error("Error al obtener detalles del servicio:", error);
       }
     };
 
     fetchServiceDetails();
-  }, []); 
-  
-  console.log('Titulo: ', title);
+  }, []);
+
+  console.log("Titulo: ", title);
 
   const handleTipoServicioSeleccionado = (idServiceType) => {
     // Manejar el ID del tipo de servicio seleccionado aquí
@@ -440,39 +446,39 @@ export default function PublicarServicio() {
         onPress={handleSubAddPut}
         disabled={!isValid || !isEmailValid || !isHourValid || !isMinuteValid}
       />
-        <Modal
-          visible={isModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setIsModalVisible(false)}
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View
+          style={[
+            styles.modalContainer,
+            isSuccessful
+              ? styles.successModalBackground
+              : styles.errorModalBackground,
+          ]}
         >
           <View
             style={[
-              styles.modalContainer,
-              isSuccessful
-                ? styles.successModalBackground
-                : styles.errorModalBackground,
-            ]}
-          >
-            <View
-            style={[
               styles.bottomModalContent,
-              isSuccessful ? styles.successModalContent : styles.errorModalContent,
+              isSuccessful
+                ? styles.successModalContent
+                : styles.errorModalContent,
             ]}
           >
-              <Text
-                style={[
-                  styles.modalMessage,
-                  isSuccessful
-                    ? styles.successModalText
-                    : styles.errorModalText,
-                ]}
-              >
-                {modalMessage}
-              </Text>
-            </View>
+            <Text
+              style={[
+                styles.modalMessage,
+                isSuccessful ? styles.successModalText : styles.errorModalText,
+              ]}
+            >
+              {modalMessage}
+            </Text>
           </View>
-        </Modal>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -621,6 +627,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   errorModalText: {
-    color: 'white',
+    color: "white",
   },
 });

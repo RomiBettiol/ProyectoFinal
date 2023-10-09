@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: "center",
-    marginTop: 80,
+    marginTop: 50,
   },
 
   titulo: {
@@ -204,6 +204,8 @@ const styles = StyleSheet.create({
 
   footerBoton: {
     width: "100%",
+    bottom: 0,
+    position: "absolute",
   },
 
   botonRegistro: {
@@ -213,7 +215,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 45,
     width: "100%",
-    marginBottom: 0,
     paddingHorizontal: 20,
   },
 

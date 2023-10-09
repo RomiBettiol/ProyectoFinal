@@ -89,8 +89,12 @@ export default function MiPerfil({ navigation }) {
         },
       })
       .then((response) => {
-        setUserPublications(response.data); // Almacena las publicaciones en el estado
-        console.log("Publicaciones", response.data);
+        if (Array.isArray(response.data)) {
+          setUserPublications(response.data); // Almacena las publicaciones en el estado
+          console.log("Publicaciones", response.data);
+        } else {
+          console.log("Invalid response data:", response.data);
+        }
       })
       .catch((error) => {
         console.log("Error fetching user publications:", error);
@@ -103,11 +107,15 @@ export default function MiPerfil({ navigation }) {
         },
       })
       .then((response) => {
-        setUserService(response.data); // Almacena las publicaciones en el estado
-        console.log("Publicaciones", response.data);
+        if (Array.isArray(response.data)) {
+          setUserService(response.data); // Almacena los servicios en el estado
+          console.log("Servicios", response.data);
+        } else {
+          console.log("Invalid response data:", response.data);
+        }
       })
       .catch((error) => {
-        console.log("Error fetching user publications:", error);
+        console.log("Error fetching user services:", error);
       });
   }, [token, idUser]);
 
