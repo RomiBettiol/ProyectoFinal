@@ -6,29 +6,29 @@ import axios from "axios";
 export default function InicioScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const verificarAuthToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem("auth-token");
+  const verificarAuthToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem("auth-token");
 
-        if (token !== null) {
-          const response = await axios.get(
-            `https://buddy-app2.loca.lt/security/auth/expire`,
-            { headers: { "auth-token": token } }
-          );
-          if (response.status === 200) {
-            navigation.navigate("HomeScreen", { token });
-          }
-        } else {
-          navigation.navigate("InicioScreen");
+      if (token !== null) {
+        const response = await axios.get(
+          `https://buddy-app2.loca.lt/security/auth/expire`,
+          { headers: { "auth-token": token } }
+        );
+        if (response.status === 200) {
+          navigation.navigate("HomeScreen", { token });
         }
-      } catch (error) {
+      } else {
         navigation.navigate("InicioScreen");
-        console.error("Error al obtener datos:", error);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      navigation.navigate("InicioScreen");
+      console.error("Error al obtener datos:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
     verificarAuthToken();
   }, []);
 
