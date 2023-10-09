@@ -324,7 +324,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
 
   return (
     <View style={styles.container}>
-      <Header token={token} />
+      <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publicá tu servicio</Text>
