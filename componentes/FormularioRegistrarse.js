@@ -22,6 +22,8 @@ const FormularioRegistrarse = ({
   datosFormulario,
   onDatosChange,
 }) => {
+  const [nombre, setNombre] = useState(datosFormulario.email);
+
   const [email, setEmail] = useState(datosFormulario.email);
   const [usuario, setUsuario] = useState(datosFormulario.usuario);
   const [contrasena, setContrasena] = useState(datosFormulario.contrasena);
@@ -85,6 +87,7 @@ const FormularioRegistrarse = ({
   useEffect(() => {
     onDatosChange({
       ...datosFormulario,
+      nombre,
       email,
       usuario,
       contrasena,
@@ -169,6 +172,19 @@ const FormularioRegistrarse = ({
         <AgregarImagenRegistro
           onImagesSelected={handleImagesSelected}
           style={styles.botImag}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Image
+          source={require("../Imagenes/usuario.png")}
+          style={styles.logo}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre"
+          value={nombre}
+          onChangeText={setNombre}
+          onBlur={() => setEmailValido(validarEmail(nombre))}
         />
       </View>
       <View style={styles.inputContainer}>

@@ -71,9 +71,14 @@ import ServiciosDetalles from "../componentes/Serivicios/ServiciosDetalles";
 import PublicarServicio from "../Screens/PublicarServicio";
 import OptionModalService from "../componentes/Perfil/OptionModalService";
 import EditarPublicacionServicio from "../componentes/Perfil/EditarPublicacionServicio";
+<<<<<<< HEAD
 import AgregarImagenRegistro from "../componentes/AgregarImagenRegistro";
 import NotificacionesScreen from "../Screens/NotificacionesScreen";
 import Backup from "../Screens/Backup";
+=======
+import AgregarImagenRegistro from '../componentes/AgregarImagenRegistro';
+import Header from "../componentes/HeaderScreen";
+>>>>>>> origin/documentos
 
 const Stack = createNativeStackNavigator();
 

@@ -18,8 +18,8 @@ import ListaValoresTipoServicios from "../componentes/Serivicios/ListaValoresTip
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../src/aws-exports';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../src/aws-exports";
 Amplify.configure(awsconfig);
 
 export default function PublicarServicio({ setAnimalId, animalId }) {
@@ -57,15 +57,18 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
     const response = await fetch(uri);
     const blob = await response.blob();
     return blob;
-  }
+  };
 
   const uploadFile = async (file) => {
     const img = await fetchImageUri(file);
     return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
-      level: 'public',
+      level: "public",
       contentType: file.type,
       progressCallback(uploadProgress) {
-        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+        console.log(
+          "PROGRESS--",
+          uploadProgress.loaded + "/" + uploadProgress.total
+        );
       },
     })
       .then((res) => {
@@ -176,6 +179,36 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
     }
   };
 
+  useEffect(() => {
+    // Hacer la solicitud GET al servidor con el idService
+    const fetchServiceDetails = async () => {
+      try {
+        const response = await axios.get(
+          `https://buddy-app2.loca.lt/services/service/${idService}`,
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        );
+
+        // Manejar los datos de la respuesta aquí
+        const serviceDetails = response.data;
+        console.log("Detalles del servicio:", serviceDetails);
+        setTitle(serviceDetails[0].serviceTitle);
+        setDescription(serviceDetails[0].serviceDescription);
+        setAddress(serviceDetails[0].address);
+        console.log("titulo: ", title);
+      } catch (error) {
+        console.error("Error al obtener detalles del servicio:", error);
+      }
+    };
+
+    fetchServiceDetails();
+  }, []);
+
+  console.log("Titulo: ", title);
+
   const handleTipoServicioSeleccionado = (idServiceType) => {
     // Manejar el ID del tipo de servicio seleccionado aquí
     setSelectedServiceTypeId(idServiceType);
@@ -190,7 +223,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
     const openTime = `${formattedNumero1}:${formattedNumero2}:00`;
     const closeTime = `${formattedNumero3}:${formattedNumero4}:00`;
     const petTypesData = [
-      { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" }
+      { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" },
     ];
     const images = imageLink;
 
@@ -253,28 +286,28 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
     }
   };
 
-   //imagenes
+  //imagenes
 
-   const handleSubAddPost = async () => {
+  const handleSubAddPost = async () => {
     console.log("Al presionar el boton: ", selectedImages);
     try {
       if (selectedImages && selectedImages.length > 0) {
         console.log("Antes de subirlas: ", selectedImages);
         let imageUrls = [];
-        
+
         // Subir las imágenes a AWS S3 y obtener las URLs
         for (const selectedImage of selectedImages) {
           // Subir la imagen a Amazon S3 y obtener el enlace
           const awsImageKey = await uploadFile(selectedImage);
-          
+
           // Construye el enlace completo a la imagen en Amazon S3
           const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
-          
+
           // Guarda el enlace en el estado
           imageUrls.push(awsImageLink);
           console.log("Después de subirlas: ", imageUrls);
         }
-        
+
         // Continúa con la solicitud POST al backend
         await handlePublicarClick(imageUrls);
       } else {
@@ -282,7 +315,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
         await handlePublicarClick(null);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Maneja el error, si es necesario
     }
   };
@@ -291,7 +324,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen token={token} />
+      <Header token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publicá tu servicio</Text>

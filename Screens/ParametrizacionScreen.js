@@ -170,7 +170,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("http://buddy-app2.loca.lt.loca.lt/parameters/province/", newProvince)
+      .post("https://buddy-app2.loca.lt/parameters/province/", newProvince)
       .then((response) => {
         setSuccessModalVisible(true); // Mostrar el modal de éxito
         getProvinces(); // Actualizar la lista de provincias después de agregar
