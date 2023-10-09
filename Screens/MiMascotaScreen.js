@@ -135,184 +135,201 @@ export default function MiMascotaScreen() {
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Mi mascota</Text>
-        </View> 
-     
+        </View>
+
         <View style={styles.contenedor2}>
           {mascotas.map((mascota, index) => (
-            <View 
-              key={index} 
+            <View
+              key={index}
               style={[
                 styles.contenedor3,
-                { backgroundColor: colores[index % colores.length] }
+                { backgroundColor: colores[index % colores.length] },
               ]}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  idMascotaSeleccionada(mascota.idPet);
+                  toggleBotonesVisibles(mascota.idPet); // Usa la función para mostrar/ocultar los botones
+                }}
+                style={styles.subcontenedor3}
               >
-                <TouchableOpacity 
-                     onPress={() => {
-                      idMascotaSeleccionada(mascota.idPet);
-                      toggleBotonesVisibles(mascota.idPet); // Usa la función para mostrar/ocultar los botones
-                    }}
-                    
-                    style={styles.subcontenedor3}
-                >
+                <Image
+                  source={{ uri: mascota.image }}
+                  style={styles.imagMascota}
+                />
+                <Text style={styles.nombreMascota}>{mascota.petName}</Text>
+                <View style={styles.iconos}>
+                  <TouchableOpacity
+                    onPress={() => toggleModalEliminar(mascota.idPet)} // Pasa el idPet aquí
+                  >
                     <Image
-                            source={{ uri: mascota.image }}
-                            style={styles.imagMascota}
+                      source={require("../Imagenes/basurin.png")}
+                      style={styles.icono}
                     />
-                    <Text style={styles.nombreMascota}>
-                        {mascota.petName}
-                    </Text>
-                    <View style={styles.iconos}>
-                    <TouchableOpacity 
-                      onPress={() => toggleModalEliminar(mascota.idPet)} // Pasa el idPet aquí
-                    >
-                      <Image source={require('../Imagenes/basurin.png')} style={styles.icono} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => openEditarModal(mascota)}>
-                      <Image source={require('../Imagenes/editar.png')} style={styles.icono} />
-                    </TouchableOpacity>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => openEditarModal(mascota)}>
+                    <Image
+                      source={require("../Imagenes/editar.png")}
+                      style={styles.icono}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+              {/* Botones flotantes */}
 
-                    </View>
-                </TouchableOpacity> 
-                {/* Botones flotantes */}  
-      
-                {botonesVisibles[mascota.idPet] && ( // Muestra los botones solo si están visibles para la mascota actual
-                  <View style={styles.botonesFlotantes}>
-                    {/* Botón 1: Mis Vacunas */}
-                    <TouchableOpacity
-                    style={[styles.botonFlotante, { backgroundColor: colores[index % colores.length] }]}
+              {botonesVisibles[mascota.idPet] && ( // Muestra los botones solo si están visibles para la mascota actual
+                <View style={styles.botonesFlotantes}>
+                  {/* Botón 1: Mis Vacunas */}
+                  <TouchableOpacity
+                    style={[
+                      styles.botonFlotante,
+                      { backgroundColor: colores[index % colores.length] },
+                    ]}
                     onPress={() => {
-                      navigation.navigate('MisTurnos', {
+                      navigation.navigate("MisTurnos", {
                         mascotaId: mascota.idPet, // Pasa el ID de la mascota seleccionada
                         token: token,
                       });
                     }}
                   >
-                      <Image
-                              source={require('../Imagenes/calendario.png')}
-                              style={styles.botonFlot}
-                      />
-                    </TouchableOpacity>
+                    <Image
+                      source={require("../Imagenes/calendario.png")}
+                      style={styles.botonFlot}
+                    />
+                  </TouchableOpacity>
 
-                    {/* Botón 2: Mis Turnos */}
-                    <TouchableOpacity
-                      style={[styles.botonFlotante2, { backgroundColor: colores[index % colores.length] }]}
-                      onPress={() => {
-                        navigation.navigate('MisVacunas', {
-                          mascotaId: mascota.idPet, // Pasa el ID de la mascota seleccionada
-                          token: token,
-                        });
-                      }}
-                    >
-                      <Image
-                              source={require('../Imagenes/jeringuilla.png')}
-                              style={styles.botonFlot}
-                      />
-                    </TouchableOpacity>
-
-                    {/* Botón 3: Mi Información */}
-                    <TouchableOpacity
-                      style={[styles.botonFlotante, { backgroundColor: colores[index % colores.length] }]}
-                      onPress={() => {
-                        navigation.navigate('MiInfoImportante', {
-                          mascotaId: mascota.idPet, // Pasa el ID de la mascota seleccionada
-                          token: token,
-                        });
-                      }}
-                    >
-                      <Image
-                              source={require('../Imagenes/notas.png')}
-                              style={styles.botonFlot}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                )}      
-            </View> 
-             ))}
-            {/* Modal (tarjeta flotante Eliminar) */}
-            <Modal
-              transparent={true}
-              animationType="slide"
-              visible={showModalEliminar}
-              onRequestClose={() => toggleModalEliminar(null)} // Limpia el estado
-            >
-              <View style={styles.modalContainerEliminar}>
-                <View style={styles.modalContentEliminar}>
-                  <EliminarMascotaModal
-                    visible={showModalEliminar}
-                    onCancel={() => toggleModalEliminar(null)}
-                    onConfirm={eliminarMascota}
-                    mascotaId={selectedMascotaId} // Pasa el idPet almacenado en selectedMascotaId
-                  />
-                  
-                </View>
-              </View>
-            </Modal>
-
-            {/* Modal (tarjeta flotante Editar) */}
-            <Modal
-              transparent={true}
-              animationType="slide"
-              visible={showTarjetaEditar}
-            >
-              <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
+                  {/* Botón 2: Mis Turnos */}
                   <TouchableOpacity
+                    style={[
+                      styles.botonFlotante2,
+                      { backgroundColor: colores[index % colores.length] },
+                    ]}
                     onPress={() => {
-                      setShowTarjetaEditar(false);
-                      setSelectedMascota(null);
+                      navigation.navigate("MisVacunas", {
+                        mascotaId: mascota.idPet, // Pasa el ID de la mascota seleccionada
+                        token: token,
+                      });
                     }}
-                    style={styles.closeIcon}
                   >
-                  <Ionicons style={styles.iconoCruz} name="close-circle" size={32} color="gray"  />
-                </TouchableOpacity>
-                {/* Pasa la información de la mascota a EditarMascota */}
-                {selectedMascota && <EditarMascota mascota={selectedMascota} token={token} onCloseEditarMascota={toggleTarjetaEditar}/>}
-              </View>
-              
+                    <Image
+                      source={require("../Imagenes/jeringuilla.png")}
+                      style={styles.botonFlot}
+                    />
+                  </TouchableOpacity>
+
+                  {/* Botón 3: Mi Información */}
+                  <TouchableOpacity
+                    style={[
+                      styles.botonFlotante,
+                      { backgroundColor: colores[index % colores.length] },
+                    ]}
+                    onPress={() => {
+                      navigation.navigate("MiInfoImportante", {
+                        mascotaId: mascota.idPet, // Pasa el ID de la mascota seleccionada
+                        token: token,
+                      });
+                    }}
+                  >
+                    <Image
+                      source={require("../Imagenes/notas.png")}
+                      style={styles.botonFlot}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
-          </Modal>
-          
-           
-             
-           <View style={styles.contenedor3}>
-           <TouchableOpacity 
-                onPress={toggleTarjeta} // Cambia el estado al presionar el botón
-            >
-                <Image
-                    source={require('../Imagenes/agregar.png')}
-                    style={styles.imagAgregar}
-                />
-                <Text style={styles.nombreMascota}>
-                    Agregar una mascota
-                </Text>
-            </TouchableOpacity>
-  
-            </View>  
-            
-        </View>  
-        
-         {/* Modal AGREGAR (tarjeta flotante) */}
-         <Modal
+          ))}
+          {/* Modal (tarjeta flotante Eliminar) */}
+          <Modal
             transparent={true}
             animationType="slide"
-            visible={showTarjeta}
+            visible={showModalEliminar}
+            onRequestClose={() => toggleModalEliminar(null)} // Limpia el estado
+          >
+            <View style={styles.modalContainerEliminar}>
+              <View style={styles.modalContentEliminar}>
+                <EliminarMascotaModal
+                  visible={showModalEliminar}
+                  onCancel={() => toggleModalEliminar(null)}
+                  onConfirm={eliminarMascota}
+                  mascotaId={selectedMascotaId} // Pasa el idPet almacenado en selectedMascotaId
+                />
+              </View>
+            </View>
+          </Modal>
+
+          {/* Modal (tarjeta flotante Editar) */}
+          <Modal
+            transparent={true}
+            animationType="slide"
+            visible={showTarjetaEditar}
           >
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 <TouchableOpacity
                   onPress={() => {
-                    toggleTarjeta();
+                    setShowTarjetaEditar(false);
                     setSelectedMascota(null);
                   }}
                   style={styles.closeIcon}
                 >
-                  <Ionicons style={styles.iconoCruz} name="close-circle" size={32} color="gray" />
+                  <Ionicons
+                    style={styles.iconoCruz}
+                    name="close-circle"
+                    size={32}
+                    color="gray"
+                  />
                 </TouchableOpacity>
-                <NuevaMascota token={token} onCloseNuevaMascota={toggleNuevaMascotaModal} />
+                {/* Pasa la información de la mascota a EditarMascota */}
+                {selectedMascota && (
+                  <EditarMascota
+                    mascota={selectedMascota}
+                    token={token}
+                    onCloseEditarMascota={toggleTarjetaEditar}
+                  />
+                )}
               </View>
             </View>
           </Modal>
-      
+
+          <View style={styles.contenedor3}>
+            <TouchableOpacity
+              onPress={toggleTarjeta} // Cambia el estado al presionar el botón
+            >
+              <Image
+                source={require("../Imagenes/agregar.png")}
+                style={styles.imagAgregar}
+              />
+              <Text style={styles.nombreMascota}>Agregar una mascota</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Modal AGREGAR (tarjeta flotante) */}
+        <Modal transparent={true} animationType="slide" visible={showTarjeta}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TouchableOpacity
+                onPress={() => {
+                  toggleTarjeta();
+                  setSelectedMascota(null);
+                }}
+                style={styles.closeIcon}
+              >
+                <Ionicons
+                  style={styles.iconoCruz}
+                  name="close-circle"
+                  size={32}
+                  color="gray"
+                />
+              </TouchableOpacity>
+              <NuevaMascota
+                token={token}
+                onCloseNuevaMascota={toggleNuevaMascotaModal}
+              />
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );

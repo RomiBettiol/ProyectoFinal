@@ -1,28 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, Modal, Pressable } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
-import ListaValoresColor from '../Busqueda/ListaValoresColor';
-import ListaValoresAnimal from '../Busqueda/ListaValoresAnimal';
-import ListaValoresZona from '../Busqueda/ListaValoresZona';
-import ListaValoresRazaPerros from '../Busqueda/ListaValoresRazaPerros';
-import ListaValoresRazaGatos from '../Busqueda/ListaValoresRazaGatos';
-import Mascotas from '../Busqueda/Mascotas';
-import ListaValoresDiasMascota from '../MiMascota/ListaValoresDiasMascota';
-import ListaValoresMesesMascota from '../MiMascota/ListaValoresMesesMascota';
-import ListaValoresAñoMascota from '../MiMascota/ListaValoresAñoMascota';
-import AgregarImagen from '../AgregarImagen';
-import SuccessModal from './SuccessModal';
-import ErrorModal from './ErrorModal';
-import axios from 'axios'; // Importa la librería axios
-import { Dropdown } from 'react-native-element-dropdown';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Pressable,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker"; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
+import ListaValoresColor from "../Busqueda/ListaValoresColor";
+import ListaValoresAnimal from "../Busqueda/ListaValoresAnimal";
+import ListaValoresZona from "../Busqueda/ListaValoresZona";
+import ListaValoresRazaPerros from "../Busqueda/ListaValoresRazaPerros";
+import ListaValoresRazaGatos from "../Busqueda/ListaValoresRazaGatos";
+import Mascotas from "../Busqueda/Mascotas";
+import ListaValoresDiasMascota from "../MiMascota/ListaValoresDiasMascota";
+import ListaValoresMesesMascota from "../MiMascota/ListaValoresMesesMascota";
+import ListaValoresAñoMascota from "../MiMascota/ListaValoresAñoMascota";
+import AgregarImagen from "../AgregarImagen";
+import SuccessModal from "./SuccessModal";
+import ErrorModal from "./ErrorModal";
+import axios from "axios"; // Importa la librería axios
+import { Dropdown } from "react-native-element-dropdown";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../../src/aws-exports';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../../src/aws-exports";
 Amplify.configure(awsconfig);
 
-
-export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }) {
-  
+export default function NuevaMascota({
+  navigation,
+  token,
+  onCloseNuevaMascota,
+}) {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
@@ -44,13 +56,12 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
 
   const [linkAWS, setLinkAWS] = useState(null); // Nuevo estado para almacenar el enlace de la imagen en Amazon S3
 
-  
   ///// upload image ////
   const fetchImageUri = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
     return blob;
-  }
+  };
 
   ////end upload img ////
 
@@ -83,7 +94,8 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
     console.log(idPetType);
     console.log(idPetBreed);
     // Obtener tipos de mascotas
-    axios.get('https://buddy-app2.loca.lt/parameters/petType')
+    axios
+      .get("https://buddy-app2.loca.lt/parameters/petType")
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({
@@ -98,24 +110,24 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
       .catch((error) => {
         console.log("Error al obtener tipos de mascotas:", error);
       });
-      console.log(linkAWS)
-  
+    console.log(linkAWS);
   }, []);
 
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
     onCloseNuevaMascota(); // Cierra el modal NuevaMascota
   };
-  
-  
-  
+
   const uploadFile = async (file) => {
     const img = await fetchImageUri(file.uri);
     return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
-      level: 'public',
+      level: "public",
       contentType: file.type,
       progressCallback(uploadProgress) {
-        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+        console.log(
+          "PROGRESS--",
+          uploadProgress.loaded + "/" + uploadProgress.total
+        );
       },
     })
       .then((res) => {
@@ -128,11 +140,9 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
       });
   };
 
-
-  
   const handleImageSelected = (imageUri) => {
     setSelectedImage(imageUri); // Almacena la imagen seleccionada en el estado
-    console.log('hola imag ',selectedImage)
+    console.log("hola imag ", selectedImage);
   };
 
   const handleSubAddPet = async () => {
@@ -140,69 +150,70 @@ export default function NuevaMascota({ navigation, token, onCloseNuevaMascota  }
       if (selectedImage) {
         // Subir la imagen a Amazon S3 y obtener el enlace
         const awsImageKey = await uploadFile(selectedImage);
-  
+
         // Construye el enlace completo a la imagen en Amazon S3
         const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
-  
+
         // Guarda el enlace en el estado
         setLinkAWS(awsImageLink);
-  
+
         // Continúa con la solicitud POST al backend
         await sendPetData(awsImageLink);
       } else {
         // Si no hay imagen seleccionada, solo envía la solicitud POST sin el enlace de la imagen
         await sendPetData(null);
       }
-      
-    // Habilita el botón nuevamente después de dos segundos
-    setTimeout(() => {
-      setIsButtonDisabled(false);
-    }, 2000);
-  } catch (error) {
-    console.error('Error:', error);
-    // Maneja el error, si es necesario
-  }
-};
 
-const sendPetData = async (imageLink) => {
-  const authtoken = token;
-  const config = {
-    headers: {
-      'auth-token': authtoken,
-    },
+      // Habilita el botón nuevamente después de dos segundos
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Error:", error);
+      // Maneja el error, si es necesario
+    }
   };
 
-  const data = {
-    petName: petData.petName,
-    birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
-    idPetType: selectedAnimalId,
-    idPetBreed: selectedBreedId,
-    image: imageLink, // Agrega el enlace de la imagen al objeto data
+  const sendPetData = async (imageLink) => {
+    const authtoken = token;
+    const config = {
+      headers: {
+        "auth-token": authtoken,
+      },
+    };
+
+    const data = {
+      petName: petData.petName,
+      birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+      idPetType: selectedAnimalId,
+      idPetBreed: selectedBreedId,
+      image: imageLink, // Agrega el enlace de la imagen al objeto data
+    };
+
+    console.log(data);
+
+    const response = await axios.post(
+      "https://buddy-app2.loca.lt/mypet/pet/",
+      data,
+      config
+    );
+
+    console.log("Respuesta del servidor:", response.data);
+
+    toggleModal();
+
+    setAddPetSuccess(true);
   };
-
-  console.log(data);
-
-  const response = await axios.post('https://buddy-app2.loca.lt/mypet/pet/', data, config);
-
-  console.log('Respuesta del servidor:', response.data);
-
-  toggleModal();
-
-  setAddPetSuccess(true);
-};
 
   const options = {
-    title: 'Seleccionar imagen',
-    cancelButtonTitle: 'Cancelar',
-    takePhotoButtonTitle: 'Tomar foto',
-    chooseFromLibraryButtonTitle: 'Elegir de la galería',
-    mediaType: 'photo',
+    title: "Seleccionar imagen",
+    cancelButtonTitle: "Cancelar",
+    takePhotoButtonTitle: "Tomar foto",
+    chooseFromLibraryButtonTitle: "Elegir de la galería",
+    mediaType: "photo",
     quality: 1,
   };
 
-   
-
-  
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
@@ -228,14 +239,15 @@ const sendPetData = async (imageLink) => {
               <Image source={{ uri: linkAWS }} style={styles.selectedImage} />
             ) : (
               <>
-                <Image source={require('../../Imagenes/fotos.png')} style={styles.foto} />
+                <Image
+                  source={require("../../Imagenes/fotos.png")}
+                  style={styles.foto}
+                />
                 <Text style={styles.botonFoto}>Seleccionar foto</Text>
               </>
             )}
-        
-           
           </TouchableOpacity>
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Nombre</Text>
             <TextInput
               style={styles.inputTexto}
@@ -261,7 +273,7 @@ const sendPetData = async (imageLink) => {
               selectedValue={selectedYear}
             />
           </View>
-          
+
           <View style={styles.subtitulo}>
             <Text style={styles.label}>Tipo de Animal</Text>
           </View>
@@ -286,9 +298,13 @@ const sendPetData = async (imageLink) => {
           </View>
 
           <View style={styles.subcontenedor5}>
-            <TouchableOpacity style={styles.closeButton} onPress={handleSubAddPet} disabled={isButtonDisabled}>
-                <Text style={styles.closeButtonText}>Agregar</Text>
-            </TouchableOpacity>     
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={handleSubAddPet}
+              disabled={isButtonDisabled}
+            >
+              <Text style={styles.closeButtonText}>Agregar</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -404,11 +420,11 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   botonGaleria: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     height: 100,
-    width: '50%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "50%",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 30,
     marginTop: 30,
     elevation: 3,
@@ -429,31 +445,31 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     borderRadius: 20,
     padding: 25,
-    alignItems: 'center',
+    alignItems: "center",
     elevation: 5,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
   },
   modalButton: {
-    backgroundColor: '#EEE9E9',
+    backgroundColor: "#EEE9E9",
     borderRadius: 10,
     padding: 10,
     elevation: 2,
     marginTop: 10,
   },
   modalButtonText: {
-    color: 'grey',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "grey",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

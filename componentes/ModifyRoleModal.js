@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "center", // Esto centra los botones horizontalmente
   },

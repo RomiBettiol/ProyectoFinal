@@ -75,27 +75,30 @@ export default function AltaInformacion({ visible, onClose }) {
 
           <View style={[{ flexDirection: "row" }, styles.subcontenedor5]}>
             <TouchableOpacity
-                          style={styles.closeButton}
-                          onPress={async () => {
-                            console.log(data.informationDate) 
-                            setIsButtonDisabled1(true);
-                            try {
-                                                 
-                              const response = await axios.post(`https://buddy-app2.loca.lt/mypet/information/${mascotaId}`, data);
-                              console.log("console log en alta informacion")
-                              console.log('Respuesta del servidor:', response.data);
-                              setShowSuccessModal(true);
-                            } catch (error) {
-                              setShowErrorModal(true);
-                             
-                            }
-                            setTimeout(() => {
-                              setIsButtonDisabled1(false);
-                            }, 2000);
-                          }}
-                          disabled={isButtonDisabled1}
-                      >
-                          <Text style={styles.closeButtonText} disabled={isButtonDisabled1}>Aceptar</Text>
+              style={styles.closeButton}
+              onPress={async () => {
+                console.log(data.informationDate);
+                setIsButtonDisabled1(true);
+                try {
+                  const response = await axios.post(
+                    `https://buddy-app2.loca.lt/mypet/information/${mascotaId}`,
+                    data
+                  );
+                  console.log("console log en alta informacion");
+                  console.log("Respuesta del servidor:", response.data);
+                  setShowSuccessModal(true);
+                } catch (error) {
+                  setShowErrorModal(true);
+                }
+                setTimeout(() => {
+                  setIsButtonDisabled1(false);
+                }, 2000);
+              }}
+              disabled={isButtonDisabled1}
+            >
+              <Text style={styles.closeButtonText} disabled={isButtonDisabled1}>
+                Aceptar
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Text style={styles.closeButtonText}>Cancelar</Text>

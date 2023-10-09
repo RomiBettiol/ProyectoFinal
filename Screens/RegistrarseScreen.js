@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
-import { Image } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import FormularioRegistrarse from '../componentes/FormularioRegistrarse';
-import axios, { AxiosError } from 'axios';
-import BotonImagenRegis from '../componentes/BotonImagenRegis';
+import React, { useState } from "react";
+import { StyleSheet, View, Text, TouchableOpacity, Modal } from "react-native";
+import * as ImagePicker from "expo-image-picker"; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
+import { Image } from "react-native-elements";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import FormularioRegistrarse from "../componentes/FormularioRegistrarse";
+import axios, { AxiosError } from "axios";
+import BotonImagenRegis from "../componentes/BotonImagenRegis";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../src/aws-exports';
-import AgregarImagen from '../componentes/AgregarImagen';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../src/aws-exports";
+import AgregarImagen from "../componentes/AgregarImagen";
 Amplify.configure(awsconfig);
-
-
 
 export function RegistrarseScreen({ navigation }) {
   const [formValid, setFormValid] = useState(false);
@@ -20,34 +18,37 @@ export function RegistrarseScreen({ navigation }) {
   const [showAlertServer, setShowAlertServer] = React.useState(false); // Estado para mostrar/ocultar el cuadro de diálogo personalizado del back-end
   const [error, setError] = React.useState("");
   const [datosFormulario, setDatosFormulario] = useState({
-    nombre: '',
-    email: '',
-    usuario: '',
-    contrasena: '',
-    contrasena2: '',
-    image:'',
+    nombre: "",
+    email: "",
+    usuario: "",
+    contrasena: "",
+    contrasena2: "",
+    image: "",
   });
 
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const handleSubmit = async () => {
-    
     if (formValid) {
       const data = {
         userName: datosFormulario.usuario,
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
         name: datosFormulario.nombre,
-        image:datosFormulario.image,
-      }
+        image: datosFormulario.image,
+      };
 
       // Hacer la petición POST al backend usando axios
       try {
-        const response = await axios.post('https://buddy-app2.loca.lt/security/user/register', data, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await axios.post(
+          "https://buddy-app2.loca.lt/security/user/register",
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.status === 201) {
           console.log("Registro exitoso:", response.data);
           navigation.navigate("ConfirmacionRegistroScreen");

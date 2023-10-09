@@ -9,8 +9,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
-import { useNavigation } from '@react-navigation/native';
-
+import { useNavigation } from "@react-navigation/native";
 
 const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
   const route = useRoute();
@@ -19,7 +18,6 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
   const [title, setTitle] = useState(""); // Estado para el título
   const [description, setDescription] = useState(""); // Estado para la descripción
   const navigation = useNavigation();
-
 
   console.log("RatingModal: ", token);
 
@@ -64,7 +62,7 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
 
     // Cerrar el modal después de enviar la calificación
     onClose();
-    navigation.navigate('HomeScreen', {token});
+    navigation.navigate("HomeScreen", { token });
   };
 
   return (

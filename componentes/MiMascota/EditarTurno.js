@@ -78,7 +78,9 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
 
     console.log(turno.idTurn);
     try {
-        const response = await axios.put(`https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,{
+      const response = await axios.put(
+        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
+        {
           titleTurn: updatedData.titleTurn,
           descriptionTurn: updatedData.descriptionTurn,
           turnDate: updatedData.turnDate,
@@ -166,26 +168,28 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
               selectedValue={selectedYear}
             />
           </View>
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor5]}>
-          <TouchableOpacity
-                          style={styles.closeButton}
-                          onPress={async () => {
-                            console.log('hora: ',hora) 
-                            console.log('fecha y hora: ',turnData.turnDate) 
-                           
-                            try {
-                                     
-                              const response = await axios.put(`https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`, updatedData);
-                              console.log('Respuesta del servidor:', response.data);
-                              setShowSuccessModal(true);
-                            } catch (error) {
-                              setShowErrorModal(true);
-                            }
-                           // setOverlayVisible(false); // Cierra el overlay después de eliminar
-                          }}
-                          disabled={isButtonDisabled}
-                      >
-                          <Text style={styles.closeButtonText}>Aceptar</Text>
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor5]}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={async () => {
+                console.log("hora: ", hora);
+                console.log("fecha y hora: ", turnData.turnDate);
+
+                try {
+                  const response = await axios.put(
+                    `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
+                    updatedData
+                  );
+                  console.log("Respuesta del servidor:", response.data);
+                  setShowSuccessModal(true);
+                } catch (error) {
+                  setShowErrorModal(true);
+                }
+                // setOverlayVisible(false); // Cierra el overlay después de eliminar
+              }}
+              disabled={isButtonDisabled}
+            >
+              <Text style={styles.closeButtonText}>Aceptar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Text style={styles.closeButtonText}>Cancelar</Text>

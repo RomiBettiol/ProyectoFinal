@@ -93,15 +93,9 @@ const ListaServiciosScreen = () => {
       } else {
         setResponseMessage(response.data.message);
       }
-
-      setTimeout(() => {
-        setConfirming(false);
-        setConfirmationModalVisible(false);
-        setServiceId(null);
-      }, 2000);
-      return;
     } catch (error) {
       console.error("Error al cambiar de estado al servicio:", error);
+    } finally {
       setTimeout(() => {
         setConfirming(false);
         setConfirmationModalVisible(false);
@@ -112,11 +106,12 @@ const ListaServiciosScreen = () => {
 
   const renderItem = ({ item }) => {
     const isServiceActive = item.serviceStateName === "ACTIVO";
+    const imagenes = JSON.parse(item.images);
 
     return (
       <View style={styles.serviceItemContainer}>
         <View style={styles.serviceItem}>
-          <Image source={MessiImage} style={styles.serviceImage} />
+          <Image source={{ uri: imagenes[0] }} style={styles.serviceImage} />
           <View style={styles.serviceInfo}>
             <Text style={styles.serviceName}>{item.serviceTitle}</Text>
             <Text style={styles.serviceInfoText}>{item.emailService}</Text>

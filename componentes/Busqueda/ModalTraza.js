@@ -18,7 +18,7 @@ export default function ModalTraza({ navigation, route }) {
   const [userNameTraza, setUserNameTraza] = useState("");
   const [mapRegion, setMapRegion] = useState(null);
   const [markers, setMarkers] = useState([]);
-  
+
   useEffect(() => {
     if (traces.length > 0 && user && initialLocation) {
       // Inicializa el mapa aquí
@@ -27,14 +27,15 @@ export default function ModalTraza({ navigation, route }) {
         latitudeDelta: 0.02,
         longitudeDelta: 0.02,
       });
-      setMarkers(traces.map(trace => ({
-        latitude: trace.latitude,
-        longitude: trace.longitude,
-      })));
+      setMarkers(
+        traces.map((trace) => ({
+          latitude: trace.latitude,
+          longitude: trace.longitude,
+        }))
+      );
     }
   }, [traces, user, initialLocation]);
-  
-  
+
   console.log("ModalTraza: ", token);
   console.log("userName: ", userNamePublicacion);
 

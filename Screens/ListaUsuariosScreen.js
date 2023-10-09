@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
-import MessiImage from "../Imagenes/MESSI.jpg";
 import ModifyRoleModal from "../componentes/ModifyRoleModal";
 import HeaderScreen from "../componentes/HeaderScreen";
 
@@ -145,7 +144,7 @@ const ListaUsuariosScreen = () => {
     return (
       <View style={styles.userItemContainer}>
         <View style={styles.userItem}>
-          <Image source={MessiImage} style={styles.userImage} />
+          <Image source={{ uri: item.image }} style={styles.userImage} />
           <View style={styles.userInfo}>
             <Text style={styles.userName}>{item.userName}</Text>
             <Text style={styles.userInfoText}>{item.mail}</Text>

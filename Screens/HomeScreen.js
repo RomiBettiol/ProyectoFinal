@@ -130,7 +130,7 @@ export default function HomeScreen({ navigation }) {
       console.error("Error al obtener los reportes:", error);
     }
   }; // No hay dependencias, se ejecutará en cada renderizado del componente
-  
+
   useFocusEffect(
     React.useCallback(() => {
       obtenerPermisos();
@@ -156,15 +156,15 @@ export default function HomeScreen({ navigation }) {
         { headers: { "auth-token": token } }
       );
 
-      if (!response.data.permisos[0]) {
+      if (!response.data.permissions[0]) {
         return;
       }
 
-      const permisos = JSON.stringify(response.data.permisos);
+      const permisos = JSON.stringify(response.data.permissions);
 
       await AsyncStorage.setItem("permisos", permisos);
 
-      setPermisos(response.data.permisos);
+      setPermisos(response.data.permissions);
 
       return;
     } catch (error) {

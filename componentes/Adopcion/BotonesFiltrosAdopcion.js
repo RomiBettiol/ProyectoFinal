@@ -128,7 +128,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
-      .get('https://buddy-app2.loca.lt/parameters/locality/')
+      .get("https://buddy-app2.loca.lt/parameters/locality/")
       .then((response) => {
         if (response.data && response.data.localities) {
           setLocalities(response.data.localities);
@@ -142,7 +142,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
-      .get('https://buddy-app2.loca.lt/parameters/petColor/')
+      .get("https://buddy-app2.loca.lt/parameters/petColor/")
       .then((response) => {
         if (response.data && response.data.petColors) {
           setPetColors(response.data.petColors);
@@ -156,7 +156,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get('https://buddy-app2.loca.lt/parameters/petBreed/')
+      .get("https://buddy-app2.loca.lt/parameters/petBreed/")
       .then((response) => {
         if (response.data && response.data.petBreeds) {
           setAvailableBreeds(
@@ -263,12 +263,12 @@ const BotonesFiltrosAdopcion = () => {
           }
           onLongPress={() => handleReportModal(item)}
         >
-          <View style={[{ flexDirection: 'row' }, styles.itemInformacion]}>
-          {imageUri && <Image source={{ uri: imageUri }} />}
-          <Image
-            source={{uri: item.images[0]}}
-            style={styles.imagenPublicacion}
-          />
+          <View style={[{ flexDirection: "row" }, styles.itemInformacion]}>
+            {imageUri && <Image source={{ uri: imageUri }} />}
+            <Image
+              source={{ uri: item.images[0] }}
+              style={styles.imagenPublicacion}
+            />
             <View style={styles.informacion}>
               <View style={[{ flexDirection: "row" }, styles.tituloView]}>
                 <Text style={styles.tituloPublicaciones}>{item.title}</Text>

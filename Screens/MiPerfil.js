@@ -13,7 +13,7 @@ import Header from "../componentes/HeaderScreen";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import BotonFlotante from "../componentes/BotonFlotante";
-import OptionModalService from '../componentes/Perfil/OptionModalService';
+import OptionModalService from "../componentes/Perfil/OptionModalService";
 
 export default function MiPerfil({ navigation }) {
   const route = useRoute();
@@ -27,6 +27,7 @@ export default function MiPerfil({ navigation }) {
   const [newName, setNewName] = useState("");
   const [newUserName, setNewUserName] = useState("");
   const [user, setUser] = useState("");
+  const [userImage, setUserImage] = useState("");
   const [passwordMismatchError, setPasswordMismatchError] = useState(false);
   const [requisitosContrasena, setRequisitosContrasena] = useState(false);
   const [contrasenaIgual, setContrasenaIgual] = useState(false);
@@ -53,12 +54,12 @@ export default function MiPerfil({ navigation }) {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isModalServiceVisible, setModalServiceVisible] = useState(false);
 
-  console.log("perfil: ", token);
+  // console.log("perfil: ", token);
 
   //Trae info del usuario
   useEffect(() => {
     axios
-      .get(`  https://romibettiol.loca.lt/security/user/`, {
+      .get(`https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -67,20 +68,16 @@ export default function MiPerfil({ navigation }) {
         setUser(response.data);
         setNewName(response.data[0].name);
         setNewUserName(response.data[0].userName);
-
         // Declarar la constante idUser
         setIdUser(response.data[0].idUser);
+        setUserImage(response.data[0].image);
 
         // Luego puedes usar idUser como desees en tu componente.
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, [token, idUser]);
 
-  console.log("idUser1: ", idUser);
-
-  useEffect(() => {
     axios
       .get(`http://romibettiol.loca.lt/publications/publication/ByUser`, {
         headers: {
@@ -92,10 +89,10 @@ export default function MiPerfil({ navigation }) {
         console.log("Publicaciones", response.data);
       })
       .catch((error) => {
-        console.error("Error fetching user publications:", error);
+        console.log("Error fetching user publications:", error);
       });
 
-      axios
+    axios
       .get(`http://romibettiol.loca.lt/services/service/ByUser`, {
         headers: {
           "auth-token": token,
@@ -106,12 +103,9 @@ export default function MiPerfil({ navigation }) {
         console.log("Publicaciones", response.data);
       })
       .catch((error) => {
-        console.error("Error fetching user publications:", error);
+        console.log("Error fetching user publications:", error);
       });
-
-  }, []);
-
-  console.log("idUser: ", idUser);
+  }, [token, idUser]);
 
   const openModalService = () => {
     setModalServiceVisible(true);
@@ -423,10 +417,7 @@ export default function MiPerfil({ navigation }) {
       <Header />
       <ScrollView>
         <View style={[styles.principal, { flexDirection: "row" }]}>
-          <Image
-            source={require("../Imagenes/usuario.png")}
-            style={styles.imagenUsuario}
-          />
+          <Image source={{ uri: userImage }} style={styles.imagenUsuario} />
           <View>
             <Text style={styles.titulo}>MI PERFIL</Text>
             {user ? (
@@ -444,44 +435,49 @@ export default function MiPerfil({ navigation }) {
         </View>
         <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
         {userService.map((servicio, index) => (
-          <View
-              style={[styles.publicationContainer, { flexDirection: "row" }]}
-            >
-              <Image
-                source={require("../Imagenes/imagenPublicaciones.jpg")}
-                style={styles.imagenPublicaciones}
-              />
-              <View>
-                <View
-                  style={[
-                    styles.informacionPublicacion,
-                    { flexDirection: "row" },
-                  ]}
+          <View style={[styles.publicationContainer, { flexDirection: "row" }]}>
+            <Image
+              source={require("../Imagenes/imagenPublicaciones.jpg")}
+              style={styles.imagenPublicaciones}
+            />
+            <View>
+              <View
+                style={[
+                  styles.informacionPublicacion,
+                  { flexDirection: "row" },
+                ]}
+              >
+                <TouchableOpacity style={styles.botonInformacion}>
+                  <Text>Servicio</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("OptionModalService", {
+                      idService: servicio.idService,
+                      token,
+                    })
+                  }
                 >
-                  <TouchableOpacity style={styles.botonInformacion}>
-                    <Text>Servicio</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate('OptionModalService', { idService: servicio.idService, token })}>
-                    <Image
-                      source={require("../Imagenes/opciones.png")}
-                      style={styles.imagenOpcionesPublicaciones}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.publicationTitle}>{servicio.serviceTitle}</Text>
-                <View
-                  style={[styles.containerfiltros, { flexDirection: "row" }]}
-                >
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("../Imagenes/marcador-de-posicion.png")}
-                      style={styles.imagenFiltros}
-                    />
-                    <Text>{servicio.address}</Text>
-                  </View>
+                  <Image
+                    source={require("../Imagenes/opciones.png")}
+                    style={styles.imagenOpcionesPublicaciones}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.publicationTitle}>
+                {servicio.serviceTitle}
+              </Text>
+              <View style={[styles.containerfiltros, { flexDirection: "row" }]}>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("../Imagenes/marcador-de-posicion.png")}
+                    style={styles.imagenFiltros}
+                  />
+                  <Text>{servicio.address}</Text>
                 </View>
               </View>
-            </View>  
+            </View>
+          </View>
         ))}
         {userPublications.adoptions &&
           userPublications.adoptions.length > 0 &&
@@ -982,6 +978,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     marginRight: 10,
+    borderRadius: 35,
   },
   titulo: {
     marginLeft: 15,

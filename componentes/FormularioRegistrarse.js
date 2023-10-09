@@ -1,14 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { TextInput, Text, View, Image, StyleSheet ,Modal, ScrollView, Pressable } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
-import BotonImagenRegis from './BotonImagenRegis';
+import React, { useState, useEffect } from "react";
+import {
+  TextInput,
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Modal,
+  ScrollView,
+  Pressable,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker"; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
+import BotonImagenRegis from "./BotonImagenRegis";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../src/aws-exports';
-import AgregarImagenRegistro from '../componentes/AgregarImagenRegistro';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../src/aws-exports";
+import AgregarImagenRegistro from "../componentes/AgregarImagenRegistro";
 Amplify.configure(awsconfig);
 
-const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChange }) => {
+const FormularioRegistrarse = ({
+  onFormValidChange,
+  datosFormulario,
+  onDatosChange,
+}) => {
   const [email, setEmail] = useState(datosFormulario.email);
   const [usuario, setUsuario] = useState(datosFormulario.usuario);
   const [contrasena, setContrasena] = useState(datosFormulario.contrasena);
@@ -26,22 +39,25 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
   ]);
 
   //donde guardo las imagenes
-  const [selectedImages, setSelectedImages] = useState('');
+  const [selectedImages, setSelectedImages] = useState("");
 
   ///// upload image ////
   const fetchImageUri = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
     return blob;
-  }
+  };
 
   const uploadFile = async (file) => {
     const img = await fetchImageUri(file);
     return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
-      level: 'public',
+      level: "public",
       contentType: file.type,
       progressCallback(uploadProgress) {
-        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+        console.log(
+          "PROGRESS--",
+          uploadProgress.loaded + "/" + uploadProgress.total
+        );
       },
     })
       .then((res) => {
@@ -53,7 +69,7 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
         throw e; // Lanza una excepción para manejar errores en la función llamante
       });
   };
-    // Función para manejar la selección de imágenes
+  // Función para manejar la selección de imágenes
   const handleImagesSelected = (images) => {
     console.log("probando esto: ", images);
     setSelectedImages(images);
@@ -64,7 +80,7 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
   useEffect(() => {
     setFormValid(isFormValid());
     onFormValidChange(isFormValid());
-  }, [nombre, email, usuario, contrasena, contrasena2, image, onFormValidChange]);
+  }, [email, usuario, contrasena, contrasena2, image, onFormValidChange]);
 
   useEffect(() => {
     onDatosChange({
@@ -75,8 +91,7 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
       contrasena2,
       image,
     });
-  }, [nombre, email, usuario, contrasena, contrasena2, image, onDatosChange]);
-
+  }, [email, usuario, contrasena, contrasena2, image, onDatosChange]);
 
   const verificarRequisitosContrasena = (contrasena) => {
     const regexNumero = /\d/;
@@ -106,17 +121,16 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
 
   const isFormValid = () => {
     return (
-      nombre.trim() !== '' &&
-      email.trim() !== '' &&
-      usuario.trim() !== '' &&
-      contrasena.trim() !== '' &&
-      image.trim() !== '' &&
+      // nombre.trim() !== '' &&
+      email.trim() !== "" &&
+      usuario.trim() !== "" &&
+      contrasena.trim() !== "" &&
+      image.trim() !== "" &&
       contrasena === contrasena2 &&
       emailValido &&
       requisitosContrasena.every((requisito) => requisito.cumplido)
     );
   };
-
 
   //imagenes
 
@@ -125,36 +139,37 @@ const FormularioRegistrarse = ({ onFormValidChange, datosFormulario, onDatosChan
     try {
       if (selectedImages && selectedImages.length > 0) {
         console.log("Antes de subirlas: ", selectedImages);
-        
-        
-        // Subir las imágenes a AWS S3 y obtener las URLs
-        
-          // Subir la imagen a Amazon S3 y obtener el enlace
-          const awsImageKey = await uploadFile(selectedImages);
-          
-          // Construye el enlace completo a la imagen en Amazon S3
-          const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
-          
-          // Guarda el enlace en el estado
-          
-          console.log("Después de subirlas: ", awsImageLink);
 
-          setImage(awsImageLink);
-          console.log("Después de settearlas a image: ", image);
-        
-      } 
+        // Subir las imágenes a AWS S3 y obtener las URLs
+
+        // Subir la imagen a Amazon S3 y obtener el enlace
+        const awsImageKey = await uploadFile(selectedImages);
+
+        // Construye el enlace completo a la imagen en Amazon S3
+        const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
+
+        // Guarda el enlace en el estado
+
+        console.log("Después de subirlas: ", awsImageLink);
+
+        setImage(awsImageLink);
+        console.log("Después de settearlas a image: ", image);
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Maneja el error, si es necesario
     }
   };
 
-//FIN imagenes
+  //FIN imagenes
 
   return (
     <View style={styles.contenedor2}>
       <View style={styles.botContainer}>
-        <AgregarImagenRegistro onImagesSelected={handleImagesSelected} style={styles.botImag}/>
+        <AgregarImagenRegistro
+          onImagesSelected={handleImagesSelected}
+          style={styles.botImag}
+        />
       </View>
       <View style={styles.inputContainer}>
         <Image
@@ -320,16 +335,13 @@ const styles = StyleSheet.create({
   },
 
   botContainer: {
-    alignContent: 'center',
-    width:300,
-    justifyContent: 'center',
-    alignItems: 'center',
-   
-
+    alignContent: "center",
+    width: 300,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  botImag:{
-    backgroundColor: '#ffffff',
-    
+  botImag: {
+    backgroundColor: "#ffffff",
   },
 });
 

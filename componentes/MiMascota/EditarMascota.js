@@ -1,25 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity,Image, Modal, Pressable } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
-import ListaValoresDiasMascota from '../MiMascota/ListaValoresDiasMascota';
-import ListaValoresMesesMascota from '../MiMascota/ListaValoresMesesMascota';
-import ListaValoresAñoMascota from '../MiMascota/ListaValoresAñoMascota';
-import ListaValoresRazaPerros from '../Busqueda/ListaValoresRazaPerros';
-import ListaValoresAnimal from '../Busqueda/ListaValoresAnimal';
-import AgregarImagen from '../AgregarImagen';
-import axios from 'axios';
-import SuccessModal from './SuccessModal';
-import ErrorModal from './ErrorModal';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Pressable,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker"; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
+import ListaValoresDiasMascota from "../MiMascota/ListaValoresDiasMascota";
+import ListaValoresMesesMascota from "../MiMascota/ListaValoresMesesMascota";
+import ListaValoresAñoMascota from "../MiMascota/ListaValoresAñoMascota";
+import ListaValoresRazaPerros from "../Busqueda/ListaValoresRazaPerros";
+import ListaValoresAnimal from "../Busqueda/ListaValoresAnimal";
+import AgregarImagen from "../AgregarImagen";
+import axios from "axios";
+import SuccessModal from "./SuccessModal";
+import ErrorModal from "./ErrorModal";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../../src/aws-exports';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../../src/aws-exports";
 Amplify.configure(awsconfig);
 
-export default function EditarMascota({ navigation, mascota, token, onCloseEditarMascota}) {
-  const [nombre, setNombre] = useState(mascota.petName || '');
-  const [raza, setRaza] = useState(mascota.petBreed || '');
-  const [tipo, setTipo] = useState(mascota.petType|| '');
-  const [selectedMonth, setSelectedMonth] = useState(mascota.birthDate.month || null); // Agregar estados para día y año
+export default function EditarMascota({
+  navigation,
+  mascota,
+  token,
+  onCloseEditarMascota,
+}) {
+  const [nombre, setNombre] = useState(mascota.petName || "");
+  const [raza, setRaza] = useState(mascota.petBreed || "");
+  const [tipo, setTipo] = useState(mascota.petType || "");
+  const [selectedMonth, setSelectedMonth] = useState(
+    mascota.birthDate.month || null
+  ); // Agregar estados para día y año
   const [selectedDay, setSelectedDay] = useState(mascota.birthDate.day || null);
   const [selectedYear, setSelectedYear] = useState(
     mascota.birthDate.year || null
@@ -34,9 +52,8 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
   const [idPetBreed, setIdPetBreed] = useState("");
   const [idPetType, setIdPetType] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [selectedImage, setSelectedImage] = React.useState(mascota.image || '');
-  const [linkAWS, setLinkAWS] = useState(mascota.image || ''); // Nuevo estado para almacenar el enlace de la imagen en Amazon S3
- 
+  const [selectedImage, setSelectedImage] = React.useState(mascota.image || "");
+  const [linkAWS, setLinkAWS] = useState(mascota.image || ""); // Nuevo estado para almacenar el enlace de la imagen en Amazon S3
 
   const updateMascota = async () => {
     setIsButtonDisabled(true);
@@ -87,7 +104,8 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
     console.log(tipo);
     console.log(raza);
     // Obtener tipos de mascotas
-    axios.get('https://buddy-app2.loca.lt/parameters/petType')
+    axios
+      .get("https://buddy-app2.loca.lt/parameters/petType")
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({
@@ -104,7 +122,8 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
       });
 
     // Obtener razas de mascotas
-    axios.get('https://buddy-app2.loca.lt/parameters/petBreed')
+    axios
+      .get("https://buddy-app2.loca.lt/parameters/petBreed")
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petBreedOptions = response.data.petBreeds.map((petBreed) => ({
@@ -121,7 +140,6 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
       });
   }, []);
 
-
   // imagen
 
   ///// upload image ////
@@ -129,15 +147,18 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
     const response = await fetch(uri);
     const blob = await response.blob();
     return blob;
-  }
+  };
 
   const uploadFile = async (file) => {
     const img = await fetchImageUri(file.uri);
     return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
-      level: 'public',
+      level: "public",
       contentType: file.type,
       progressCallback(uploadProgress) {
-        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+        console.log(
+          "PROGRESS--",
+          uploadProgress.loaded + "/" + uploadProgress.total
+        );
       },
     })
       .then((res) => {
@@ -155,34 +176,34 @@ export default function EditarMascota({ navigation, mascota, token, onCloseEdita
       if (selectedImage) {
         // Subir la imagen a Amazon S3 y obtener el enlace
         const awsImageKey = await uploadFile(selectedImage);
-  
+
         // Construye el enlace completo a la imagen en Amazon S3
         const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
-  
+
         // Guarda el enlace en el estado
-       
+
         setLinkAWS(awsImageLink);
-  
+
         // Continúa con la solicitud POST al backend
         await sendPetData(awsImageLink);
       } else {
         // Si no hay imagen seleccionada, solo envía la solicitud POST sin el enlace de la imagen
         await sendPetData(null);
       }
-      
-    // Habilita el botón nuevamente después de dos segundos
-    setTimeout(() => {
-      setIsButtonDisabled(false);
-    }, 2000);
-  } catch (error) {
-    console.error('Error:', error);
-    // Maneja el error, si es necesario
-  }
-};
 
-const sendPetData = async (imageLink) => {
-  const authtoken = token;
-  setIsButtonDisabled(true);
+      // Habilita el botón nuevamente después de dos segundos
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Error:", error);
+      // Maneja el error, si es necesario
+    }
+  };
+
+  const sendPetData = async (imageLink) => {
+    const authtoken = token;
+    setIsButtonDisabled(true);
     const idPet = mascota.idPet; // Obtén la ID de la mascota desde los props
     const updatedData = {
       petName: nombre,
@@ -194,28 +215,27 @@ const sendPetData = async (imageLink) => {
       // Otras propiedades que quieras actualizar
       birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
       image: imageLink,
-      
     };
-    console.log({idPet})
-    console.log(updatedData)
+    console.log({ idPet });
+    console.log(updatedData);
     try {
-      const response = await axios.put(`https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,{
-        headers: {
-          'auth-token': token
-        },
-        
-        petName: updatedData.petName,
-        birthDate: updatedData.birthDate,
-        idPetType: updatedData.idPetType,
-        idPetBreed: updatedData.idPetBreed,
-        image:updatedData.image,
-        // Otros datos que puedas necesitar
-      
-      }
-      
+      const response = await axios.put(
+        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+
+          petName: updatedData.petName,
+          birthDate: updatedData.birthDate,
+          idPetType: updatedData.idPetType,
+          idPetBreed: updatedData.idPetBreed,
+          image: updatedData.image,
+          // Otros datos que puedas necesitar
+        }
       );
       setShowSuccessModal(true);
-      console.log(response.data); 
+      console.log(response.data);
       console.log(response.data); // Mensaje de éxito desde el backend
       // Puedes hacer algo aquí después de la actualización exitosa, como navegar a otra pantalla
     } catch (error) {
@@ -225,25 +245,22 @@ const sendPetData = async (imageLink) => {
       setIsButtonDisabled(false);
     }, 2000);
 
-  console.log('Respuesta del servidor:', response.data);
+    console.log("Respuesta del servidor:", response.data);
 
-  toggleModal();
+    toggleModal();
 
-  setAddPetSuccess(true);
-};
+    setAddPetSuccess(true);
+  };
 
   const options = {
-    title: 'Seleccionar imagen',
-    cancelButtonTitle: 'Cancelar',
-    takePhotoButtonTitle: 'Tomar foto',
-    chooseFromLibraryButtonTitle: 'Elegir de la galería',
-    mediaType: 'photo',
+    title: "Seleccionar imagen",
+    cancelButtonTitle: "Cancelar",
+    takePhotoButtonTitle: "Tomar foto",
+    chooseFromLibraryButtonTitle: "Elegir de la galería",
+    mediaType: "photo",
     quality: 1,
   };
 
-   
-
-  
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
@@ -265,19 +282,20 @@ const sendPetData = async (imageLink) => {
       <View style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>EDITAR MASCOTA</Text>
-            <TouchableOpacity style={styles.botonGaleria} onPress={openGallery}>
-              {selectedImage ? (
-                <Image source={{ uri: linkAWS }} style={styles.selectedImage} />
-              ) : (
-                <>
-                  <Image source={require('../../Imagenes/fotos.png')} style={styles.foto} />
-                  <Text style={styles.botonFoto}>Seleccionar foto</Text>
-                </>
-              )}
-          
-            
-            </TouchableOpacity>
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
+          <TouchableOpacity style={styles.botonGaleria} onPress={openGallery}>
+            {selectedImage ? (
+              <Image source={{ uri: linkAWS }} style={styles.selectedImage} />
+            ) : (
+              <>
+                <Image
+                  source={require("../../Imagenes/fotos.png")}
+                  style={styles.foto}
+                />
+                <Text style={styles.botonFoto}>Seleccionar foto</Text>
+              </>
+            )}
+          </TouchableOpacity>
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Nombre</Text>
             <TextInput
               style={styles.inputTexto}
@@ -438,11 +456,11 @@ const styles = StyleSheet.create({
   },
 
   botonGaleria: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     height: 100,
-    width: '50%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "50%",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 30,
     marginTop: 30,
     elevation: 3,
@@ -463,31 +481,31 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     borderRadius: 20,
     padding: 25,
-    alignItems: 'center',
+    alignItems: "center",
     elevation: 5,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
   },
   modalButton: {
-    backgroundColor: '#EEE9E9',
+    backgroundColor: "#EEE9E9",
     borderRadius: 10,
     padding: 10,
     elevation: 2,
     marginTop: 10,
   },
   modalButtonText: {
-    color: 'grey',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "grey",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

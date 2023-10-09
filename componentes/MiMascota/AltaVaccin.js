@@ -159,23 +159,27 @@ export default function AltaVaccin({ visible, onClose }) {
                   return; // Si el botón está deshabilitado, no hacer nada
                 }
 
-                            setIsButtonDisabled(true); // Deshabilitar el botón
-                            try {
-                                                 
-                              const response = await axios.post(`https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`, data);
-                              console.log('Respuesta del servidor:', response.data);
-                              setShowSuccessModal(true);
-                            } catch (error) {
-                              setShowErrorModal(true);
-                            }
-                            setTimeout(() => {
-                              setIsButtonDisabled(false); // Habilitar el botón nuevamente después de 2 segundos
-                            }, 2000);
-                          //  setOverlayVisible(false); // Cierra el overlay después de eliminar
-                          }}
-                          disabled={isButtonDisabled && isButtonDisabled1}
-                      >
-                          <Text style={styles.closeButtonText} disabled={isButtonDisabled1}>Aceptar</Text>
+                setIsButtonDisabled(true); // Deshabilitar el botón
+                try {
+                  const response = await axios.post(
+                    `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
+                    data
+                  );
+                  console.log("Respuesta del servidor:", response.data);
+                  setShowSuccessModal(true);
+                } catch (error) {
+                  setShowErrorModal(true);
+                }
+                setTimeout(() => {
+                  setIsButtonDisabled(false); // Habilitar el botón nuevamente después de 2 segundos
+                }, 2000);
+                //  setOverlayVisible(false); // Cierra el overlay después de eliminar
+              }}
+              disabled={isButtonDisabled && isButtonDisabled1}
+            >
+              <Text style={styles.closeButtonText} disabled={isButtonDisabled1}>
+                Aceptar
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Text style={styles.closeButtonText}>Cancelar</Text>

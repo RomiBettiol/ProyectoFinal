@@ -6,6 +6,7 @@ import PreScreen from "../Screens/PreScreen";
 import ListaServiciosScreen from "../Screens/ListaServiciosScreen";
 import ListaUsuariosScreen from "../Screens/ListaUsuariosScreen";
 import AltaEstablecimientoScreen from "../Screens/AltaEstablecimientoScreen";
+import EstablecimientoDetalleScreen from "../Screens/EstablecimientoDetalleScreen";
 import RyPScreen from "../Screens/RyPScreen";
 import Registro from "../componentes/Registro";
 import HomeScreen from "../Screens/HomeScreen";
@@ -70,7 +71,7 @@ import ServiciosDetalles from "../componentes/Serivicios/ServiciosDetalles";
 import PublicarServicio from "../Screens/PublicarServicio";
 import OptionModalService from "../componentes/Perfil/OptionModalService";
 import EditarPublicacionServicio from "../componentes/Perfil/EditarPublicacionServicio";
-import AgregarImagenRegistro from '../componentes/AgregarImagenRegistro';
+import AgregarImagenRegistro from "../componentes/AgregarImagenRegistro";
 
 const Stack = createNativeStackNavigator();
 
@@ -83,42 +84,27 @@ export default function MainStack() {
         }}
       >
         <Stack.Screen name="PreScreen" component={PreScreen} />
+        <Stack.Screen name="InfoModal" component={InfoModal} />
+        <Stack.Screen name="BotonVaccine" component={BotonVaccine} />
+        <Stack.Screen name="AltaVaccin" component={AltaVaccin} />
+        <Stack.Screen name="VaccinModal" component={VaccinModal} />
         <Stack.Screen
-                name='InfoModal'
-                component={InfoModal}
-            />
-            <Stack.Screen
-                name='BotonVaccine'
-                component={BotonVaccine}
-            />
-            <Stack.Screen
-                name='AltaVaccin'
-                component={AltaVaccin}
-            />
-            <Stack.Screen
-                name='VaccinModal'
-                component={VaccinModal}
-            />
-            <Stack.Screen
-                name='ListaValoresAñoMascota'
-                component={ListaValoresAñoMascota}
-            />
-            <Stack.Screen
-                name='ListaValoresDiasMascota'
-                component={ListaValoresDiasMascota}
-            />
-            <Stack.Screen
-                name='ListaValoresMesesMascota'
-                component={ListaValoresMesesMascota}
-            />
-            <Stack.Screen
-                name='EditarVaccin'
-                component={EditarVaccin}
-            />
-            <Stack.Screen
-                name='AgregarImagenRegistro'
-                component={AgregarImagenRegistro}
-            />
+          name="ListaValoresAñoMascota"
+          component={ListaValoresAñoMascota}
+        />
+        <Stack.Screen
+          name="ListaValoresDiasMascota"
+          component={ListaValoresDiasMascota}
+        />
+        <Stack.Screen
+          name="ListaValoresMesesMascota"
+          component={ListaValoresMesesMascota}
+        />
+        <Stack.Screen name="EditarVaccin" component={EditarVaccin} />
+        <Stack.Screen
+          name="AgregarImagenRegistro"
+          component={AgregarImagenRegistro}
+        />
 
         <Stack.Screen name="InicioScreen" component={InicioScreen} />
 
@@ -137,6 +123,12 @@ export default function MainStack() {
           name="AltaEstablecimientoScreen"
           component={AltaEstablecimientoScreen}
         />
+
+        <Stack.Screen
+          name="EstablecimientoDetalleScreen"
+          component={EstablecimientoDetalleScreen}
+        />
+
         <Stack.Screen name="RyPScreen" component={RyPScreen} />
         <Stack.Screen
           name="ListaUsuariosScreen"
@@ -246,26 +238,17 @@ export default function MainStack() {
           name="PreguntasFrecuentes"
           component={PreguntasFrecuentes}
         />
-        <Stack.Screen
-          name="ServiciosScreen"
-          component={ServiciosScreen}
-        />
-        <Stack.Screen
-          name="ServiciosDetalle"
-          component={ServiciosDetalles}
-        />
-        <Stack.Screen
-          name="PublicarServicio"
-          component={PublicarServicio}
-        /> 
+        <Stack.Screen name="ServiciosScreen" component={ServiciosScreen} />
+        <Stack.Screen name="ServiciosDetalle" component={ServiciosDetalles} />
+        <Stack.Screen name="PublicarServicio" component={PublicarServicio} />
         <Stack.Screen
           name="OptionModalService"
           component={OptionModalService}
-        />         
+        />
         <Stack.Screen
           name="EditarPublicacionServicio"
           component={EditarPublicacionServicio}
-        />             
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

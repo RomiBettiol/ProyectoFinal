@@ -36,13 +36,16 @@ const Registro = () => {
   const handleIngresarPress = async () => {
     if (formValid) {
       try {
-        const response = await axios.post('https://buddy-app2.loca.lt/security/auth/login', {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          mail: usuario,
-          password: contrasena,
-        });
+        const response = await axios.post(
+          "https://buddy-app2.loca.lt/security/auth/login",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            mail: usuario,
+            password: contrasena,
+          }
+        );
 
         if (response.status === 200) {
           const token = response.data.data.token;

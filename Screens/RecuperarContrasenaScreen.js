@@ -41,9 +41,12 @@ export default function RecuperarContrasenaScreen({}) {
     }
 
     try {
-      const response = await axios.post('https://buddy-app2.loca.lt/security/auth/resetPassword', {
-        mail: email
-      });
+      const response = await axios.post(
+        "https://buddy-app2.loca.lt/security/auth/resetPassword",
+        {
+          mail: email,
+        }
+      );
 
       if (response.status === 200) {
         navigation.navigate("ConfirmacionContrasenaScreen", { email: email });

@@ -58,42 +58,42 @@ const SlideModal = ({ visible, onClose }) => {
     setConfirmLogoutModalVisible(true);
   };
 
+  const [newName, setNewName] = useState("");
+  const [newUserName, setNewUserName] = useState("");
+  const [user, setUser] = useState("");
+  const [idUser, setIdUser] = useState("");
+  const [newUserImage, setNewUserImage] = useState("");
 
-  const [newName, setNewName] = useState('');
-  const [newUserName, setNewUserName] = useState('');
-  const [user, setUser] = useState ('');
-  const [idUser, setIdUser] = useState('');
-  const [newUserImage,setNewUserImage]= useState('');
-
-  console.log("perfil: ", token);
+  // console.log("perfil: ", token);
 
   //Trae info del usuario
- const fetchNombre = () => {
-    axios.get(`https://buddy-app2.loca.lt/security/user/`, {
-      headers: {
-        'auth-token': token
-      }
-    })
-    .then(response => {
-      setUser(response.data);
-      setNewName(response.data[0].name);
-      setNewUserName(response.data[0].userName);
-      setNewUserImage(response.data[0].image)
-  
-      // Declarar la constante idUser
-      setIdUser(response.data[0].idUser);
-      
-      // Luego puedes usar idUser como desees en tu componente.
-    })
-    .catch(error => {
-      console.error('Error fetching user data:', error);
-    });
+  const fetchNombre = () => {
+    axios
+      .get(`https://buddy-app2.loca.lt/security/user/`, {
+        headers: {
+          "auth-token": token,
+        },
+      })
+      .then((response) => {
+        setUser(response.data);
+        setNewName(response.data[0].name);
+        setNewUserName(response.data[0].userName);
+        setNewUserImage(response.data[0].image);
+
+        // Declarar la constante idUser
+        setIdUser(response.data[0].idUser);
+
+        // Luego puedes usar idUser como desees en tu componente.
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
     console.log("user: ", user);
-      console.log("newName: ", newName);
-      console.log("newUserName: ", newUserName);
-      console.log("idUser: ", idUser);
-  }
-      useEffect(()=>{
+    console.log("newName: ", newName);
+    console.log("newUserName: ", newUserName);
+    console.log("idUser: ", idUser);
+  };
+  useEffect(() => {
     fetchNombre();
   }, [token, idUser]);
 
@@ -125,8 +125,8 @@ const SlideModal = ({ visible, onClose }) => {
         >
           <View style={[styles.usuario]}>
             <Image
-                source={{uri: newUserImage}}
-                style={styles.imagenUsuario}
+              source={{ uri: newUserImage }}
+              style={styles.imagenUsuario}
             />
             <TouchableOpacity
               onPress={() => navigation.navigate("MiPerfil", { token })}
@@ -159,8 +159,9 @@ const SlideModal = ({ visible, onClose }) => {
                 <Text style={styles.textoModal}>Adoptar mascota</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.opciones}
-            onPress={() => handleOptionPress("ServiciosScreen")}
+            <TouchableOpacity
+              style={styles.opciones}
+              onPress={() => handleOptionPress("ServiciosScreen")}
             >
               <View style={[{ flexDirection: "row" }, styles.view]}>
                 <Image

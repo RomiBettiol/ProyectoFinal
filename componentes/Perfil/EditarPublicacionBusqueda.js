@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal, Image, Pressable } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
-import HeaderScreen from '../HeaderScreen';
-import ListaValoresColor from '../Busqueda/ListaValoresColor';
-import ListaValoresAnimal from '../Busqueda/ListaValoresAnimal';
-import ListaValoresZona from '../Busqueda/ListaValoresZona';
-import ListaValoresRazaPerros from '../Busqueda/ListaValoresRazaPerros';
-import Mascotas from '../Busqueda/Mascotas';
-import ListaValoresDias from '../Busqueda/ListaValoresDias';
-import ListaValoresMeses from '../Busqueda/ListaValoresMeses';
-import ListaValoresAño from '../Busqueda/ListaValoresAño';
-import ImagePickerComponent from '../Busqueda/ImagePickerComponent';  
-import BotonPublicar from '../Busqueda/BotonPublicar';
-import axios from 'axios';
-import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Image,
+  Pressable,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker"; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
+import HeaderScreen from "../HeaderScreen";
+import ListaValoresColor from "../Busqueda/ListaValoresColor";
+import ListaValoresAnimal from "../Busqueda/ListaValoresAnimal";
+import ListaValoresZona from "../Busqueda/ListaValoresZona";
+import ListaValoresRazaPerros from "../Busqueda/ListaValoresRazaPerros";
+import Mascotas from "../Busqueda/Mascotas";
+import ListaValoresDias from "../Busqueda/ListaValoresDias";
+import ListaValoresMeses from "../Busqueda/ListaValoresMeses";
+import ListaValoresAño from "../Busqueda/ListaValoresAño";
+import ImagePickerComponent from "../Busqueda/ImagePickerComponent";
+import BotonPublicar from "../Busqueda/BotonPublicar";
+import axios from "axios";
+import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
+import { useNavigation } from "@react-navigation/native";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../../src/aws-exports';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../../src/aws-exports";
 Amplify.configure(awsconfig);
 
 export default function EditarPublicacionBusqueda({ route }) {
@@ -43,40 +54,43 @@ export default function EditarPublicacionBusqueda({ route }) {
   const idPublicationSearch = publicationToEdit.idPublicationSearch;
   console.log("Publicacion búsqueda: ", idPublicationSearch);
 
-    //donde guardo las imagenes
-    const [selectedImages, setSelectedImages] = useState([]);
+  //donde guardo las imagenes
+  const [selectedImages, setSelectedImages] = useState([]);
 
-    ///// upload image ////
-    const fetchImageUri = async (uri) => {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      return blob;
-    }
-  
-    const uploadFile = async (file) => {
-      const img = await fetchImageUri(file);
-      return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
-        level: 'public',
-        contentType: file.type,
-        progressCallback(uploadProgress) {
-          console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
-        },
+  ///// upload image ////
+  const fetchImageUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  };
+
+  const uploadFile = async (file) => {
+    const img = await fetchImageUri(file);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+      level: "public",
+      contentType: file.type,
+      progressCallback(uploadProgress) {
+        console.log(
+          "PROGRESS--",
+          uploadProgress.loaded + "/" + uploadProgress.total
+        );
+      },
+    })
+      .then((res) => {
+        // Retorna la clave (key) de la imagen en Amazon S3
+        return res.key;
       })
-        .then((res) => {
-          // Retorna la clave (key) de la imagen en Amazon S3
-          return res.key;
-        })
-        .catch((e) => {
-          console.log(e);
-          throw e; // Lanza una excepción para manejar errores en la función llamante
-        });
-    };
-      // Función para manejar la selección de imágenes
-    const handleImagesSelected = (images) => {
-      console.log("probando esto: ", images);
-      setSelectedImages(images);
-      console.log("probando esto: ", selectedImages);
-    };
+      .catch((e) => {
+        console.log(e);
+        throw e; // Lanza una excepción para manejar errores en la función llamante
+      });
+  };
+  // Función para manejar la selección de imágenes
+  const handleImagesSelected = (images) => {
+    console.log("probando esto: ", images);
+    setSelectedImages(images);
+    console.log("probando esto: ", selectedImages);
+  };
 
   const handleEndEditing = () => {
     if (4 < title.length) {
@@ -165,20 +179,20 @@ export default function EditarPublicacionBusqueda({ route }) {
       if (selectedImages && selectedImages.length > 0) {
         console.log("Antes de subirlas: ", selectedImages);
         let imageUrls = [];
-        
+
         // Subir las imágenes a AWS S3 y obtener las URLs
         for (const selectedImage of selectedImages) {
           // Subir la imagen a Amazon S3 y obtener el enlace
           const awsImageKey = await uploadFile(selectedImage);
-          
+
           // Construye el enlace completo a la imagen en Amazon S3
           const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
-          
+
           // Guarda el enlace en el estado
           imageUrls.push(awsImageLink);
           console.log("Después de subirlas: ", imageUrls);
         }
-        
+
         // Continúa con la solicitud PUT al backend
         await handlePut(imageUrls);
       } else {
@@ -186,18 +200,12 @@ export default function EditarPublicacionBusqueda({ route }) {
         await handlePut(null);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Maneja el error, si es necesario
     }
   };
-  
-
-
-
-  
 
   //FIN imagenes
-  
 
   return (
     <View style={styles.container}>
@@ -206,7 +214,7 @@ export default function EditarPublicacionBusqueda({ route }) {
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publica tu mascota</Text>
           <ImagePickerComponent onImagesSelected={handleImagesSelected} />
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
             <TextInput
               style={styles.inputTexto}
