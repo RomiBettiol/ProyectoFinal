@@ -92,7 +92,7 @@ export default function HomeScreen({ navigation }) {
       title: "Back Up",
       image: require("../Imagenes/backup.png"),
       permission: "READ_BACKUP",
-      onPress: () => navigation.navigate("BackUpScreen", { token }),
+      onPress: () => navigation.navigate("Backup", { token }),
     },
     {
       title: "Parametrización",

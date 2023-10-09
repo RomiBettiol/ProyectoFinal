@@ -72,6 +72,7 @@ import OptionModalService from "../componentes/Perfil/OptionModalService";
 import EditarPublicacionServicio from "../componentes/Perfil/EditarPublicacionServicio";
 import AgregarImagenRegistro from '../componentes/AgregarImagenRegistro';
 import NotificacionesScreen from "../Screens/NotificacionesScreen";
+import Backup from "../Screens/Backup";
 
 const Stack = createNativeStackNavigator();
 
@@ -270,7 +271,11 @@ export default function MainStack() {
         <Stack.Screen
           name="NotificacionesScreen"
           component={NotificacionesScreen}
-        />                       
+        />          
+        <Stack.Screen
+          name="Backup"
+          component={Backup}
+        />              
       </Stack.Navigator>
     </NavigationContainer>
   );
