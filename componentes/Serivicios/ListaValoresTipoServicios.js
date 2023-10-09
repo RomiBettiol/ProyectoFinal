@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
 const ListaValoresTipoServicios = ({
   selectedServiceType,
@@ -8,10 +9,20 @@ const ListaValoresTipoServicios = ({
   setSelectedServiceTypeId,
 }) => {
   const [serviceTypeOptions, setServiceTypeOptions] = useState([]);
+  const route = useRoute();
+  const { token } = route.params;
+
+  console.log('probando token: ', token);
 
   useEffect(() => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/serviceType")
+      .get("https://buddy-app2.loca.lt/services/service/types", {
+        headers: {
+          'auth-token': token,
+          'Cache-Control': 'no-cache', 
+          'Pragma': 'no-cache',
+        }
+      })
       .then((response) => {
         console.log("Tipos de servicio exitosos:", response.data);
         setServiceTypeOptions(response.data.serviceTypes);
@@ -22,35 +33,41 @@ const ListaValoresTipoServicios = ({
       });
   }, []);
 
+  console.log('ServiceTypeOptions: ', serviceTypeOptions);
+
   return (
     <View style={styles.container}>
-      <View style={styles.optionsContainer}>
-        {serviceTypeOptions.map((serviceTypeOption, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.option,
-              selectedServiceType === serviceTypeOption.serviceTypeName &&
-                styles.selectedOption,
-            ]}
-            onPress={() => {
-              setSelectedServiceType(serviceTypeOption.serviceTypeName);
-              setSelectedServiceTypeId(serviceTypeOption.idServiceType); // Agrega el ID al estado
-            }}
-          >
-            <Text
-              style={[
-                styles.optionText,
-                selectedServiceType === serviceTypeOption.serviceTypeName &&
-                  styles.selectedOptionText,
-              ]}
-            >
-              {serviceTypeOption.serviceTypeName}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        <View style={styles.optionsContainer}>
+          {serviceTypeOptions ? (
+            serviceTypeOptions.map((serviceTypeOption, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.option,
+                  selectedServiceType === serviceTypeOption.serviceTypeName &&
+                    styles.selectedOption,
+                ]}
+                onPress={() => {
+                  setSelectedServiceType(serviceTypeOption.serviceTypeName);
+                  setSelectedServiceTypeId(serviceTypeOption.idServiceType);
+                }}
+              >
+                <Text
+                  style={[
+                    styles.optionText,
+                    selectedServiceType === serviceTypeOption.serviceTypeName &&
+                      styles.selectedOptionText,
+                  ]}
+                >
+                  {serviceTypeOption.serviceTypeName}
+                </Text>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>Loading...</Text>
+          )}
+        </View>
       </View>
-    </View>
   );
 };
 

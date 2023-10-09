@@ -10,11 +10,13 @@ export default function ServiciosDetalles({ route }) {
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [buttonTransform, setButtonTransform] = useState(0);
   const servicioTitle = source === 'MiPerfil' ? servicio?.[0]?.serviceTitle : servicio?.serviceTitle;
   const servicioDescription = source === 'MiPerfil' ? servicio?.[0]?.serviceDescription : servicio?.serviceDescription;
   const servicioAddress = source === 'MiPerfil' ? servicio?.[0]?.address : servicio?.address;
   const servicioOpenTime = source === 'MiPerfil' ? servicio?.[0]?.openTime : servicio?.openTime;
   const servicioCloseTime = source === 'MiPerfil' ? servicio?.[0]?.closeTime : servicio?.closeTime;
+  //const servicioImages = source === 'MiPerfil' ? servicio?.[0]?.images[0] : servicio?.images[0];
 
   console.log('servicio: ', servicio);
   console.log('info: ', servicioTitle, servicioAddress, servicioDescription, servicioCloseTime, servicioOpenTime);
@@ -66,15 +68,16 @@ export default function ServiciosDetalles({ route }) {
   console.log('ServiciosDetalles: ', token);
   console.log('ID Servicio: ', servicio.idService);
   console.log('numberRating: ', servicio.avgRating);
+  console.log('titulo: ', servicio.serviceTitle);
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../Imagenes/imagenPublicaciones.jpg")}
+        source={{uri: servicio.images[0]}}
         style={styles.imagenServicio}
       />
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.titulo}>{servicioTitle}</Text>
+        <Text style={styles.titulo}>{servicio.serviceTitle}</Text>
         <TouchableOpacity onPress={() => handleOpenRatingModal(servicio.idService)}>
           <Image
             source={require("../../Imagenes/estrella.png")}
@@ -101,23 +104,30 @@ export default function ServiciosDetalles({ route }) {
           </View>
         ) : null}
       <View style={styles.informacionServicio}>
-        <Text style={styles.descripcion}>{servicioDescription}</Text>
+        <Text style={styles.descripcion}>{servicio.serviceDescription}</Text>
         <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
             <Image
                 source={require("../../Imagenes/posicion.png")}
                 style={styles.imagenInformacionFiltros}
             />
-            <Text style={styles.textoInformacionFiltros}>{servicioAddress}</Text>
+            <Text style={styles.textoInformacionFiltros}>{servicio.address}</Text>
         </View>
         <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
             <Image
                 source={require("../../Imagenes/reloj.png")}
                 style={styles.imagenInformacionFiltros}
             />
-            <Text style={styles.textoInformacionFiltros}>{servicioOpenTime} - {servicioCloseTime}</Text>
+            <Text style={styles.textoInformacionFiltros}>{servicio.openTime} - {servicio.closeTime}</Text>
         </View>
       </View>
+      <View
+        style={[
+          styles.botonFlotanteContainer,
+          { transform: [{ translateY: buttonTransform }] },
+        ]}
+      >
         <BotonMenu token={token} style={styles.contenedorBoton} />
+      </View>
     </View>
   );
 }
@@ -180,5 +190,11 @@ const styles = StyleSheet.create({
   ratingContainer:{
     width: '100%',
     marginLeft: '70%',
+  },
+  botonFlotanteContainer: {
+    position: "absolute",
+    bottom: 80, // Puedes ajustar esta cantidad según tus preferencias
+    right: 20, // Puedes ajustar esta cantidad según tus preferencias
+    transform: [{ translateY: 0 }], // Inicialmente no se desplaza
   },
 });

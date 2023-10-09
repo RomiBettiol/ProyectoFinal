@@ -22,6 +22,9 @@ export default function HomeScreen({ navigation }) {
   const [adoptionQuantity, setAdoptionQuantity] = useState("");
   const [lostPetsQuantity, setLostPetsQuantity] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
+  const [notificacion, setNotifications] = useState(false);
+  const [notificacionReaded, setNotificationsReaded] = useState(false);
+  const [infoUsuario, setInfoUsuario] = useState(false);
 
   const buttons = [
     {
@@ -89,7 +92,7 @@ export default function HomeScreen({ navigation }) {
       title: "Back Up",
       image: require("../Imagenes/backup.png"),
       permission: "READ_BACKUP",
-      onPress: () => navigation.navigate("BackUpScreen", { token }),
+      onPress: () => navigation.navigate("Backup", { token }),
     },
     {
       title: "Parametrización",
@@ -102,10 +105,41 @@ export default function HomeScreen({ navigation }) {
     // Agrega más botones aquí
   ];
 
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get('https://buddy-app2.loca.lt/reports/notification/', {
+        headers: {
+          'auth-token': token,
+        },
+      });
+
+      if (response.status === 200) {
+        setNotifications(response.data.notifications);
+
+        // Contar notificaciones con el atributo 'readed' en true
+        const readNotificationsCount = response.data.notifications.filter(notification => notification.readed === false).length;
+        setNotificationsReaded(readNotificationsCount);
+        // Mostrar la cantidad de notificaciones con 'readed' en true en la consola
+        console.log('Cantidad de notificaciones con readed en true:', readNotificationsCount);
+      } else {
+        console.error('Error al obtener las notificaciones');
+      }
+    } catch (error) {
+      console.error('Error de red:', error);
+    }
+  };
+
   useEffect(() => {
     obtenerInformes();
     obtenerPermisos();
-  }, []);
+    fetchNotifications();
+   // const intervalId = setInterval(() => {
+     // fetchNotifications();
+   // }, 5000); // 5000 milisegundos = 5 segundos
+
+    // Limpia el intervalo cuando el componente se desmonta
+    //return () => clearInterval(intervalId);
+  }, [token]);
 
   const obtenerInformes = async () => {
     try {
@@ -227,7 +261,7 @@ export default function HomeScreen({ navigation }) {
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.home}>
         <Image source={require("../Imagenes/logo2.png")} style={styles.logo} />
-        <MenuHorizontal token={token} openModal={openModal} />
+        <MenuHorizontal token={token} openModal={openModal} notificacionReaded={notificacionReaded} />
         {!permisos[0] ? <Text></Text> : renderButtons()}
         <View style={[styles.informe1, { flexDirection: "row" }]}>
           <Text style={styles.textoInforme}>

@@ -104,11 +104,11 @@ export default function DenunciaScreen({ navigation }) {
         `https://buddy-app2.loca.lt/security/complaint/execute/${data.validate}/${idComplaint}`,
         null,
         {
-          headers: headers, // Pasa los encabezados con la solicitud
+          headers: headers,
         }
       )
       .then((response) => {
-        // Manejar la respuesta del servidor si es necesario
+        // Manejar la respuesta del servidor si es necesario  
         loadDenuncias(token);
         console.log("Denuncia bloqueada con éxito");
       })
@@ -126,7 +126,7 @@ export default function DenunciaScreen({ navigation }) {
         <Text style={styles.titulo}>Denuncias Pendientes</Text>
         {denuncias.map((denuncia) => (
           <View key={denuncia.idComplaint} style={styles.denuncia}>
-            <Text style={styles.tituloDenuncia}>Publicación Denunciada:</Text>
+            <Text style={styles.tituloDenuncia}>Publicación Denunciada: {denuncia.idComplaint}</Text>
             <Text style={styles.motivoTexto}>Motivo de la denuncia:</Text>
             <Text style={styles.textoDenuncia}>
               {denuncia.complaintDescription}

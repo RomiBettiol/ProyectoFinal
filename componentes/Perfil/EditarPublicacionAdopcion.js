@@ -96,7 +96,7 @@
         });
     
         const response = await axios.put(
-          `https://buddy-app1.loca.lt/publications/publication/${idPublicationAdoption}?modelType=adoption`,
+          `https://buddy-app2.loca.lt/publications/publication/${idPublicationAdoption}?modelType=adoption`,
           {
             title: title,
             description: description,
@@ -232,55 +232,6 @@
               Ingresa al menos 4 caracteres.
             </Text>
           )}
-          <View style={styles.subcontenedor2}>
-            <Text style={styles.descripcionPublicacion}>Descripción</Text>
-            <TextInput
-              style={styles.inputDescripcion}
-              value={description}
-              onChangeText={setDescription}
-              multiline={true}
-              textAlignVertical="top"
-              maxLength={1000}
-            />
-          </View>
-          <View style={styles.subcontenedor3}>
-            <Text style={styles.tipoAnimal}>Tipo de animal</Text>
-            <ScrollView
-              horizontal={true} // Hace que el ScrollView sea horizontal
-              contentContainerStyle={{ flexDirection: "row" }} // Establece la dirección de los elementos hijos como horizontal
-            >
-              <ListaValoresAnimal
-                selectedAnimal={selectedAnimal}
-                setSelectedAnimal={setSelectedAnimal}
-                setSelectedAnimalId={setSelectedAnimalId}
-              />
-            </ScrollView>
-            <ListaValoresColor
-              selectedColorId={selectedColorId}
-              setSelectedColorId={setSelectedColorId}
-            />
-            <ListaValoresZona
-              selectedLocality={selectedLocality}
-              setSelectedLocality={setSelectedLocality}
-            />
-            {selectedAnimal && (
-              <ListaValoresRazaPerros
-                selectedAnimal={selectedAnimal}
-                setSelectedBreedId={setSelectedBreedId}
-              />
-            )}
-          </View>
-          <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
-            <Text style={styles.tituloPublicacion}>Celular</Text>
-            <TextInput
-              style={styles.inputTexto}
-              value={contactPhone}
-              onChangeText={(text) => {
-                const numericValue = text.replace(/[^0-9]/g, "");
-                setContactPhone(numericValue);
-              }}
-            />
-        </View>
         <Modal
           visible={isModalVisible}
           animationType="slide"
