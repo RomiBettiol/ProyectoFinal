@@ -12,7 +12,7 @@ export default function NotificacionesScreen({ navigation }) {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('https://romibettiol.loca.lt/reports/notification/', {
+        const response = await axios.get('https://buddy-app2.loca.lt/reports/notification/', {
           headers: {
             'auth-token': token,
           },

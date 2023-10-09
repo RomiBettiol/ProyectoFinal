@@ -13,7 +13,7 @@ export default function InicioScreen({ navigation }) {
 
         if (token !== null) {
           const response = await axios.get(
-            `https://romibettiol.loca.lt/security/auth/expire`,
+            `https://buddy-app2.loca.lt/security/auth/expire`,
             { headers: { "auth-token": token } }
           );
           if (response.status === 200) {

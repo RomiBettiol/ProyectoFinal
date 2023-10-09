@@ -14,7 +14,7 @@ export default function ReportesScreen() {
 
     useEffect(() => {
         // Realizar la solicitud GET utilizando Axios
-        axios.get('https://romibettiol.loca.lt/reports/count/founds-success')
+        axios.get('https://buddy-app2.loca.lt/reports/count/founds-success')
           .then((response) => {
             // Extraer el valor quantity de la respuesta
             const { quantity } = response.data;
@@ -25,7 +25,7 @@ export default function ReportesScreen() {
           });
 
         // Servicios activos
-        axios.get('https://romibettiol.loca.lt/reports/count/services-actives')
+        axios.get('https://buddy-app2.loca.lt/reports/count/services-actives')
         .then((response) => {
           // Extraer el valor quantity de la respuesta
           const { quantity } = response.data;
@@ -36,7 +36,7 @@ export default function ReportesScreen() {
         });
 
         // Usuarios activos
-        axios.get('https://romibettiol.loca.lt/reports/count/users-actives')
+        axios.get('https://buddy-app2.loca.lt/reports/count/users-actives')
         .then((response) => {
           // Extraer el valor quantity de la respuesta
           const { quantity } = response.data;
@@ -47,7 +47,7 @@ export default function ReportesScreen() {
         });
 
         // Mascotas perdidas
-        axios.get('https://romibettiol.loca.lt/reports/count/losts-actives')
+        axios.get('https://buddy-app2.loca.lt/reports/count/losts-actives')
         .then((response) => {
           // Extraer el valor quantity de la respuesta
           const { quantity } = response.data;
@@ -58,7 +58,7 @@ export default function ReportesScreen() {
         });
 
         // Mascotas en adopción
-        axios.get('https://romibettiol.loca.lt/reports/count/adoptions-actives')
+        axios.get('https://buddy-app2.loca.lt/reports/count/adoptions-actives')
         .then((response) => {
           // Extraer el valor quantity de la respuesta
           const { quantity } = response.data;
@@ -69,7 +69,7 @@ export default function ReportesScreen() {
         });
 
         // Mascotas adoptadas
-        axios.get('https://romibettiol.loca.lt/reports/count/adoptions-success')
+        axios.get('https://buddy-app2.loca.lt/reports/count/adoptions-success')
         .then((response) => {
           // Extraer el valor quantity de la respuesta
           const { quantity } = response.data;

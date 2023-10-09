@@ -36,7 +36,7 @@ const Registro = () => {
   const handleIngresarPress = async () => {
     if (formValid) {
       try {
-        const response = await axios.post('https://romibettiol.loca.lt/security/auth/login', {
+        const response = await axios.post('https://buddy-app2.loca.lt/security/auth/login', {
           headers: {
             'Content-Type': 'application/json',
           },

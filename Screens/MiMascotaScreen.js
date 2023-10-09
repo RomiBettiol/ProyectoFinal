@@ -101,7 +101,7 @@ export default function MiMascotaScreen() {
   const fetchMascotas = async () => {
     try {
       const response = await axios.get(
-        "  https://romibettiol.loca.lt/mypet/pet",
+        "  https://buddy-app2.loca.lt/mypet/pet",
         {
           headers: {
             "auth-token": token,

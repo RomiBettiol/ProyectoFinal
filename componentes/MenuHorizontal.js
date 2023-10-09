@@ -14,7 +14,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
 
   const sendNotificationRequest = async () => {
     try {
-      const response = await axios.post('https://romibettiol.loca.lt/reports/notification/', null, {
+      const response = await axios.post('https://buddy-app2.loca.lt/reports/notification/', null, {
         headers: {
           'auth-token': token,
         },

@@ -41,7 +41,7 @@ export default function RecuperarContrasenaScreen({}) {
     }
 
     try {
-      const response = await axios.post('https://romibettiol.loca.lt/security/auth/resetPassword', {
+      const response = await axios.post('https://buddy-app2.loca.lt/security/auth/resetPassword', {
         mail: email
       });
 

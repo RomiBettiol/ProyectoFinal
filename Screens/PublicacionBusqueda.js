@@ -105,7 +105,7 @@ export default function PublicacionBusqueda({ navigation }) {
           "auth-token": token,
         },
       };
-      const response = await axios.post('https://romibettiol.loca.lt/publications/publication/search', postData, config);
+      const response = await axios.post('https://buddy-app2.loca.lt/publications/publication/search', postData, config);
       console.log('Solicitud POST exitosa:', response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);
