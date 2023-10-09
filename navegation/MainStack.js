@@ -71,6 +71,7 @@ import PublicarServicio from "../Screens/PublicarServicio";
 import OptionModalService from "../componentes/Perfil/OptionModalService";
 import EditarPublicacionServicio from "../componentes/Perfil/EditarPublicacionServicio";
 import AgregarImagenRegistro from '../componentes/AgregarImagenRegistro';
+import Header from "../componentes/HeaderScreen";
 
 const Stack = createNativeStackNavigator();
 

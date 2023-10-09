@@ -10,11 +10,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import HeaderScreen from "../../componentes/HeaderScreen";
-import ImagePickerComponent from "../../componentes/Busqueda/ImagePickerComponent";
-import ListaValoresZona from "../../componentes/Busqueda/ListaValoresZona";
-import BotonPublicar from "../../componentes/Busqueda/BotonPublicar";
-import ListaValoresTipoServicios from "../../componentes/Serivicios/ListaValoresTipoServicios";
+import Header from "../componentes/HeaderScreen";
+import ImagePickerComponent from "../componentes/Busqueda/ImagePickerComponent";
+import ListaValoresZona from "../componentes/Busqueda/ListaValoresZona";
+import BotonPublicar from "../componentes/Busqueda/BotonPublicar";
+import ListaValoresTipoServicios from "../componentes/Serivicios/ListaValoresTipoServicios";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
@@ -74,7 +74,7 @@ export default function PublicarServicio() {
 
     try {
       const response = await axios.put(
-        `https://romibettiol.loca.lt/services/service/${idService}`,
+        `https://buddy-app2.loca.lt/services/service/${idService}`,
         {
           serviceTitle: title,
           serviceDescription: description,
@@ -208,7 +208,7 @@ export default function PublicarServicio() {
     // Hacer la solicitud GET al servidor con el idService
     const fetchServiceDetails = async () => {
       try {
-        const response = await axios.get(`https://romibettiol.loca.lt/services/service/${idService}`, {
+        const response = await axios.get(`https://buddy-app2.loca.lt/services/service/${idService}`, {
           headers: {
             "auth-token": token,
           },
@@ -238,7 +238,7 @@ export default function PublicarServicio() {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen token={token} />
+      <Header token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Editá tu servicio</Text>

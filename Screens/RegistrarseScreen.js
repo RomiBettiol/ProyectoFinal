@@ -39,6 +39,8 @@ export function RegistrarseScreen({ navigation }) {
         password: datosFormulario.contrasena,
         name: datosFormulario.nombre,
         image:datosFormulario.image,
+        userType:'BÁSICO', 
+        documents: null,
       }
 
       // Hacer la petición POST al backend usando axios
