@@ -18,6 +18,10 @@ import ListaValoresTipoServicios from "../componentes/Serivicios/ListaValoresTip
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
+Amplify.configure(awsconfig);
+
 export default function PublicarServicio({ setAnimalId, animalId }) {
   const navigation = useNavigation();
   const route = useRoute(); // Obtiene la prop route
@@ -44,6 +48,42 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
 
   console.log("Token desde publicación servicios: ", token);
   console.log("animales: ", selectedTypes);
+
+  //donde guardo las imagenes
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  ///// upload image ////
+  const fetchImageUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  }
+
+  const uploadFile = async (file) => {
+    const img = await fetchImageUri(file);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+      level: 'public',
+      contentType: file.type,
+      progressCallback(uploadProgress) {
+        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+      },
+    })
+      .then((res) => {
+        // Retorna la clave (key) de la imagen en Amazon S3
+        return res.key;
+      })
+      .catch((e) => {
+        console.log(e);
+        throw e; // Lanza una excepción para manejar errores en la función llamante
+      });
+  };
+
+  // Función para manejar la selección de imágenes
+  const handleImagesSelected = (images) => {
+    console.log("probando esto: ", images);
+    setSelectedImages(images);
+    console.log("probando esto: ", selectedImages);
+  };
 
   const isValidEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -141,7 +181,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
     setSelectedServiceTypeId(idServiceType);
   };
 
-  const handlePublicarClick = async () => {
+  const handlePublicarClick = async (imageLink) => {
     // Formatear los números para tener dos dígitos
     const formattedNumero1 = numero1.padStart(2, "0");
     const formattedNumero2 = numero2.padStart(2, "0");
@@ -152,6 +192,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
     const petTypesData = [
       { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" }
     ];
+    const images = imageLink;
 
     // Mostrar la información que se va a enviar en la consola
     console.log("Información que se va a enviar:", {
@@ -160,7 +201,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
       address: address,
       open24hs: abierto24h,
       emailService: email,
-      images: "",
+      images,
       idServiceType: selectedServiceTypeId,
       idLocality: selectedLocality,
       openTime: openTime,
@@ -177,7 +218,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
           address: address,
           open24hs: abierto24h,
           emailService: email,
-          images: "",
+          images,
           idServiceType: selectedServiceTypeId,
           idLocality: selectedLocality,
           openTime: openTime,
@@ -212,13 +253,49 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
     }
   };
 
+   //imagenes
+
+   const handleSubAddPost = async () => {
+    console.log("Al presionar el boton: ", selectedImages);
+    try {
+      if (selectedImages && selectedImages.length > 0) {
+        console.log("Antes de subirlas: ", selectedImages);
+        let imageUrls = [];
+        
+        // Subir las imágenes a AWS S3 y obtener las URLs
+        for (const selectedImage of selectedImages) {
+          // Subir la imagen a Amazon S3 y obtener el enlace
+          const awsImageKey = await uploadFile(selectedImage);
+          
+          // Construye el enlace completo a la imagen en Amazon S3
+          const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
+          
+          // Guarda el enlace en el estado
+          imageUrls.push(awsImageLink);
+          console.log("Después de subirlas: ", imageUrls);
+        }
+        
+        // Continúa con la solicitud POST al backend
+        await handlePublicarClick(imageUrls);
+      } else {
+        // Si no hay imágenes seleccionadas, solo envía la solicitud POST sin el enlace de la imagen
+        await handlePublicarClick(null);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      // Maneja el error, si es necesario
+    }
+  };
+
+  //FIN imagenes
+
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publicá tu servicio</Text>
-          <ImagePickerComponent />
+          <ImagePickerComponent onImagesSelected={handleImagesSelected} />
           <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
             <TextInput
@@ -279,6 +356,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
           selectedServiceType={selectedServiceType}
           setSelectedServiceType={setSelectedServiceType}
           setSelectedServiceTypeId={setSelectedServiceTypeId}
+          token={token}
         />
         <Text style={styles.descripcionPublicacion}>Horario de atención</Text>
         <View style={[styles.hora, { flexDirection: "row" }]}>
@@ -339,7 +417,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
         </View>
       </ScrollView>
       <BotonPublicar
-        onPress={handlePublicarClick}
+        onPress={handleSubAddPost}
         disabled={!isValid || !isEmailValid || !isHourValid || !isMinuteValid}
       />
 

@@ -3,11 +3,11 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../HeaderScreen';
 import Carousel from 'react-native-snap-carousel';
-import ModalTraza from './ModalTraza';
 
 const PublicacionDetalle = ({route}) => {
   const navigation = useNavigation();
   const publicacion = route.params?.publicacion;
+  const { token } = route.params;
   
   const carouselImages = publicacion.images ;
   console.log("carrousel setteado: ",carouselImages);

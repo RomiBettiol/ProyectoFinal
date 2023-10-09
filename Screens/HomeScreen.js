@@ -24,6 +24,7 @@ export default function HomeScreen({ navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [notificacion, setNotifications] = useState(false);
   const [notificacionReaded, setNotificationsReaded] = useState(false);
+  const [infoUsuario, setInfoUsuario] = useState(false);
 
   const buttons = [
     {
@@ -116,7 +117,7 @@ export default function HomeScreen({ navigation }) {
         setNotifications(response.data.notifications);
 
         // Contar notificaciones con el atributo 'readed' en true
-        const readNotificationsCount = response.data.notifications.filter(notification => notification.readed === true).length;
+        const readNotificationsCount = response.data.notifications.filter(notification => notification.readed === false).length;
         setNotificationsReaded(readNotificationsCount);
         // Mostrar la cantidad de notificaciones con 'readed' en true en la consola
         console.log('Cantidad de notificaciones con readed en true:', readNotificationsCount);
@@ -132,7 +133,13 @@ export default function HomeScreen({ navigation }) {
     obtenerInformes();
     obtenerPermisos();
     fetchNotifications();
-  }, []);
+   // const intervalId = setInterval(() => {
+     // fetchNotifications();
+   // }, 5000); // 5000 milisegundos = 5 segundos
+
+    // Limpia el intervalo cuando el componente se desmonta
+    //return () => clearInterval(intervalId);
+  }, [token]);
 
   const obtenerInformes = async () => {
     try {
@@ -183,15 +190,15 @@ export default function HomeScreen({ navigation }) {
         { headers: { "auth-token": token } }
       );
 
-      if (!response.data.permisos[0]) {
+      if (!response.data.permissions[0]) {
         return;
       }
 
-      const permisos = JSON.stringify(response.data.permisos);
+      const permisos = JSON.stringify(response.data.permissions);
 
       await AsyncStorage.setItem("permisos", permisos);
 
-      setPermisos(response.data.permisos);
+      setPermisos(response.data.permissions);
 
       return;
     } catch (error) {

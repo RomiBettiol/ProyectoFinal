@@ -16,6 +16,7 @@ export default function ServiciosDetalles({ route }) {
   const servicioAddress = source === 'MiPerfil' ? servicio?.[0]?.address : servicio?.address;
   const servicioOpenTime = source === 'MiPerfil' ? servicio?.[0]?.openTime : servicio?.openTime;
   const servicioCloseTime = source === 'MiPerfil' ? servicio?.[0]?.closeTime : servicio?.closeTime;
+  //const servicioImages = source === 'MiPerfil' ? servicio?.[0]?.images[0] : servicio?.images[0];
 
   console.log('servicio: ', servicio);
   console.log('info: ', servicioTitle, servicioAddress, servicioDescription, servicioCloseTime, servicioOpenTime);
@@ -67,15 +68,16 @@ export default function ServiciosDetalles({ route }) {
   console.log('ServiciosDetalles: ', token);
   console.log('ID Servicio: ', servicio.idService);
   console.log('numberRating: ', servicio.avgRating);
+  console.log('titulo: ', servicio.serviceTitle);
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../Imagenes/imagenPublicaciones.jpg")}
+        source={{uri: servicio.images[0]}}
         style={styles.imagenServicio}
       />
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.titulo}>{servicioTitle}</Text>
+        <Text style={styles.titulo}>{servicio.serviceTitle}</Text>
         <TouchableOpacity onPress={() => handleOpenRatingModal(servicio.idService)}>
           <Image
             source={require("../../Imagenes/estrella.png")}
@@ -102,20 +104,20 @@ export default function ServiciosDetalles({ route }) {
           </View>
         ) : null}
       <View style={styles.informacionServicio}>
-        <Text style={styles.descripcion}>{servicioDescription}</Text>
+        <Text style={styles.descripcion}>{servicio.serviceDescription}</Text>
         <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
             <Image
                 source={require("../../Imagenes/posicion.png")}
                 style={styles.imagenInformacionFiltros}
             />
-            <Text style={styles.textoInformacionFiltros}>{servicioAddress}</Text>
+            <Text style={styles.textoInformacionFiltros}>{servicio.address}</Text>
         </View>
         <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
             <Image
                 source={require("../../Imagenes/reloj.png")}
                 style={styles.imagenInformacionFiltros}
             />
-            <Text style={styles.textoInformacionFiltros}>{servicioOpenTime} - {servicioCloseTime}</Text>
+            <Text style={styles.textoInformacionFiltros}>{servicio.openTime} - {servicio.closeTime}</Text>
         </View>
       </View>
       <View

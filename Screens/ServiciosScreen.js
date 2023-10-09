@@ -114,7 +114,6 @@ export default function ServiciosScreen({ navigation }) {
     setDenunciaModalVisible(true);
   };
   
-
   return (
     <View style={styles.container}>
       <HeaderScreen />
@@ -135,7 +134,7 @@ export default function ServiciosScreen({ navigation }) {
                   onLongPress={() => handleReportModal(servicio)}
                 >
                   <Image
-                    source={require("../Imagenes/imagenPublicaciones.jpg")}
+                    source={{uri: servicio.images[0]}}
                     style={styles.imagenServicio}
                   />
                   <Text>{servicio.serviceTitle}</Text>

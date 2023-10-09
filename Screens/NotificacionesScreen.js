@@ -20,6 +20,7 @@ export default function NotificacionesScreen({ navigation }) {
 
         if (response.status === 200) {
           setNotifications(response.data.notifications);
+          console.log(response.data);
         } else {
           console.error('Error al obtener las notificaciones');
         }
@@ -32,7 +33,7 @@ export default function NotificacionesScreen({ navigation }) {
   }, [token]);
 
   const countUnreadNotifications = () => {
-    return notifications.filter(notification => notification.readed).length;
+    return notifications.filter(notification => !notification.readed).length;
   };
 
   const formatDate = (dateString) => {
@@ -42,6 +43,7 @@ export default function NotificacionesScreen({ navigation }) {
 
   const unreadNotificationsCount = countUnreadNotifications();
   console.log('Cant. de notificaciones: ', unreadNotificationsCount);
+  console.log(notifications);
 
   return (
     <View style={styles.container}>
@@ -61,7 +63,7 @@ export default function NotificacionesScreen({ navigation }) {
           <View key={notification.idNotification} style={styles.contenedorNotificacion}>
             <View style={styles.contenidoNotificacion}>
               <Text style={styles.textoNotificacion}>{notification.content}</Text>
-              {notification.readed && <View style={styles.circuloRojo} />}
+              {!notification.readed && <View style={styles.circuloRojo} />}
               <Text style={styles.textoFecha}>{formatDate(notification.createdAt)}</Text>
             </View>
           </View>

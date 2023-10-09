@@ -7,7 +7,6 @@ import {
   TextInput,
   Switch,
   Modal,
-  TouchableOpacity,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import HeaderScreen from "../../componentes/HeaderScreen";
@@ -18,10 +17,14 @@ import ListaValoresTipoServicios from "../../componentes/Serivicios/ListaValores
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../../src/aws-exports';
+Amplify.configure(awsconfig);
+
 export default function PublicarServicio() {
   const navigation = useNavigation();
   const route = useRoute(); // Obtiene la prop route
-  const { token, idService } = route.params;
+  const { token, servicio } = route.params;
   const [isValid, setIsValid] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -41,11 +44,47 @@ export default function PublicarServicio() {
   const [modalMessage, setModalMessage] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const idService = servicio.idService;
 
   console.log("Token desde publicación servicios: ", token);
   console.log('ID Service desde editar servicio: ', idService);
 
-  const handlePublicarClick = async () => {
+  //donde guardo las imagenes
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  ///// upload image ////
+  const fetchImageUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  }
+
+  const uploadFile = async (file) => {
+    const img = await fetchImageUri(file);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+      level: 'public',
+      contentType: file.type,
+      progressCallback(uploadProgress) {
+        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+      },
+    })
+      .then((res) => {
+        // Retorna la clave (key) de la imagen en Amazon S3
+        return res.key;
+      })
+      .catch((e) => {
+        console.log(e);
+        throw e; // Lanza una excepción para manejar errores en la función llamante
+      });
+  };
+    // Función para manejar la selección de imágenes
+  const handleImagesSelected = (images) => {
+    console.log("probando esto: ", images);
+    setSelectedImages(images);
+    console.log("probando esto: ", selectedImages);
+  };
+
+  const handlePublicarClick = async (imagenes) => {
     // Formatear los números para tener dos dígitos
     const formattedNumero1 = numero1.padStart(2, "0");
     const formattedNumero2 = numero2.padStart(2, "0");
@@ -56,6 +95,7 @@ export default function PublicarServicio() {
     const petTypesData = [
       { idPetType: "a44fd4a2-2287-4605-9a69-46929d0dfa84" }
     ];
+    const images = imagenes;
 
     // Mostrar la información que se va a enviar en la consola
     console.log("Información que se va a enviar:", {
@@ -64,7 +104,7 @@ export default function PublicarServicio() {
       address: address,
       open24hs: abierto24h,
       emailService: email,
-      images: "",
+      images: images,
       idServiceType: selectedServiceTypeId,
       idLocality: selectedLocality,
       openTime: openTime,
@@ -81,7 +121,7 @@ export default function PublicarServicio() {
           address: address,
           open24hs: abierto24h,
           emailService: email,
-          images: "",
+          images: imagenes,
           idServiceType: selectedServiceTypeId,
           idLocality: selectedLocality,
           openTime: openTime,
@@ -128,6 +168,40 @@ export default function PublicarServicio() {
         setIsModalVisible(true);
         //console.error("Error al realizar la solicitud:", error.message);
       }
+    }
+  };
+
+  //imagenes
+
+  const handleSubAddPut = async () => {
+    console.log("Al presionar el boton: ", selectedImages);
+    try {
+      if (selectedImages && selectedImages.length > 0) {
+        console.log("Antes de subirlas: ", selectedImages);
+        let imageUrls = [];
+        
+        // Subir las imágenes a AWS S3 y obtener las URLs
+        for (const selectedImage of selectedImages) {
+          // Subir la imagen a Amazon S3 y obtener el enlace
+          const awsImageKey = await uploadFile(selectedImage);
+          
+          // Construye el enlace completo a la imagen en Amazon S3
+          const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
+          
+          // Guarda el enlace en el estado
+          imageUrls.push(awsImageLink);
+          console.log("Después de subirlas: ", imageUrls);
+        }
+        
+        // Continúa con la solicitud PUT al backend
+        await handlePublicarClick(imageUrls);
+      } else {
+        // Si no hay imágenes seleccionadas, solo envía la solicitud PUT sin el enlace de la imagen
+        await handlePublicarClick(null);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      // Maneja el error, si es necesario
     }
   };
 
@@ -242,7 +316,7 @@ export default function PublicarServicio() {
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Editá tu servicio</Text>
-          <ImagePickerComponent />
+          <ImagePickerComponent onImagesSelected={handleImagesSelected} />
           <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
             <TextInput
@@ -363,7 +437,7 @@ export default function PublicarServicio() {
         </View>
       </ScrollView>
       <BotonPublicar
-        onPress={handlePublicarClick}
+        onPress={handleSubAddPut}
         disabled={!isValid || !isEmailValid || !isHourValid || !isMinuteValid}
       />
         <Modal
@@ -380,7 +454,12 @@ export default function PublicarServicio() {
                 : styles.errorModalBackground,
             ]}
           >
-            <View style={[styles.modalContent, styles.bottomModalContent]}>
+            <View
+            style={[
+              styles.bottomModalContent,
+              isSuccessful ? styles.successModalContent : styles.errorModalContent,
+            ]}
+          >
               <Text
                 style={[
                   styles.modalMessage,
@@ -503,12 +582,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo borroso semi-transparente
     justifyContent: "flex-end", // Alinear en la parte inferior
   },
-  modalContent: {
-    backgroundColor: "#8ADC58",
-    padding: 20,
-    borderRadius: 10,
-    alignItems: "center",
-  },
   modalContentError: {
     backgroundColor: "red",
     padding: 20,
@@ -534,5 +607,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     marginBottom: 50, // Ajusta el margen inferior según tus preferencias
+  },
+  successModalContent: {
+    backgroundColor: "#8ADC58",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  errorModalContent: {
+    backgroundColor: "red",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  errorModalText: {
+    color: 'white',
   },
 });

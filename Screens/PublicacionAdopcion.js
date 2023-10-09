@@ -118,7 +118,7 @@ export default function PublicacionBusqueda({ navigation }) {
         }, 1000); // 1000 milisegundos = 1 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
     } catch (error) {
-      //console.error('Error al realizar la solicitud POST:', error);
+      console.error('Error al realizar la solicitud POST:', error);
       setIsSuccessful(false);
       setIsModalVisible(true);
       setModalMessage('Publicación fallida, por favor complete todos los campos');
