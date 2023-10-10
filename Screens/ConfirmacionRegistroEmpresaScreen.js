@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     marginBottom:0,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginTop:110,
+    marginTop:220,
   },
   textoAviso:{
     textAlign: 'center',

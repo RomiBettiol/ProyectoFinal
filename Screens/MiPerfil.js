@@ -26,7 +26,6 @@ export default function MiPerfil({ navigation }) {
   const [newName, setNewName] = useState("");
   const [newUserName, setNewUserName] = useState("");
   const [user, setUser] = useState("");
-  const [userImage, setUserImage] = useState("");
   const [passwordMismatchError, setPasswordMismatchError] = useState(false);
   const [requisitosContrasena, setRequisitosContrasena] = useState(false);
   const [contrasenaIgual, setContrasenaIgual] = useState(false);
@@ -38,8 +37,7 @@ export default function MiPerfil({ navigation }) {
   const [userPublications, setUserPublications] = useState([]);
   const [userService, setUserService] = useState([]);
   const [optionsModalVisible, setOptionsModalVisible] = useState(false);
-  const [confirmationModalVisible, setConfirmationModalVisible] =
-    useState(false);
+  const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
   const [selectedPublication, setSelectedPublication] = useState(null);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [deleteFailure, setDeleteFailure] = useState(false);
@@ -54,11 +52,11 @@ export default function MiPerfil({ navigation }) {
   const [isModalServiceVisible, setIsModalServiceVisible] = useState(false);
   const [servicio, setServicio] = useState(false);
   const [idServicio, setIdServicio] = useState(false);
-  const [confirmationModalService, setConfirmationModalService] =
-    useState(false);
+  const [confirmationModalService, setConfirmationModalService] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // console.log("perfil: ", token);
+  console.log("perfil: ", token);
+
 
   //Trae info del usuario
   useEffect(() => {
@@ -72,6 +70,7 @@ export default function MiPerfil({ navigation }) {
         setUser(response.data);
         setNewName(response.data[0].name);
         setNewUserName(response.data[0].userName);
+
         // Declarar la constante idUser
         setIdUser(response.data[0].idUser);
         setIsLoading(false);
@@ -81,7 +80,11 @@ export default function MiPerfil({ navigation }) {
         console.error("Error fetching user data:", error);
         setIsLoading(false);
       });
+  }, [token, idUser]);
 
+  console.log("idUser1: ", idUser);
+
+  useEffect(() => {
     axios
       .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
         headers: {
@@ -89,35 +92,30 @@ export default function MiPerfil({ navigation }) {
         },
       })
       .then((response) => {
-        if (Array.isArray(response.data)) {
-          setUserPublications(response.data); // Almacena las publicaciones en el estado
-          console.log("Publicaciones", response.data);
-        } else {
-          console.log("Invalid response data:", response.data);
-        }
+        setUserPublications(response.data); // Almacena las publicaciones en el estado
+        console.log("Publicaciones", response.data);
       })
       .catch((error) => {
-        console.log("Error fetching user publications:", error);
+        console.error("Error fetching user publications:", error);
       });
 
-    axios
+      axios
       .get(`https://buddy-app2.loca.lt/services/service/ByUser`, {
         headers: {
           "auth-token": token,
         },
       })
       .then((response) => {
-        if (Array.isArray(response.data)) {
-          setUserService(response.data); // Almacena los servicios en el estado
-          console.log("Servicios", response.data);
-        } else {
-          console.log("Invalid response data:", response.data);
-        }
+        setUserService(response.data); // Almacena las publicaciones en el estado
+        console.log("Publicaciones", response.data);
       })
       .catch((error) => {
-        console.log("Error fetching user services:", error);
+        console.error("Error fetching user publications:", error);
       });
-  }, [token, idUser]);
+
+  }, []);
+
+  console.log("idUser: ", idUser);
 
   const openModalService = () => {
     setModalServiceVisible(true);
@@ -200,7 +198,7 @@ export default function MiPerfil({ navigation }) {
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
         .put(
-          `  https://buddy-app2.loca.lt/security/user/${idUser}`,
+          `https://buddy-app2.loca.lt/security/user/${idUser}`,
           updatedUserData,
           {
             headers: {
@@ -239,7 +237,7 @@ export default function MiPerfil({ navigation }) {
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
       .put(
-        `  https://buddy-app2.loca.lt/security/user/${idUser}`,
+        `https://buddy-app2.loca.lt/security/user/${idUser}`,
         updatedUserData,
         {
           headers: {
@@ -366,7 +364,7 @@ export default function MiPerfil({ navigation }) {
       console.log("idPublicacion: ", idPublicationToDelete);
       axios
         .delete(
-          `  https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
+          `https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
           {
             headers: {
               "auth-token": token,
@@ -392,7 +390,7 @@ export default function MiPerfil({ navigation }) {
     if (deleteSuccess || deleteFailure) {
       // Realiza la solicitud GET para cargar las publicaciones actualizadas
       axios
-        .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
+        .get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
           headers: {
             "auth-token": token,
           },
@@ -421,7 +419,7 @@ export default function MiPerfil({ navigation }) {
   const handleLogout = async () => {
     try {
       const response = await fetch(
-        "  https://buddy-app2.loca.lt/security/auth/logout",
+        "https://buddy-app2.loca.lt/security/auth/logout",
         {
           method: "POST",
           headers: {
@@ -450,34 +448,34 @@ export default function MiPerfil({ navigation }) {
 
   const handleConfirmDelete = () => {
     // Realiza la solicitud DELETE utilizando Axios con el token de autorización
-    axios
-      .delete(`https://buddy-app2.loca.lt/services/service/${idServicio}`, {
-        headers: {
-          "auth-token": token, // Incluye el token en el encabezado de autorización
-        },
-      })
-      .then((response) => {
+    axios.delete(`https://buddy-app2.loca.lt/services/service/${idServicio}`, {
+      headers: {
+        'auth-token': token, // Incluye el token en el encabezado de autorización
+      },
+    })
+      .then(response => {
         if (response.status === 200) {
-          console.log("Serivicio eliminado");
+  
+          console.log('Serivicio eliminado');
 
-          if (response.status === 200) {
-          } else {
-            //setIsSuccessful(false);
-            //setModalMessage("Hubo un error al eliminar la publicación");
-          }
+        if (response.status === 200) {
+        } else {
+          //setIsSuccessful(false);
+          //setModalMessage("Hubo un error al eliminar la publicación");
+        }
 
-          setTimeout(() => {
-            //setIsModalVisible(false); // Cierra el modal después de 1 segundo
-            navigation.navigate("HomeScreen", { token }); // Redirige al perfil
-          }, 1000);
+        setTimeout(() => {
+          //setIsModalVisible(false); // Cierra el modal después de 1 segundo
+          navigation.navigate("HomeScreen", { token }); // Redirige al perfil
+        }, 1000);
         } else {
           // Maneja cualquier otro código de estado si es necesario
-          console.error("Error al eliminar el servicio");
+          console.error('Error al eliminar el servicio');
         }
       })
-      .catch((error) => {
+      .catch(error => {
         // Maneja los errores de la solicitud
-        console.error("Error al eliminar el servicio", error);
+        console.error('Error al eliminar el servicio', error);
       });
   };
 
@@ -486,8 +484,8 @@ export default function MiPerfil({ navigation }) {
       <Header />
       <ScrollView>
         <View style={[styles.principal, { flexDirection: "row" }]}>
-          {isLoading ? (
-            <Text>Cargando...</Text>
+        {isLoading ? (
+        <Text>Cargando...</Text>
           ) : (
             <View style={{ flexDirection: "row" }}>
               {user && user[0] && user[0].image && (
@@ -515,44 +513,44 @@ export default function MiPerfil({ navigation }) {
         </View>
         <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
         {userService.map((servicio, index) => (
-          <View style={[styles.publicationContainer, { flexDirection: "row" }]}>
-            <Image
-              source={{ uri: servicio.images[0] }}
-              style={styles.imagenPublicaciones}
-            />
-            <View>
-              <View
-                style={[
-                  styles.informacionPublicacion,
-                  { flexDirection: "row" },
-                ]}
-              >
-                <TouchableOpacity style={styles.botonInformacion}>
-                  <Text>Servicio</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => openOptionsModalService(servicio)}
+          <View
+              style={[styles.publicationContainer, { flexDirection: "row" }]}
+            >
+              <Image
+                source={{uri: servicio.images[0]}}
+                style={styles.imagenPublicaciones}
+              />
+              <View>
+                <View
+                  style={[
+                    styles.informacionPublicacion,
+                    { flexDirection: "row" },
+                  ]}
                 >
-                  <Image
-                    source={require("../Imagenes/opciones.png")}
-                    style={styles.imagenOpcionesPublicaciones}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.publicationTitle}>
-                {servicio.serviceTitle}
-              </Text>
-              <View style={[styles.containerfiltros, { flexDirection: "row" }]}>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("../Imagenes/marcador-de-posicion.png")}
-                    style={styles.imagenFiltros}
-                  />
-                  <Text>{servicio.address}</Text>
+                  <TouchableOpacity style={styles.botonInformacion}>
+                    <Text>Servicio</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => openOptionsModalService(servicio)}>
+                    <Image
+                      source={require("../Imagenes/opciones.png")}
+                      style={styles.imagenOpcionesPublicaciones}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.publicationTitle}>{servicio.serviceTitle}</Text>
+                <View
+                  style={[styles.containerfiltros, { flexDirection: "row" }]}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("../Imagenes/marcador-de-posicion.png")}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{servicio.address}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </View>
+            </View>  
         ))}
         {userPublications.adoptions &&
           userPublications.adoptions.length > 0 &&
@@ -561,7 +559,7 @@ export default function MiPerfil({ navigation }) {
               style={[styles.publicationContainer, { flexDirection: "row" }]}
             >
               <Image
-                source={{ uri: adoption.images[0] }}
+                source={{uri: adoption.images[0]}}
                 style={styles.imagenPublicaciones}
               />
               <View>
@@ -610,7 +608,7 @@ export default function MiPerfil({ navigation }) {
               style={[styles.publicationContainer, { flexDirection: "row" }]}
             >
               <Image
-                source={{ uri: search.images[0] }}
+                source={{uri: search.images[0]}}
                 style={styles.imagenPublicaciones}
               />
               <View>
@@ -803,7 +801,6 @@ export default function MiPerfil({ navigation }) {
             </View>
           </View>
         </Modal>
-
         <Modal
           animationType="slide"
           transparent={true}
@@ -928,7 +925,6 @@ export default function MiPerfil({ navigation }) {
             </View>
           </View>
         </Modal>
-
         {/*Modal eliminacion*/}
         <Modal
           animationType="slide"
@@ -969,10 +965,7 @@ export default function MiPerfil({ navigation }) {
               <TouchableOpacity
                 style={styles.opcionesModal}
                 onPress={() => {
-                  navigation.navigate("EditarPublicacionServicio", {
-                    servicio,
-                    token,
-                  });
+                  navigation.navigate('EditarPublicacionServicio', { servicio, token });
                   closeOptionsModalService();
                 }}
               >
@@ -981,9 +974,9 @@ export default function MiPerfil({ navigation }) {
               <TouchableOpacity
                 style={styles.opcionesModal}
                 onPress={() => {
-                  setIsModalServiceVisible(false);
-                  setConfirmationModalService(true);
-                  console.log("id eliminación: ", idServicio);
+                  setIsModalServiceVisible(false); 
+                  setConfirmationModalService(true); 
+                  console.log('id eliminación: ', idServicio);
                 }}
               >
                 <Text>Eliminar</Text>
@@ -991,12 +984,8 @@ export default function MiPerfil({ navigation }) {
               <TouchableOpacity
                 style={styles.opcionesModal}
                 onPress={() => {
-                  console.log("mostrar servicio: ", servicio);
-                  navigation.navigate("ServiciosDetalle", {
-                    servicio,
-                    token,
-                    source: "MiPerfil",
-                  });
+                  console.log('mostrar servicio: ', servicio);
+                  navigation.navigate('ServiciosDetalle', {servicio, token, source: 'MiPerfil' });
                   closeOptionsModalService();
                 }}
               >
@@ -1025,7 +1014,7 @@ export default function MiPerfil({ navigation }) {
               <TouchableOpacity
                 style={styles.cancelarModal}
                 onPress={() => {
-                  console.log("id eliminación: ", idServicio);
+                  console.log('id eliminación: ', idServicio);
                   handleConfirmDelete(idServicio);
                 }}
               >
@@ -1055,7 +1044,6 @@ export default function MiPerfil({ navigation }) {
           </View>
         </View>
       </Modal>
-
       <Modal
         animationType="slide"
         transparent={true}
