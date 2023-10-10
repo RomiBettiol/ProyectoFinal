@@ -107,25 +107,33 @@ export default function HomeScreen({ navigation }) {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get('https://buddy-app2.loca.lt/reports/notification/', {
-        headers: {
-          'auth-token': token,
-        },
-      });
+      const response = await axios.get(
+        "https://buddy-app2.loca.lt/reports/notification/",
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      );
 
       if (response.status === 200) {
         setNotifications(response.data.notifications);
 
         // Contar notificaciones con el atributo 'readed' en true
-        const readNotificationsCount = response.data.notifications.filter(notification => notification.readed === false).length;
+        const readNotificationsCount = response.data.notifications.filter(
+          (notification) => notification.readed === false
+        ).length;
         setNotificationsReaded(readNotificationsCount);
         // Mostrar la cantidad de notificaciones con 'readed' en true en la consola
-        console.log('Cantidad de notificaciones con readed en true:', readNotificationsCount);
+        console.log(
+          "Cantidad de notificaciones con readed en true:",
+          readNotificationsCount
+        );
       } else {
-        console.error('Error al obtener las notificaciones');
+        console.error("Error al obtener las notificaciones");
       }
     } catch (error) {
-      console.error('Error de red:', error);
+      console.error("Error de red:", error);
     }
   };
 
@@ -133,9 +141,9 @@ export default function HomeScreen({ navigation }) {
     obtenerInformes();
     obtenerPermisos();
     fetchNotifications();
-   // const intervalId = setInterval(() => {
-     // fetchNotifications();
-   // }, 5000); // 5000 milisegundos = 5 segundos
+    // const intervalId = setInterval(() => {
+    // fetchNotifications();
+    // }, 5000); // 5000 milisegundos = 5 segundos
 
     // Limpia el intervalo cuando el componente se desmonta
     //return () => clearInterval(intervalId);
@@ -262,7 +270,11 @@ export default function HomeScreen({ navigation }) {
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.home}>
         <Image source={require("../Imagenes/logo2.png")} style={styles.logo} />
-        <MenuHorizontal token={token} openModal={openModal} notificacionReaded={notificacionReaded} />
+        <MenuHorizontal
+          token={token}
+          openModal={openModal}
+          notificacionReaded={notificacionReaded}
+        />
         {!permisos[0] ? <Text></Text> : renderButtons()}
         <View style={[styles.informe1, { flexDirection: "row" }]}>
           <Text style={styles.textoInforme}>

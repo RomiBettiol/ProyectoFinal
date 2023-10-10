@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const OptionModalService = ({ visible, onClose, route }) => {
   const { idService, token } = route.params;
@@ -12,109 +12,127 @@ const OptionModalService = ({ visible, onClose, route }) => {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [servicio, setServicio] = useState(false);
 
-  console.log('token desde option: ', token);
-  console.log('idService desde option: ', idService);
+  console.log("token desde option: ", token);
+  console.log("idService desde option: ", idService);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://buddy-app2.loca.lt/services/service/${idService}`, {
-          headers: {
-            'auth-token': token // Agrega el token en el encabezado
+        const response = await axios.get(
+          `https://buddy-app2.loca.lt/services/service/${idService}`,
+          {
+            headers: {
+              "auth-token": token, // Agrega el token en el encabezado
+            },
           }
-        });
-        
+        );
+
         // Handle the response data here
-        setServicio(response.data)
-        console.log('Data from GET request:', response.data);
+        setServicio(response.data);
+        console.log("Data from GET request:", response.data);
       } catch (error) {
         // Handle errors
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, [token, idService]); // Agrega el token y idUser como dependencias para el efecto
-  
-  console.log('mostrar información: ', servicio);
+
+  console.log("mostrar información: ", servicio);
 
   const handleModificarClick = () => {
     // Navegar al componente EditarPublicacionServicio pasando el idService como parámetro
-    navigation.navigate('EditarPublicacionServicio', { idService, token });
+    navigation.navigate("EditarPublicacionServicio", { idService, token });
   };
 
   const handleDeleteClick = () => {
     // Mostrar el modal de confirmación de eliminación
     setShowDeleteConfirmation(true);
-  
+
     // Pasa el idService y el token al segundo modal
-    console.log('idService y token en el segundo modal:', idService, token);
+    console.log("idService y token en el segundo modal:", idService, token);
   };
 
   const handleConfirmDelete = () => {
     // Realiza la solicitud DELETE utilizando Axios con el token de autorización
-    axios.delete(`https://buddy-app2.loca.lt/services/service/${idService}`, {
-      headers: {
-        'auth-token': token, // Incluye el token en el encabezado de autorización
-      },
-    })
-      .then(response => {
+    axios
+      .delete(`https://buddy-app2.loca.lt/services/service/${idService}`, {
+        headers: {
+          "auth-token": token, // Incluye el token en el encabezado de autorización
+        },
+      })
+      .then((response) => {
         if (response.status === 200) {
           setShowDeleteConfirmation(false);
-  
-          console.log('Serivicio eliminado');
+
+          console.log("Serivicio eliminado");
           setIsModalVisible(true);
 
-        if (response.status === 200) {
-          setIsSuccessful(true);
-          setModalMessage("Publicación eliminada con éxito");
-        } else {
-          setIsSuccessful(false);
-          setModalMessage("Hubo un error al eliminar la publicación");
-        }
+          if (response.status === 200) {
+            setIsSuccessful(true);
+            setModalMessage("Publicación eliminada con éxito");
+          } else {
+            setIsSuccessful(false);
+            setModalMessage("Hubo un error al eliminar la publicación");
+          }
 
-        setTimeout(() => {
-          setIsModalVisible(false); // Cierra el modal después de 1 segundo
-          navigation.navigate("HomeScreen", { token }); // Redirige al perfil
-        }, 1000);
+          setTimeout(() => {
+            setIsModalVisible(false); // Cierra el modal después de 1 segundo
+            navigation.navigate("HomeScreen", { token }); // Redirige al perfil
+          }, 1000);
         } else {
           // Maneja cualquier otro código de estado si es necesario
-          console.error('Error al eliminar el servicio');
+          console.error("Error al eliminar el servicio");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         // Maneja los errores de la solicitud
-        console.error('Error al eliminar el servicio', error);
+        console.error("Error al eliminar el servicio", error);
       });
   };
-  
 
   const handleCancelDelete = () => {
     // Cerrar el modal de confirmación de eliminación sin eliminar el servicio
     setShowDeleteConfirmation(false);
-  
+
     // Navegar a la pantalla "MiPerfil"
-    navigation.navigate('MiPerfil', {token});
+    navigation.navigate("MiPerfil", { token });
   };
-  
+
   return (
     <Modal visible={visible}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <TouchableOpacity style={styles.opcionesModal} onPress={handleModificarClick}>
+          <TouchableOpacity
+            style={styles.opcionesModal}
+            onPress={handleModificarClick}
+          >
             <Text>Modificar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.opcionesModal} onPress={handleDeleteClick}>
+          <TouchableOpacity
+            style={styles.opcionesModal}
+            onPress={handleDeleteClick}
+          >
             <Text>Eliminar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.opcionesModal} onPress={() => {
-              console.log('mostrar servicio: ', servicio);
-              navigation.navigate('ServiciosDetalle', {servicio, token, source: 'MiPerfil' });
+          <TouchableOpacity
+            style={styles.opcionesModal}
+            onPress={() => {
+              console.log("mostrar servicio: ", servicio);
+              navigation.navigate("ServiciosDetalle", {
+                servicio,
+                token,
+                source: "MiPerfil",
+              });
             }}
           >
             <Text>Ver servicio</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelarModal} onPress={handleCancelDelete}>
+          <TouchableOpacity
+            style={styles.cancelarModal}
+            onPress={handleCancelDelete}
+          >
             <Text>Cancelar</Text>
           </TouchableOpacity>
         </View>
@@ -125,7 +143,7 @@ const OptionModalService = ({ visible, onClose, route }) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text>¿Estás seguro que deseas eliminar el servicio?</Text>
-            <View style={[styles.confirmButtons1, {flexDirection: 'row'}]}>
+            <View style={[styles.confirmButtons1, { flexDirection: "row" }]}>
               <TouchableOpacity
                 style={[styles.confirmButton1, styles.confirmButtonAccept1]}
                 onPress={handleConfirmDelete}
@@ -144,33 +162,31 @@ const OptionModalService = ({ visible, onClose, route }) => {
       </Modal>
 
       <Modal
-          visible={isModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setIsModalVisible(false)}
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View
+          style={[
+            styles.modalContainer1,
+            isSuccessful
+              ? styles.successModalBackground
+              : styles.errorModalBackground,
+          ]}
         >
-          <View
-            style={[
-              styles.modalContainer1,
-              isSuccessful
-                ? styles.successModalBackground
-                : styles.errorModalBackground,
-            ]}
-          >
-            <View style={[styles.modalContent1, styles.bottomModalContent1]}>
-              <Text
-                style={[
-                  styles.modalMessage,
-                  isSuccessful
-                    ? styles.successModalText
-                    : styles.errorModalText,
-                ]}
-              >
-                {modalMessage}
-              </Text>
-            </View>
+          <View style={[styles.modalContent1, styles.bottomModalContent1]}>
+            <Text
+              style={[
+                styles.modalMessage,
+                isSuccessful ? styles.successModalText : styles.errorModalText,
+              ]}
+            >
+              {modalMessage}
+            </Text>
           </View>
-        </Modal>
+        </View>
+      </Modal>
     </Modal>
   );
 };
@@ -201,8 +217,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFB984",
     height: 30,
     width: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 5,
     marginLeft: 50,
     paddingLeft: 8,
@@ -227,7 +243,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
-  
 });
 
 export default OptionModalService;

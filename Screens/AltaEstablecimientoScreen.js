@@ -62,6 +62,13 @@ const AltaEstablecimientoScreen = () => {
     <View style={styles.container}>
       <HeaderScreen />
       <Text style={styles.title}>Establecimientos en revision</Text>
+      {!establishments[0] && (
+        <View style={styles.ItemContainer}>
+          <Text style={styles.ItemName}>
+            No hay usuarios pendientes de aprobación.
+          </Text>
+        </View>
+      )}
       {establishments.map((item) => (
         <View key={item.idUser} style={styles.ItemContainer}>
           <View style={styles.Item}>

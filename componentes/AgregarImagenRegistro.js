@@ -1,37 +1,38 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Pressable,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../src/aws-exports';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../src/aws-exports";
 Amplify.configure(awsconfig);
 
-const AgregarImagenRegistro = ( {onImagesSelected } ) => {
-  const [selectedImages, setSelectedImages] = React.useState('' );
+const AgregarImagenRegistro = ({ onImagesSelected }) => {
+  const [selectedImage, setSelectedImage] = useState(null); // Cambiado a un solo URI
   const [showModal, setShowModal] = useState(false);
-  
 
   const options = {
-    title: 'Seleccionar imagen',
-    cancelButtonTitle: 'Cancelar',
-    takePhotoButtonTitle: 'Tomar foto',
-    chooseFromLibraryButtonTitle: 'Elegir de la galería',
-    mediaType: 'photo',
+    title: "Seleccionar imagen",
+    cancelButtonTitle: "Cancelar",
+    takePhotoButtonTitle: "Tomar foto",
+    chooseFromLibraryButtonTitle: "Elegir de la galería",
+    mediaType: "photo",
     quality: 1,
   };
 
-   
-
-  
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
-    if (!result.canceled) {
-      const updatedImages = [...selectedImages, result.uri];
-        console.log("mostrando los url: ", updatedImages)
-        setSelectedImages(updatedImages);
-        onImagesSelected(updatedImages);
+    if (!result.cancelled) {
+      setSelectedImage({ localUri: result.uri });
+      onImagesSelected(result.uri); // Pasar la URI a la función onImagesSelected
     }
   };
 
@@ -40,20 +41,33 @@ const AgregarImagenRegistro = ( {onImagesSelected } ) => {
   };
 
   const removeImage = () => {
-    setSelectedImages(null);
+    setSelectedImage(null); // Limpiar la imagen seleccionada
   };
 
   return (
     <TouchableOpacity style={styles.botonGaleria} onPress={openGallery}>
-      {selectedImages ? (
-        <Image source={{ uri: selectedImages.localUri }} style={styles.selectedImage} />
+      {selectedImage ? (
+        <>
+          <Image
+            source={{ uri: selectedImage.localUri }}
+            style={styles.selectedImage}
+          />
+          <Text style={styles.botonFoto}>
+            Presione si quiere seleccionar otra foto
+          </Text>
+        </>
       ) : (
         <>
-          <Image source={require('../Imagenes/fotos.png')} style={styles.foto} />
-          <Text style={styles.botonFoto}>Seleccionar foto</Text>
+          <Image
+            source={require("../Imagenes/fotos.png")}
+            style={styles.foto}
+          />
+          <Text style={styles.botonFoto}>
+            Presione para seleccionar una foto
+          </Text>
         </>
       )}
-  
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -81,11 +95,11 @@ export default AgregarImagenRegistro;
 
 const styles = StyleSheet.create({
   botonGaleria: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     height: 100,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 30,
     marginTop: 30,
     elevation: 3,
@@ -106,31 +120,31 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     borderRadius: 20,
     padding: 25,
-    alignItems: 'center',
+    alignItems: "center",
     elevation: 5,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
   },
   modalButton: {
-    backgroundColor: '#EEE9E9',
+    backgroundColor: "#EEE9E9",
     borderRadius: 10,
     padding: 10,
     elevation: 2,
     marginTop: 10,
   },
   modalButtonText: {
-    color: 'grey',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "grey",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

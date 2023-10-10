@@ -108,7 +108,7 @@ export default function DenunciaScreen({ navigation }) {
         }
       )
       .then((response) => {
-        // Manejar la respuesta del servidor si es necesario  
+        // Manejar la respuesta del servidor si es necesario
         loadDenuncias(token);
         console.log("Denuncia bloqueada con éxito");
       })

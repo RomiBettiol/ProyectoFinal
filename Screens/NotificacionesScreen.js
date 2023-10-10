@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import axios from 'axios';
-import HeaderScreen from '../componentes/HeaderScreen';
+import React, { useState, useEffect } from "react";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
+import { useRoute } from "@react-navigation/native";
+import axios from "axios";
+import HeaderScreen from "../componentes/HeaderScreen";
 
 export default function NotificacionesScreen({ navigation }) {
   const route = useRoute();
@@ -12,20 +12,23 @@ export default function NotificacionesScreen({ navigation }) {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('https://buddy-app2.loca.lt/reports/notification/', {
-          headers: {
-            'auth-token': token,
-          },
-        });
+        const response = await axios.get(
+          "https://buddy-app2.loca.lt/reports/notification/",
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        );
 
         if (response.status === 200) {
           setNotifications(response.data.notifications);
           console.log(response.data);
         } else {
-          console.error('Error al obtener las notificaciones');
+          console.error("Error al obtener las notificaciones");
         }
       } catch (error) {
-        console.error('Error de red:', error);
+        console.error("Error de red:", error);
       }
     };
 
@@ -33,38 +36,52 @@ export default function NotificacionesScreen({ navigation }) {
   }, [token]);
 
   const countUnreadNotifications = () => {
-    return notifications.filter(notification => !notification.readed).length;
+    return notifications.filter((notification) => !notification.readed).length;
   };
 
   const formatDate = (dateString) => {
-    const options = { day: '2-digit', month: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options).replace(/\//g, '-');
+    const options = { day: "2-digit", month: "2-digit" };
+    return new Date(dateString)
+      .toLocaleDateString(undefined, options)
+      .replace(/\//g, "-");
   };
 
   const unreadNotificationsCount = countUnreadNotifications();
-  console.log('Cant. de notificaciones: ', unreadNotificationsCount);
+  console.log("Cant. de notificaciones: ", unreadNotificationsCount);
   console.log(notifications);
 
   return (
     <View style={styles.container}>
-      <HeaderScreen token={token} unreadNotificationsCount={unreadNotificationsCount} />
+      <HeaderScreen
+        token={token}
+        unreadNotificationsCount={unreadNotificationsCount}
+      />
       <View style={styles.header}>
         <Text style={styles.titulo}>Notificaciones</Text>
         {countUnreadNotifications() > 0 && (
           <View style={styles.circuloRojoContainer}>
             <View style={styles.circuloRojo}>
-              <Text style={styles.textoCirculo}>{countUnreadNotifications()}</Text>
+              <Text style={styles.textoCirculo}>
+                {countUnreadNotifications()}
+              </Text>
             </View>
           </View>
         )}
       </View>
       <ScrollView>
-        {notifications.map(notification => (
-          <View key={notification.idNotification} style={styles.contenedorNotificacion}>
+        {notifications.map((notification) => (
+          <View
+            key={notification.idNotification}
+            style={styles.contenedorNotificacion}
+          >
             <View style={styles.contenidoNotificacion}>
-              <Text style={styles.textoNotificacion}>{notification.content}</Text>
+              <Text style={styles.textoNotificacion}>
+                {notification.content}
+              </Text>
               {!notification.readed && <View style={styles.circuloRojo} />}
-              <Text style={styles.textoFecha}>{formatDate(notification.createdAt)}</Text>
+              <Text style={styles.textoFecha}>
+                {formatDate(notification.createdAt)}
+              </Text>
             </View>
           </View>
         ))}
@@ -79,11 +96,11 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
     borderBottomWidth: 0.5,
-    borderBottomColor: 'gray',
+    borderBottomColor: "gray",
     padding: 10,
     marginTop: 10,
     marginLeft: 42,
@@ -96,20 +113,20 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#FFB984',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#FFB984",
+    justifyContent: "center",
+    alignItems: "center",
   },
   circuloRojo: {
     width: 15,
     height: 15,
     borderRadius: 12.5,
-    backgroundColor: '#FFB984',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#FFB984",
+    justifyContent: "center",
+    alignItems: "center",
   },
   textoCirculo: {
-    color: 'black',
+    color: "black",
     fontSize: 14,
   },
   contenedorNotificacion: {
@@ -125,13 +142,13 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   contenidoNotificacion: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   textoFecha: {
     fontSize: 12,
-    color: 'gray',
+    color: "gray",
     marginLeft: 10,
   },
 });

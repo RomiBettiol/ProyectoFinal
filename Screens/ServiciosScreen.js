@@ -13,7 +13,7 @@ import { useRoute } from "@react-navigation/native";
 import BotonesFiltroServicios from "../componentes/Serivicios/BotonesFiltroServicios";
 import BarraBusquedaServicios from "../componentes/Serivicios/BarraBusquedaServicios";
 import BotonFlotante from "../componentes/BotonFlotante";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 import DenunciasModalServicio from "../componentes/Denuncias/DenunciasModalServcios";
 
 export default function ServiciosScreen({ navigation }) {
@@ -34,12 +34,15 @@ export default function ServiciosScreen({ navigation }) {
   useEffect(() => {
     const obtenerServicios = async () => {
       try {
-        const response = await axios.get("https://buddy-app2.loca.lt/services/service/", {
-          headers: {
-            "auth-token": token,
-          },
-        });
-  
+        const response = await axios.get(
+          "https://buddy-app2.loca.lt/services/service/",
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        );
+
         if (response && response.data) {
           const data = response.data;
           setServicios(data);
@@ -51,10 +54,9 @@ export default function ServiciosScreen({ navigation }) {
         console.error("Error al obtener los servicios:", error);
       }
     };
-  
+
     obtenerServicios();
   }, [token]);
-  
 
   // Función para manejar la navegación a ServiciosDetalle y pasar el servicio seleccionado
   const navigateToServicioDetalle = (servicio) => {
@@ -92,8 +94,8 @@ export default function ServiciosScreen({ navigation }) {
       setServicios(originalServicios);
     } else {
       // Filtra los servicios según el tipo de servicio seleccionado
-      const serviciosFiltrados = originalServicios.filter((servicio) =>
-        servicio.serviceTypeName === filtro
+      const serviciosFiltrados = originalServicios.filter(
+        (servicio) => servicio.serviceTypeName === filtro
       );
       // Actualiza el estado con los servicios filtrados
       setServicios(serviciosFiltrados);
@@ -113,7 +115,7 @@ export default function ServiciosScreen({ navigation }) {
     setSelectedService(servicio);
     setDenunciaModalVisible(true);
   };
-  
+
   return (
     <View style={styles.container}>
       <HeaderScreen />
@@ -134,7 +136,7 @@ export default function ServiciosScreen({ navigation }) {
                   onLongPress={() => handleReportModal(servicio)}
                 >
                   <Image
-                    source={{uri: servicio.images[0]}}
+                    source={{ uri: servicio.images[0] }}
                     style={styles.imagenServicio}
                   />
                   <Text>{servicio.serviceTitle}</Text>
@@ -150,7 +152,15 @@ export default function ServiciosScreen({ navigation }) {
           </View>
         ))}
       </View>
-      <DenunciasModalServicio visible={denunciaModalVisible} onClose={() => setDenunciaModalVisible(false)} selectedPublicationToReport={selectedService ? selectedService.idService : null} token={token} selectedUserToReport={selectedService ? selectedService.idUser : null} />
+      <DenunciasModalServicio
+        visible={denunciaModalVisible}
+        onClose={() => setDenunciaModalVisible(false)}
+        selectedPublicationToReport={
+          selectedService ? selectedService.idService : null
+        }
+        token={token}
+        selectedUserToReport={selectedService ? selectedService.idUser : null}
+      />
 
       <View
         style={[
