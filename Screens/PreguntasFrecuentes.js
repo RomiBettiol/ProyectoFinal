@@ -29,14 +29,13 @@ export default function PreguntasFrecuentes() {
                 style={styles.contenedorPreguntaIzquierda1}
                 onPress={() => handleQuestionPress(1)}
             >
-                <Text style={styles.textoPregunta}>¿Pregunta frecuente 1?</Text>
+                <Text style={styles.textoPregunta}>¿Cómo puedo reportar una mascota perdida en la aplicación?</Text>
             </TouchableOpacity>
             {selectedQuestion === 1 && (
                 <View style={styles.contenedorRespuesta}>
-                <Text style={styles.textoRespuesta}>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. 
-                    Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor 
-                    (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró 
-                    hacer un libro de textos especimen.</Text>
+                <Text style={styles.textoRespuesta}>En la página de inicio de la aplicación, encontrarás un botón que dirá Encuentra a tu mascota,
+                al ingresar en esa sección en el extremo inferior aparecerá un botón para agregar una publicación. Completas todos los campos,
+                haces click en publicar y listo!</Text>
                 </View>
             )}
 
@@ -44,14 +43,13 @@ export default function PreguntasFrecuentes() {
                 style={styles.contenedorPreguntaDerecha1}
                 onPress={() => handleQuestionPress(2)}
             >
-                <Text style={styles.textoPregunta}>¿Pregunta frecuente 2?</Text>
+                <Text style={styles.textoPregunta}>¿Que pasa si denuncio una publicación?</Text>
             </TouchableOpacity>
             {selectedQuestion === 2 && (
                 <View style={styles.contenedorRespuestaDerecha}>
-                    <Text style={styles.textoRespuesta}>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. 
-                    Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor 
-                    (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró 
-                    hacer un libro de textos especimen.</Text>
+                    <Text style={styles.textoRespuesta}>Si denuncias una publicación, esa denuncia le llegará al administrador de la aplicación
+                    para que revise los motivos de la misma, si el administrador piensa que esa denuncia es valida, entonces esa publicación se dará de bajo,
+                    de lo contrario, se desestimará la denuncia realizada.</Text>
             </View>
             )}
 
@@ -59,14 +57,14 @@ export default function PreguntasFrecuentes() {
                 style={styles.contenedorPreguntaIzquierda2}
                 onPress={() => handleQuestionPress(3)}
             >
-                <Text style={styles.textoPregunta}>¿Pregunta frecuente 3?</Text>
+                <Text style={styles.textoPregunta}>¿Cómo puedo publicar un servicio?</Text>
             </TouchableOpacity>
             {selectedQuestion === 3 && (
                 <View style={styles.contenedorRespuesta}>
-                <Text style={styles.textoRespuesta}>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. 
-                    Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor 
-                    (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró 
-                    hacer un libro de textos especimen.</Text>
+                <Text style={styles.textoRespuesta}>Para publicar un servicio es importante haberse registrado como 'Usuario establecimiento', para esto se necesita
+                subir todos los documentos pedidos dentro del registro. Una vez registrado, el administrador validará la información y ya podrás ingresar a la
+                aplicación como usuario establecimiento, allí lo único que queda hacer es ingresar al botón de 'Servicios para mi mascota' que se encuentra en
+                el inicio de la aplicación y publicar tu servicio!</Text>
                 </View>
             )}
 
@@ -74,14 +72,12 @@ export default function PreguntasFrecuentes() {
                 style={styles.contenedorPreguntaDerecha2}
                 onPress={() => handleQuestionPress(4)}
             >
-                <Text style={styles.textoPregunta}>¿Pregunta frecuente 4?</Text>
+                <Text style={styles.textoPregunta}>¿Como hago para denunciar una publicación?</Text>
             </TouchableOpacity>
             {selectedQuestion === 4 && (
                 <View style={styles.contenedorRespuestaDerecha}>
-                    <Text style={styles.textoRespuesta}>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. 
-                    Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor 
-                    (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró 
-                    hacer un libro de textos especimen.</Text>
+                    <Text style={styles.textoRespuesta}>Para denunciar una publicación que posee información inadecuada, debes mantener pulsada la misma y aparecerá
+                    un modal en donde podrás ingresar el motivo de la denuncia, al hacer click en enviar se habrá realizado la denuncia.</Text>
             </View>
             )}
 
@@ -89,14 +85,12 @@ export default function PreguntasFrecuentes() {
                 style={styles.contenedorPreguntaIzquierda3}
                 onPress={() => handleQuestionPress(5)}
             >
-                <Text style={styles.textoPregunta}>¿Pregunta frecuente 5?</Text>
+                <Text style={styles.textoPregunta}>¿Pueda dar de baja una publicación?</Text>
             </TouchableOpacity>
             {selectedQuestion === 5 && (
                 <View style={styles.contenedorRespuesta}>
-                <Text style={styles.textoRespuesta}>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. 
-                    Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor 
-                    (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró 
-                    hacer un libro de textos especimen.</Text>
+                <Text style={styles.textoRespuesta}>Claro! En tu perfil podrás visualizar todas las publicaciones que realizaste dentro de la aplicación,
+                en el botón de opciones podrás elegit la opción 'Eliminar' y esa publicación se dará de baja automáticamente.</Text>
                 </View>
             )}
 
@@ -104,14 +98,11 @@ export default function PreguntasFrecuentes() {
                 style={styles.contenedorPreguntaDerecha3}
                 onPress={() => handleQuestionPress(6)}
             >
-                <Text style={styles.textoPregunta}>¿Pregunta frecuente 6?</Text>
+                <Text style={styles.textoPregunta}>¿Tengo un límite de publicaciones que pueda realizar?</Text>
             </TouchableOpacity>
             {selectedQuestion === 6 && (
                 <View style={styles.contenedorRespuestaDerecha}>
-                    <Text style={styles.textoRespuesta}>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. 
-                    Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor 
-                    (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró 
-                    hacer un libro de textos especimen.</Text>
+                    <Text style={styles.textoRespuesta}>No! Puedes realizar las publicaciones que necesites dentro de Buddy.</Text>
             </View>
             )}
 
@@ -119,14 +110,11 @@ export default function PreguntasFrecuentes() {
                 style={styles.contenedorPreguntaIzquierda4}
                 onPress={() => handleQuestionPress(7)}
             >
-                <Text style={styles.textoPregunta}>¿Pregunta frecuente 7?</Text>
+                <Text style={styles.textoPregunta}>¿Que pasa si se agrega una traza incorrecta en mi publicación?</Text>
             </TouchableOpacity>
             {selectedQuestion === 7 && (
                 <View style={styles.contenedorRespuesta}>
-                <Text style={styles.textoRespuesta}>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. 
-                    Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor 
-                    (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró 
-                    hacer un libro de textos especimen.</Text>
+                <Text style={styles.textoRespuesta}>Con el botón 'Eliminar traza' podrás eliminar cualquier traza que no desees dentro de la publicación.</Text>
                 </View>
             )}
             
@@ -134,14 +122,11 @@ export default function PreguntasFrecuentes() {
                 style={styles.contenedorPreguntaDerecha4}
                 onPress={() => handleQuestionPress(8)}
             >
-                <Text style={styles.textoPregunta}>¿Pregunta frecuente 8?</Text>
+                <Text style={styles.textoPregunta}>¿Cómo se cuando alguien agrega una traza a mi publicación?</Text>
             </TouchableOpacity>
             {selectedQuestion === 8 && (
                 <View style={styles.contenedorRespuestaDerecha}>
-                    <Text style={styles.textoRespuesta}>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. 
-                    Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor 
-                    (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró 
-                    hacer un libro de textos especimen.</Text>
+                    <Text style={styles.textoRespuesta}>Cuando alguien agregue una traza a tu publicación, te llegará una notificación avisandote!</Text>
             </View>
             )}
         </ScrollView>

@@ -141,9 +141,9 @@ export default function HomeScreen({ navigation }) {
     obtenerInformes();
     obtenerPermisos();
     fetchNotifications();
-    // const intervalId = setInterval(() => {
-    // fetchNotifications();
-    // }, 5000); // 5000 milisegundos = 5 segundos
+    //const intervalId = setInterval(() => {
+      //fetchNotifications();
+    //}, 5000); // 5000 milisegundos = 5 segundos
 
     // Limpia el intervalo cuando el componente se desmonta
     //return () => clearInterval(intervalId);

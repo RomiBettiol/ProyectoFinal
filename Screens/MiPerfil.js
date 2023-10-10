@@ -86,33 +86,47 @@ export default function MiPerfil({ navigation }) {
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        `https://buddy-app2.loca.lt/publications/publication/ByUser`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
-        setUserPublications(response.data); // Almacena las publicaciones en el estado
-        console.log("Publicaciones", response.data);
+        if (response.data) {
+          setUserPublications(response.data);
+        } else {
+          console.log(
+            "No hay publicaciones de mascotas perdidas o en adopción."
+          );
+        }
       })
       .catch((error) => {
-        console.error("Error fetching user publications:", error);
+        console.log("Error fetching user publications:", error);
       });
 
-      axios
-      .get(`https://buddy-app2.loca.lt/services/service/ByUser`, {
-        headers: {
-          "auth-token": token,
-        },
-      })
+    axios
+      .get(
+        `https://buddy-app2.loca.lt/services/service/ByUser`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
-        setUserService(response.data); // Almacena las publicaciones en el estado
-        console.log("Publicaciones", response.data);
+        console.log(response.data);
+        if (response.data) {
+          setUserService(response.data);
+        } else {
+          console.log("No hay publicaciones de servicio.");
+        }
       })
       .catch((error) => {
-        console.error("Error fetching user publications:", error);
+        console.log("Error fetching user services:", error);
       });
-
   }, []);
 
   console.log("idUser: ", idUser);
@@ -198,7 +212,7 @@ export default function MiPerfil({ navigation }) {
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
         .put(
-          `https://buddy-app2.loca.lt/security/user/${idUser}`,
+          `  https://buddy-app2.loca.lt/security/user/${idUser}`,
           updatedUserData,
           {
             headers: {
@@ -237,7 +251,7 @@ export default function MiPerfil({ navigation }) {
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
       .put(
-        `https://buddy-app2.loca.lt/security/user/${idUser}`,
+        `  https://buddy-app2.loca.lt/security/user/${idUser}`,
         updatedUserData,
         {
           headers: {
@@ -364,7 +378,7 @@ export default function MiPerfil({ navigation }) {
       console.log("idPublicacion: ", idPublicationToDelete);
       axios
         .delete(
-          `https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
+          `  https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
           {
             headers: {
               "auth-token": token,
@@ -390,7 +404,7 @@ export default function MiPerfil({ navigation }) {
     if (deleteSuccess || deleteFailure) {
       // Realiza la solicitud GET para cargar las publicaciones actualizadas
       axios
-        .get(`http://buddy-app2.loca.lt/publications/publication/ByUser`, {
+        .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
           headers: {
             "auth-token": token,
           },
@@ -419,7 +433,7 @@ export default function MiPerfil({ navigation }) {
   const handleLogout = async () => {
     try {
       const response = await fetch(
-        "https://buddy-app2.loca.lt/security/auth/logout",
+        "  https://buddy-app2.loca.lt/security/auth/logout",
         {
           method: "POST",
           headers: {
