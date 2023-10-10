@@ -76,6 +76,7 @@ export default function NotificacionesScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
   },
   header: {
     flexDirection: 'row',
@@ -112,14 +113,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   contenedorNotificacion: {
-    marginLeft: 40,
+    marginLeft: 45,
     marginTop: 25,
+    width: '80%',
   },
   textoNotificacion: {
-    fontSize: 18,
+    fontSize: 14,
     borderBottomWidth: 0.5,
     padding: 5,
     borderBottomColor: 'gray',
+    textAlign: 'justify',
   },
   contenidoNotificacion: {
     flexDirection: 'row',

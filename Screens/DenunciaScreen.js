@@ -123,10 +123,22 @@ export default function DenunciaScreen({ navigation }) {
     <View style={styles.container}>
       <HeaderScreen />
       <ScrollView>
-        <Text style={styles.titulo}>Denuncias Pendientes</Text>
-        {denuncias.map((denuncia) => (
+      <Text style={styles.titulo}>Denuncias Pendientes</Text>
+      {denuncias.length === 0 ? (
+        <View style={styles.emptyDenunciasContainer}>
+        </View>
+      ) : (
+        denuncias.map((denuncia) => (
           <View key={denuncia.idComplaint} style={styles.denuncia}>
-            <Text style={styles.tituloDenuncia}>Publicación Denunciada: {denuncia.idComplaint}</Text>
+            <Text style={styles.tituloDenuncia}>
+              Publicación Denunciada:{" "}
+              {denuncia.category === "Búsqueda de Mascota" || denuncia.category === "Adopción de Mascota"
+                ? denuncia.publication.title
+                : denuncia.category === "Servicio"
+                ? denuncia.publication.serviceTitle
+                : ""}
+            </Text>
+            <Text style={styles.motivoTexto}>Tipo de publicación: {denuncia.category}</Text>
             <Text style={styles.motivoTexto}>Motivo de la denuncia:</Text>
             <Text style={styles.textoDenuncia}>
               {denuncia.complaintDescription}
@@ -146,7 +158,9 @@ export default function DenunciaScreen({ navigation }) {
               </TouchableOpacity>
             </View>
           </View>
-        ))}
+        ))
+      )}
+    </ScrollView>
         <Modal
           visible={confirmModalVisible}
           animationType="slide"
@@ -163,7 +177,7 @@ export default function DenunciaScreen({ navigation }) {
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 style={styles.botonModal}
-                onPress={handleRechazar(token)}
+                onPress={() =>handleRechazar(token)}
               >
                 <Text>Rechazar</Text>
               </TouchableOpacity>
@@ -211,7 +225,6 @@ export default function DenunciaScreen({ navigation }) {
             </View>
           </View>
         </Modal>
-      </ScrollView>
       <BotonMenu token={token} />
     </View>
   );
@@ -319,3 +332,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 });
+
+
+

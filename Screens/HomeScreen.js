@@ -169,6 +169,7 @@ export default function HomeScreen({ navigation }) {
     React.useCallback(() => {
       obtenerPermisos();
       obtenerInformes();
+      fetchNotifications();
     }, [])
   );
 
