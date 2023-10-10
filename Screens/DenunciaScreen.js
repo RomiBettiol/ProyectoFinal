@@ -123,108 +123,110 @@ export default function DenunciaScreen({ navigation }) {
     <View style={styles.container}>
       <HeaderScreen />
       <ScrollView>
-      <Text style={styles.titulo}>Denuncias Pendientes</Text>
-      {denuncias.length === 0 ? (
-        <View style={styles.emptyDenunciasContainer}>
+        <Text style={styles.titulo}>Denuncias Pendientes</Text>
+        {denuncias.length === 0 ? (
+          <View style={styles.emptyDenunciasContainer}></View>
+        ) : (
+          denuncias.map((denuncia) => (
+            <View key={denuncia.idComplaint} style={styles.denuncia}>
+              <Text style={styles.tituloDenuncia}>
+                Publicación Denunciada:{" "}
+                {denuncia.category === "Búsqueda de Mascota" ||
+                denuncia.category === "Adopción de Mascota"
+                  ? denuncia.publication.title
+                  : denuncia.category === "Servicio"
+                  ? denuncia.publication.serviceTitle
+                  : ""}
+              </Text>
+              <Text style={styles.motivoTexto}>
+                Tipo de publicación: {denuncia.category}
+              </Text>
+              <Text style={styles.motivoTexto}>Motivo de la denuncia:</Text>
+              <Text style={styles.textoDenuncia}>
+                {denuncia.complaintDescription}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={styles.botonRechazar}
+                  onPress={() => handleOpenConfirmModal(denuncia.idComplaint)}
+                >
+                  <Text>Rechazar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.botonBloquear}
+                  onPress={() => handleOpenBloquearModal(denuncia.idComplaint)}
+                >
+                  <Text>Bloquear</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        )}
+      </ScrollView>
+      <Modal
+        visible={confirmModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={handleCloseConfirmModal}
+      >
+        <TouchableWithoutFeedback onPress={handleCloseConfirmModal}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.modalContent}>
+          <Text style={styles.tituloModal}>
+            ¿Seguro que quieres rechazar la denuncia?
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={styles.botonModal}
+              onPress={() => handleRechazar(token)}
+            >
+              <Text>Rechazar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.botonModal}
+              onPress={handleCloseConfirmModal}
+            >
+              <Text>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      ) : (
-        denuncias.map((denuncia) => (
-          <View key={denuncia.idComplaint} style={styles.denuncia}>
-            <Text style={styles.tituloDenuncia}>
-              Publicación Denunciada:{" "}
-              {denuncia.category === "Búsqueda de Mascota" || denuncia.category === "Adopción de Mascota"
-                ? denuncia.publication.title
-                : denuncia.category === "Servicio"
-                ? denuncia.publication.serviceTitle
-                : ""}
-            </Text>
-            <Text style={styles.motivoTexto}>Tipo de publicación: {denuncia.category}</Text>
-            <Text style={styles.motivoTexto}>Motivo de la denuncia:</Text>
-            <Text style={styles.textoDenuncia}>
-              {denuncia.complaintDescription}
-            </Text>
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                style={styles.botonRechazar}
-                onPress={() => handleOpenConfirmModal(denuncia.idComplaint)}
-              >
-                <Text>Rechazar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.botonBloquear}
-                onPress={() => handleOpenBloquearModal(denuncia.idComplaint)}
-              >
-                <Text>Bloquear</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))
-      )}
-    </ScrollView>
-        <Modal
-          visible={confirmModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={handleCloseConfirmModal}
-        >
-          <TouchableWithoutFeedback onPress={handleCloseConfirmModal}>
-            <View style={styles.modalOverlay} />
-          </TouchableWithoutFeedback>
-          <View style={styles.modalContent}>
-            <Text style={styles.tituloModal}>
-              ¿Seguro que quieres rechazar la denuncia?
-            </Text>
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                style={styles.botonModal}
-                onPress={() =>handleRechazar(token)}
-              >
-                <Text>Rechazar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.botonModal}
-                onPress={handleCloseConfirmModal}
-              >
-                <Text>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+      </Modal>
 
-        <Modal
-          visible={bloquearModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setBloquearModalVisible(false)}
+      <Modal
+        visible={bloquearModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setBloquearModalVisible(false)}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => setBloquearModalVisible(false)}
         >
-          <TouchableWithoutFeedback
-            onPress={() => setBloquearModalVisible(false)}
-          >
-            <View style={styles.modalOverlay} />
-          </TouchableWithoutFeedback>
-          <View style={styles.modalContent}>
-            <Text style={styles.tituloModal}>
-              ¿Seguro que quieres bloquear la denuncia?
-            </Text>
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                style={styles.botonModal}
-                onPress={() => {
-                  handleBloquear(denunciaToBloquear, token);
-                  setBloquearModalVisible(false);
-                }}
-              >
-                <Text>Bloquear</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.botonModal}
-                onPress={() => setBloquearModalVisible(false)}
-              >
-                <Text>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.modalContent}>
+          <Text style={styles.tituloModal}>
+            ¿Seguro que quieres bloquear la denuncia?
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={styles.botonModal}
+              onPress={() => {
+                handleBloquear(denunciaToBloquear, token);
+                setBloquearModalVisible(false);
+              }}
+            >
+              <Text>Bloquear</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.botonModal}
+              onPress={() => setBloquearModalVisible(false)}
+            >
+              <Text>Cancelar</Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
+        </View>
+      </Modal>
       <BotonMenu token={token} />
     </View>
   );
@@ -332,6 +334,3 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 });
-
-
-

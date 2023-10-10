@@ -383,7 +383,9 @@ export default function InicioScreen() {
                       onPress={() => {
                         setId(item.idRole);
                         setEditPermissionModalVisible(true);
-                        setPermissionRole(item.permisos ? item.permisos : "-");
+                        setPermissionRole(
+                          item.permissions ? item.permissions : "-"
+                        );
                         setNewName(item.roleName);
                       }}
                     >
@@ -413,19 +415,6 @@ export default function InicioScreen() {
       </View>
       <View style={styles.rowContainer}>
         <Text style={styles.titulo}>Permisos</Text>
-        {permissions.includes("WRITE_ROLES") && (
-          <TouchableOpacity
-            onPress={() => {
-              setType("permission");
-              setAddModalVisible(true);
-            }}
-          >
-            <Image
-              source={require("../Imagenes/agregar.png")}
-              style={styles.imagenAgregar}
-            />
-          </TouchableOpacity>
-        )}
       </View>
       <View>
         {permisos.map((item) => (
@@ -587,20 +576,6 @@ export default function InicioScreen() {
                 setInputError(false);
               }}
             />
-            {type === "permission" && (
-              <>
-                <Text style={styles.modalText}>Token claim del permiso</Text>
-                <TextInput
-                  placeholder="Ingrese el token claim"
-                  style={[styles.input, inputError && styles.inputError]}
-                  value={newTokenClaim}
-                  onChangeText={(text) => {
-                    setNewTokenClaim(text);
-                    setInputError(false);
-                  }}
-                />
-              </>
-            )}
             {inputError && (
               <Text style={styles.textError}>Complete todos los campos</Text>
             )}
@@ -697,6 +672,7 @@ export default function InicioScreen() {
           </View>
         </View>
       </Modal>
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -916,7 +892,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   editOptionButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#FFB988",
     padding: 5,
     borderRadius: 5,
   },

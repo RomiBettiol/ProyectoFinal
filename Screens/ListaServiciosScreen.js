@@ -73,7 +73,6 @@ const ListaServiciosScreen = () => {
           "auth-token": token,
         },
       };
-
       let response;
       if (serviceState === "ACTIVO") {
         response = await axios.delete(
