@@ -137,7 +137,7 @@ const FormularioRegistrarse = ({
       email.trim() !== "" &&
       usuario.trim() !== "" &&
       contrasena.trim() !== "" &&
-      image.trim() !== "" &&
+      // image.trim() !== "" &&
       contrasena === contrasena2 &&
       emailValido &&
       requisitosContrasena.every((requisito) => requisito.cumplido)

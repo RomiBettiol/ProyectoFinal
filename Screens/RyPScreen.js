@@ -148,14 +148,14 @@ export default function InicioScreen() {
     }
     setConfirming(true);
 
+    let response;
+
     try {
       const config = {
         headers: {
           "auth-token": token,
         },
       };
-
-      let response;
 
       if (type === "role") {
         const data = {
@@ -195,13 +195,16 @@ export default function InicioScreen() {
           }`
         );
       } else {
-        setResponseMessage(response.data.message);
+        setResponseMessage("Ya existe un rol con ese nombre");
       }
     } catch (error) {
-      console.error(
-        `Error al crear un nuevo ${type === "role" ? "rol" : "permiso"}`,
-        error
-      );
+      if (error == "AxiosError: Request failed with status code 400") {
+        setResponseMessage("Ya existe un rol con ese nombre");
+      } else {
+        setResponseMessage(
+          `Error al crear un nuevo ${type === "role" ? "rol" : "permiso"}`
+        );
+      }
     } finally {
       setTimeout(() => {
         setConfirming(false);
@@ -267,10 +270,13 @@ export default function InicioScreen() {
         setResponseMessage(response.data.message);
       }
     } catch (error) {
-      console.error(
-        `Error al modficar el ${type === "role" ? "rol" : "permiso"}`,
-        error
-      );
+      if (error == "AxiosError: Request failed with status code 400") {
+        setResponseMessage("Ya existe un rol con ese nombre");
+      } else {
+        setResponseMessage(
+          `Error al modificar el ${type === "role" ? "rol" : "permiso"}`
+        );
+      }
     } finally {
       setTimeout(() => {
         setConfirming(false);

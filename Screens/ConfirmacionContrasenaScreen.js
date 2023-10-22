@@ -30,7 +30,7 @@ export default function ConfirmacionContrasenaScreen({}) {
         />
         <Text style={styles.textoAgradecimiento}>
           ¡Enviamos un correo a {email}, sigue el enlace del mismo para
-          finalizar cambio de contraseña!
+          finalizar el cambio de contraseña!
         </Text>
       </View>
       <View style={styles.footerBoton}>

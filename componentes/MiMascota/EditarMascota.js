@@ -105,7 +105,11 @@ export default function EditarMascota({
     console.log(raza);
     // Obtener tipos de mascotas
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType")
+      .get("https://buddy-app2.loca.lt/parameters/petType", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({
@@ -123,7 +127,11 @@ export default function EditarMascota({
 
     // Obtener razas de mascotas
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed")
+      .get("https://buddy-app2.loca.lt/parameters/petBreed", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petBreedOptions = response.data.petBreeds.map((petBreed) => ({

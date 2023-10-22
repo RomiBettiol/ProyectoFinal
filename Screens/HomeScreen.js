@@ -18,7 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function HomeScreen({ navigation }) {
   const route = useRoute(); // Obtiene la prop route
   const [quantity, setQuantity] = useState("");
-  const [permisos, setPermisos] = useState("");
+  const [permisos, setPermisos] = useState([]);
   const [adoptionQuantity, setAdoptionQuantity] = useState("");
   const [lostPetsQuantity, setLostPetsQuantity] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
@@ -142,7 +142,7 @@ export default function HomeScreen({ navigation }) {
     obtenerPermisos();
     fetchNotifications();
     //const intervalId = setInterval(() => {
-      //fetchNotifications();
+    //fetchNotifications();
     //}, 5000); // 5000 milisegundos = 5 segundos
 
     // Limpia el intervalo cuando el componente se desmonta
@@ -152,19 +152,22 @@ export default function HomeScreen({ navigation }) {
   const obtenerInformes = async () => {
     try {
       const responseFounds = await axios.get(
-        `https://buddy-app2.loca.lt/reports/count/founds-success`
+        `https://buddy-app2.loca.lt/reports/count/founds-success`,
+        { headers: { "auth-token": token } }
       );
       const foundsQuantity = responseFounds.data.quantity;
       setQuantity(foundsQuantity);
 
       const responseLosts = await axios.get(
-        `https://buddy-app2.loca.lt/reports/count/losts-actives`
+        `https://buddy-app2.loca.lt/reports/count/losts-actives`,
+        { headers: { "auth-token": token } }
       );
       const lostsQuantity = responseLosts.data.quantity;
       setLostPetsQuantity(lostsQuantity);
 
       const responseAdoptions = await axios.get(
-        `https://buddy-app2.loca.lt/reports/count/adoptions-success`
+        `https://buddy-app2.loca.lt/reports/count/adoptions-success`,
+        { headers: { "auth-token": token } }
       );
       const adoptionsQuantity = responseAdoptions.data.quantity;
       setAdoptionQuantity(adoptionsQuantity);
@@ -178,6 +181,7 @@ export default function HomeScreen({ navigation }) {
       obtenerPermisos();
       obtenerInformes();
       fetchNotifications();
+      console.log(permisos);
     }, [])
   );
 
@@ -199,15 +203,15 @@ export default function HomeScreen({ navigation }) {
         { headers: { "auth-token": token } }
       );
 
-      if (!response.data.permissions[0]) {
+      if (!response.data) {
         return;
       }
 
-      const permisos = JSON.stringify(response.data.permissions);
+      const permisos = JSON.stringify(response.data);
 
       await AsyncStorage.setItem("permisos", permisos);
 
-      setPermisos(response.data.permissions);
+      setPermisos(response.data);
 
       return;
     } catch (error) {

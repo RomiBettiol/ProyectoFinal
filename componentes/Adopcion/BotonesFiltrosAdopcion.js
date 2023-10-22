@@ -128,7 +128,11 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/locality/")
+      .get("https://buddy-app2.loca.lt/parameters/locality/", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         if (response.data && response.data.localities) {
           setLocalities(response.data.localities);
@@ -142,7 +146,11 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petColor/")
+      .get("https://buddy-app2.loca.lt/parameters/petColor/", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         if (response.data && response.data.petColors) {
           setPetColors(response.data.petColors);
@@ -156,7 +164,11 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed/")
+      .get("https://buddy-app2.loca.lt/parameters/petBreed/", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         if (response.data && response.data.petBreeds) {
           setAvailableBreeds(
@@ -194,6 +206,7 @@ const BotonesFiltrosAdopcion = () => {
         headers: {
           "Content-Type": "application/json",
           "Bypass-Tunnel-Reminder": "",
+          "auth-token": token,
         },
       })
       .then((response) => {

@@ -15,7 +15,11 @@ export default function ReportesScreen() {
   useEffect(() => {
     // Realizar la solicitud GET utilizando Axios
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/founds-success")
+      .get("https://buddy-app2.loca.lt/reports/count/founds-success", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -27,7 +31,11 @@ export default function ReportesScreen() {
 
     // Servicios activos
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/services-actives")
+      .get("https://buddy-app2.loca.lt/reports/count/services-actives", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -39,7 +47,11 @@ export default function ReportesScreen() {
 
     // Usuarios activos
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/users-actives")
+      .get("https://buddy-app2.loca.lt/reports/count/users-actives", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -51,7 +63,11 @@ export default function ReportesScreen() {
 
     // Mascotas perdidas
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/losts-actives")
+      .get("https://buddy-app2.loca.lt/reports/count/losts-actives", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -63,7 +79,11 @@ export default function ReportesScreen() {
 
     // Mascotas en adopción
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/adoptions-actives")
+      .get("https://buddy-app2.loca.lt/reports/count/adoptions-actives", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -75,7 +95,11 @@ export default function ReportesScreen() {
 
     // Mascotas adoptadas
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/adoptions-success")
+      .get("https://buddy-app2.loca.lt/reports/count/adoptions-success", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;

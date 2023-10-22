@@ -111,8 +111,6 @@ export function RegistrarseScreen({ navigation }) {
         >
           <Text style={styles.textoBoton}>Registrarse</Text>
         </TouchableOpacity>
-
-        {error && <Text style={styles.errorText}>Error: {error}</Text>}
       </View>
       {/* Cuadro de diálogo personalizado */}
       <Modal

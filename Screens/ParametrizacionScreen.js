@@ -412,9 +412,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const getZonas = () => {
     axios
       .get("https://buddy-app2.loca.lt/parameters/locality/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "auth-token": token },
       })
       .then((response) => {
         const localities = response.data.localities;
@@ -432,7 +430,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetColors = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petColor/")
+      .get("https://buddy-app2.loca.lt/parameters/petColor/", {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         const colors = response.data.petColors;
         if (colors && Array.isArray(colors)) {
@@ -449,7 +449,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetTypes = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType/")
+      .get("https://buddy-app2.loca.lt/parameters/petType/", {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         const types = response.data.petTypes;
         if (types && Array.isArray(types)) {
@@ -466,7 +468,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetBreeds = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed/")
+      .get("https://buddy-app2.loca.lt/parameters/petBreed/", {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         const breeds = response.data.petBreeds;
         if (breeds && Array.isArray(breeds)) {
@@ -483,7 +487,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getProvinces = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/province/")
+      .get("https://buddy-app2.loca.lt/parameters/province/", {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         const fetchedProvinces = response.data.provinces;
         if (fetchedProvinces && Array.isArray(fetchedProvinces)) {
@@ -500,7 +506,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getRegions = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/region/")
+      .get("https://buddy-app2.loca.lt/parameters/region/", {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         const fetchedRegions = response.data.regions;
         if (fetchedRegions && Array.isArray(fetchedRegions)) {

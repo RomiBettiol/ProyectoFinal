@@ -95,7 +95,11 @@ export default function NuevaMascota({
     console.log(idPetBreed);
     // Obtener tipos de mascotas
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType")
+      .get("https://buddy-app2.loca.lt/parameters/petType", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({

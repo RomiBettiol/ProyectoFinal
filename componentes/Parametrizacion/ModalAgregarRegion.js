@@ -27,7 +27,11 @@ const ModalAgregarRegion = ({
 
   useEffect(() => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/province")
+      .get("https://buddy-app2.loca.lt/parameters/province", {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         setProvinces(response.data.provinces);
       })
