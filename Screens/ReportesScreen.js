@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import Header from "../componentes/HeaderScreen";
 import BotonMenu from "../componentes/BotonMenu";
 import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
 export default function ReportesScreen() {
   const [quantity, setQuantity] = useState("");
@@ -11,6 +12,8 @@ export default function ReportesScreen() {
   const [lostPetsQuantity, setLostPetsQuantity] = useState("");
   const [adoptionPetsQuantity, setAdoptionPetsQuantity] = useState("");
   const [adoptionQuantity, setAdoptionQuantity] = useState("");
+  const route = useRoute();
+  const { token } = route.params;
 
   useEffect(() => {
     // Realizar la solicitud GET utilizando Axios
