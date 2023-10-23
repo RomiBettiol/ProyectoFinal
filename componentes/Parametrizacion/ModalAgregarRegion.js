@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ModalAgregarRegion = ({
   isVisible,
@@ -24,8 +25,19 @@ const ModalAgregarRegion = ({
   const [showProvinceList, setShowProvinceList] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [token, setToken] = useState("");
+
+  const getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem("auth-token");
+      setToken(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    getToken();
     axios
       .get("https://buddy-app2.loca.lt/parameters/province", {
         headers: {

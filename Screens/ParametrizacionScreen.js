@@ -170,7 +170,9 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/province/", newProvince)
+      .post("https://buddy-app2.loca.lt/parameters/province/", newProvince, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         setSuccessModalVisible(true); // Mostrar el modal de éxito
         getProvinces(); // Actualizar la lista de provincias después de agregar
@@ -197,7 +199,9 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/petType/", newType)
+      .post("https://buddy-app2.loca.lt/parameters/petType/", newType, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         //console.log('Tipo de animal agregado exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
@@ -225,7 +229,9 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/petColor/", newColor)
+      .post("https://buddy-app2.loca.lt/parameters/petColor/", newColor, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         getPetColors(); // Actualizar la lista de colores después de agregar
         setSuccessModalVisible(true); // Mostrar mensaje de éxito
@@ -244,7 +250,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleZoneDelete = (zoneId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/locality/${zoneId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/locality/${zoneId}`, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         handleSuccessfulDeletePublication();
         getZonas();
@@ -258,7 +266,9 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleBreedDelete = async (breedId) => {
     console.log("ID:", breedId);
     await axios
-      .delete(`https://buddy-app2.loca.lt/parameters/petBreed/${breedId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/petBreed/${breedId}`, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         handleSuccessfulDeletePublication();
         getPetBreeds();
@@ -271,7 +281,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleColorDelete = (colorId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/petColor/${colorId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/petColor/${colorId}`, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         handleSuccessfulDeletePublication();
         getPetColors();
@@ -284,7 +296,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleTypeDelete = (typeId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/petType/${typeId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/petType/${typeId}`, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         handleSuccessfulDeletePublication();
         getPetTypes();
@@ -297,7 +311,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleProvinceDelete = (provinceId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/province/${provinceId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/province/${provinceId}`, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         handleSuccessfulDeletePublication();
         getProvinces();
@@ -310,7 +326,9 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleRegionDelete = (regionId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/region/${regionId}`)
+      .delete(`https://buddy-app2.loca.lt/parameters/region/${regionId}`, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         handleSuccessfulDeletePublication();
         getRegions();

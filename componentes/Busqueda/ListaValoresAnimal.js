@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ListaValoresAnimal = ({
   selectedAnimal,
@@ -8,10 +9,23 @@ const ListaValoresAnimal = ({
   setSelectedAnimalId,
 }) => {
   const [animalOptions, setAnimalOptions] = useState([]);
+  const [token, setToken] = useState("");
+
+  const getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem("auth-token");
+      setToken(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    getToken();
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType/")
+      .get("https://buddy-app2.loca.lt/parameters/petType/", {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         console.log("Tipos de animal exitosos:", response.data);
         setAnimalOptions(response.data.petTypes);

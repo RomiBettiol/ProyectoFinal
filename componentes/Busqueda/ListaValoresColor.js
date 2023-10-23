@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ListaValoresColor = ({ setSelectedColorId }) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [colorOptions, setColorOptions] = useState([]);
+  const [token, setToken] = useState("");
 
   const getColores = () => {
     axios
       .get("https://buddy-app2.loca.lt/parameters/petColor/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "auth-token": token },
       })
       .then((response) => {
         console.log("Colores exitosos:", response.data);
@@ -24,8 +24,17 @@ const ListaValoresColor = ({ setSelectedColorId }) => {
         setColorOptions([]); // En caso de error, seteamos el estado como una lista vacía
       });
   };
+  const getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem("auth-token");
+      setToken(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    getToken();
     getColores();
   }, []);
 

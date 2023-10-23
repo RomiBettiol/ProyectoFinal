@@ -2,15 +2,29 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
   const [selectedBreed, setSelectedBreed] = useState(null);
   const [breedOptions, setBreedOptions] = useState([]);
+  const [token, setToken] = useState("");
+
+  const getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem("auth-token");
+      setToken(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getRazas = () => {
     axios
       .get(
-        `https://buddy-app2.loca.lt/parameters/petBreed/byType/${selectedAnimal}`
+        `https://buddy-app2.loca.lt/parameters/petBreed/byType/${selectedAnimal}`,
+        {
+          headers: { "auth-token": token },
+        }
       )
       .then((response) => {
         console.log("Razas exitosas:", response.data);
@@ -28,6 +42,7 @@ const ListaValoresRazaPerros = ({ selectedAnimal, setSelectedBreedId }) => {
   };
 
   useEffect(() => {
+    getToken();
     getRazas();
     setSelectedBreed(null); // Reiniciar selectedBreed cuando cambie el animal seleccionado
   }, [selectedAnimal]);

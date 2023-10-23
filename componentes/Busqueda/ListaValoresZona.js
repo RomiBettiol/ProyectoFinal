@@ -2,17 +2,26 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ListaValoresZona = ({ setSelectedLocality }) => {
   const [selectedZone, setSelectedZone] = useState(null);
   const [zoneOptions, setZoneOptions] = useState([]);
+  const [token, setToken] = useState("");
+
+  const getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem("auth-token");
+      setToken(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getZonas = () => {
     axios
       .get("https://buddy-app2.loca.lt/parameters/locality/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "auth-token": token },
       })
       .then((response) => {
         console.log("Zonas exitosas:", response.data);
@@ -30,6 +39,7 @@ const ListaValoresZona = ({ setSelectedLocality }) => {
   };
 
   useEffect(() => {
+    getToken();
     getZonas();
   }, []);
 
