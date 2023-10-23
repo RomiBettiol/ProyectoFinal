@@ -8,8 +8,6 @@ import {
   Text,
   View,
   Image,
-  TouchableWithoutFeedback,
-  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -70,8 +68,13 @@ const Registro = () => {
     }
   };
 
+  async function handlePressAsync() {
+    const result = await promptAsync();
+  }
+
   return (
     <SafeAreaView style={styles.contenedor2}>
+      <Text style={[{ fontSize: 26, marginBottom: 5 }]}>Inicio de Sesión</Text>
       <Text style={[{ fontSize: 16 }]}>Complete los siguientes campos</Text>
       <TextInput
         style={styles.input}
@@ -136,7 +139,9 @@ const Registro = () => {
       <TouchableOpacity
         onPress={() => navigation.navigate("RecuperarContrasenaScreen")}
       >
-        <Text style={[{ fontSize: 16 }]}>¿Olvidaste tu contraseña?</Text>
+        <Text style={[{ fontSize: 16, textDecorationLine: "underline" }]}>
+          ¿Olvidaste tu contraseña?
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -162,7 +167,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#DDC4B8",
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingTop: "25%",
+    paddingTop: "15%",
     borderTopLeftRadius: 140,
     width: "85%",
     height: "60%",

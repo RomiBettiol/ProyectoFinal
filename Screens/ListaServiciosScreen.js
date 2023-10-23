@@ -11,7 +11,6 @@ import {
 import HeaderScreen from "../componentes/HeaderScreen";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
-import MessiImage from "../Imagenes/MESSI.jpg";
 
 const ListaServiciosScreen = () => {
   const [services, setServices] = useState([]);
