@@ -42,7 +42,7 @@ export default function RecuperarContrasenaScreen({}) {
 
     try {
       const response = await axios.post(
-        "https://8396-191-82-3-33.ngrok-free.app/security/auth/resetPassword",
+        "https://buddy-app2.loca.lt/security/auth/resetPassword",
         {
           mail: email,
         }

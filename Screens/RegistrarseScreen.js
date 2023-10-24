@@ -34,14 +34,14 @@ export function RegistrarseScreen({ navigation }) {
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const handleSubmit = async () => {
-    console.log("formValid: ", formValid)
-    console.log("formValid: ", datosFormulario)
+    console.log("formValid: ", formValid);
+    console.log("formValid: ", datosFormulario);
     if (formValid) {
       const data = {
         userName: datosFormulario.usuario,
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
-        name: datosFormulario.nombre + ', ' + datosFormulario.apellidos,
+        name: datosFormulario.nombre + ", " + datosFormulario.apellidos,
         phoneNumber: datosFormulario.nroTelefono,
         cuitCuil: datosFormulario.cuitCuil,
         address: datosFormulario.domicilio,
@@ -50,11 +50,11 @@ export function RegistrarseScreen({ navigation }) {
         userType: "BÁSICO",
         documents: null,
       };
-      console.log(data); 
+      console.log(data);
       // Hacer la petición POST al backend usando axios
       try {
         const response = await axios.post(
-          "https://8396-191-82-3-33.ngrok-free.app/security/user/register",
+          "https://buddy-app2.loca.lt/security/user/register",
           data,
           {
             headers: {
@@ -84,7 +84,7 @@ export function RegistrarseScreen({ navigation }) {
         errorText = "Por favor, complete el nombre de usuario.";
       } else if (datosFormulario.email.trim() === "") {
         errorText = "Por favor, complete el mail.";
-      }  else if (datosFormulario.apellidos.trim() === "") {
+      } else if (datosFormulario.apellidos.trim() === "") {
         errorText = "Por favor, complete lo/s apellido/s.";
       } else if (datosFormulario.domicilio.trim() === "") {
         errorText = "Por favor, complete el domicilio.";
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     width: "100%",
     bottom: 0,
     position: "absolute",
-    marginTop:25,
+    marginTop: 25,
   },
 
   botonRegistro: {

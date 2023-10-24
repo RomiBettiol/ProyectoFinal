@@ -72,7 +72,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `https://8396-191-82-3-33.ngrok-free.app/mypet/pet/${mascota.idPet}`,
+        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
         {
           headers: {
             "auth-token": token,
@@ -105,7 +105,7 @@ export default function EditarMascota({
     console.log(raza);
     // Obtener tipos de mascotas
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/parameters/petType")
+      .get("https://buddy-app2.loca.lt/parameters/petType")
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({
@@ -123,7 +123,7 @@ export default function EditarMascota({
 
     // Obtener razas de mascotas
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/parameters/petBreed")
+      .get("https://buddy-app2.loca.lt/parameters/petBreed")
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petBreedOptions = response.data.petBreeds.map((petBreed) => ({
@@ -220,7 +220,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `https://8396-191-82-3-33.ngrok-free.app/mypet/pet/${mascota.idPet}`,
+        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
         {
           headers: {
             "auth-token": token,

@@ -15,7 +15,7 @@ export default function ReportesScreen() {
   useEffect(() => {
     // Realizar la solicitud GET utilizando Axios
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/reports/count/founds-success")
+      .get("https://buddy-app2.loca.lt/reports/count/founds-success")
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -27,7 +27,7 @@ export default function ReportesScreen() {
 
     // Servicios activos
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/reports/count/services-actives")
+      .get("https://buddy-app2.loca.lt/reports/count/services-actives")
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -39,7 +39,7 @@ export default function ReportesScreen() {
 
     // Usuarios activos
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/reports/count/users-actives")
+      .get("https://buddy-app2.loca.lt/reports/count/users-actives")
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -51,7 +51,7 @@ export default function ReportesScreen() {
 
     // Mascotas perdidas
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/reports/count/losts-actives")
+      .get("https://buddy-app2.loca.lt/reports/count/losts-actives")
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -63,7 +63,7 @@ export default function ReportesScreen() {
 
     // Mascotas en adopción
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/reports/count/adoptions-actives")
+      .get("https://buddy-app2.loca.lt/reports/count/adoptions-actives")
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -75,7 +75,7 @@ export default function ReportesScreen() {
 
     // Mascotas adoptadas
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/reports/count/adoptions-success")
+      .get("https://buddy-app2.loca.lt/reports/count/adoptions-success")
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;

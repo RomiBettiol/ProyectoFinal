@@ -36,7 +36,7 @@ const ListaUsuariosScreen = () => {
       };
 
       const response = await axios.get(
-        "https://8396-191-82-3-33.ngrok-free.app/security/user/every",
+        "https://buddy-app2.loca.lt/security/user/every",
         config
       );
 
@@ -81,7 +81,7 @@ const ListaUsuariosScreen = () => {
       };
 
       await axios.post(
-        `https://8396-191-82-3-33.ngrok-free.app/security/user/changeRole/${userId}/${selectedRole}`,
+        `https://buddy-app2.loca.lt/security/user/changeRole/${userId}/${selectedRole}`,
         {},
         config
       );
@@ -111,12 +111,12 @@ const ListaUsuariosScreen = () => {
 
       if (userState === "ACTIVO") {
         response = await axios.delete(
-          `https://8396-191-82-3-33.ngrok-free.app/security/user/${userId}`,
+          `https://buddy-app2.loca.lt/security/user/${userId}`,
           config
         );
       } else {
         response = await axios.post(
-          `https://8396-191-82-3-33.ngrok-free.app/security/user/changeState/${userId}/ACTIVO`,
+          `https://buddy-app2.loca.lt/security/user/changeState/${userId}/ACTIVO`,
           {},
           config
         );

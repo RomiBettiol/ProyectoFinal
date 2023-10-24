@@ -35,7 +35,7 @@ export default function ServiciosScreen({ navigation }) {
     const obtenerServicios = async () => {
       try {
         const response = await axios.get(
-          "https://8396-191-82-3-33.ngrok-free.app/services/service/",
+          "https://buddy-app2.loca.lt/services/service/",
           {
             headers: {
               "auth-token": token,

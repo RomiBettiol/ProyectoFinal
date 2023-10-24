@@ -1,153 +1,160 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Modal, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import HeaderScreen from '../componentes/HeaderScreen';
-import BarraBusquedaMascota from '../componentes/MiMascota/BarraBusquedaMascota';
-import BotonTurnos from '../componentes/MiMascota/BotonTurnos';
-import { Popover, Overlay } from 'react-native-elements';
-import { Picker } from '@react-native-picker/picker';
-import AltaTurno from '../componentes/MiMascota/AltaTurno';
-import EditarTurno from '../componentes/MiMascota/EditarTurno';
-import TurnoModal from '../componentes/MiMascota/TurnoModal';
-import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
-import axios from 'axios';
-import SuccessModal from '../componentes/MiMascota/SuccessModal';
-import ErrorModal from '../componentes/MiMascota/ErrorModal';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Dimensions,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import HeaderScreen from "../componentes/HeaderScreen";
+import BarraBusquedaMascota from "../componentes/MiMascota/BarraBusquedaMascota";
+import BotonTurnos from "../componentes/MiMascota/BotonTurnos";
+import { Popover, Overlay } from "react-native-elements";
+import { Picker } from "@react-native-picker/picker";
+import AltaTurno from "../componentes/MiMascota/AltaTurno";
+import EditarTurno from "../componentes/MiMascota/EditarTurno";
+import TurnoModal from "../componentes/MiMascota/TurnoModal";
+import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
+import axios from "axios";
+import SuccessModal from "../componentes/MiMascota/SuccessModal";
+import ErrorModal from "../componentes/MiMascota/ErrorModal";
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function MisTurnos(token) {
-    const [overlayVisible, setOverlayVisible] = useState(false);
-    const [selectedTurnIndex, setSelectedTurnIndex] = useState(null);
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-    const [searchText, setSearchText] = useState('');
-    const [showAltaTurnoModal, setShowAltaTurnoModal] = useState(false);
-    const [showEditarTurnoModal, setShowEditarTurnoModal] = useState(false);
-    const [showOptionsOverlay, setShowOptionsOverlay] = useState(false);
-    const [turnos, setTurnos] = useState([]);
-    const [turno, setTurno] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [showErrorModal, setShowErrorModal] = useState(false);
-    const[showTurnoModal, setShowTurnoModal] = useState(false);
-    const route = useRoute();
-    const mascotaId = route.params?.mascotaId;
-    const [error404, setError404] = useState(false);
-    const [buttonTransform, setButtonTransform] = useState(0);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [selectedTurnIndex, setSelectedTurnIndex] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [searchText, setSearchText] = useState("");
+  const [showAltaTurnoModal, setShowAltaTurnoModal] = useState(false);
+  const [showEditarTurnoModal, setShowEditarTurnoModal] = useState(false);
+  const [showOptionsOverlay, setShowOptionsOverlay] = useState(false);
+  const [turnos, setTurnos] = useState([]);
+  const [turno, setTurno] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showTurnoModal, setShowTurnoModal] = useState(false);
+  const route = useRoute();
+  const mascotaId = route.params?.mascotaId;
+  const [error404, setError404] = useState(false);
+  const [buttonTransform, setButtonTransform] = useState(0);
 
-   
-        async function fetchTurnos() {
-            try {
-                const response = await axios.get(`https://8396-191-82-3-33.ngrok-free.app/mypet/turn/${mascotaId}`);
-                if (response.data && Array.isArray(response.data.turns)) {
-                setTurnos(response.data.turns);
-                console.log(response.data.turns)
-                }
-                
-            } catch (error) {
-                if (error.response && error.response.status === 404) {
-                    // Si el error es 404, establece el estado error404 en true
-                    setError404(true);
-                }
-            }
-        };
-        
-        console.log(turnos)
-
-    
-    const filterAndSearchTurnos = () => {
-        return turnos
-            .filter(turno => {
-                const dateParts = turno.turnDate.split('-');
-                const day= parseInt(dateParts[0], 10);
-                const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
-                const  year= parseInt(dateParts[2], 10);
-                const turnDate = new Date(year, month, day); 
-                const turnoYear = year;
-                const searchTextLower = searchText.toLowerCase();
-                const titleLower = turno.titleTurn.toLowerCase();
-                return (
-                    (selectedYear === null || turnoYear === selectedYear) &&
-                    (searchText === '' || titleLower.includes(searchTextLower))
-                );
-            })
-            .sort((a, b) => {
-                const fechaA = new Date(a.turnDate);
-                const fechaB = new Date(b.turnDate);
-
-                return fechaA - fechaB;
-            });
-    };
-
-    const filteredAndSortedTurnos = filterAndSearchTurnos();
-    function groupTurnosByMonth(turnos) {
-        const groupedTurnos = {};
-    
-        turnos.forEach(turno => {
-
-                const dateParts = turno.turnDate.split('-');
-                const  year= parseInt(dateParts[2], 10);
-                const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
-                const day= parseInt(dateParts[0], 10);
-                const fecha = new Date(year, month, day);
-                const mes = fecha.toLocaleString('default', { month: 'long' });              
-
-            if (!groupedTurnos[mes]) {
-                groupedTurnos[mes] = [];
-            }
-    
-            groupedTurnos[mes].push(turno);
-        });
-    
-        return groupedTurnos;
+  async function fetchTurnos() {
+    try {
+      const response = await axios.get(
+        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`
+      );
+      if (response.data && Array.isArray(response.data.turns)) {
+        setTurnos(response.data.turns);
+        console.log(response.data.turns);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        // Si el error es 404, establece el estado error404 en true
+        setError404(true);
+      }
     }
-    
-    const filteredTurnosAgrupados = groupTurnosByMonth(filteredAndSortedTurnos);
+  }
 
-    const toggleEditarTurnoModal = () => {
-        setShowEditarTurnoModal(!showEditarTurnoModal);
-        fetchTurnos();
-        
-    };
+  console.log(turnos);
 
-    const toggleAltaTurnoModal = () => {
-        setShowAltaTurnoModal(!showAltaTurnoModal);
-        fetchTurnos();
-    };
-    // Dentro de la función que maneja la opción "Eliminar"
-    const handleDeleteTurno = async () => {
-        console.log(turno.idTurn)
-            try {
-                const response = await axios.delete(`https://8396-191-82-3-33.ngrok-free.app/mypet/turn/${mascotaId}/${turno.idTurn}`);
-                console.log('Turno eliminado:', response.data);
-                setShowSuccessModal(true);
-            } catch (error) {
-                console.error('Error eliminando la mascota:', error);
-                setShowErrorModal(true);
-            }
-        
-        setOverlayVisible(false); // Cierra el overlay después de eliminar
-        fetchTurnos()
-    };
-    function dia (turno) {
-        const dateParts = turno.turnDate.split('-');
-        const  year= parseInt(dateParts[2], 10);
+  const filterAndSearchTurnos = () => {
+    return turnos
+      .filter((turno) => {
+        const dateParts = turno.turnDate.split("-");
+        const day = parseInt(dateParts[0], 10);
         const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
-        const day= parseInt(dateParts[0], 10);
-        return day;
-    };
-    const handleSuccessModalClose = () => {
-        fetchTurnos();
-        setShowSuccessModal(false);
-        setShowTurnoModal(false);
-        setOverlayVisible(false); // Cierra el modal NuevaMascota
-      };
+        const year = parseInt(dateParts[2], 10);
+        const turnDate = new Date(year, month, day);
+        const turnoYear = year;
+        const searchTextLower = searchText.toLowerCase();
+        const titleLower = turno.titleTurn.toLowerCase();
+        return (
+          (selectedYear === null || turnoYear === selectedYear) &&
+          (searchText === "" || titleLower.includes(searchTextLower))
+        );
+      })
+      .sort((a, b) => {
+        const fechaA = new Date(a.turnDate);
+        const fechaB = new Date(b.turnDate);
 
-      useEffect(() => {
-        fetchTurnos();
+        return fechaA - fechaB;
+      });
+  };
 
-    }, []);
-    
+  const filteredAndSortedTurnos = filterAndSearchTurnos();
+  function groupTurnosByMonth(turnos) {
+    const groupedTurnos = {};
+
+    turnos.forEach((turno) => {
+      const dateParts = turno.turnDate.split("-");
+      const year = parseInt(dateParts[2], 10);
+      const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+      const day = parseInt(dateParts[0], 10);
+      const fecha = new Date(year, month, day);
+      const mes = fecha.toLocaleString("default", { month: "long" });
+
+      if (!groupedTurnos[mes]) {
+        groupedTurnos[mes] = [];
+      }
+
+      groupedTurnos[mes].push(turno);
+    });
+
+    return groupedTurnos;
+  }
+
+  const filteredTurnosAgrupados = groupTurnosByMonth(filteredAndSortedTurnos);
+
+  const toggleEditarTurnoModal = () => {
+    setShowEditarTurnoModal(!showEditarTurnoModal);
+    fetchTurnos();
+  };
+
+  const toggleAltaTurnoModal = () => {
+    setShowAltaTurnoModal(!showAltaTurnoModal);
+    fetchTurnos();
+  };
+  // Dentro de la función que maneja la opción "Eliminar"
+  const handleDeleteTurno = async () => {
+    console.log(turno.idTurn);
+    try {
+      const response = await axios.delete(
+        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`
+      );
+      console.log("Turno eliminado:", response.data);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Error eliminando la mascota:", error);
+      setShowErrorModal(true);
+    }
+
+    setOverlayVisible(false); // Cierra el overlay después de eliminar
+    fetchTurnos();
+  };
+  function dia(turno) {
+    const dateParts = turno.turnDate.split("-");
+    const year = parseInt(dateParts[2], 10);
+    const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+    const day = parseInt(dateParts[0], 10);
+    return day;
+  }
+  const handleSuccessModalClose = () => {
+    fetchTurnos();
+    setShowSuccessModal(false);
+    setShowTurnoModal(false);
+    setOverlayVisible(false); // Cierra el modal NuevaMascota
+  };
+
+  useEffect(() => {
+    fetchTurnos();
+  }, []);
+
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />

@@ -100,14 +100,11 @@ export default function MiMascotaScreen() {
 
   const fetchMascotas = async () => {
     try {
-      const response = await axios.get(
-        "https://8396-191-82-3-33.ngrok-free.app/mypet/pet",
-        {
-          headers: {
-            "auth-token": token,
-          },
-        }
-      );
+      const response = await axios.get("https://buddy-app2.loca.lt/mypet/pet", {
+        headers: {
+          "auth-token": token,
+        },
+      });
       const mascotasData = response.data.pets;
       console.log(mascotasData);
       setMascotas(mascotasData);

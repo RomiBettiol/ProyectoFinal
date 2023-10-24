@@ -23,7 +23,7 @@ const ModalEditarColor = ({
   const handleEditColor = () => {
     axios
       .put(
-        `https://8396-191-82-3-33.ngrok-free.app/parameters/petColor/${editingColor.idPetColor}`,
+        `https://buddy-app2.loca.lt/parameters/petColor/${editingColor.idPetColor}`,
         {
           petColorName: colorName,
         }

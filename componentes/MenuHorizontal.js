@@ -13,7 +13,6 @@ import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 
-
 const MenuHorizontal = ({ openModal, notificacionReaded }) => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -25,7 +24,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
   const sendNotificationRequest = async () => {
     try {
       const response = await axios.post(
-        "https://8396-191-82-3-33.ngrok-free.app/reports/notification/",
+        "https://buddy-app2.loca.lt/reports/notification/",
         null,
         {
           headers: {
@@ -63,7 +62,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
 
   useEffect(() => {
     axios
-      .get(`https://8396-191-82-3-33.ngrok-free.app/security/user/`, {
+      .get(`https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -88,7 +87,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
       >
         <Image source={{ uri: user.image }} style={styles.imagenMenu} />
       </TouchableOpacity>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.menuItem}
         onPress={() => navigation.navigate("MisChats", { token })}
       >

@@ -23,7 +23,7 @@ const ModalEditarProvincia = ({
   const handleEditProvince = () => {
     axios
       .put(
-        `https://8396-191-82-3-33.ngrok-free.app/parameters/province/${editingProvince.idProvince}`,
+        `https://buddy-app2.loca.lt/parameters/province/${editingProvince.idProvince}`,
         {
           provinceName: provinceName,
         }

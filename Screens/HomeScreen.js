@@ -108,7 +108,7 @@ export default function HomeScreen({ navigation }) {
   const fetchNotifications = async () => {
     try {
       const response = await axios.get(
-        "https://8396-191-82-3-33.ngrok-free.app/reports/notification/",
+        "https://buddy-app2.loca.lt/reports/notification/",
         {
           headers: {
             "auth-token": token,
@@ -142,7 +142,7 @@ export default function HomeScreen({ navigation }) {
     obtenerPermisos();
     fetchNotifications();
     //const intervalId = setInterval(() => {
-      //fetchNotifications();
+    //fetchNotifications();
     //}, 5000); // 5000 milisegundos = 5 segundos
 
     // Limpia el intervalo cuando el componente se desmonta
@@ -152,19 +152,19 @@ export default function HomeScreen({ navigation }) {
   const obtenerInformes = async () => {
     try {
       const responseFounds = await axios.get(
-        `https://8396-191-82-3-33.ngrok-free.app/reports/count/founds-success`
+        `https://buddy-app2.loca.lt/reports/count/founds-success`
       );
       const foundsQuantity = responseFounds.data.quantity;
       setQuantity(foundsQuantity);
 
       const responseLosts = await axios.get(
-        `https://8396-191-82-3-33.ngrok-free.app/reports/count/losts-actives`
+        `https://buddy-app2.loca.lt/reports/count/losts-actives`
       );
       const lostsQuantity = responseLosts.data.quantity;
       setLostPetsQuantity(lostsQuantity);
 
       const responseAdoptions = await axios.get(
-        `https://8396-191-82-3-33.ngrok-free.app/reports/count/adoptions-success`
+        `https://buddy-app2.loca.lt/reports/count/adoptions-success`
       );
       const adoptionsQuantity = responseAdoptions.data.quantity;
       setAdoptionQuantity(adoptionsQuantity);
@@ -195,7 +195,7 @@ export default function HomeScreen({ navigation }) {
       const token = await AsyncStorage.getItem("auth-token");
 
       const response = await axios.get(
-        `https://8396-191-82-3-33.ngrok-free.app/security/user/permissions`,
+        `https://buddy-app2.loca.lt/security/user/permissions`,
         { headers: { "auth-token": token } }
       );
 

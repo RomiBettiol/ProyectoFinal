@@ -39,7 +39,7 @@ const ModalAgregarRaza = ({
     };
 
     await axios
-      .post("https://8396-191-82-3-33.ngrok-free.app/parameters/petBreed", newBreed)
+      .post("https://buddy-app2.loca.lt/parameters/petBreed", newBreed)
       .then((response) => {
         console.log(response);
         onAdd(newBreed);

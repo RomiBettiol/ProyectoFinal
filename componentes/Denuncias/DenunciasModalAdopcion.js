@@ -35,7 +35,7 @@ const DenunciasModalAdopcion = ({
 
     // Realizar la solicitud POST utilizando Axios
     axios
-      .post("https://8396-191-82-3-33.ngrok-free.app/security/complaint/", complaintData, {
+      .post("https://buddy-app2.loca.lt/security/complaint/", complaintData, {
         headers: {
           "Content-Type": "application/json",
           "auth-token": token,

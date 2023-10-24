@@ -95,7 +95,7 @@ export default function NuevaMascota({
     console.log(idPetBreed);
     // Obtener tipos de mascotas
     axios
-      .get("https://8396-191-82-3-33.ngrok-free.app/parameters/petType")
+      .get("https://buddy-app2.loca.lt/parameters/petType")
       .then((response) => {
         // Mapear los datos para obtener un array de opciones
         const petTypeOptions = response.data.petTypes.map((petType) => ({
@@ -193,7 +193,7 @@ export default function NuevaMascota({
     console.log(data);
 
     const response = await axios.post(
-      "https://8396-191-82-3-33.ngrok-free.app/mypet/pet/",
+      "https://buddy-app2.loca.lt/mypet/pet/",
       data,
       config
     );

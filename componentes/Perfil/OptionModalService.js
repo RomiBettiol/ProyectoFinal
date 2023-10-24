@@ -19,7 +19,7 @@ const OptionModalService = ({ visible, onClose, route }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://8396-191-82-3-33.ngrok-free.app/services/service/${idService}`,
+          `https://buddy-app2.loca.lt/services/service/${idService}`,
           {
             headers: {
               "auth-token": token, // Agrega el token en el encabezado
@@ -57,7 +57,7 @@ const OptionModalService = ({ visible, onClose, route }) => {
   const handleConfirmDelete = () => {
     // Realiza la solicitud DELETE utilizando Axios con el token de autorización
     axios
-      .delete(`https://8396-191-82-3-33.ngrok-free.app/services/service/${idService}`, {
+      .delete(`https://buddy-app2.loca.lt/services/service/${idService}`, {
         headers: {
           "auth-token": token, // Incluye el token en el encabezado de autorización
         },

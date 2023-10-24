@@ -123,7 +123,7 @@ export default function EditarPublicacionBusqueda({ route }) {
       });
 
       const response = await axios.put(
-        `https://8396-191-82-3-33.ngrok-free.app/publications/publication/${idPublicationSearch}?modelType=search`,
+        `https://buddy-app2.loca.lt/publications/publication/${idPublicationSearch}?modelType=search`,
         {
           title,
           description,

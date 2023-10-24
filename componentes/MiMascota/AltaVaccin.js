@@ -162,7 +162,7 @@ export default function AltaVaccin({ visible, onClose }) {
                 setIsButtonDisabled(true); // Deshabilitar el botón
                 try {
                   const response = await axios.post(
-                    `https://8396-191-82-3-33.ngrok-free.app/mypet/vaccine/${mascotaId}`,
+                    `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
                     data
                   );
                   console.log("Respuesta del servidor:", response.data);

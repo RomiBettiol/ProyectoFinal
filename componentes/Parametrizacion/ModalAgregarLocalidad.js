@@ -41,7 +41,7 @@ const ModalAgregarLocalidad = ({
     };
 
     axios
-      .post("https://8396-191-82-3-33.ngrok-free.app/parameters/locality", newLocalidad)
+      .post("https://buddy-app2.loca.lt/parameters/locality", newLocalidad)
       .then((response) => {
         onAdd(newLocalidad);
         setLocalityName("");
