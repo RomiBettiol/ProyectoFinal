@@ -12,15 +12,9 @@ import Header from "../HeaderScreen";
 import Carousel from "react-native-snap-carousel";
 import axios from "axios";
 
-const PublicacionDetalle = ({route}) => {
+const PublicacionDetalle = ({ route }) => {
   const navigation = useNavigation();
   const publicacion = route.params?.publicacion;
-<<<<<<< HEAD
-  const { token } = route.params;
-  
-  const carouselImages = publicacion.images ;
-  console.log("carrousel setteado: ",carouselImages);
-=======
   const idSearch = publicacion.idPublicationSearch;
   const { token } = route.params;
   const [idUserAutor, setIdUserAutor] = useState("");
@@ -32,7 +26,6 @@ const PublicacionDetalle = ({route}) => {
 
   const carouselImages = publicacion.images;
   console.log("carrousel setteado: ", carouselImages);
->>>>>>> entrega-demo-marti
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const year = fechaObj.getFullYear();
@@ -152,73 +145,6 @@ const PublicacionDetalle = ({route}) => {
   };
   return (
     <View>
-<<<<<<< HEAD
-        <Header />
-        <View>
-          <Carousel
-            data={carouselImages}
-            renderItem={({ item }) => (
-              <Image source={{uri: item}} style={styles.imagenPublicacion} />
-            )}
-            sliderWidth={500}
-            itemWidth={500}
-          />
-        </View>
-        <View style={styles.informacion}>
-          <View style={[{flexDirection:'row'}, styles.containerIconos]}>
-            <TouchableOpacity>
-              <Image
-                source={require('../../Imagenes/compartir.png')}
-                style={styles.iconos}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ModalTraza', {
-                    idPublicationSearch: publicacion.idPublicationSearch,
-                    token,
-                    userNamePublicacion: publicacion.user.userName,
-                  });
-                }}
-            >
-              <Image
-                source={require('../../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png')}
-                style={styles.iconos}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={[{flexDirection:'row'}, styles.contenedorTitulo]}>
-            <Text style={styles.tituloPublicacion}>{publicacion?.title}</Text>
-            <TouchableOpacity style={styles.botonInformacion}>
-              <Text>¡Tengo info!</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.containerDescripcion}>
-            <Text style={styles.descripcionPublicacion}>{publicacion?.description}</Text>
-            <View style={[styles.informacionFiltros, {flexDirection:'row'}]}>
-              <View style={styles.derecha}>
-                <View style={[styles.itemInfoFiltro, {flexDirection:'row'}]}>
-                  <Image
-                      source={require('../../Imagenes/marcador-de-posicion.png')}
-                      style={styles.iconos}
-                  />
-                  <Text style={styles.texto}>{publicacion?.locality.localityName}</Text>
-                </View>
-                <View style={[styles.itemInfoFiltro, {flexDirection:'row'}]}>
-                  <Image
-                      source={require('../../Imagenes/hueso.png')}
-                      style={styles.iconos}
-                  />
-                  <Text style={styles.texto}>{publicacion?.petBreed.petBreedName}</Text>
-                </View>
-                <View style={[styles.itemInfoFiltro, {flexDirection:'row'}]}>
-                  <Image
-                      source={require('../../Imagenes/dueno.png')}
-                      style={styles.iconos}
-                  />
-                  <Text style={styles.texto}>{publicacion?.user.userName}</Text>
-                </View>
-=======
       <Header />
       <View>
         <Carousel
@@ -276,7 +202,6 @@ const PublicacionDetalle = ({route}) => {
                 <Text style={styles.texto}>
                   {publicacion?.locality.localityName}
                 </Text>
->>>>>>> entrega-demo-marti
               </View>
               <View style={[styles.itemInfoFiltro, { flexDirection: "row" }]}>
                 <Image
