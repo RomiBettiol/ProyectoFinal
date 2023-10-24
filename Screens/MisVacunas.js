@@ -1,185 +1,197 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Modal, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import HeaderScreen from '../componentes/HeaderScreen';
-import BarraBusquedaMascota from '../componentes/MiMascota/BarraBusquedaMascota';
-import BotonVaccine from '../componentes/MiMascota/BotonVaccine';
-import BotonFlotante from '../componentes/BotonFlotante';
-import { Popover, Overlay } from 'react-native-elements';
-import { Picker } from '@react-native-picker/picker';
-import AltaVaccin from '../componentes/MiMascota/AltaVaccin';
-import EditarVaccin from '../componentes/MiMascota/EditarVaccin';
-import VaccinModal from '../componentes/MiMascota/VaccinModal';
-import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
-import axios from 'axios';
-import SuccessModal from '../componentes/MiMascota/SuccessModal';
-import ErrorModal from '../componentes/MiMascota/ErrorModal';
-import { dismissBrowser } from 'expo-web-browser';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Dimensions,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import HeaderScreen from "../componentes/HeaderScreen";
+import BarraBusquedaMascota from "../componentes/MiMascota/BarraBusquedaMascota";
+import BotonVaccine from "../componentes/MiMascota/BotonVaccine";
+import BotonFlotante from "../componentes/BotonFlotante";
+import { Popover, Overlay } from "react-native-elements";
+import { Picker } from "@react-native-picker/picker";
+import AltaVaccin from "../componentes/MiMascota/AltaVaccin";
+import EditarVaccin from "../componentes/MiMascota/EditarVaccin";
+import VaccinModal from "../componentes/MiMascota/VaccinModal";
+import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
+import axios from "axios";
+import SuccessModal from "../componentes/MiMascota/SuccessModal";
+import ErrorModal from "../componentes/MiMascota/ErrorModal";
+import { dismissBrowser } from "expo-web-browser";
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
-export default function MisVacunas(token) {
-    const [overlayVisible, setOverlayVisible] = useState(false);
-    const [selectedVaccinIndex, setSelectedVaccinIndex] = useState(null);
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-    const [searchText, setSearchText] = useState('');
-    const [showAltaVaccinModal, setShowAltaVaccinModal] = useState(false);
-    const [showEditarVaccinModal, setShowEditarVaccinModal] = useState(false);
-    const [showOptionsOverlay, setShowOptionsOverlay] = useState(false);
-    const [vaccines, setVaccines] = useState([]);
-    const [vaccin, setVaccin] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [showErrorModal, setShowErrorModal] = useState(false);
-    const route = useRoute();
-    const mascotaId = route.params?.mascotaId; 
-    console.log(mascotaId)
-    const[showVaccinModal, setShowVaccinModal] = useState(false);
-    const [buttonTransform, setButtonTransform] = useState(0);
-    const[mensaje, setMensaje] = useState('')
-    const [error404, setError404] = useState(false);
-    
-    
-        async function fetchVaccines() {
-            try {
-                const response = await axios.get(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}`);
-                console.log('Después de hacer la solicitud GET');
-                if (response.data && Array.isArray(response.data.vaccines)) {
-                    
-                    setVaccines(response.data.vaccines);
-                   
-                } else {
-                    console.error('API response does not have a valid "vaccines" array:', response.data);
-                }
-                
-            } catch (error) {
-                
-        
-                if (error.response && error.response.status === 404) {
-                    // Si el error es 404, establece el estado error404 en true
-                    setError404(true);
-                }
-            }
-        };
-       
-    
-    
-    const filterAndSearchVaccines = () => {
-        
-        return vaccines
-            .filter(vaccin => {
-                console.log(vaccin.vaccineDate)
-                const dateParts = vaccin.vaccineDate.split('-');
-                const day= parseInt(dateParts[0], 10);
-                const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
-                const  year= parseInt(dateParts[2], 10);
-                console.log(year)
-                console.log(month)
-                console.log(day)
-                const vaccineDate = new Date(year, month, day);
-                console.log('vaccineDate: ',vaccineDate); 
-                const vaccinYear = vaccineDate.getFullYear();
-                console.log('vaccinYear: ',vaccinYear); 
-                const searchTextLower = searchText.toLowerCase();
-                console.log('searchTextLower: ', searchTextLower); 
-                const titleLower = vaccin.titleVaccine.toLowerCase();
-                console.log('titleLower: ', titleLower); 
-                console.log('hora:',vaccin.vaccineHour);
-                return (
-                    (selectedYear === null || vaccinYear === selectedYear) &&
-                    (searchText === '' || titleLower.includes(searchTextLower))
-                    
-                );
-            })
-            .sort((a, b) => {
-                
-                const fechaA = new Date(a.vaccineDate);
-                const fechaB = new Date(b.vaccineDate);
+export default function MisVacunas() {
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [selectedVaccinIndex, setSelectedVaccinIndex] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [searchText, setSearchText] = useState("");
+  const [showAltaVaccinModal, setShowAltaVaccinModal] = useState(false);
+  const [showEditarVaccinModal, setShowEditarVaccinModal] = useState(false);
+  const [showOptionsOverlay, setShowOptionsOverlay] = useState(false);
+  const [vaccines, setVaccines] = useState([]);
+  const [vaccin, setVaccin] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const route = useRoute();
+  const mascotaId = route.params?.mascotaId;
+  const { token } = route.params;
+  const [showVaccinModal, setShowVaccinModal] = useState(false);
+  const [buttonTransform, setButtonTransform] = useState(0);
+  const [mensaje, setMensaje] = useState("");
+  const [error404, setError404] = useState(false);
 
-                return fechaA - fechaB;
-            });
-             
-    };
-
-    const filteredAndSortedVaccines = filterAndSearchVaccines();
-    function groupVaccinesByMonth(vaccines) {
-        const groupedVaccines = {};
-    
-        vaccines.forEach(vaccin => {
-            const dateParts = vaccin.vaccineDate.split('-');
-            const year= parseInt(dateParts[2], 10);
-            const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
-            const  day= parseInt(dateParts[0], 10);
-            const fecha = new Date(year, month, day);
-            const mes = fecha.toLocaleString('default', { month: 'long' });
-    
-            if (!groupedVaccines[mes]) {
-                groupedVaccines[mes] = [];
-            }
-    
-            groupedVaccines[mes].push(vaccin);
-        });
-    
-        return groupedVaccines;
+  async function fetchVaccines() {
+    try {
+      const response = await axios.get(
+        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      );
+      console.log("Después de hacer la solicitud GET");
+      if (response.data && Array.isArray(response.data.vaccines)) {
+        setVaccines(response.data.vaccines);
+      } else {
+        console.error(
+          'API response does not have a valid "vaccines" array:',
+          response.data
+        );
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        // Si el error es 404, establece el estado error404 en true
+        setError404(true);
+      }
     }
-    
-    const filteredVaccinesAgrupados = groupVaccinesByMonth(filteredAndSortedVaccines);
+  }
 
-    const toggleEditarVaccinModal = () => {
-        setShowEditarVaccinModal(!showEditarVaccinModal);
-        fetchVaccines();
-    };
-
-    const toggleAltaVaccinModal = () => {
-        setShowAltaVaccinModal(!showAltaVaccinModal);
-        fetchVaccines();
-    };
-
-    function dia (vaccin) {
-        const dateParts = vaccin.vaccineDate.split('-');
-        const year= parseInt(dateParts[2], 10);
+  const filterAndSearchVaccines = () => {
+    return vaccines
+      .filter((vaccin) => {
+        console.log(vaccin.vaccineDate);
+        const dateParts = vaccin.vaccineDate.split("-");
+        const day = parseInt(dateParts[0], 10);
         const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
-        const  day= parseInt(dateParts[0], 10);
-        return day;
-    };
-    
-    
-    // Dentro de la función que maneja la opción "Eliminar"
-    const handleDeleteVaccin = async () => {
-        console.log(vaccin.idVaccin )
-        try {
-            const response = await axios.delete(`https://buddy-app1.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`);
-            console.log('Vaccin  eliminado:', response.data);
-            setMensaje('Vacuna eliminada correctamente')
-            setShowSuccessModal(true);
-            } catch (error) {
-                console.error('Error eliminando la vacuna:', error);
-                setMensaje('Vacuna eliminada correctamente')
-                setShowErrorModal(true);
-            }
-        
-        setOverlayVisible(false); // Cierra el overlay después de eliminar
-        fetchVaccines();
-    };
-   
+        const year = parseInt(dateParts[2], 10);
+        console.log(year);
+        console.log(month);
+        console.log(day);
+        const vaccineDate = new Date(year, month, day);
+        console.log("vaccineDate: ", vaccineDate);
+        const vaccinYear = vaccineDate.getFullYear();
+        console.log("vaccinYear: ", vaccinYear);
+        const searchTextLower = searchText.toLowerCase();
+        console.log("searchTextLower: ", searchTextLower);
+        const titleLower = vaccin.titleVaccine.toLowerCase();
+        console.log("titleLower: ", titleLower);
+        console.log("hora:", vaccin.vaccineHour);
+        return (
+          (selectedYear === null || vaccinYear === selectedYear) &&
+          (searchText === "" || titleLower.includes(searchTextLower))
+        );
+      })
+      .sort((a, b) => {
+        const fechaA = new Date(a.vaccineDate);
+        const fechaB = new Date(b.vaccineDate);
 
-    const handleSuccessModalClose = () => {
-        fetchVaccines();
-        setShowSuccessModal(false);
-        setShowVaccinModal(false);
-        setOverlayVisible(false); // Cierra el modal NuevaMascota
+        return fechaA - fechaB;
+      });
+  };
 
-    };
-    
-    useEffect(() => {
-        console.log("vaccines: ");
-        console.log(vaccines);
-    }, [vaccines]);
+  const filteredAndSortedVaccines = filterAndSearchVaccines();
+  function groupVaccinesByMonth(vaccines) {
+    const groupedVaccines = {};
 
-    
-    useEffect(() => {
-        fetchVaccines();
-    }, []); 
+    vaccines.forEach((vaccin) => {
+      const dateParts = vaccin.vaccineDate.split("-");
+      const year = parseInt(dateParts[2], 10);
+      const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+      const day = parseInt(dateParts[0], 10);
+      const fecha = new Date(year, month, day);
+      const mes = fecha.toLocaleString("default", { month: "long" });
+
+      if (!groupedVaccines[mes]) {
+        groupedVaccines[mes] = [];
+      }
+
+      groupedVaccines[mes].push(vaccin);
+    });
+
+    return groupedVaccines;
+  }
+
+  const filteredVaccinesAgrupados = groupVaccinesByMonth(
+    filteredAndSortedVaccines
+  );
+
+  const toggleEditarVaccinModal = () => {
+    setShowEditarVaccinModal(!showEditarVaccinModal);
+    fetchVaccines();
+  };
+
+  const toggleAltaVaccinModal = () => {
+    setShowAltaVaccinModal(!showAltaVaccinModal);
+    fetchVaccines();
+  };
+
+  function dia(vaccin) {
+    const dateParts = vaccin.vaccineDate.split("-");
+    const year = parseInt(dateParts[2], 10);
+    const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
+    const day = parseInt(dateParts[0], 10);
+    return day;
+  }
+
+  // Dentro de la función que maneja la opción "Eliminar"
+  const handleDeleteVaccin = async () => {
+    console.log(vaccin.idVaccin);
+    try {
+      const response = await axios.delete(
+        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      );
+      console.log("Vaccin  eliminado:", response.data);
+      setMensaje("Vacuna eliminada correctamente");
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Error eliminando la vacuna:", error);
+      setMensaje("Vacuna eliminada correctamente");
+      setShowErrorModal(true);
+    }
+
+    setOverlayVisible(false); // Cierra el overlay después de eliminar
+    fetchVaccines();
+  };
+
+  const handleSuccessModalClose = () => {
+    fetchVaccines();
+    setShowSuccessModal(false);
+    setShowVaccinModal(false);
+    setOverlayVisible(false); // Cierra el modal NuevaMascota
+  };
+
+  useEffect(() => {
+    console.log("vaccines: ");
+    console.log(vaccines);
+  }, [vaccines]);
+
+  useEffect(() => {
+    fetchVaccines();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -317,6 +329,7 @@ export default function MisVacunas(token) {
                   mascotaId={mascotaId}
                   vaccin={vaccin}
                   onClose={toggleEditarVaccinModal}
+                  token={token}
                 />
               </View>
             </View>
@@ -336,7 +349,7 @@ export default function MisVacunas(token) {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <AltaVaccin onClose={toggleAltaVaccinModal} />
+              <AltaVaccin onClose={toggleAltaVaccinModal} token={token} />
             </View>
           </View>
         </Modal>

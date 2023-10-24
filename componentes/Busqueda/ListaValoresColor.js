@@ -4,10 +4,9 @@ import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ListaValoresColor = ({ setSelectedColorId }) => {
+const ListaValoresColor = ({ setSelectedColorId, token }) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [colorOptions, setColorOptions] = useState([]);
-  const [token, setToken] = useState("");
 
   const getColores = () => {
     axios
@@ -24,17 +23,8 @@ const ListaValoresColor = ({ setSelectedColorId }) => {
         setColorOptions([]); // En caso de error, seteamos el estado como una lista vacía
       });
   };
-  const getToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem("auth-token");
-      setToken(token);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
-    getToken();
     getColores();
   }, []);
 

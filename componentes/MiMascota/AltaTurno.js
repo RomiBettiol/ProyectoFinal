@@ -26,6 +26,7 @@ export default function AltaTurno({ visible, onClose }) {
   const [minutos, setMinutos] = useState("");
   const route = useRoute();
   const mascotaId = route.params?.mascotaId;
+  const { token } = route.params;
   console.log(mascotaId);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
   const [isButtonDisabled1, setIsButtonDisabled1] = useState(true);
@@ -172,7 +173,12 @@ export default function AltaTurno({ visible, onClose }) {
                 try {
                   const response = await axios.post(
                     `  https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`,
-                    data
+                    data,
+                    {
+                      headers: {
+                        "auth-token": token,
+                      },
+                    }
                   );
                   console.log("Respuesta del servidor:", response.data);
                   setShowSuccessModal(true);

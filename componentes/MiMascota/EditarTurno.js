@@ -17,7 +17,14 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
-export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
+
+export default function EditarTurno({
+  visible,
+  onClose,
+  turno,
+  mascotaId,
+  token,
+}) {
   const timeParts = turno.turnHour.split(":");
   const hor = parseInt(timeParts[0], 10);
   const min = parseInt(timeParts[1], 10);
@@ -84,6 +91,11 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
           titleTurn: updatedData.titleTurn,
           descriptionTurn: updatedData.descriptionTurn,
           turnDate: updatedData.turnDate,
+        },
+        {
+          headers: {
+            "auth-token": token,
+          },
         }
       );
       console.log("Turno editado:", response.updatedDatadata);
@@ -178,7 +190,12 @@ export default function EditarTurno({ visible, onClose, turno, mascotaId }) {
                 try {
                   const response = await axios.put(
                     `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
-                    updatedData
+                    updatedData,
+                    {
+                      headers: {
+                        "auth-token": token,
+                      },
+                    }
                   );
                   console.log("Respuesta del servidor:", response.data);
                   setShowSuccessModal(true);

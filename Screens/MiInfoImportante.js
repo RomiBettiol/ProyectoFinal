@@ -26,7 +26,7 @@ import InfoModal from "../componentes/MiMascota/InfoModal";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-export default function MiInfoImportante(token) {
+export default function MiInfoImportante() {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [selectedInformationIndex, setSelectedInformationIndex] =
     useState(null);
@@ -40,16 +40,20 @@ export default function MiInfoImportante(token) {
   const [info, setInfo] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [buttonTransform, setButtonTransform] = useState(0);
-
   const [error404, setError404] = useState(false);
-
   const route = useRoute();
   const mascotaId = route.params?.mascotaId;
+  const { token } = route.params;
 
   async function fetchInformacion() {
     try {
       const response = await axios.get(
-        `  https://buddy-app2.loca.lt/mypet/information/${mascotaId}`
+        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
       );
 
       if (Array.isArray(response.data.information)) {
@@ -94,7 +98,12 @@ export default function MiInfoImportante(token) {
     console.log(info.idInformation);
     try {
       const response = await axios.delete(
-        `  https://buddy-app2.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`
+        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
       );
       console.log("Info eliminado:", response.data);
       setShowSuccessModal(true);
@@ -215,6 +224,7 @@ export default function MiInfoImportante(token) {
                   mascotaId={mascotaId}
                   info={info}
                   onClose={toggleEditarInfoModal}
+                  token={token}
                 />
               </View>
             </View>
@@ -235,7 +245,10 @@ export default function MiInfoImportante(token) {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <AltaInformacion onClose={() => setShowAltaInfoModal(false)} />
+            <AltaInformacion
+              onClose={() => setShowAltaInfoModal(false)}
+              token={token}
+            />
           </View>
         </View>
       </Modal>
@@ -368,6 +381,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    marginBottom: 5,
   },
   containerInfo: {
     alignSelf: "center",

@@ -17,7 +17,13 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
-export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
+export default function EditarVaccin({
+  visible,
+  onClose,
+  vaccin,
+  mascotaId,
+  token,
+}) {
   const timeParts = vaccin.vaccineHour.split(":");
   const hor = parseInt(timeParts[0], 10);
   const min = parseInt(timeParts[1], 10);
@@ -75,32 +81,7 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
     descriptionVaccine: descriptionVaccin, // Agregar a los datos actualizados
     vaccineDate: `${selectedYear}-${selectedMonth}-${selectedDay} ${hora}:${minutos}:00`,
   };
-  const handleEditeVaccin = async () => {
-    // Obtén la ID de la mascota desde los props
-    const updatedData = {
-      titleVaccin: titleVaccin,
-      descriptionVaccin: descriptionVaccin, // Agregar a los datos actualizados
-      vaccinDate: `${selectedYear}-${selectedMonth}-${selectedDay} ${hora}:${minutos}:00`,
-    };
-    console.log(vaccin.idVaccin);
-    try {
-      const response = await axios.put(
-        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
-        {
-          titleVaccine: updatedData.titleVaccin,
-          descriptionVaccine: updatedData.descriptionVaccin,
-          vaccineDate: updatedData.vaccinDate,
-        }
-      );
-      console.log("Vacuna editado:", response.data);
-      setShowSuccessModal(true);
-    } catch (error) {
-      console.error("Error al editar la vacuna:", error);
-      setShowErrorModal(true);
-    }
 
-    setOverlayVisible(false); // Cierra el overlay después de eliminar
-  };
   return (
     <View>
       <View style={styles.modalContainer}>
@@ -183,8 +164,13 @@ export default function EditarVaccin({ visible, onClose, vaccin, mascotaId }) {
 
                 try {
                   const response = await axios.put(
-                    `  https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
-                    updatedData
+                    `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
+                    updatedData,
+                    {
+                      headers: {
+                        "auth-token": token,
+                      },
+                    }
                   );
                   console.log("Respuesta del servidor:", response.data);
                   setShowSuccessModal(true);

@@ -16,7 +16,7 @@ import ErrorModal from "./ErrorModal";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
 
-export default function AltaVaccin({ visible, onClose }) {
+export default function AltaVaccin({ visible, onClose, token }) {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
@@ -26,7 +26,6 @@ export default function AltaVaccin({ visible, onClose }) {
   const [minutos, setMinutos] = useState("");
   const route = useRoute();
   const mascotaId = route.params?.mascotaId;
-  console.log(mascotaId);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
   const [isButtonDisabled1, setIsButtonDisabled1] = useState(true);
 
@@ -163,7 +162,12 @@ export default function AltaVaccin({ visible, onClose }) {
                 try {
                   const response = await axios.post(
                     `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
-                    data
+                    data,
+                    {
+                      headers: {
+                        "auth-token": token,
+                      },
+                    }
                   );
                   console.log("Respuesta del servidor:", response.data);
                   setShowSuccessModal(true);

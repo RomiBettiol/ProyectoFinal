@@ -253,6 +253,7 @@ export default function MiMascotaScreen() {
                   onCancel={() => toggleModalEliminar(null)}
                   onConfirm={eliminarMascota}
                   mascotaId={selectedMascotaId} // Pasa el idPet almacenado en selectedMascotaId
+                  token={token}
                 />
               </View>
             </View>

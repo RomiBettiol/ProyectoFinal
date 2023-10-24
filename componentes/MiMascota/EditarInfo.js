@@ -38,6 +38,11 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
         {
           titleInformation: updatedData.titleInformation,
           descriptionInformation: updatedData.descriptionInformation,
+        },
+        {
+          headers: {
+            "auth-token": token,
+          },
         }
       );
       setShowSuccessModal(true);

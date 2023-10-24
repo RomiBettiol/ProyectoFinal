@@ -163,7 +163,7 @@ export default function ModalTraza({ navigation, route }) {
       try {
         // Realizar la solicitud POST
         const response = await axios.post(
-          "  https://buddy-app2.loca.lt/publications/trace/",
+          "https://buddy-app2.loca.lt/publications/trace/",
           data,
           {
             headers: {

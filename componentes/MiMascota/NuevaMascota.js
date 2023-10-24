@@ -288,6 +288,7 @@ export default function NuevaMascota({
                 selectedAnimal={selectedAnimal}
                 setSelectedAnimal={setSelectedAnimal}
                 setSelectedAnimalId={setSelectedAnimalId}
+                token={token}
               />
             </View>
           </ScrollView>
@@ -297,6 +298,7 @@ export default function NuevaMascota({
               <ListaValoresRazaPerros
                 selectedAnimal={selectedAnimal}
                 setSelectedBreedId={setSelectedBreedId}
+                token={token}
               />
             )}
           </View>

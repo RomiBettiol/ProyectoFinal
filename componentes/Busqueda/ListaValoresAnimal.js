@@ -7,21 +7,11 @@ const ListaValoresAnimal = ({
   selectedAnimal,
   setSelectedAnimal,
   setSelectedAnimalId,
+  token,
 }) => {
   const [animalOptions, setAnimalOptions] = useState([]);
-  const [token, setToken] = useState("");
-
-  const getToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem("auth-token");
-      setToken(token);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
-    getToken();
     axios
       .get("https://buddy-app2.loca.lt/parameters/petType/", {
         headers: { "auth-token": token },

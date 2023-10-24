@@ -19,7 +19,7 @@ import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-export default function AltaInformacion({ visible, onClose }) {
+export default function AltaInformacion({ visible, onClose, token }) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const route = useRoute();
@@ -82,7 +82,12 @@ export default function AltaInformacion({ visible, onClose }) {
                 try {
                   const response = await axios.post(
                     `https://buddy-app2.loca.lt/mypet/information/${mascotaId}`,
-                    data
+                    data,
+                    {
+                      headers: {
+                        "auth-token": token,
+                      },
+                    }
                   );
                   console.log("console log en alta informacion");
                   console.log("Respuesta del servidor:", response.data);

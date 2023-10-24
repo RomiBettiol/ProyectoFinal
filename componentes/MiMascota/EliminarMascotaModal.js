@@ -2,10 +2,20 @@ import React from "react";
 import { Modal, View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import axios from "axios";
 
-const EliminarMascotaModal = ({ visible, onCancel, onConfirm, mascotaId }) => {
+const EliminarMascotaModal = ({
+  visible,
+  onCancel,
+  onConfirm,
+  mascotaId,
+  token,
+}) => {
   const eliminarMascota = async () => {
     try {
-      await axios.delete(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`);
+      await axios.delete(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`, {
+        headers: {
+          "auth-token": token,
+        },
+      });
       onConfirm();
     } catch (error) {
       console.error("Error eliminando la mascota:", error);

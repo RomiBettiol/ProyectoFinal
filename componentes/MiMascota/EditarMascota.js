@@ -72,16 +72,17 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `  https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
+        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
         {
-          headers: {
-            "auth-token": token,
-          },
-
           petName: updatedData.petName,
           birthDate: updatedData.birthDate,
           idPetType: updatedData.idPetType,
           idPetBreed: updatedData.idPetBreed,
+        },
+        {
+          headers: {
+            "auth-token": token,
+          },
           // Otros datos que puedas necesitar
         }
       );
@@ -333,6 +334,7 @@ export default function EditarMascota({
                 selectedAnimal={selectedAnimal}
                 setSelectedAnimal={setSelectedAnimal}
                 setSelectedAnimalId={setSelectedAnimalId}
+                token={token}
               />
             </View>
           </ScrollView>
@@ -342,6 +344,7 @@ export default function EditarMascota({
               <ListaValoresRazaPerros
                 selectedAnimal={selectedAnimal}
                 setSelectedBreedId={setSelectedBreedId}
+                token={token}
               />
             )}
           </View>
