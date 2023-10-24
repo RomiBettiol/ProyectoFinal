@@ -272,6 +272,7 @@ const BotonesFiltrosAdopcion = () => {
           onPress={() =>
             navigation.navigate("PublicacionDetalleAdopcion", {
               publicacion: item,
+              token: token,
             })
           }
           onLongPress={() => handleReportModal(item)}

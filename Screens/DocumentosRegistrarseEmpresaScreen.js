@@ -39,6 +39,10 @@ export default function DocumentosRegistrarseEmpresaScreen({ route }) {
   const usuario = route.params?.usuario;
   const contrasena = route.params?.contrasena;
   const images = route.params?.awsImageLink;
+  const domicilio = route.params?.domicilio;
+  const nroTelefono = route.params?.nroTelefono;
+  const cuitCuil = route.params?.cuitCuil;
+  const fechaNacimiento = route.params?.fechaNacimiento;
 
   console.log(
     "despues de navegar:",
@@ -48,7 +52,11 @@ export default function DocumentosRegistrarseEmpresaScreen({ route }) {
     nombre,
     usuario,
     contrasena,
-    images
+    images,
+    domicilio,
+    nroTelefono,
+    fechaNacimiento,
+    cuitCuil
   );
   console.log("despues de navegar refugio:", checkBoxData.refugioMascotas);
   console.log("despues de navegar servicioSalud:", checkBoxData.servicioSalud);
@@ -261,6 +269,10 @@ export default function DocumentosRegistrarseEmpresaScreen({ route }) {
       userName: usuario,
       name: nombre,
       image: images,
+      phoneNumber: nroTelefono,
+      cuitCuil: cuitCuil,
+      address: domicilio,
+      birthDate: fechaNacimiento,
       userType: "ESTABLECIMIENTO",
       documents: arrayPdf,
       serviceType: checkboxDatas,

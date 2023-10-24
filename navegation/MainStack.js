@@ -76,6 +76,13 @@ import NotificacionesScreen from "../Screens/NotificacionesScreen";
 import Backup from "../Screens/Backup";
 import Header from "../componentes/HeaderScreen";
 
+//chats
+import MisChats from "../Screens/MisChats";
+import Chats from "../componentes/ChatComponent/Chats";
+import NuevoChat from "../componentes/ChatComponent/NuevoChat";
+import BotonSlide from "../componentes/BotonSlide";
+import Archivados from "../componentes/ChatComponent/Archivados";
+
 const Stack = createNativeStackNavigator();
 
 export default function MainStack() {
@@ -104,7 +111,7 @@ export default function MainStack() {
           component={ListaValoresMesesMascota}
         />
         <Stack.Screen name="EditarVaccin" component={EditarVaccin} />
-        
+
         <Stack.Screen
           name="AgregarImagenRegistro"
           component={AgregarImagenRegistro}
@@ -258,6 +265,11 @@ export default function MainStack() {
           component={NotificacionesScreen}
         />
         <Stack.Screen name="Backup" component={Backup} />
+        <Stack.Screen name="MisChats" component={MisChats} />
+        <Stack.Screen name="Chats" component={Chats} />
+        <Stack.Screen name="NuevoChat" component={NuevoChat} />
+        <Stack.Screen name="BotonSlide" component={BotonSlide} />
+        <Stack.Screen name="Archivados" component={Archivados} />
       </Stack.Navigator>
     </NavigationContainer>
   );

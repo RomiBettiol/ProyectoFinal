@@ -81,7 +81,6 @@ export default function EditarVaccin({
     descriptionVaccine: descriptionVaccin, // Agregar a los datos actualizados
     vaccineDate: `${selectedYear}-${selectedMonth}-${selectedDay} ${hora}:${minutos}:00`,
   };
-
   return (
     <View>
       <View style={styles.modalContainer}>

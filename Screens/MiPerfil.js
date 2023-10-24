@@ -207,7 +207,7 @@ export default function MiPerfil({ navigation }) {
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
         .put(
-          `  https://buddy-app2.loca.lt/security/user/${idUser}`,
+          `https://buddy-app2.loca.lt/security/user/${idUser}`,
           updatedUserData,
           {
             headers: {
@@ -246,7 +246,7 @@ export default function MiPerfil({ navigation }) {
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
       .put(
-        `  https://buddy-app2.loca.lt/security/user/${idUser}`,
+        `https://buddy-app2.loca.lt/security/user/${idUser}`,
         updatedUserData,
         {
           headers: {
@@ -373,7 +373,7 @@ export default function MiPerfil({ navigation }) {
       console.log("idPublicacion: ", idPublicationToDelete);
       axios
         .delete(
-          `  https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
+          `https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
           {
             headers: {
               "auth-token": token,
@@ -427,26 +427,9 @@ export default function MiPerfil({ navigation }) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(
-        "  https://buddy-app2.loca.lt/security/auth/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": token,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        // Cierre de sesión exitoso, navega a InicioScreen.js
-        navigation.navigate("InicioScreen");
-      } else {
-        // Mostrar un modal de error en caso de que la llamada no sea exitosa
-        setLogoutError("Hubo un error al cerrar sesión.");
-      }
+      await AsyncStorage.removeItem("auth-token");
+      navigation.navigate("InicioScreen");
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
       setLogoutError("Hubo un error al cerrar sesión.");
     }
   };
@@ -466,12 +449,6 @@ export default function MiPerfil({ navigation }) {
       .then((response) => {
         if (response.status === 200) {
           console.log("Serivicio eliminado");
-
-          if (response.status === 200) {
-          } else {
-            //setIsSuccessful(false);
-            //setModalMessage("Hubo un error al eliminar la publicación");
-          }
 
           setTimeout(() => {
             //setIsModalVisible(false); // Cierra el modal después de 1 segundo

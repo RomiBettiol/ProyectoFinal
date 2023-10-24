@@ -19,27 +19,37 @@ export function RegistrarseScreen({ navigation }) {
   const [error, setError] = React.useState("");
   const [datosFormulario, setDatosFormulario] = useState({
     nombre: "",
+    apellidos: "",
     email: "",
     usuario: "",
     contrasena: "",
     contrasena2: "",
     image: "",
+    domicilio: "",
+    nroTelefono: "",
+    fechaNacimiento: "",
+    cuitCuil: "",
   });
 
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const handleSubmit = async () => {
+    console.log("formValid: ", formValid);
+    console.log("formValid: ", datosFormulario);
     if (formValid) {
       const data = {
         userName: datosFormulario.usuario,
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
-        name: datosFormulario.nombre,
+        name: datosFormulario.nombre + ", " + datosFormulario.apellidos,
+        phoneNumber: datosFormulario.nroTelefono,
+        cuitCuil: datosFormulario.cuitCuil,
+        address: datosFormulario.domicilio,
+        birthDate: datosFormulario.fechaNacimiento,
         image: datosFormulario.image,
         userType: "BÁSICO",
         documents: null,
       };
-
       // Hacer la petición POST al backend usando axios
       try {
         const response = await axios.post(
@@ -73,6 +83,16 @@ export function RegistrarseScreen({ navigation }) {
         errorText = "Por favor, complete el nombre de usuario.";
       } else if (datosFormulario.email.trim() === "") {
         errorText = "Por favor, complete el mail.";
+      } else if (datosFormulario.apellidos.trim() === "") {
+        errorText = "Por favor, complete lo/s apellido/s.";
+      } else if (datosFormulario.domicilio.trim() === "") {
+        errorText = "Por favor, complete el domicilio.";
+      } else if (datosFormulario.fechaNacimiento.trim() === "") {
+        errorText = "Por favor, complete la fecha de nacimiento.";
+      } else if (datosFormulario.cuitCuil.trim() === "") {
+        errorText = "Por favor, complete el Cuit/Cuil.";
+      } else if (datosFormulario.nroTelefono.trim() === "") {
+        errorText = "Por favor, complete el numero de telefono.";
       }
 
       setErrorMessage(errorText);
@@ -204,6 +224,7 @@ const styles = StyleSheet.create({
     width: "100%",
     bottom: 0,
     position: "absolute",
+    // marginTop: 25,
   },
 
   botonRegistro: {

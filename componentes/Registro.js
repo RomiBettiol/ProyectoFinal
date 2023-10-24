@@ -8,6 +8,8 @@ import {
   Text,
   View,
   Image,
+  TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -67,10 +69,6 @@ const Registro = () => {
       setShowAlert(true);
     }
   };
-
-  async function handlePressAsync() {
-    const result = await promptAsync();
-  }
 
   return (
     <SafeAreaView style={styles.contenedor2}>

@@ -87,7 +87,10 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
       >
         <Image source={{ uri: user.image }} style={styles.imagenMenu} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.menuItem}>
+      <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => navigation.navigate("MisChats", { token })}
+      >
         <Image
           source={require("../Imagenes/mensaje.png")}
           style={styles.menu}

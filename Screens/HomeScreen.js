@@ -140,7 +140,6 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     obtenerInformes();
     obtenerPermisos();
-    console.log(permisos);
     fetchNotifications();
     //const intervalId = setInterval(() => {
     //fetchNotifications();
@@ -182,7 +181,6 @@ export default function HomeScreen({ navigation }) {
       obtenerPermisos();
       obtenerInformes();
       fetchNotifications();
-      console.log(permisos);
     }, [])
   );
 

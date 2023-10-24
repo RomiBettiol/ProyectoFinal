@@ -24,6 +24,7 @@ const FormularioRegistrarse = ({
   onDatosChange,
 }) => {
   const [nombre, setNombre] = useState(datosFormulario.nombre);
+  const [apellidos, setApellidos] = useState(datosFormulario.nombre);
   const [email, setEmail] = useState(datosFormulario.email);
   const [usuario, setUsuario] = useState(datosFormulario.usuario);
   const [contrasena, setContrasena] = useState(datosFormulario.contrasena);
@@ -32,6 +33,13 @@ const FormularioRegistrarse = ({
   const [mostrarTexto, setMostrarTexto] = useState(false);
   const [mostrarTextoContrasena2, setMostrarTextoContrasena2] = useState(false);
   const [emailValido, setEmailValido] = useState(true);
+  const [domicilio, setDomicilio] = useState(datosFormulario.domicilio);
+  const [nroTelefono, setNroTelefono] = useState(datosFormulario.nroTelefono);
+  const [fechaNacimiento, setFechaNacimiento] = useState(
+    datosFormulario.fechaNacimiento
+  );
+  const [cuitCuil, setCuitCuil] = useState(datosFormulario.cuitCuil);
+
   const [formValid, setFormValid] = useState(false);
 
   const [requisitosContrasena, setRequisitosContrasena] = useState([
@@ -85,11 +93,16 @@ const FormularioRegistrarse = ({
     onFormValidChange(isFormValid());
   }, [
     nombre,
+    apellidos,
     email,
     usuario,
     contrasena,
     contrasena2,
     image,
+    domicilio,
+    nroTelefono,
+    fechaNacimiento,
+    cuitCuil,
     onFormValidChange,
   ]);
 
@@ -97,13 +110,31 @@ const FormularioRegistrarse = ({
     onDatosChange({
       ...datosFormulario,
       nombre,
+      apellidos,
       email,
       usuario,
       contrasena,
       contrasena2,
       image,
+      domicilio,
+      nroTelefono,
+      fechaNacimiento,
+      cuitCuil,
     });
-  }, [nombre, email, usuario, contrasena, contrasena2, image, onDatosChange]);
+  }, [
+    nombre,
+    apellidos,
+    email,
+    usuario,
+    contrasena,
+    contrasena2,
+    image,
+    domicilio,
+    nroTelefono,
+    fechaNacimiento,
+    cuitCuil,
+    onDatosChange,
+  ]);
 
   const verificarRequisitosContrasena = (contrasena) => {
     const regexNumero = /\d/;
@@ -133,11 +164,16 @@ const FormularioRegistrarse = ({
 
   const isFormValid = () => {
     return (
-      // nombre.trim() !== '' &&
+      nombre.trim() !== "" &&
+      apellidos.trim() !== "" &&
       email.trim() !== "" &&
       usuario.trim() !== "" &&
       contrasena.trim() !== "" &&
-      // image.trim() !== "" &&
+      image.trim() !== "" &&
+      domicilio.trim() !== "" &&
+      nroTelefono.trim() !== "" &&
+      fechaNacimiento.trim() !== "" &&
+      cuitCuil.trim() !== "" &&
       contrasena === contrasena2 &&
       emailValido &&
       requisitosContrasena.every((requisito) => requisito.cumplido)
@@ -163,16 +199,17 @@ const FormularioRegistrarse = ({
         // Guarda el enlace en el estado
 
         console.log("Después de subirlas: ", awsImageLink);
-
-        setImage(awsImageLink);
-        console.log("Después de settearlas a image: ", image);
+        setTimeout(() => {
+          setImage(awsImageLink);
+        }, 3000);
       }
     } catch (error) {
       console.error("Error:", error);
       // Maneja el error, si es necesario
     }
+    console.log("Después de settearlas a image: ", image);
   };
-
+  console.log("Después de settearlas a image: ", image);
   //FIN imagenes
 
   return (
@@ -195,6 +232,18 @@ const FormularioRegistrarse = ({
           value={nombre}
           onChangeText={setNombre}
           onBlur={() => setEmailValido(validarEmail(nombre))}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Image
+          source={require("../Imagenes/usuario.png")}
+          style={styles.logo}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Apellidos"
+          value={apellidos}
+          onChangeText={setApellidos}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -230,6 +279,62 @@ const FormularioRegistrarse = ({
           onChangeText={setUsuario}
         />
       </View>
+      <View style={styles.inputContainer}>
+        <Image
+          source={require("../Imagenes/domicilio.png")}
+          style={styles.logo}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Domicilio"
+          value={domicilio}
+          onChangeText={setDomicilio}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Image
+          source={require("../Imagenes/telefono.png")}
+          style={styles.logo}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Numero de teléfono"
+          value={nroTelefono}
+          onChangeText={setNroTelefono}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Image
+          source={require("../Imagenes/fechNac.png")}
+          style={styles.logo}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Fecha de nacimiento"
+          value={fechaNacimiento}
+          onChangeText={setFechaNacimiento}
+        />
+      </View>
+      <Text style={styles.textoContrasena2}>
+        El formato de fecha debe ser aaaa-mm-dd
+      </Text>
+
+      <View style={styles.inputContainer}>
+        <Image
+          source={require("../Imagenes/licencia.png")}
+          style={styles.logo}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Cuit / Cuil"
+          value={cuitCuil}
+          onChangeText={setCuitCuil}
+        />
+      </View>
+      <Text style={styles.textoContrasena2}>
+        El CUIT/CUIL debe tener 11 dígitos numéricos
+      </Text>
+
       <View>
         <View style={styles.inputContainer}>
           <Image
@@ -319,7 +424,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 80,
   },
 
   texto: {

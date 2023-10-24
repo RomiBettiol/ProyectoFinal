@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ListaValoresColor = ({ setSelectedColorId, token }) => {
+const ListaValoresColor = ({ setSelectedColorId }) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [colorOptions, setColorOptions] = useState([]);
 
