@@ -1,13 +1,18 @@
-
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ImageBackground } from 'react-native';
-import Registro from '../componentes/Registro'; // Asegúrate de que la ruta sea correcta
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ImageBackground,
+} from "react-native";
+import Registro from "../componentes/Registro"; // Asegúrate de que la ruta sea correcta
+import { useNavigation } from "@react-navigation/native";
 
 export function InicioSesionScreen({ navigation }) {
   return (
     <ImageBackground
-      source={require('../Imagenes/Fondo2.png')}
+      source={require("../Imagenes/Fondo2.png")}
       style={styles.backgroundImage}
     >
       <View style={styles.contenedor1}>
@@ -21,13 +26,13 @@ export function InicioSesionScreen({ navigation }) {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
+    resizeMode: "cover",
+    justifyContent: "center",
   },
 
   titulo: {
     fontSize: 50,
-    marginBottom: '5%',
+    // marginBottom: "5%",
   },
 
   subtitulo: {
@@ -35,8 +40,8 @@ const styles = StyleSheet.create({
   },
 
   contenedor1: {
-    marginTop: '50%',
-    alignItems: 'center',
+    marginTop: "50%",
+    alignItems: "center",
   },
 });
 

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
+import axios from "axios";
 
 const ListaValoresZona = ({ setSelectedLocality }) => {
   const [selectedZone, setSelectedZone] = useState(null);
@@ -9,13 +9,13 @@ const ListaValoresZona = ({ setSelectedLocality }) => {
 
   const getZonas = () => {
     axios
-      .get('http://buddy-app1.loca.lt/parameters/locality/', {
+      .get("https://8396-191-82-3-33.ngrok-free.app/parameters/locality/", {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
-        console.log('Zonas exitosas:', response.data);
+        console.log("Zonas exitosas:", response.data);
         const localities = response.data.localities;
         if (localities && Array.isArray(localities)) {
           setZoneOptions(localities);
@@ -24,7 +24,7 @@ const ListaValoresZona = ({ setSelectedLocality }) => {
         }
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET:', error);
+        console.error("Error en la solicitud GET:", error);
         setZoneOptions([]);
       });
   };
@@ -60,10 +60,10 @@ export default ListaValoresZona;
 const styles = StyleSheet.create({
   dropdown: {
     height: 40,
-    backgroundColor: '#EEE9E9',
+    backgroundColor: "#EEE9E9",
     padding: 25,
     borderRadius: 40,
-    width: '93%',
+    width: "93%",
     marginTop: 20,
   },
   icon: {

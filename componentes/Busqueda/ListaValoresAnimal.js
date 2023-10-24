@@ -1,44 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import axios from "axios";
 
-const ListaValoresAnimal = ({ selectedAnimal, setSelectedAnimal, setSelectedAnimalId }) => {
+const ListaValoresAnimal = ({
+  selectedAnimal,
+  setSelectedAnimal,
+  setSelectedAnimalId,
+}) => {
   const [animalOptions, setAnimalOptions] = useState([]);
 
   useEffect(() => {
     axios
-      .get('http://buddy-app1.loca.lt/parameters/petType/')
+      .get("https://8396-191-82-3-33.ngrok-free.app/parameters/petType/")
       .then((response) => {
-        console.log('Tipos de animal exitosos:', response.data);
+        console.log("Tipos de animal exitosos:", response.data);
         setAnimalOptions(response.data.petTypes);
       })
       .catch((error) => {
-        console.error('Error en la solicitud GET:', error);
+        console.error("Error en la solicitud GET:", error);
         setAnimalOptions([]);
       });
   }, []);
 
   return (
     <View style={styles.container}>
-      
-      
       <View style={styles.optionsContainer}>
         {animalOptions.map((animalOption, index) => (
           <TouchableOpacity
-          key={index}
-          style={[
-            styles.option,
-            selectedAnimal === animalOption.petTypeName && styles.selectedOption,
-          ]}
-          onPress={() => {
-            setSelectedAnimal(animalOption.petTypeName);
-            setSelectedAnimalId(animalOption.idPetType); // Agrega el ID al estado
-          }}
-        >
+            key={index}
+            style={[
+              styles.option,
+              selectedAnimal === animalOption.petTypeName &&
+                styles.selectedOption,
+            ]}
+            onPress={() => {
+              setSelectedAnimal(animalOption.petTypeName);
+              setSelectedAnimalId(animalOption.idPetType); // Agrega el ID al estado
+            }}
+          >
             <Text
               style={[
                 styles.optionText,
-                selectedAnimal === animalOption.petTypeName && styles.selectedOptionText,
+                selectedAnimal === animalOption.petTypeName &&
+                  styles.selectedOptionText,
               ]}
             >
               {animalOption.petTypeName}
@@ -59,13 +63,13 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   optionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   option: {
     padding: 10,
     borderWidth: 1,
-    borderColor: '#DDC4B8',
+    borderColor: "#DDC4B8",
     borderRadius: 5,
     margin: 10,
   },
@@ -73,10 +77,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedOption: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
   },
   selectedOptionText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

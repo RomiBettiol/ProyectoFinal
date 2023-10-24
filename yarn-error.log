@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/Picker: Not found
+  Error:https://registry.yarnpkg.com/Picker: Not found
       at params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:66145:18)
       at self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:140890:22)
       at Request.emit (node:events:513:28)

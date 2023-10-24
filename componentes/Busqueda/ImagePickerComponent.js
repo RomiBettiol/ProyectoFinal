@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } fro
 import { Icon } from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 
-const ImagePickerComponent = () => {
+const ImagePickerComponent = ({ onImagesSelected }) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [mainImageIndex, setMainImageIndex] = useState(null);
@@ -26,13 +26,19 @@ const ImagePickerComponent = () => {
         quality: 1,
       });
 
-      if (!result.cancelled) {
-        setSelectedImages([...selectedImages, result.uri]);
-
+      if (!result.canceled) {
+        console.log("estoy adentro del distinto a cancelado")
+        const updatedImages = [...selectedImages, result.uri];
+        console.log("mostrando los url: ", updatedImages)
+        setSelectedImages(updatedImages);
+        console.log("mostrando los ya setteados : ", selectedImages)
         // Si no se ha seleccionado una imagen principal, establecer la primera como principal
         if (mainImageIndex === null) {
           setMainImageIndex(0);
         }
+
+        // Llama a la función onImagesSelected con el nuevo arreglo de imágenes seleccionadas
+        onImagesSelected(updatedImages);
       }
     } else {
       setShowModal(true);
@@ -91,7 +97,6 @@ const ImagePickerComponent = () => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>¡Ya elegiste 4 fotos!</Text>
-            <Text style={styles.modalText}>Son suficientes para reconocer a tu mascota</Text>
             <Pressable style={styles.modalButton} onPress={closeModal}>
               <Text style={styles.modalButtonText}>Entendido</Text>
             </Pressable>

@@ -1,18 +1,23 @@
-import React, {useState} from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../HeaderScreen';
 import Carousel from 'react-native-snap-carousel';
+import axios from 'axios';
 
-const PublicacionDetalle = ({ route }) => {
+const PublicacionDetalle = ({route}) => {
   const navigation = useNavigation();
   const publicacion = route.params?.publicacion;
+  const idSearch = publicacion.idPublicationSearch
+  const { token } = route.params;
+  const [idUserAutor, setIdUserAutor] = useState('');
+  const [userAutor, setUserAutor] = useState('');
+  
+  const [mensaje, setMensaje] = useState('');
+  const [showCongratulationsModal, setShowCongratulationsModal] = useState(false);
 
-  const carouselImages = [
-    require('../../Imagenes/imagenPublicaciones.jpg'),
-    require('../../Imagenes/imagenPublicaciones2.jpg'),
-  ];
-
+  const carouselImages = publicacion.images ;
+  console.log("carrousel setteado: ",carouselImages);
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const year = fechaObj.getFullYear();
@@ -21,6 +26,100 @@ const PublicacionDetalle = ({ route }) => {
     return `${day}-${month}-${year}`;
   };
 
+  useEffect(() => {
+    axios
+      .get(`https://8396-191-82-3-33.ngrok-free.app/security/user`, {
+        headers: {
+          "auth-token": token,
+        },
+      })
+      .then((response) => {
+        setUserAutor(response.data);
+        setIdUserAutor(response.data[0].idUser);
+
+        // Luego puedes usar idUser como desees en tu componente.
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }, [token, idUserAutor]);
+
+  const handleNewChat = async (selectedUser) => {
+    const idSelectedUser = selectedUser.idUser
+    const idAutor = idUserAutor
+    const idAdopcion = publicacion.idPublicationSearch
+    console.log("idUserautor: ", idAutor, "idUser seleccionado: ", idSelectedUser, "idPublicacion: ",idAdopcion)
+    try {
+      // Realizar una solicitud POST al servidor para crear un nuevo chat
+      const response = await axios.post(`https://8396-191-82-3-33.ngrok-free.app/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Search`,null,{
+          headers: {
+              'auth-token': token
+            }
+        });
+      // Verificar si la solicitud fue exitosa
+      if (response.status === 201) {
+        const id = response.data.idChat;
+        navigation.navigate('Chats', {
+          chatId: id,
+          token: token,
+          idUserRecep: idSelectedUser,
+          nombre: selectedUser.userName,
+          image: selectedUser.image,
+          idReference: idSearch,
+          referenceType: 'SEARCH',
+          imagenPublicacion: carouselImages[0],
+        });
+        
+      }  else if (response.status === 200) {
+        setMensaje(response.data.message + ". Lo redirigiremos al chat existente...");
+        setShowCongratulationsModal(true);
+        if (response.data.chat && response.data.chat.idChat) {
+          const id = response.data.chat.idChat;
+          setTimeout(() => {
+            navigation.navigate('Chats', {
+            chatId: id,
+            token: token,
+            idUserRecep: idSelectedUser,
+            nombre: selectedUser.userName,
+            image: selectedUser.image,
+            idReference: idSearch,
+            referenceType: 'SEARCH',
+            imagenPublicacion: carouselImages[0],
+          });
+          }, 4000);
+          
+        } else {
+          console.log('No se pudo encontrar el ID del chat en la respuesta:', response.data);
+        }
+      } else {
+        console.error('Error al crear el chat:', response.data);
+        console.log("mensaje: ", response.data.message);
+        
+      }
+    } catch (error) {
+        if (error.response && error.response.status === 400) {
+          const id = error.response.data.chat.idChat;
+          console.log('error 400 mensaje: ',error.response.data.message )
+          setMensaje(error.response.data.message + ". Lo redirigiremos al chat existente...");
+          setShowCongratulationsModal(true);
+          setTimeout(() => {
+            navigation.navigate('Chats', {
+            chatId: id, // Reemplaza 'chatId' con la clave correcta para el ID del chat
+            token: token,// Otras props que quieras pasar a la pantalla de chat
+            idUserRecep: idSelectedUser,
+            nombre: selectedUser.userName,
+            image: selectedUser.image,
+            idReference: idSearch,
+            referenceType: "SEARCH",
+            imagenPublicacion: carouselImages[0],
+          });
+          }, 8000);
+          
+        }else {
+          console.error('Error al crear el chat CATCH:', error);
+        }
+    }
+  };
   return (
     <View>
         <Header />
@@ -28,7 +127,7 @@ const PublicacionDetalle = ({ route }) => {
           <Carousel
             data={carouselImages}
             renderItem={({ item }) => (
-              <Image source={item} style={styles.imagenPublicacion} />
+              <Image source={{uri: item}} style={styles.imagenPublicacion} />
             )}
             sliderWidth={500}
             itemWidth={500}
@@ -42,7 +141,15 @@ const PublicacionDetalle = ({ route }) => {
                 style={styles.iconos}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ModalTraza', {
+                    idPublicationSearch: publicacion.idPublicationSearch,
+                    token,
+                    userNamePublicacion: publicacion.user.userName,
+                  });
+                }}
+            >
               <Image
                 source={require('../../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png')}
                 style={styles.iconos}
@@ -51,7 +158,9 @@ const PublicacionDetalle = ({ route }) => {
           </View>
           <View style={[{flexDirection:'row'}, styles.contenedorTitulo]}>
             <Text style={styles.tituloPublicacion}>{publicacion?.title}</Text>
-            <TouchableOpacity style={styles.botonInformacion}>
+            <TouchableOpacity style={styles.botonInformacion}
+               onPress={() => handleNewChat(publicacion?.user)} // Agregar lógica de manejo de clic aquí
+            >
               <Text>¡Tengo info!</Text>
             </TouchableOpacity>
           </View>
@@ -107,6 +216,20 @@ const PublicacionDetalle = ({ route }) => {
             </View>
           </View>
         </View>
+        <Modal
+              transparent={true}
+              visible={showCongratulationsModal}
+              animationType="slide"
+              onRequestClose={() => setShowCongratulationsModal(false)}
+            >
+              <View style={styles.modalContainer}>
+                <View style={[styles.modalContent,
+                    ,{backgroundColor:'#FFB984'}
+                  ]}>
+                  <Text style={styles.modalText}>{mensaje}</Text>
+                </View>
+              </View>
+            </Modal>
     </View>
   );
 };
@@ -172,7 +295,35 @@ const styles = StyleSheet.create({
     },
     contenedorTitulo: {
       marginTop: 15,
-    }
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    },
+    modalContent: {
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      padding: 20,
+      width: '80%',
+      alignItems: 'center',
+    },
+    modalText: {
+      fontSize: 18,
+      marginBottom: 20,
+    },
+    modalButtons: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    modalButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      marginHorizontal: 10,
+      backgroundColor: '#FFB984', // Cambia el color de fondo del botón de acuerdo a tus preferencias
+      borderRadius: 5,
+    },
   });
 
 export default PublicacionDetalle;

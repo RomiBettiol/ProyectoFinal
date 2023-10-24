@@ -3,9 +3,14 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } fro
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-const AgregarImagen = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
+Amplify.configure(awsconfig);
+
+const AgregarImagen = ( {onImagesSelected } ) => {
+  const [selectedImages, setSelectedImages] = React.useState('' );
   const [showModal, setShowModal] = useState(false);
+  
 
   const options = {
     title: 'Seleccionar imagen',
@@ -16,11 +21,17 @@ const AgregarImagen = () => {
     quality: 1,
   };
 
+   
+
+  
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
-    if (!result.cancelled) {
-      setSelectedImage(result.uri);
+    if (!result.canceled) {
+      const updatedImages = [...selectedImages, result.uri];
+        console.log("mostrando los url: ", updatedImages)
+        setSelectedImages(updatedImages);
+        onImagesSelected(updatedImages);
     }
   };
 
@@ -29,13 +40,13 @@ const AgregarImagen = () => {
   };
 
   const removeImage = () => {
-    setSelectedImage(null);
+    setSelectedImages(null);
   };
 
   return (
     <TouchableOpacity style={styles.botonGaleria} onPress={openGallery}>
-      {selectedImage ? (
-        <Image source={{ uri: selectedImage }} style={styles.selectedImage} />
+      {selectedImages ? (
+        <Image source={{ uri: selectedImages.localUri }} style={styles.selectedImage} />
       ) : (
         <>
           <Image source={require('../Imagenes/fotos.png')} style={styles.foto} />

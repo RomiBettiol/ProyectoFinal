@@ -14,7 +14,7 @@ export default function AdoptarScreen() {
   console.log("prueba en adoptar: "+ token);
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen  token={token}/>
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>¡Adopta una mascota!</Text>

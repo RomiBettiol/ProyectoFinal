@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
 
-const Header = () => {
+const Header = (token) => {
   const navigation = useNavigation();
-
+  const route = useRoute(); // Obtiene la prop route
   return (
     <View style={styles.container}>
       <TouchableOpacity>
@@ -14,7 +15,7 @@ const Header = () => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate('HomeScreen')}
+        onPress={() => navigation.navigate('HomeScreen',  token={token})}
       >
         <Image
           source={require('../Imagenes/logoHeader.png')}

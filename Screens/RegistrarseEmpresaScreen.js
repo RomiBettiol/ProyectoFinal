@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet,ScrollView, Text,TextInput, TouchableOpacity, View,KeyboardAvoidingView} from 'react-native';
+import * as ImagePicker from 'expo-image-picker'; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
 import { Image, Button, CheckBox } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ImageBackground } from 'react-native';
@@ -9,6 +10,10 @@ import {ConfirmacionRegistroScreen} from './ConfirmacionRegistroScreen';
 import { useNavigation } from '@react-navigation/native';
 //import bcrypt from 'bcrypt';
 
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
+Amplify.configure(awsconfig);
+
 export function RegistrarseEmpresaScreen({}){
   const [nombre, setNombre] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -16,12 +21,17 @@ export function RegistrarseEmpresaScreen({}){
   const [usuario, setUsuario] = React.useState('');
   const [contrasena, setContrasena] = React.useState('');
   const [contrasena2, setContrasena2] = React.useState('');
+  const [domicilio, setDomicilio] = React.useState('');
+  const [nroTelefono, setNroTelefono] = React.useState('');
+  const [fechaNacimiento, setFechaNacimiento] = React.useState('');
+  const [cuitCuil, setCuitCuil] = React.useState('');
   const [servicioSalud, setServicioSalud] = React.useState(false);
   const [tiendasMascotas, setTiendasMascotas] = React.useState(false);
   const [refugioMascotas, setRefugioMascotas] = React.useState(false);
   const [checkBox1, setCheckBox1] = React.useState(false);
   const [checkBox2, setCheckBox2] = React.useState(false);
   const [checkBox3, setCheckBox3] = React.useState(false);
+  const [linkAWS, setLinkAWS] = useState(null); // Nuevo estado para almacenar el enlace de la imagen en Amazon S3
 
   const [nombreError, setNombreError] = React.useState(false);
   const [emailError, setEmailError] = React.useState(false);
@@ -30,11 +40,19 @@ export function RegistrarseEmpresaScreen({}){
   const [contrasena2Error, setContrasena2Error] = React.useState(false);
   const [checkBoxError, setCheckBoxError] = React.useState(false);
   const [formValid, setFormValid] = React.useState(true);
+  const [domicilioError, setDomicilioError] = React.useState(false);
+  const [fechaNacimientoError, setFechaNacimientoError] = React.useState(false);
+  const [cuitCuilError, setCuitCuilError] = React.useState(false);
+  const [nroTelefonoError, setNroTelefonoError] = React.useState(false);
+  const [linkAWSError, setLinkAWSError] = React.useState(false);
 
   const [mostrarTexto, setMostrarTexto] = React.useState(false);
   const [mostrarTextoContrasena2, setMostrarTextoContrasena2] = React.useState(false);
 
   const navigation = useNavigation();
+
+  const [selectedImage, setSelectedImage] = React.useState(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const [requisitosContrasena, setRequisitosContrasena] = React.useState([
     { texto: 'Mínimo 8 caracteres', cumplido: false },
@@ -69,12 +87,17 @@ export function RegistrarseEmpresaScreen({}){
     const isContrasenaValid = contrasena !== '' && requisitosContrasena.every((req) => req.cumplido);
     const isContrasena2Valid = contrasena2 !== '' && contrasena2 === contrasena;
     const isCheckboxValid = checkBox1 || checkBox2 || checkBox3;
+    const isDomicilioValid= domicilio !== '';
+    const isNroTelefonoValid= nroTelefono!== '';
+    const isFechaNacimientoValid= fechaNacimiento!== '';
+    const isCuitCuilValid= cuitCuil !== '';
+    const isLinkAWSValid = linkAWS !== '';
 
     const isFormValid =
-      isEmailValid && isNombreValid && isUsuarioValid && isContrasenaValid && isContrasena2Valid && isCheckboxValid;
+      isEmailValid && isNombreValid && isUsuarioValid && isContrasenaValid && isContrasena2Valid && isCheckboxValid && isDomicilioValid && isLinkAWSValid && isNroTelefonoValid && isFechaNacimientoValid && isCuitCuilValid ;
 
     setFormValid(isFormValid);
-  }, [email, isValidEmail, nombre, usuario, contrasena, contrasena2, checkBox1, checkBox2, checkBox3, requisitosContrasena]);
+  }, [email, isValidEmail, nombre, usuario, contrasena, contrasena2,domicilio, nroTelefono, fechaNacimiento,linkAWS, cuitCuil, checkBox1, checkBox2, checkBox3, requisitosContrasena]);
 
   
   const handleCheckBox1 = () => {
@@ -107,6 +130,11 @@ export function RegistrarseEmpresaScreen({}){
     const isContrasenaValid = contrasena !== '' && requisitosContrasena.every((req) => req.cumplido);
     const isContrasena2Valid = contrasena2 !== '' && contrasena2 === contrasena;
     const isCheckboxValid = checkBox1 || checkBox2 || checkBox3;
+    const isDomicilioValid= domicilio !== '';
+    const isNroTelefonoValid= nroTelefono!== '';
+    const isFechaNacimientoValid= fechaNacimiento!== '';
+    const isCuitCuilValid= cuitCuil !== '';
+    const isLinkAWSValid = linkAWS !== '';
 
     setEmailError(!isEmailValid);
     setNombreError(!isNombreValid);
@@ -114,9 +142,14 @@ export function RegistrarseEmpresaScreen({}){
     setContrasenaError(!isContrasenaValid);
     setContrasena2Error(!isContrasena2Valid);
     setCheckBoxError(!isCheckboxValid);
+    setDomicilio(!isDomicilioValid);
+    setNroTelefono(!isNroTelefonoValid);
+    setFechaNacimiento(!isFechaNacimientoValid);
+    setCuitCuil(!isCuitCuilValid);
+    setLinkAWS(!isLinkAWSValid);
 
     const isFormValid =
-      isEmailValid && isNombreValid && isUsuarioValid && isContrasenaValid && isContrasena2Valid && isCheckboxValid;
+      isEmailValid && isNombreValid && isUsuarioValid && isContrasenaValid && isContrasena2Valid && isCheckboxValid && isDomicilioValid && isLinkAWSValid && isNroTelefonoValid && isFechaNacimientoValid && isCuitCuilValid ;
 
     setFormValid(isFormValid);
 
@@ -127,14 +160,121 @@ export function RegistrarseEmpresaScreen({}){
     console.log('Confirmación de Contraseña Error:', contrasena2Error);
     console.log('Checkbox Error:', checkBoxError);
     console.log('Form Valid:', isFormValid);
-
+    console.log('awsLink Error:', linkAWS);
+    console.log('Domicilio Error:', linkAWS);
+    console.log('Nro de telefono Error:', linkAWS);
+    console.log('CuitCuil Error:', linkAWS);
+    console.log('Fecha creacion Error:', linkAWS);
   
 };
 
 
+
+///// upload image ////
+const fetchImageUri = async (uri) => {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  return blob;
+}
+ ////end upload img ////
+
+
+ const [petData, setPetData] = useState({
+   petName: "",
+   birthDate: "",
+ });
+
+ const toggleModal = () => {
+   setShowModal(!showModal); // Cambiar el estado del modal
+ };
+
+ const uploadFile = async (file) => {
+  const img = await fetchImageUri(file.uri);
+  return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+    level: 'public',
+    contentType: file.type,
+    progressCallback(uploadProgress) {
+      console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+    },
+  })
+    .then((res) => {
+      // Retorna la clave (key) de la imagen en Amazon S3
+      return res.key;
+    })
+    .catch((e) => {
+      console.log(e);
+      throw e; // Lanza una excepción para manejar errores en la función llamante
+    });
+};
+const handleSubAddPet = async (checkBoxData) => {
+  try {
+    if (selectedImage) {
+      // Subir la imagen a Amazon S3 y obtener el enlace
+      const awsImageKey = await uploadFile(selectedImage);
+
+      // Construye el enlace completo a la imagen en Amazon S3
+      const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
+
+      // Guarda el enlace en el estado
+      setLinkAWS(awsImageLink);
+      setTimeout(() => {
+        handleNavegar(checkBoxData, awsImageLink);
+      }, 2000);
+      // Continúa con la solicitud POST al backend
+       
+    } else {
+      // Si no hay imagen seleccionada, solo envía la solicitud POST sin el enlace de la imagen
+      console.log('ERRORRRRRRRRRRRR')
+    }
+    
+  // Habilita el botón nuevamente después de dos segundos
+  setTimeout(() => {
+    setIsButtonDisabled(false);
+  }, 2000);
+
+  handleNavegar(checkBoxData);
+} catch (error) {
+  console.error('Error:', error);
+  // Maneja el error, si es necesario
+}
+};
+const options = {
+  title: 'Seleccionar imagen',
+  cancelButtonTitle: 'Cancelar',
+  takePhotoButtonTitle: 'Tomar foto',
+  chooseFromLibraryButtonTitle: 'Elegir de la galería',
+  mediaType: 'photo',
+  quality: 1,
+};
+const openGallery = async () => {
+  const result = await ImagePicker.launchImageLibraryAsync(options);
+
+  if (!result.canceled) {
+    setSelectedImage(result);
+  }
+};
+
+const handleNavegar = (checkBoxData, awsImageLink) => {
+  console.log('antes de navegar:',checkBoxData, email, isValidEmail, nombre, usuario, contrasena,domicilio, nroTelefono, fechaNacimiento, cuitCuil, awsImageLink)
+  navigation.navigate('DocumentosRegistrarseEmpresaScreen', {
+    checkBoxData: checkBoxData,
+    email,
+    isValidEmail,
+    nombre,
+    usuario,
+    contrasena,
+    domicilio,
+    nroTelefono,
+    fechaNacimiento,
+    cuitCuil,
+    awsImageLink,
+  });
+};
+
+
   return(
-           
-    <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <View style={styles.general}>
+    
        <View style={styles.logoContainer}>
               <Image
               source={require('../Imagenes/logo2.png'
@@ -143,8 +283,20 @@ export function RegistrarseEmpresaScreen({}){
               />          
               <Text style={styles.titulo}>REGISTRARSE</Text>
         </View>
+        <ScrollView contentContainerStyle={styles.container} >
         <View style={styles.contenedor2}> 
-        
+          <TouchableOpacity style={styles.botonGaleria} onPress={openGallery}>
+              {selectedImage ? (
+                <Image source={{ uri: linkAWS }} style={styles.selectedImage} />
+              ) : (
+                <>
+                  <Image source={require('../Imagenes/fotos.png')} style={styles.foto} />
+                  <Text style={styles.botonFoto}>Seleccionar foto</Text>
+                </>
+              )}
+          
+            
+          </TouchableOpacity>
           <View style={styles.contenVentanaTexto}>
             <Text style={styles.textoVentana}>Tipo de establecimiento:</Text>
           </View>
@@ -226,7 +378,51 @@ export function RegistrarseEmpresaScreen({}){
                   value={usuario}
                   onChangeText={setUsuario}
                 />
-            </View>   
+            </View>
+            <View style={styles.inputContainer}>
+              <Image
+                source={require("../Imagenes/domicilio.png")}
+                style={styles.logo}
+              />
+              <TextInput
+                style={[styles.input, usuarioError && styles.inputError]} // Aplicar estilo de error si hay un error en el usuario
+                placeholder="Domicilio"
+                value={domicilio}
+                onChangeText={setDomicilio}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Image source={require("../Imagenes/telefono.png")} style={styles.logo} />
+              <TextInput
+                style={[styles.input, usuarioError && styles.inputError]} // Aplicar estilo de error si hay un error en el usuario
+                placeholder="Numero de teléfono"
+                value={nroTelefono}
+                onChangeText={setNroTelefono}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Image source={require("../Imagenes/fechNac.png")} style={styles.logo} />
+              <TextInput
+                style={[styles.input, usuarioError && styles.inputError]} // Aplicar estilo de error si hay un error en el usuario
+                placeholder="Fecha de fundación"
+                value={fechaNacimiento}
+                onChangeText={setFechaNacimiento}
+              />
+            </View>
+            <Text style={styles.textoContrasena2}>El formato de fecha debe ser aaaa-mm-dd</Text>
+        
+
+            <View style={styles.inputContainer}>
+              <Image source={require("../Imagenes/licencia.png")} style={styles.logo} />
+              <TextInput
+                style={[styles.input, usuarioError && styles.inputError]} // Aplicar estilo de error si hay un error en el usuario
+                placeholder="Cuit / Cuil"
+                value={cuitCuil}
+                onChangeText={setCuitCuil}
+              />
+            </View>
+            <Text style={styles.textoContrasena2}>El CUIT/CUIL debe tener 11 dígitos numéricos</Text>
+            
             <View>
                 <View style={styles.inputContainer}>
                     
@@ -280,8 +476,8 @@ export function RegistrarseEmpresaScreen({}){
                       )}
                   </View>
                 </View>
-            </View>
-       
+          </View>
+          </ScrollView>
             <View style={(styles.footerBoton)}>
               <TouchableOpacity
                 style={[styles.botonRegistro, formValid ? null : styles.disabledButton]}
@@ -293,33 +489,36 @@ export function RegistrarseEmpresaScreen({}){
                       tiendasMascotas: checkBox2,
                       refugioMascotas: checkBox3,
                     };
-                    navigation.navigate('DocumentosRegistrarseEmpresaScreen', { checkBoxData, formValid }); // Pasar formValid como prop
+                    handleSubAddPet(checkBoxData);
+                    
                   }
                 }}
-                disabled={!formValid}>
+                disabled={!formValid && isButtonDisabled}>
                 <Text style={styles.textoBoton}>SIGUIENTE</Text>
               </TouchableOpacity>
             </View>
-    </KeyboardAwareScrollView>
     
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  general:{
+     flex: 1,
+     alignItems:'center'
+
+  },
   inputError: {
     borderColor: 'red',
   },
  
-    container: {
-        flexGrow: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',     
-       },
-       logoContainer: {
-         alignItems: 'center',
-         marginTop: 30,
-       },
+  container: {
+    paddingBottom:15,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 30,
+  },
    
      titulo: {
        fontSize: 35,
@@ -331,7 +530,7 @@ const styles = StyleSheet.create({
     },
     contenedor2: {
       //flex: 1,
-      height: 450,
+     // height: 450,
       backgroundColor: '#DDC4B8',
       width: 350,
       borderRadius: 30,
@@ -443,5 +642,33 @@ const styles = StyleSheet.create({
       color: 'red',
       marginTop: 5,
       flexDirection: 'row',
+    },
+    botonGaleria: {
+      backgroundColor: '#DDC4B8',
+      height: 100,
+      width: '80%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 30,
+      marginTop: 30,
+      elevation: 3,
+    },
+    foto: {
+      width: 30,
+      height: 30,
+    },
+    botonFoto: {
+      fontSize: 14,
+      marginTop: 10,
+    },
+    selectedImage: {
+      width: 60,
+      height: 60,
+      margin: 5,
+      borderRadius: 40,
+    },
+    foto: {
+      width: 30,
+      height: 30,
     },
 });

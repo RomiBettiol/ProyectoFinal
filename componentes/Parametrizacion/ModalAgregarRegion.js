@@ -1,10 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet, Dimensions, TextInput, ScrollView } from 'react-native';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  TextInput,
+  ScrollView,
+} from "react-native";
+import axios from "axios";
 
-const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) => {
-  const [regionName, setRegionName] = useState('');
-  const [selectedProvinceId, setSelectedProvinceId] = useState('');
+const ModalAgregarRegion = ({
+  isVisible,
+  onClose,
+  onAdd,
+  onSuccess,
+  onError,
+}) => {
+  const [regionName, setRegionName] = useState("");
+  const [selectedProvinceId, setSelectedProvinceId] = useState("");
   const [provinces, setProvinces] = useState([]);
   const [showProvinceList, setShowProvinceList] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -12,18 +27,21 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
 
   useEffect(() => {
     axios
-      .get('http://buddy-app1.loca.lt/parameters/province')
+      .get("https://8396-191-82-3-33.ngrok-free.app/parameters/province")
       .then((response) => {
         setProvinces(response.data.provinces);
       })
       .catch((error) => {
-        console.error('Error al obtener provincias:', error);
+        console.error("Error al obtener provincias:", error);
       });
   }, []);
 
   const handleAddRegion = () => {
     if (!regionName || !selectedProvinceId) {
-      console.log('Error', 'Por favor, ingresa el nombre de la región y selecciona una provincia.');
+      console.log(
+        "Error",
+        "Por favor, ingresa el nombre de la región y selecciona una provincia."
+      );
       onError();
       onClose();
       return;
@@ -35,11 +53,11 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
     };
 
     axios
-      .post('http://buddy-app1.loca.lt/parameters/region', newRegion)
+      .post("https://8396-191-82-3-33.ngrok-free.app/parameters/region", newRegion)
       .then((response) => {
         onAdd(newRegion);
-        setRegionName('');
-        setSelectedProvinceId('');
+        setRegionName("");
+        setSelectedProvinceId("");
         setShowSuccess(true); // Mostrar el mensaje de éxito inmediatamente
         onClose(); // Cerrar el modal
 
@@ -51,10 +69,10 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
       })
       .catch((error) => {
         if (error.response) {
-          console.error('Error en la solicitud POST:', error.response.data);
+          console.error("Error en la solicitud POST:", error.response.data);
           onError();
         } else {
-          console.error('Error en la solicitud POST:', error.message);
+          console.error("Error en la solicitud POST:", error.message);
           onError();
         }
       });
@@ -80,11 +98,17 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
               style={styles.inputPicker}
               onPress={() => setShowProvinceList(!showProvinceList)}
             >
-              <Text>{selectedProvinceId ? provinces.find(province => province.idProvince === selectedProvinceId).provinceName : 'Selecciona una provincia'}</Text>
+              <Text>
+                {selectedProvinceId
+                  ? provinces.find(
+                      (province) => province.idProvince === selectedProvinceId
+                    ).provinceName
+                  : "Selecciona una provincia"}
+              </Text>
             </TouchableOpacity>
             {showProvinceList && (
               <ScrollView style={styles.provinceList}>
-                {provinces.map(province => (
+                {provinces.map((province) => (
                   <TouchableOpacity
                     key={province.idProvince}
                     onPress={() => {
@@ -100,7 +124,10 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
           </View>
 
           <View style={styles.botonesDecidir}>
-            <TouchableOpacity style={styles.botonesEditar} onPress={handleAddRegion}>
+            <TouchableOpacity
+              style={styles.botonesEditar}
+              onPress={handleAddRegion}
+            >
               <Text>Agregar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.botonesEditar} onPress={onClose}>
@@ -116,23 +143,23 @@ const ModalAgregarRegion = ({ isVisible, onClose, onAdd, onSuccess, onError  }) 
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: Dimensions.get('window').width * 0.6,
-    backgroundColor: 'white',
+    width: Dimensions.get("window").width * 0.6,
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
   },
   tituloModal: {
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   inputRegion: {
-    backgroundColor: '#EEE9E9',
-    width: '100%',
+    backgroundColor: "#EEE9E9",
+    width: "100%",
     height: 32,
     borderRadius: 5,
     paddingLeft: 8,
@@ -145,36 +172,36 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   inputPicker: {
-    backgroundColor: '#EEE9E9',
-    width: '100%',
+    backgroundColor: "#EEE9E9",
+    width: "100%",
     height: 32,
     borderRadius: 5,
     paddingLeft: 8,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   provinceList: {
     maxHeight: 150,
     borderWidth: 1,
-    borderColor: '#CCC',
+    borderColor: "#CCC",
     borderRadius: 5,
     marginTop: 5,
   },
   botonesDecidir: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
   },
   botonesEditar: {
-    width: '40%',
-    backgroundColor: 'red',
+    width: "40%",
+    backgroundColor: "red",
     marginLeft: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 5,
     height: 30,
     marginTop: 20,
     marginRight: 10,
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
   },
 });
 

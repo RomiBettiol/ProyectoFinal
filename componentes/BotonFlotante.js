@@ -19,6 +19,8 @@ const BotonFlotante = () => {
       navigation.navigate('PublicacionAdopcion', { token });
     } else if (route.name === 'MiPerfil') {
       handleOpenModalOptionsPublications();
+    } else if (route.name === 'ServiciosScreen') { 
+      navigation.navigate('PublicarServicio', { token });
     }
   };
 
@@ -88,6 +90,14 @@ const BotonFlotante = () => {
               }}
             >
               <Text style={styles.opcionModal}>Publicación Búsqueda</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('PublicarServicio', {token})
+                handleCloseModalOptionsPublications();
+              }}
+            >
+              <Text style={styles.opcionModal}>Publicación Servicio</Text>
             </TouchableOpacity>
             <TouchableOpacity  style={styles.botonCloseText} onPress={handleCloseModalOptionsPublications}>
               <Text style={styles.closeText}>Cerrar</Text>

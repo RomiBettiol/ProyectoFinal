@@ -1,73 +1,137 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal } from 'react-native';
-import HeaderScreen from '../componentes/HeaderScreen';
-import ListaValoresColor from '../componentes/Busqueda/ListaValoresColor';
-import ListaValoresAnimal from '../componentes/Busqueda/ListaValoresAnimal';
-import ListaValoresZona from '../componentes/Busqueda/ListaValoresZona';
-import ListaValoresRazaPerros from '../componentes/Busqueda/ListaValoresRazaPerros';
-import Mascotas from '../componentes/Busqueda/Mascotas';
-import ListaValoresDias from '../componentes/Busqueda/ListaValoresDias';
-import ListaValoresMeses from '../componentes/Busqueda/ListaValoresMeses';
-import ListaValoresAño from '../componentes/Busqueda/ListaValoresAño';
-import ImagePickerComponent from '../componentes/Busqueda/ImagePickerComponent';  
-import BotonPublicar from '../componentes/Busqueda/BotonPublicar';
-import axios from 'axios';
-import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Image,
+  Pressable,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker"; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
+import HeaderScreen from "../componentes/HeaderScreen";
+import ListaValoresColor from "../componentes/Busqueda/ListaValoresColor";
+import ListaValoresAnimal from "../componentes/Busqueda/ListaValoresAnimal";
+import ListaValoresZona from "../componentes/Busqueda/ListaValoresZona";
+import ListaValoresRazaPerros from "../componentes/Busqueda/ListaValoresRazaPerros";
+import Mascotas from "../componentes/Busqueda/Mascotas";
+import ListaValoresDias from "../componentes/Busqueda/ListaValoresDias";
+import ListaValoresMeses from "../componentes/Busqueda/ListaValoresMeses";
+import ListaValoresAño from "../componentes/Busqueda/ListaValoresAño";
+import ImagePickerComponent from "../componentes/Busqueda/ImagePickerComponent";
+import BotonPublicar from "../componentes/Busqueda/BotonPublicar";
+import axios from "axios";
+import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
+
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../src/aws-exports";
+Amplify.configure(awsconfig);
 
 export default function PublicacionBusqueda({ navigation }) {
+  const [isValid, setIsValid] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedColorId, setSelectedColorId] = useState('');
-  const [selectedLocality, setSelectedLocality] = useState('');
-  const [selectedBreedId, setSelectedBreedId] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedColorId, setSelectedColorId] = useState("");
+  const [selectedLocality, setSelectedLocality] = useState("");
+  const [selectedBreedId, setSelectedBreedId] = useState("");
   const [selectedIsFound, setSelectedIsFound] = useState(null);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState("");
   const [selectedAnimalId, setSelectedAnimalId] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
 
-  const handlePost = async () => {
-    const longitude = 12.09812;
-    const latitude = 34.56789; 
-    const images = "";
+  //donde guardo las imagenes
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  ///// upload image ////
+  const fetchImageUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  };
+
+  const uploadFile = async (file) => {
+    const img = await fetchImageUri(file);
+    return Storage.put(`my-image-filename${Math.random()}.jpg`, img, {
+      level: "public",
+      contentType: file.type,
+      progressCallback(uploadProgress) {
+        console.log(
+          "PROGRESS--",
+          uploadProgress.loaded + "/" + uploadProgress.total
+        );
+      },
+    })
+      .then((res) => {
+        // Retorna la clave (key) de la imagen en Amazon S3
+        return res.key;
+      })
+      .catch((e) => {
+        console.log(e);
+        throw e; // Lanza una excepción para manejar errores en la función llamante
+      });
+  };
+  // Función para manejar la selección de imágenes
+  const handleImagesSelected = (images) => {
+    console.log("probando esto: ", images);
+    setSelectedImages(images);
+    console.log("probando esto: ", selectedImages);
+  };
+
+  const handleEndEditing = (imageLink) => {
+    if (4 < title.length) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+    console.log(isValid);
+  };
+
+  const handlePost = async (imageLink) => {
+    const images = imageLink;
     const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDay}`;
-  
+
     try {
       const postData = {
         title,
         description,
-        longitude,
-        latitude,
-        images, 
-        idPetType: selectedAnimalId,  
+        images,
+        idPetType: selectedAnimalId,
         idPetBreed: selectedBreedId,
-        idPetColor: selectedColorId,         
+        idPetColor: selectedColorId,
         idLocality: selectedLocality,
         isFound: selectedIsFound,
-        lostDate: formattedDate, 
+        lostDate: formattedDate,
       };
-  
-      console.log('Datos a publicar:', postData);
+
+      console.log("Datos a publicar:", postData);
       const config = {
         headers: {
-          'auth-token': token,
+          "auth-token": token,
         },
       };
-      const response = await axios.post('https://buddy-app1.loca.lt/publications/publication/search', postData, config);
-      console.log('Solicitud POST exitosa:', response.data);
+      const response = await axios.post(
+        "https://8396-191-82-3-33.ngrok-free.app/publications/publication/search",
+        postData,
+        config
+      );
+      console.log("Solicitud POST exitosa:", response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);
-      setModalMessage('¡Publicación exitosa!');
+      setModalMessage("¡Publicación exitosa!");
       setTimeout(() => {
         setIsModalVisible(false); // Cierra el modal después de 2 segundos
         setTimeout(() => {
-          navigation.navigate('HomeScreen', {token}); // Navega a 'HomeScreen' después de 5 segundos
+          navigation.navigate("HomeScreen", { token }); // Navega a 'HomeScreen' después de 5 segundos
         }, 1000); // 1000 milisegundos = 1 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
       // Maneja el éxito, muestra un mensaje de éxito, navega, etc.
@@ -75,7 +139,9 @@ export default function PublicacionBusqueda({ navigation }) {
       //console.error('Error al realizar la solicitud POST:', error);
       setIsSuccessful(false);
       setIsModalVisible(true);
-      setModalMessage('Publicación fallida, por favor complete todos los campos');
+      setModalMessage(
+        "Publicación fallida, por favor complete todos los campos"
+      );
       setTimeout(() => {
         setIsModalVisible(false); // Cierra el modal después de 3 segundos
       }, 2000); // 2000 milisegundos = 2 segundos
@@ -84,21 +150,64 @@ export default function PublicacionBusqueda({ navigation }) {
     }
   };
 
+  //imagenes
+
+  const handleSubAddPost = async () => {
+    console.log("Al presionar el boton: ", selectedImages);
+    try {
+      if (selectedImages && selectedImages.length > 0) {
+        console.log("Antes de subirlas: ", selectedImages);
+        let imageUrls = [];
+
+        // Subir las imágenes a AWS S3 y obtener las URLs
+        for (const selectedImage of selectedImages) {
+          // Subir la imagen a Amazon S3 y obtener el enlace
+          const awsImageKey = await uploadFile(selectedImage);
+
+          // Construye el enlace completo a la imagen en Amazon S3
+          const awsImageLink = `https://proyfinalbuddybucket201616-dev.s3.sa-east-1.amazonaws.com/public/${awsImageKey}`;
+
+          // Guarda el enlace en el estado
+          imageUrls.push(awsImageLink);
+          console.log("Después de subirlas: ", imageUrls);
+        }
+
+        // Continúa con la solicitud POST al backend
+        await handlePost(imageUrls);
+      } else {
+        // Si no hay imágenes seleccionadas, solo envía la solicitud POST sin el enlace de la imagen
+        await handlePost(null);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Maneja el error, si es necesario
+    }
+  };
+
+  //FIN imagenes
+
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Publica tu mascota</Text>
-          <ImagePickerComponent />
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor1]}>
+          <ImagePickerComponent onImagesSelected={handleImagesSelected} />
+
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>
             <Text style={styles.tituloPublicacion}>Titulo</Text>
             <TextInput
-              style={styles.inputTexto}
+              style={[styles.inputTexto, !isValid && styles.inputError]}
               value={title}
               onChangeText={setTitle}
+              onEndEditing={handleEndEditing}
             />
           </View>
+          {!isValid && (
+            <Text style={styles.errorTextCaracteres}>
+              Ingresa al menos 4 caracteres.
+            </Text>
+          )}
           <View style={styles.subcontenedor2}>
             <Text style={styles.descripcionPublicacion}>Descripción</Text>
             <TextInput
@@ -110,31 +219,77 @@ export default function PublicacionBusqueda({ navigation }) {
               maxLength={1000}
             />
           </View>
-            <View style={styles.subcontenedor3}>
-              <ListaValoresAnimal selectedAnimal={selectedAnimal} setSelectedAnimal={setSelectedAnimal} setSelectedAnimalId={setSelectedAnimalId} />
-              <ListaValoresColor selectedColorId={selectedColorId} setSelectedColorId={setSelectedColorId} />
-              <ListaValoresZona selectedLocality={selectedLocality} setSelectedLocality={setSelectedLocality} />
-              {selectedAnimal && (
-                <ListaValoresRazaPerros selectedAnimal={selectedAnimal} setSelectedBreedId={setSelectedBreedId} />
-              )}
-            </View>
-            <Mascotas selectedIsFound={selectedIsFound} onOptionSelect={setSelectedIsFound} />
+          <View style={styles.subcontenedor3}>
+            <Text style={styles.tipoAnimal}>Tipo de animal</Text>
+            <ScrollView
+              horizontal={true} // Hace que el ScrollView sea horizontal
+              contentContainerStyle={{ flexDirection: "row" }} // Establece la dirección de los elementos hijos como horizontal
+            >
+              <ListaValoresAnimal
+                selectedAnimal={selectedAnimal}
+                setSelectedAnimal={setSelectedAnimal}
+                setSelectedAnimalId={setSelectedAnimalId}
+              />
+            </ScrollView>
+            <ListaValoresColor
+              selectedColorId={selectedColorId}
+              setSelectedColorId={setSelectedColorId}
+            />
+            <ListaValoresZona
+              selectedLocality={selectedLocality}
+              setSelectedLocality={setSelectedLocality}
+            />
+            {selectedAnimal && (
+              <ListaValoresRazaPerros
+                selectedAnimal={selectedAnimal}
+                setSelectedBreedId={setSelectedBreedId}
+              />
+            )}
+          </View>
+          <Mascotas
+            selectedIsFound={selectedIsFound}
+            onOptionSelect={setSelectedIsFound}
+          />
           <Text style={styles.textoFecha}>Fecha de extravío</Text>
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
-          <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
-          {selectedMonth && <ListaValoresDias selectedMonth={selectedMonth} setSelectedDay={setSelectedDay} />}
-          <ListaValoresAño setSelectedYear={setSelectedYear} />
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
+            <ListaValoresMeses setSelectedMonth={setSelectedMonth} />
+            {selectedMonth && (
+              <ListaValoresDias
+                selectedMonth={selectedMonth}
+                setSelectedDay={setSelectedDay}
+              />
+            )}
+            <ListaValoresAño setSelectedYear={setSelectedYear} />
           </View>
         </View>
       </ScrollView>
-      <Modal visible={isModalVisible} animationType="slide" transparent={true} onRequestClose={() => setIsModalVisible(false)}>
-          <View style={[styles.modalContainer, isSuccessful ? styles.successModalBackground : styles.errorModalBackground]}>
-            <View style={[styles.modalContent, styles.bottomModalContent]}>
-              <Text style={[styles.modalMessage, isSuccessful ? styles.successModalText : styles.errorModalText]}>{modalMessage}</Text>
-            </View>
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View
+          style={[
+            styles.modalContainer,
+            isSuccessful
+              ? styles.successModalBackground
+              : styles.errorModalBackground,
+          ]}
+        >
+          <View style={[styles.modalContent, styles.bottomModalContent]}>
+            <Text
+              style={[
+                styles.modalMessage,
+                isSuccessful ? styles.successModalText : styles.errorModalText,
+              ]}
+            >
+              {modalMessage}
+            </Text>
           </View>
+        </View>
       </Modal>
-      <BotonPublicar onPress={handlePost} />
+      <BotonPublicar disabled={!isValid} onPress={handleSubAddPost} />
     </View>
   );
 }
@@ -155,11 +310,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   inputTexto: {
-    backgroundColor: '#EEE9E9',
-    width: '70%',
+    backgroundColor: "#EEE9E9",
+    width: "70%",
     height: 32,
     borderRadius: 100,
-    textAlign: 'center',
+    textAlign: "center",
   },
   tituloPublicacion: {
     marginRight: 20,
@@ -171,27 +326,31 @@ const styles = StyleSheet.create({
   },
   subcontenedor1: {
     marginTop: 25,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   subcontenedor2: {
     marginTop: 25,
-    width: '100%',
-    justifyContent: 'center',
+    width: "100%",
+    justifyContent: "center",
   },
   descripcionPublicacion: {
     fontSize: 16,
-    marginLeft: '8%',
+    marginLeft: "8%",
+  },
+  tipoAnimal: {
+    marginLeft: "3%",
+    fontSize: 16,
   },
   inputDescripcion: {
-    backgroundColor: '#EEE9E9',
-    width: '85%',
+    backgroundColor: "#EEE9E9",
+    width: "85%",
     height: 100,
     borderRadius: 30,
     padding: 20,
     marginTop: 15,
-    marginLeft: '8%',
+    marginLeft: "8%",
   },
   subcontenedor3: {
     marginTop: 25,
@@ -199,26 +358,34 @@ const styles = StyleSheet.create({
   },
   subcontenedor4: {
     margin: 15,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   successModalBackground: {
-    backgroundColor: 'green',
-    marginTop: '180%',
+    backgroundColor: "green",
+    marginTop: "180%",
   },
   successModalText: {
-    color: 'white',
-  },  
+    color: "white",
+  },
   errorModalBackground: {
-    backgroundColor: 'red', // Cambiar a azul o el color que desees
-    marginTop: '180%',
+    backgroundColor: "red", // Cambiar a azul o el color que desees
+    marginTop: "180%",
     margin: 20,
     borderRadius: 10,
   },
   errorModalText: {
-    color: 'white', // Cambiar a blanco o el color de texto deseado
+    color: "white", // Cambiar a blanco o el color de texto deseado
   },
   bottomModalContent: {
-    alignItems: 'flex-end', // Alinea el contenido del modal en el extremo inferior
+    alignItems: "flex-end", // Alinea el contenido del modal en el extremo inferior
     padding: 20,
+  },
+  errorTextCaracteres: {
+    color: "red",
+    marginLeft: 40,
+  },
+  iconos: {
+    height: 30,
+    width: 30,
   },
 });
