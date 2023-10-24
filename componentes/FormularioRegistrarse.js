@@ -82,9 +82,8 @@ const FormularioRegistrarse = ({
 
   // Función para manejar la selección de imágenes
   const handleImagesSelected = (images) => {
-    console.log("probando esto: ", images);
     setSelectedImages(images);
-    console.log("probando esto: ", selectedImages);
+
     handleSubAddPut();
   };
 
@@ -183,11 +182,8 @@ const FormularioRegistrarse = ({
   //imagenes
 
   const handleSubAddPut = async () => {
-    console.log("Al presionar el boton: ", selectedImages);
     try {
       if (selectedImages && selectedImages.length > 0) {
-        console.log("Antes de subirlas: ", selectedImages);
-
         // Subir las imágenes a AWS S3 y obtener las URLs
 
         // Subir la imagen a Amazon S3 y obtener el enlace
@@ -198,7 +194,6 @@ const FormularioRegistrarse = ({
 
         // Guarda el enlace en el estado
 
-        console.log("Después de subirlas: ", awsImageLink);
         setTimeout(() => {
           setImage(awsImageLink);
         }, 3000);
@@ -207,9 +202,8 @@ const FormularioRegistrarse = ({
       console.error("Error:", error);
       // Maneja el error, si es necesario
     }
-    console.log("Después de settearlas a image: ", image);
   };
-  console.log("Después de settearlas a image: ", image);
+
   //FIN imagenes
 
   return (

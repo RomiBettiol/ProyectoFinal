@@ -17,6 +17,7 @@ const ModalEditarColor = ({
   editingColor,
   onSuccessUpdate,
   onErrorUpdate,
+  token,
 }) => {
   const [colorName, setColorName] = useState("");
 
@@ -26,6 +27,9 @@ const ModalEditarColor = ({
         `https://buddy-app2.loca.lt/parameters/petColor/${editingColor.idPetColor}`,
         {
           petColorName: colorName,
+        },
+        {
+          headers: { "auth-token": token },
         }
       )
       .then((response) => {

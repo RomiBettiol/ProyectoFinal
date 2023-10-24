@@ -30,7 +30,7 @@ const AgregarImagenRegistro = ({ onImagesSelected }) => {
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setSelectedImage({ localUri: result.uri });
       onImagesSelected(result.uri); // Pasar la URI a la función onImagesSelected
     }

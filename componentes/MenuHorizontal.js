@@ -19,8 +19,6 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
   const { token } = route.params;
   const [user, setUser] = useState("");
 
-  console.log("notificaciones sin leer: ", notificacionReaded);
-
   const sendNotificationRequest = async () => {
     try {
       const response = await axios.post(
@@ -34,7 +32,6 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
       );
 
       if (response.status === 200) {
-        console.log("Solicitud POST exitosa");
         // Después de una solicitud exitosa, navega a 'NotificacionesScreen'
         navigation.navigate("NotificacionesScreen", { token });
       } else {

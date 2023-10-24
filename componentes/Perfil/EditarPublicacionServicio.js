@@ -46,7 +46,6 @@ export default function PublicarServicio() {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const idService = servicio.idService;
 
-  console.log("Token desde publicación servicios: ", token);
   console.log("ID Service desde editar servicio: ", idService);
 
   //donde guardo las imagenes

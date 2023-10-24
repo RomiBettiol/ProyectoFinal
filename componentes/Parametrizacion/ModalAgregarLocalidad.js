@@ -18,6 +18,7 @@ const ModalAgregarLocalidad = ({
   regions,
   onSuccess,
   onError,
+  token,
 }) => {
   const [localityName, setLocalityName] = useState("");
   const [selectedRegionId, setSelectedRegionId] = useState("");
@@ -41,7 +42,9 @@ const ModalAgregarLocalidad = ({
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/locality", newLocalidad)
+      .post("https://buddy-app2.loca.lt/parameters/locality", newLocalidad, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         onAdd(newLocalidad);
         setLocalityName("");

@@ -17,6 +17,7 @@ const ModalEditarTipoAnimal = ({
   editingType,
   onSuccessUpdate,
   onErrorUpdate,
+  token,
 }) => {
   const [typeName, setTypeName] = useState("");
 
@@ -26,6 +27,9 @@ const ModalEditarTipoAnimal = ({
         `https://buddy-app2.loca.lt/parameters/petType/${editingType.idPetType}`,
         {
           petTypeName: typeName,
+        },
+        {
+          headers: { "auth-token": token },
         }
       )
       .then((response) => {

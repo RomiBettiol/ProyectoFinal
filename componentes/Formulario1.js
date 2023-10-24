@@ -1,46 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
-
+import React, { useEffect, useState } from "react";
+import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
+import * as DocumentPicker from "expo-document-picker";
 
 const Formulario1 = ({ pdf1, pdf2, pdf3, setPdf1, setPdf2, setPdf3 }) => {
-  const [textPdf1, setTextPdf1] = useState('ADJUNTAR HABILITACION MUNICIPAL');
-  const [textPdf2, setTextPdf2] = useState('ADJUNTAR REGISTRO NACIONAL DEL ESTABLECIMIENTO');
-  const [textPdf3, setTextPdf3] = useState('CONSTANCIA DE CUIT');
+  const [textPdf1, setTextPdf1] = useState("ADJUNTAR HABILITACION MUNICIPAL");
+  const [textPdf2, setTextPdf2] = useState(
+    "ADJUNTAR REGISTRO NACIONAL DEL ESTABLECIMIENTO"
+  );
+  const [textPdf3, setTextPdf3] = useState("CONSTANCIA DE CUIT");
 
   const selectPdf = async (pdfIndex) => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
-        type: 'application/pdf', // Limitar a archivos PDF
+        type: "application/pdf", // Limitar a archivos PDF
       });
       switch (pdfIndex) {
         case 1:
           setPdf1(result);
-          if (result.type === 'success') {
+          if (result.type === "success") {
             setTextPdf1(result.name);
           }
           break;
         case 2:
           setPdf2(result);
-          if (result.type === 'success') {
+          if (result.type === "success") {
             setTextPdf2(result.name);
           }
           break;
         case 3:
           setPdf3(result);
-          if (result.type === 'success') {
+          if (result.type === "success") {
             setTextPdf3(result.name);
           }
           break;
         default:
           break;
       }
-    } catch (error) {
-      console.log('Error al seleccionar el PDF:', error);
-    }
+    } catch (error) {}
   };
-
-  
 
   return (
     <View style={styles.contenedor2}>
@@ -61,38 +58,38 @@ const Formulario1 = ({ pdf1, pdf2, pdf3, setPdf1, setPdf2, setPdf3 }) => {
 
 const styles = StyleSheet.create({
   contenedor2: {
-   // flex: 1,
+    // flex: 1,
     height: 350,
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     width: 350,
     borderRadius: 30,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.9,
     shadowRadius: 4,
     elevation: 5,
-    justifyContent: 'center',
-    alignItems:'center',
-    marginBottom:15,
-    paddingTop:30,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+    paddingTop: 30,
   },
   texto: {
     fontSize: 16,
     marginTop: 10,
-    color:'#9d9d9d',
-    textAlign:'center',
+    color: "#9d9d9d",
+    textAlign: "center",
   },
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 30,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
     //elevation: 10,
     borderRadius: 20,
-    height:80,
-    width:'90%',
-    textAlign:'center',
+    height: 80,
+    width: "90%",
+    textAlign: "center",
   },
 });
 

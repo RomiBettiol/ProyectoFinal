@@ -17,6 +17,7 @@ const ModalEditarRegion = ({
   editingRegion,
   onSuccessUpdate,
   onErrorUpdate,
+  token,
 }) => {
   const [regionName, setRegionName] = useState("");
 
@@ -26,6 +27,9 @@ const ModalEditarRegion = ({
         `https://buddy-app2.loca.lt/parameters/region/${editingRegion.idRegion}`,
         {
           regionName: regionName,
+        },
+        {
+          headers: { "auth-token": token },
         }
       )
       .then((response) => {

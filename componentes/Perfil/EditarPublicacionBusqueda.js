@@ -249,20 +249,24 @@ export default function EditarPublicacionBusqueda({ route }) {
                 selectedAnimal={selectedAnimal}
                 setSelectedAnimal={setSelectedAnimal}
                 setSelectedAnimalId={setSelectedAnimalId}
+                token={token}
               />
             </ScrollView>
             <ListaValoresColor
               selectedColorId={selectedColorId}
               setSelectedColorId={setSelectedColorId}
+              token={token}
             />
             <ListaValoresZona
               selectedLocality={selectedLocality}
               setSelectedLocality={setSelectedLocality}
+              token={token}
             />
             {selectedAnimal && (
               <ListaValoresRazaPerros
                 selectedAnimal={selectedAnimal}
                 setSelectedBreedId={setSelectedBreedId}
+                token={token}
               />
             )}
           </View>

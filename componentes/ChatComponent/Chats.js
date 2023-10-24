@@ -113,7 +113,6 @@ export default function Chats({
 
   const fetchArchivar = async () => {
     try {
-      console.log("Estoy adentro del try archivar, token:", token);
       const response = await axios.post(
         `https://buddy-app2.loca.lt/chats/chat/archive/${idChat}/true`,
         null,
@@ -137,7 +136,6 @@ export default function Chats({
     const idPublicacion = idReference[0];
     console.log(idPublicacion);
     try {
-      console.log("Estoy adentro del try cerrar, token:", token);
       const response = await axios.post(
         `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Search`,
         null,
@@ -165,7 +163,6 @@ export default function Chats({
     const idPublicacion = idReference[0];
     console.log("idPublicacion dentro del try: ", idPublicacion);
     try {
-      console.log("Estoy adentro del try cerrar, token:", token);
       const response = await axios.post(
         `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
         null,
@@ -214,7 +211,6 @@ export default function Chats({
 
   const fetchSMS = async () => {
     try {
-      console.log("Estoy adentro del try, token:", token);
       const response = await axios.get(
         `https://buddy-app2.loca.lt/chats/message/${idChat}`,
         {

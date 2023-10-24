@@ -17,6 +17,7 @@ const ModalAgregarRegion = ({
   onAdd,
   onSuccess,
   onError,
+  token,
 }) => {
   const [regionName, setRegionName] = useState("");
   const [selectedProvinceId, setSelectedProvinceId] = useState("");
@@ -24,19 +25,8 @@ const ModalAgregarRegion = ({
   const [showProvinceList, setShowProvinceList] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [token, setToken] = useState("");
-
-  const getToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem("auth-token");
-      setToken(token);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
-    getToken();
     axios
       .get("https://buddy-app2.loca.lt/parameters/province", {
         headers: {
@@ -44,12 +34,13 @@ const ModalAgregarRegion = ({
         },
       })
       .then((response) => {
+        console.log(provinces);
         setProvinces(response.data.provinces);
       })
       .catch((error) => {
         console.error("Error al obtener provincias:", error);
       });
-  }, []);
+  }, [isVisible]);
 
   const handleAddRegion = () => {
     if (!regionName || !selectedProvinceId) {
@@ -68,7 +59,11 @@ const ModalAgregarRegion = ({
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/region", newRegion)
+      .post("https://buddy-app2.loca.lt/parameters/region", newRegion, {
+        headers: {
+          "auth-token": token,
+        },
+      })
       .then((response) => {
         onAdd(newRegion);
         setRegionName("");

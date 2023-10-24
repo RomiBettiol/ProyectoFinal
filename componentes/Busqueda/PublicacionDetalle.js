@@ -6,10 +6,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../HeaderScreen";
-import Carousel from "react-native-snap-carousel";
 import axios from "axios";
 
 const PublicacionDetalle = ({ route }) => {
@@ -146,16 +146,15 @@ const PublicacionDetalle = ({ route }) => {
   return (
     <View>
       <Header />
-      <View>
-        <Carousel
-          data={carouselImages}
-          renderItem={({ item }) => (
-            <Image source={{ uri: item }} style={styles.imagenPublicacion} />
-          )}
-          sliderWidth={500}
-          itemWidth={500}
-        />
-      </View>
+      <ScrollView horizontal={true}>
+        {carouselImages.map((item, index) => (
+          <Image
+            key={index}
+            source={{ uri: item }}
+            style={styles.imagenPublicacion}
+          />
+        ))}
+      </ScrollView>
       <View style={styles.informacion}>
         <View style={[{ flexDirection: "row" }, styles.containerIconos]}>
           <TouchableOpacity>
@@ -270,16 +269,16 @@ const PublicacionDetalle = ({ route }) => {
 
 const styles = StyleSheet.create({
   imagenPublicacion: {
-    width: "100%",
+    width: 500,
     height: 380,
   },
   informacion: {
     backgroundColor: "#ffffff",
     height: "100%",
     width: "100%",
-    borderRadius: 55,
+    borderRadius: 25,
     position: "absolute",
-    marginTop: 450,
+    marginTop: 480,
     padding: 30,
     paddingTop: 20,
   },

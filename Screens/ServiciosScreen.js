@@ -29,8 +29,6 @@ export default function ServiciosScreen({ navigation }) {
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
 
-  console.log("Token servicios: ", token);
-
   useEffect(() => {
     const obtenerServicios = async () => {
       try {
@@ -60,7 +58,6 @@ export default function ServiciosScreen({ navigation }) {
 
   // Función para manejar la navegación a ServiciosDetalle y pasar el servicio seleccionado
   const navigateToServicioDetalle = (servicio) => {
-    console.log("Probando Token: ", token);
     navigation.navigate("ServiciosDetalle", { servicio, token });
   };
 

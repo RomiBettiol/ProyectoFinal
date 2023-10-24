@@ -17,6 +17,7 @@ const ModalEditar = ({
   editingZone,
   onSuccessUpdate,
   onErrorUpdate,
+  token,
 }) => {
   const [localities, setLocalities] = useState("");
 
@@ -26,6 +27,9 @@ const ModalEditar = ({
         `https://buddy-app2.loca.lt/parameters/locality/${editingZone.idLocality}`,
         {
           localityName: localities,
+        },
+        {
+          headers: { "auth-token": token },
         }
       )
       .then((response) => {

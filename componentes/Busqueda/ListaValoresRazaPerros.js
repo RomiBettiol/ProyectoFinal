@@ -35,7 +35,6 @@ const ListaValoresRazaPerros = ({
   };
 
   useEffect(() => {
-    console.log(token);
     getRazas();
     setSelectedBreed(null); // Reiniciar selectedBreed cuando cambie el animal seleccionado
   }, [selectedAnimal]);

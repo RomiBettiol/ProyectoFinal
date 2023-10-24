@@ -19,7 +19,6 @@ const DenunciasModalAdopcion = ({
   const [motivo, setMotivo] = useState("");
 
   console.log("idPublication desde denuncia: ", selectedPublicationToReport);
-  console.log("token desde denuncia: ", token);
   console.log("idUser desde denuncia: ", selectedUserToReport);
 
   const handleDenunciar = (token) => {
@@ -31,7 +30,6 @@ const DenunciasModalAdopcion = ({
     };
 
     console.log("Datos de denuncia:", complaintData); // Imprimir los datos de la denuncia
-    console.log("token: ", token);
 
     // Realizar la solicitud POST utilizando Axios
     axios

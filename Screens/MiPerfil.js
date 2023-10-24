@@ -57,8 +57,6 @@ export default function MiPerfil({ navigation }) {
     useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log("perfil: ", token);
-
   //Trae info del usuario
   useEffect(() => {
     axios

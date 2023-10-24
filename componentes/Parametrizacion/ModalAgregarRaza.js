@@ -18,6 +18,7 @@ const ModalAgregarRaza = ({
   petTypes,
   onSuccess,
   onError,
+  token,
 }) => {
   const [breedName, setBreedName] = useState("");
   const [selectedPetTypeId, setSelectedPetTypeId] = useState("");
@@ -39,7 +40,9 @@ const ModalAgregarRaza = ({
     };
 
     await axios
-      .post("https://buddy-app2.loca.lt/parameters/petBreed", newBreed)
+      .post("https://buddy-app2.loca.lt/parameters/petBreed", newBreed, {
+        headers: { "auth-token": token },
+      })
       .then((response) => {
         console.log(response);
         onAdd(newBreed);

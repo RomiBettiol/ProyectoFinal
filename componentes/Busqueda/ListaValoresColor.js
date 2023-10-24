@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
 
-const ListaValoresColor = ({ setSelectedColorId }) => {
+const ListaValoresColor = ({ setSelectedColorId, token }) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [colorOptions, setColorOptions] = useState([]);
 

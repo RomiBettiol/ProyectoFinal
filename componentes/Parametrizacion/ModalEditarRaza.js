@@ -17,6 +17,7 @@ const ModalEditarRaza = ({
   editingBreed,
   onSuccessUpdate,
   onErrorUpdate,
+  token,
 }) => {
   const [breedName, setBreedName] = useState("");
 
@@ -26,6 +27,9 @@ const ModalEditarRaza = ({
         `https://buddy-app2.loca.lt/parameters/petBreed/${editingBreed.idPetBreed}`,
         {
           petBreedName: breedName,
+        },
+        {
+          headers: { "auth-token": token },
         }
       )
       .then((response) => {

@@ -273,7 +273,7 @@ export default function EditarMascota({
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setSelectedImage(result);
     }
   };

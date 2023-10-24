@@ -46,7 +46,6 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
   const [isHourValid, setIsHourValid] = useState(true);
   const [isMinuteValid, setIsMinuteValid] = useState(true);
 
-  console.log("Token desde publicación servicios: ", token);
   console.log("animales: ", selectedTypes);
 
   //donde guardo las imagenes
@@ -373,6 +372,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
           <ListaValoresZona
             selectedLocality={selectedLocality}
             setSelectedLocality={setSelectedLocality}
+            token={token}
           />
         </View>
         <View style={styles.subcontenedor4}>

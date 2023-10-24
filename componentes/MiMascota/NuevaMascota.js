@@ -66,8 +66,6 @@ export default function NuevaMascota({
   ////end upload img ////
 
   const authtoken = token;
-  console.log("token en agregarmascota: " + token);
-  console.log("authtoken: " + authtoken);
 
   const [petData, setPetData] = useState({
     petName: "",
@@ -221,7 +219,7 @@ export default function NuevaMascota({
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setSelectedImage(result);
     }
   };

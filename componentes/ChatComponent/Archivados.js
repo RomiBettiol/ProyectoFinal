@@ -40,7 +40,6 @@ export default function Archivados({ navigation }) {
   const [chat, setChat] = useState(false);
   const route = useRoute();
   const { token } = route.params;
-  console.log(token);
   const [buttonTransform, setButtonTransform] = useState(0);
   const [selectedChat, setSelectedChat] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
@@ -180,7 +179,6 @@ export default function Archivados({ navigation }) {
 
   const fetchDesArchivar = async () => {
     try {
-      console.log("Estoy adentro del try archivar, token:", token);
       const response = await axios.post(
         `https://buddy-app2.loca.lt/chats/chat/archive/${selectedIdChat}/false`,
         null,

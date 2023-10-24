@@ -22,13 +22,12 @@ const BotonImagenRegis = () => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setSelectedImages([...selectedImages, result.uri]);
     }
   };
 
   const removeImage = (index) => {
-    console.log(index);
     const updatedImages = selectedImages.filter((_, i) => i !== index);
     setSelectedImages(updatedImages);
   };

@@ -49,9 +49,6 @@ const OptionModalService = ({ visible, onClose, route }) => {
   const handleDeleteClick = () => {
     // Mostrar el modal de confirmación de eliminación
     setShowDeleteConfirmation(true);
-
-    // Pasa el idService y el token al segundo modal
-    console.log("idService y token en el segundo modal:", idService, token);
   };
 
   const handleConfirmDelete = () => {

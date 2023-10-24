@@ -49,8 +49,7 @@ const FilterButtonsExample = () => {
   const handleReportModal = (publication) => {
     setSelectedPublicationToReport(publication.idPublicationSearch);
     setSelectedUserToReport(publication.user.idUser);
-    console.log("selectedPublicationToReport: ", selectedPublicationToReport);
-    console.log("selectedUserToReport: ", selectedUserToReport);
+
     setReportModalVisible(true);
   };
 
@@ -225,7 +224,7 @@ const FilterButtonsExample = () => {
   };
 
   const handleFilterPress = (filter) => {
-    console.log("Selected Filter:", filter); // Verifica el valor de selectedFilter
+    // Verifica el valor de selectedFilter
     setSelectedAnimalType(null);
     setSelectedColor(null);
 
@@ -235,7 +234,7 @@ const FilterButtonsExample = () => {
     } else if (filter === "Otros") {
       setSelectedFilter(filter);
       const filteredData = filterByOtherAnimals(publicaciones); // Filtrar publicaciones por "Otros"
-      console.log("Filtered Data:", filteredData); // Verifica el contenido de filteredData
+      // Verifica el contenido de filteredData
       setFilteredPublicaciones(filteredData);
     } else {
       setSelectedFilter(filter);
@@ -249,7 +248,6 @@ const FilterButtonsExample = () => {
   };
 
   const filterByOtherAnimals = (data) => {
-    console.log("filterByOtherAnimals function called");
     const animalTypesToExclude = ["PERRO", "GATO", "CONEJO"];
     return data.filter(
       (item) =>
@@ -290,7 +288,6 @@ const FilterButtonsExample = () => {
             <View style={styles.informacion}>
               <View style={[{ flexDirection: "row" }, styles.tituloView]}>
                 <Text style={styles.tituloPublicaciones}>{item.title}</Text>
-                {/* Aquí utilizamos el operador ternario para aplicar el estilo según isFound */}
                 <View
                   style={
                     item.isFound ? styles.encontradoStyle : styles.perdidoStyle
@@ -658,6 +655,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   tituloPublicaciones: {
+    flex: 1,
+    // alignItems: "flex-start",
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 8,
@@ -692,15 +691,15 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   imagenFiltroPublicacion: {
-    width: 20,
-    height: 20,
-    marginRight: 5,
+    width: 15,
+    height: 15,
+    marginRight: 2,
   },
   filtros: {
     marginTop: 15,
   },
   miniFiltros: {
-    marginRight: 10,
+    marginRight: 5,
   },
   informacion: {
     marginRight: 3,
@@ -742,8 +741,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tituloView: {
+    // flex: 1,
     marginTop: 15,
-    justifyContent: "flex-start",
+    // justifyContent: "flex-start",
   },
   loadMoreButton: {
     backgroundColor: "#f0f0f0",

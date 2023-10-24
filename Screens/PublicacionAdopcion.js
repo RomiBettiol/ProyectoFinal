@@ -113,7 +113,6 @@ export default function PublicacionBusqueda({ navigation }) {
       };
 
       console.log("Datos a publicar:", postData);
-      console.log("token :", token);
       const config = {
         headers: {
           "auth-token": token,

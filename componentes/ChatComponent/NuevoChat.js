@@ -43,7 +43,6 @@ export default function NuevoChat({ navigation }) {
   const [buttonTransform, setButtonTransform] = useState(0);
   const [userAutor, setUserAutor] = useState("");
   const [idUserAutor, setIdUserAutor] = useState("");
-  console.log("token: ", token);
   const searchUser = () => {
     return users.filter((user) => {
       const searchTextLower = searchText.toLowerCase();
@@ -122,7 +121,6 @@ export default function NuevoChat({ navigation }) {
 
   const fetchUsers = async () => {
     try {
-      console.log("estoy adentro del try, token:", token);
       const response = await axios.get(
         "https://buddy-app2.loca.lt/security/user/all",
         {

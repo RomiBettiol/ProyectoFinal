@@ -433,6 +433,7 @@ export default function ParametrizacionScreen({ navigation }) {
         headers: { "auth-token": token },
       })
       .then((response) => {
+        console.log(response.data.localities);
         const localities = response.data.localities;
         if (localities && Array.isArray(localities)) {
           setZoneOptions(localities);
@@ -572,32 +573,36 @@ export default function ParametrizacionScreen({ navigation }) {
         </View>
         <View style={styles.containerItem}>
           {petBreeds.map((breed, index) => (
-            <View
-              key={index}
-              style={[
-                { flexDirection: "row", alignItems: "center" },
-                styles.containerTexto,
-              ]}
-            >
-              <Text style={styles.zoneItem}>{breed.petBreedName}</Text>
-              {permisos.includes("WRITE_PARAMETROS") && (
-                <View style={[styles.botones, { flexDirection: "row" }]}>
-                  <TouchableOpacity onPress={() => handleBreedEditPress(breed)}>
-                    <Image
-                      source={require("../Imagenes/editar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleBreedDelete(breed.idPetBreed)}
-                  >
-                    <Image
-                      source={require("../Imagenes/eliminar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+            <View key={index} style={styles.containerTexto}>
+              <View style={[{ justifyContent: "center", marginLeft: 10 }]}>
+                <Text style={styles.zoneItem}>{breed.petBreedName}</Text>
+              </View>
+              <View
+                style={[
+                  { alignItems: "flex-end", flex: 1, justifyContent: "center" },
+                ]}
+              >
+                {permisos.includes("WRITE_PARAMETROS") && (
+                  <View style={[styles.botones, { flexDirection: "row" }]}>
+                    <TouchableOpacity
+                      onPress={() => handleBreedEditPress(breed)}
+                    >
+                      <Image
+                        source={require("../Imagenes/editar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleBreedDelete(breed.idPetBreed)}
+                    >
+                      <Image
+                        source={require("../Imagenes/eliminar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
           ))}
         </View>
@@ -618,32 +623,36 @@ export default function ParametrizacionScreen({ navigation }) {
         </View>
         <View style={styles.containerItem}>
           {petColors.map((color, index) => (
-            <View
-              key={index}
-              style={[
-                { flexDirection: "row", alignItems: "center" },
-                styles.containerTexto,
-              ]}
-            >
-              <Text style={styles.zoneItem}>{color.petColorName}</Text>
-              {permisos.includes("WRITE_PARAMETROS") && (
-                <View style={[styles.botones, { flexDirection: "row" }]}>
-                  <TouchableOpacity onPress={() => handleColorEditPress(color)}>
-                    <Image
-                      source={require("../Imagenes/editar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleColorDelete(color.idPetColor)}
-                  >
-                    <Image
-                      source={require("../Imagenes/eliminar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+            <View key={index} style={styles.containerTexto}>
+              <View style={[{ justifyContent: "center", marginLeft: 10 }]}>
+                <Text style={styles.zoneItem}>{color.petColorName}</Text>
+              </View>
+              <View
+                style={[
+                  { alignItems: "flex-end", flex: 1, justifyContent: "center" },
+                ]}
+              >
+                {permisos.includes("WRITE_PARAMETROS") && (
+                  <View style={[styles.botones, { flexDirection: "row" }]}>
+                    <TouchableOpacity
+                      onPress={() => handleColorEditPress(color)}
+                    >
+                      <Image
+                        source={require("../Imagenes/editar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleColorDelete(color.idPetColor)}
+                    >
+                      <Image
+                        source={require("../Imagenes/eliminar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
           ))}
         </View>
@@ -666,32 +675,34 @@ export default function ParametrizacionScreen({ navigation }) {
         </View>
         <View style={styles.containerItem}>
           {petTypes.map((type, index) => (
-            <View
-              key={index}
-              style={[
-                { flexDirection: "row", alignItems: "center" },
-                styles.containerTexto,
-              ]}
-            >
-              <Text style={styles.zoneItem}>{type.petTypeName}</Text>
-              {permisos.includes("WRITE_PARAMETROS") && (
-                <View style={[styles.botones, { flexDirection: "row" }]}>
-                  <TouchableOpacity onPress={() => handleTypeEditPress(type)}>
-                    <Image
-                      source={require("../Imagenes/editar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleTypeDelete(type.idPetType)}
-                  >
-                    <Image
-                      source={require("../Imagenes/eliminar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+            <View key={index} style={styles.containerTexto}>
+              <View style={[{ justifyContent: "center", marginLeft: 10 }]}>
+                <Text style={styles.zoneItem}>{type.petTypeName}</Text>
+              </View>
+              <View
+                style={[
+                  { alignItems: "flex-end", flex: 1, justifyContent: "center" },
+                ]}
+              >
+                {permisos.includes("WRITE_PARAMETROS") && (
+                  <View style={[styles.botones, { flexDirection: "row" }]}>
+                    <TouchableOpacity onPress={() => handleTypeEditPress(type)}>
+                      <Image
+                        source={require("../Imagenes/editar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleTypeDelete(type.idPetType)}
+                    >
+                      <Image
+                        source={require("../Imagenes/eliminar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
           ))}
         </View>
@@ -712,34 +723,36 @@ export default function ParametrizacionScreen({ navigation }) {
         </View>
         <View style={styles.containerItem}>
           {provinces.map((province, index) => (
-            <View
-              key={index}
-              style={[
-                { flexDirection: "row", alignItems: "center" },
-                styles.containerTexto,
-              ]}
-            >
-              <Text style={styles.zoneItem}>{province.provinceName}</Text>
-              {permisos.includes("WRITE_PARAMETROS") && (
-                <View style={[styles.botones, { flexDirection: "row" }]}>
-                  <TouchableOpacity
-                    onPress={() => handleEditProvincePress(province)}
-                  >
-                    <Image
-                      source={require("../Imagenes/editar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleProvinceDelete(province.idProvince)}
-                  >
-                    <Image
-                      source={require("../Imagenes/eliminar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+            <View key={index} style={styles.containerTexto}>
+              <View style={[{ justifyContent: "center", marginLeft: 10 }]}>
+                <Text style={styles.zoneItem}>{province.provinceName}</Text>
+              </View>
+              <View
+                style={[
+                  { alignItems: "flex-end", flex: 1, justifyContent: "center" },
+                ]}
+              >
+                {permisos.includes("WRITE_PARAMETROS") && (
+                  <View style={[styles.botones, { flexDirection: "row" }]}>
+                    <TouchableOpacity
+                      onPress={() => handleEditProvincePress(province)}
+                    >
+                      <Image
+                        source={require("../Imagenes/editar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleProvinceDelete(province.idProvince)}
+                    >
+                      <Image
+                        source={require("../Imagenes/eliminar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
           ))}
         </View>
@@ -760,32 +773,34 @@ export default function ParametrizacionScreen({ navigation }) {
         </View>
         <View style={styles.containerItem}>
           {zoneOptions.map((zone, index) => (
-            <View
-              key={index}
-              style={[
-                { flexDirection: "row", alignItems: "center" },
-                styles.containerTexto,
-              ]}
-            >
-              <Text style={styles.zoneItem}>{zone.localityName}</Text>
-              {permisos.includes("WRITE_PARAMETROS") && (
-                <View style={[styles.botones, { flexDirection: "row" }]}>
-                  <TouchableOpacity onPress={() => handleEditPress(zone)}>
-                    <Image
-                      source={require("../Imagenes/editar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleZoneDelete(zone.idLocality)}
-                  >
-                    <Image
-                      source={require("../Imagenes/eliminar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+            <View key={index} style={styles.containerTexto}>
+              <View style={[{ justifyContent: "center", marginLeft: 10 }]}>
+                <Text style={styles.zoneItem}>{zone.localityName}</Text>
+              </View>
+              <View
+                style={[
+                  { alignItems: "flex-end", flex: 1, justifyContent: "center" },
+                ]}
+              >
+                {permisos.includes("WRITE_PARAMETROS") && (
+                  <View style={[styles.botones, { flexDirection: "row" }]}>
+                    <TouchableOpacity onPress={() => handleEditPress(zone)}>
+                      <Image
+                        source={require("../Imagenes/editar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleZoneDelete(zone.idLocality)}
+                    >
+                      <Image
+                        source={require("../Imagenes/eliminar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
           ))}
         </View>
@@ -806,34 +821,36 @@ export default function ParametrizacionScreen({ navigation }) {
         </View>
         <View style={styles.containerItem}>
           {regions.map((region, index) => (
-            <View
-              key={index}
-              style={[
-                { flexDirection: "row", alignItems: "center" },
-                styles.containerTexto,
-              ]}
-            >
-              <Text style={styles.zoneItem}>{region.regionName}</Text>
-              {permisos.includes("WRITE_PARAMETROS") && (
-                <View style={[styles.botones, { flexDirection: "row" }]}>
-                  <TouchableOpacity
-                    onPress={() => handleEditRegionPress(region)}
-                  >
-                    <Image
-                      source={require("../Imagenes/editar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleRegionDelete(region.idRegion)}
-                  >
-                    <Image
-                      source={require("../Imagenes/eliminar.png")}
-                      style={styles.imagenbotones}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+            <View key={index} style={styles.containerTexto}>
+              <View style={[{ justifyContent: "center", marginLeft: 10 }]}>
+                <Text style={styles.zoneItem}>{region.regionName}</Text>
+              </View>
+              <View
+                style={[
+                  { alignItems: "flex-end", flex: 1, justifyContent: "center" },
+                ]}
+              >
+                {permisos.includes("WRITE_PARAMETROS") && (
+                  <View style={[styles.botones, { flexDirection: "row" }]}>
+                    <TouchableOpacity
+                      onPress={() => handleEditRegionPress(region)}
+                    >
+                      <Image
+                        source={require("../Imagenes/editar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleRegionDelete(region.idRegion)}
+                    >
+                      <Image
+                        source={require("../Imagenes/eliminar.png")}
+                        style={styles.imagenbotones}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
           ))}
         </View>
@@ -845,6 +862,7 @@ export default function ParametrizacionScreen({ navigation }) {
         editingZone={editingZone}
         onSuccessUpdate={handleSuccessfulUpdatePublication}
         onErrorUpdate={handleFailedUpdatePublication}
+        token={token}
       />
       <ModalEditarColor
         isVisible={isEditColorModalVisible}
@@ -853,6 +871,7 @@ export default function ParametrizacionScreen({ navigation }) {
         editingColor={editingColor}
         onSuccessUpdate={handleSuccessfulUpdatePublication}
         onErrorUpdate={handleFailedUpdatePublication}
+        token={token}
       />
       <ModalEditarTipoAnimal
         isVisible={isEditTypeModalVisible}
@@ -861,6 +880,7 @@ export default function ParametrizacionScreen({ navigation }) {
         editingType={editingType}
         onSuccessUpdate={handleSuccessfulUpdatePublication}
         onErrorUpdate={handleFailedUpdatePublication}
+        token={token}
       />
       <ModalEditarRaza
         isVisible={isEditBreedModalVisible}
@@ -869,6 +889,7 @@ export default function ParametrizacionScreen({ navigation }) {
         editingBreed={editingBreed}
         onSuccessUpdate={handleSuccessfulUpdatePublication}
         onErrorUpdate={handleFailedUpdatePublication}
+        token={token}
       />
       <ModalAgregarColor
         isVisible={isAddColorModalVisible}
@@ -876,6 +897,7 @@ export default function ParametrizacionScreen({ navigation }) {
         onAdd={handleAddColor}
         newColorName={newColorName}
         setNewColorName={setNewColorName}
+        token={token}
       />
       <ModalAgregarTipoAnimal
         isVisible={isAddTipoAnimalModalVisible}
@@ -883,6 +905,7 @@ export default function ParametrizacionScreen({ navigation }) {
         onAdd={handleAddType}
         newTypeName={newTypeName}
         setNewTypeName={setNewTypeName}
+        token={token}
       />
       <ModalEditarProvincia
         isVisible={isEditProvinceModalVisible}
@@ -891,6 +914,7 @@ export default function ParametrizacionScreen({ navigation }) {
         editingProvince={editingProvince}
         onSuccessUpdate={handleSuccessfulUpdatePublication}
         onErrorUpdate={handleFailedUpdatePublication}
+        token={token}
       />
       <ModalAgregarProvincia
         isVisible={isAddProvinceModalVisible}
@@ -898,6 +922,7 @@ export default function ParametrizacionScreen({ navigation }) {
         onAdd={handleAddProvince}
         newProvinceName={newProvinceName}
         setNewProvinceName={setNewProvinceName}
+        token={token}
       />
       <ModalEditarRegion
         isVisible={isEditRegionModalVisible}
@@ -906,6 +931,7 @@ export default function ParametrizacionScreen({ navigation }) {
         editingRegion={editingRegion}
         onSuccessUpdate={handleSuccessfulUpdatePublication}
         onErrorUpdate={handleFailedUpdatePublication}
+        token={token}
       />
       <ModalAgregarRegion
         isVisible={isAddRegionModalVisible}
@@ -914,6 +940,7 @@ export default function ParametrizacionScreen({ navigation }) {
         provinces={provinces}
         onSuccess={handleSuccessfulRegionPublication}
         onError={handleFailedRegionPublication}
+        token={token}
       />
       <ModalAgregarLocalidad
         isVisible={isAddLocalidadModalVisible}
@@ -922,6 +949,7 @@ export default function ParametrizacionScreen({ navigation }) {
         regions={regions}
         onSuccess={handleSuccessfulRegionPublication}
         onError={handleFailedRegionPublication}
+        token={token}
       />
       <ModalAgregarRaza
         isVisible={isAddBreedModalVisible}
@@ -930,6 +958,7 @@ export default function ParametrizacionScreen({ navigation }) {
         petTypes={petTypes}
         onSuccess={handleSuccessfulRegionPublication}
         onError={handleFailedRegionPublication}
+        token={token}
       />
       <Modal
         animationType="slide"
@@ -1039,6 +1068,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   imagenbotones: {
+    // flex: 1,
+    // alignSelf: "flex-end",
     width: 20,
     height: 20,
     marginRight: 8,
@@ -1048,14 +1079,16 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   containerTexto: {
+    flex: 1,
+    flexDirection: "row",
     backgroundColor: "#DDC4B8",
-    width: "50%",
+    width: "90%",
     height: 30,
-    justifyContent: "space-around",
-    alignItems: "center",
-    marginLeft: 83,
     marginTop: 10,
-    paddingLeft: 10,
+  },
+  containerItem: {
+    flex: 1,
+    alignItems: "center",
   },
   successModal: {
     backgroundColor: "green",

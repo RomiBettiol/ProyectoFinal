@@ -41,8 +41,6 @@ const BotonesFiltrosAdopcion = () => {
   const [selectedUserToReport, setSelectedUserToReport] = useState(null);
   const [reportModalVisible, setReportModalVisible] = useState(false);
 
-  console.log("token desde adopción: ", token);
-
   const handleDenunciar = () => {
     setDenunciaModalVisible(true);
     setReportModalVisible(false); // Cierra el modal de reporte

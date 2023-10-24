@@ -10,6 +10,7 @@ import {
   Modal,
   Image,
   Pressable,
+  LogBox,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker"; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
 import HeaderScreen from "../componentes/HeaderScreen";

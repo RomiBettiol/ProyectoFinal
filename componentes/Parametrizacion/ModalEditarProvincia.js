@@ -17,6 +17,7 @@ const ModalEditarProvincia = ({
   editingProvince,
   onSuccessUpdate,
   onErrorUpdate,
+  token,
 }) => {
   const [provinceName, setProvinceName] = useState("");
 
@@ -26,6 +27,9 @@ const ModalEditarProvincia = ({
         `https://buddy-app2.loca.lt/parameters/province/${editingProvince.idProvince}`,
         {
           provinceName: provinceName,
+        },
+        {
+          headers: { "auth-token": token },
         }
       )
       .then((response) => {

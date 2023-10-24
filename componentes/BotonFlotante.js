@@ -1,26 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Image, Text, Modal } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import SlideModal from './SlideModal';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Text,
+  Modal,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import SlideModal from "./SlideModal";
 
 const BotonFlotante = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalOptionsPublications, setModalOptionsPublications] = useState(false);
+  const [modalOptionsPublications, setModalOptionsPublications] =
+    useState(false);
   const route = useRoute();
   const { token } = route.params;
 
   const handleNavigateToPublicacion = () => {
-    console.log("Nombre de la pantalla actual: " + route.name);
-    console.log("handleNavigateToPublicacion se ejecutó");
-    if (route.name === 'BusquedaScreen') {
-      navigation.navigate('PublicacionBusqueda', { token });
-    } else if (route.name === 'AdoptarScreen') {
-      navigation.navigate('PublicacionAdopcion', { token });
-    } else if (route.name === 'MiPerfil') {
+    if (route.name === "BusquedaScreen") {
+      navigation.navigate("PublicacionBusqueda", { token });
+    } else if (route.name === "AdoptarScreen") {
+      navigation.navigate("PublicacionAdopcion", { token });
+    } else if (route.name === "MiPerfil") {
       handleOpenModalOptionsPublications();
-    } else if (route.name === 'ServiciosScreen') { 
-      navigation.navigate('PublicarServicio', { token });
+    } else if (route.name === "ServiciosScreen") {
+      navigation.navigate("PublicarServicio", { token });
     }
   };
 
@@ -29,7 +35,7 @@ const BotonFlotante = () => {
   };
 
   const handleCloseModalOptionsPublications = () => {
-    setModalOptionsPublications(false); 
+    setModalOptionsPublications(false);
   };
 
   const handleOpenModal = () => {
@@ -45,7 +51,7 @@ const BotonFlotante = () => {
       <TouchableOpacity style={styles.botonMenu} onPress={handleOpenModal}>
         <View style={styles.fab}>
           <Image
-            source={require('../Imagenes/menu.png')}
+            source={require("../Imagenes/menu.png")}
             style={styles.imagenBoton}
           />
         </View>
@@ -54,13 +60,12 @@ const BotonFlotante = () => {
       <TouchableOpacity
         style={styles.botonCrear}
         onPress={() => {
-          console.log("Botón Agregar presionado");
           handleNavigateToPublicacion();
         }}
       >
         <View style={styles.fab2}>
           <Image
-            source={require('../Imagenes/agregar.png')}
+            source={require("../Imagenes/agregar.png")}
             style={styles.imagenBoton}
           />
         </View>
@@ -77,7 +82,7 @@ const BotonFlotante = () => {
           <View style={styles.modalContent}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('PublicacionAdopcion', {token})
+                navigation.navigate("PublicacionAdopcion", { token });
                 handleCloseModalOptionsPublications();
               }}
             >
@@ -85,7 +90,7 @@ const BotonFlotante = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('PublicacionBusqueda', {token})
+                navigation.navigate("PublicacionBusqueda", { token });
                 handleCloseModalOptionsPublications();
               }}
             >
@@ -93,13 +98,16 @@ const BotonFlotante = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('PublicarServicio', {token})
+                navigation.navigate("PublicarServicio", { token });
                 handleCloseModalOptionsPublications();
               }}
             >
               <Text style={styles.opcionModal}>Publicación Servicio</Text>
             </TouchableOpacity>
-            <TouchableOpacity  style={styles.botonCloseText} onPress={handleCloseModalOptionsPublications}>
+            <TouchableOpacity
+              style={styles.botonCloseText}
+              onPress={handleCloseModalOptionsPublications}
+            >
               <Text style={styles.closeText}>Cerrar</Text>
             </TouchableOpacity>
           </View>
@@ -112,7 +120,7 @@ const BotonFlotante = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     right: 20,
   },
@@ -120,24 +128,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   fab: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     width: 60,
     height: 60,
     borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 5,
   },
   botonCrear: {
     marginTop: 10,
   },
   fab2: {
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
     width: 60,
     height: 60,
     borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 2,
   },
   imagenBoton: {
@@ -146,33 +154,33 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo oscuro semitransparente
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo oscuro semitransparente
   },
   modalContent: {
-    backgroundColor: 'white',
-    width: '50%', // Ajusta el ancho según tus preferencias
+    backgroundColor: "white",
+    width: "50%", // Ajusta el ancho según tus preferencias
     borderRadius: 10,
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   closeText: {
-    backgroundColor: '#FFB984',
+    backgroundColor: "#FFB984",
     borderRadius: 5,
     width: 80,
     height: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   botonCloseText: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 5,
     marginTop: 10,
   },
   opcionModal: {
     marginLeft: 10,
-    borderBottomColor: 'gray',
+    borderBottomColor: "gray",
     borderBottomWidth: 0.5,
     padding: 5,
   },

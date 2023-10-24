@@ -64,8 +64,6 @@ const SlideModal = ({ visible, onClose }) => {
   const [idUser, setIdUser] = useState("");
   const [newUserImage, setNewUserImage] = useState("");
 
-  // console.log("perfil: ", token);
-
   //Trae info del usuario
   const fetchNombre = () => {
     axios

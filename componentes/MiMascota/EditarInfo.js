@@ -15,7 +15,13 @@ import ErrorModal from "./ErrorModal";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-export default function EditarInfo({ visible, onClose, info, mascotaId }) {
+export default function EditarInfo({
+  visible,
+  onClose,
+  info,
+  mascotaId,
+  token,
+}) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [titleInformation, setTitleInformation] = useState(
@@ -33,24 +39,22 @@ export default function EditarInfo({ visible, onClose, info, mascotaId }) {
     };
     console.log(info.idInformation);
     try {
+      console.log(updatedData);
       const response = await axios.put(
         `https://buddy-app2.loca.lt/mypet/information/${mascotaId}/${idInformation}`,
-        {
-          titleInformation: updatedData.titleInformation,
-          descriptionInformation: updatedData.descriptionInformation,
-        },
+        updatedData,
         {
           headers: {
             "auth-token": token,
           },
         }
       );
+      console.log("pase");
       setShowSuccessModal(true);
     } catch (error) {
+      console.log(error);
       setShowErrorModal(true);
     }
-
-    setOverlayVisible(false); // Cierra el overlay después de eliminar
   };
 
   return (

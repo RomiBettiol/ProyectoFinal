@@ -36,7 +36,6 @@ export default function ModalTraza({ navigation, route }) {
     }
   }, [traces, user, initialLocation]);
 
-  console.log("ModalTraza: ", token);
   console.log("userName: ", userNamePublicacion);
 
   //Trae info del usuario

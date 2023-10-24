@@ -93,7 +93,6 @@ export default function DenunciaScreen({ navigation }) {
     const data = { validate: true };
     console.log("id Denuncia: ", idComplaint);
     console.log("true or false: ", data.validate);
-    console.log("token desde bloquear: ", token);
 
     const headers = {
       "auth-token": token, // Agrega el encabezado auth-token con el valor proporcionado
@@ -116,8 +115,6 @@ export default function DenunciaScreen({ navigation }) {
         console.error("Error al bloquear la denuncia:", error);
       });
   }
-
-  console.log("Denuncias: ", token);
 
   return (
     <View style={styles.container}>

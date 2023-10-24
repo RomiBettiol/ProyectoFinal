@@ -34,7 +34,7 @@ const BotonImagenRegis = () => {
         quality: 1,
       });
 
-      if (!result.cancelled) {
+      if (!result.canceled) {
         setSelectedImages([...selectedImages, result.uri]);
 
         // Si no se ha seleccionado una imagen principal, establecer la primera como principal

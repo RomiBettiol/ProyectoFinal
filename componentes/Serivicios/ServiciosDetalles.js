@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import RatingModal from './RatingModal';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import BotonMenu from '../BotonMenu';
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import RatingModal from "./RatingModal";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import BotonMenu from "../BotonMenu";
 
 export default function ServiciosDetalles({ route }) {
   const navigation = useNavigation();
@@ -11,15 +11,31 @@ export default function ServiciosDetalles({ route }) {
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [buttonTransform, setButtonTransform] = useState(0);
-  const servicioTitle = source === 'MiPerfil' ? servicio?.[0]?.serviceTitle : servicio?.serviceTitle;
-  const servicioDescription = source === 'MiPerfil' ? servicio?.[0]?.serviceDescription : servicio?.serviceDescription;
-  const servicioAddress = source === 'MiPerfil' ? servicio?.[0]?.address : servicio?.address;
-  const servicioOpenTime = source === 'MiPerfil' ? servicio?.[0]?.openTime : servicio?.openTime;
-  const servicioCloseTime = source === 'MiPerfil' ? servicio?.[0]?.closeTime : servicio?.closeTime;
+  const servicioTitle =
+    source === "MiPerfil"
+      ? servicio?.[0]?.serviceTitle
+      : servicio?.serviceTitle;
+  const servicioDescription =
+    source === "MiPerfil"
+      ? servicio?.[0]?.serviceDescription
+      : servicio?.serviceDescription;
+  const servicioAddress =
+    source === "MiPerfil" ? servicio?.[0]?.address : servicio?.address;
+  const servicioOpenTime =
+    source === "MiPerfil" ? servicio?.[0]?.openTime : servicio?.openTime;
+  const servicioCloseTime =
+    source === "MiPerfil" ? servicio?.[0]?.closeTime : servicio?.closeTime;
   //const servicioImages = source === 'MiPerfil' ? servicio?.[0]?.images[0] : servicio?.images[0];
 
-  console.log('servicio: ', servicio);
-  console.log('info: ', servicioTitle, servicioAddress, servicioDescription, servicioCloseTime, servicioOpenTime);
+  console.log("servicio: ", servicio);
+  console.log(
+    "info: ",
+    servicioTitle,
+    servicioAddress,
+    servicioDescription,
+    servicioCloseTime,
+    servicioOpenTime
+  );
 
   const ratingsImages = {
     1: {
@@ -28,7 +44,7 @@ export default function ServiciosDetalles({ route }) {
     },
     2: {
       source: require("../../Imagenes/2estrellas.png"),
-      style: { width: 85, height: 40, marginLeft: 20, }, // Estilos personalizados para 2 estrellas
+      style: { width: 85, height: 40, marginLeft: 20 }, // Estilos personalizados para 2 estrellas
     },
     3: {
       source: require("../../Imagenes/3estrellas.png"),
@@ -44,7 +60,6 @@ export default function ServiciosDetalles({ route }) {
     },
   };
 
-
   const handleOpenRatingModal = (serviceId) => {
     // Abre el modal de puntuación y utiliza serviceId según sea necesario
     setRatingModalVisible(true);
@@ -57,28 +72,29 @@ export default function ServiciosDetalles({ route }) {
 
   const handleRatingModalClose = () => {
     // Puedes cargar nueva información o realizar cualquier otra acción necesaria aquí
-    console.log('El modal se ha cerrado, actualizando información...');
+    console.log("El modal se ha cerrado, actualizando información...");
   };
 
   const handleRatingSubmit = (rating) => {
     // Aquí puedes enviar la puntuación al servidor o realizar otras acciones
-    console.log('Puntuación enviada:', rating);
+    console.log("Puntuación enviada:", rating);
   };
 
-  console.log('ServiciosDetalles: ', token);
-  console.log('ID Servicio: ', servicio.idService);
-  console.log('numberRating: ', servicio.avgRating);
-  console.log('titulo: ', servicio.serviceTitle);
+  console.log("ID Servicio: ", servicio.idService);
+  console.log("numberRating: ", servicio.avgRating);
+  console.log("titulo: ", servicio.serviceTitle);
 
   return (
     <View style={styles.container}>
       <Image
-        source={{uri: servicio.images[0]}}
+        source={{ uri: servicio.images[0] }}
         style={styles.imagenServicio}
       />
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: "row" }}>
         <Text style={styles.titulo}>{servicio.serviceTitle}</Text>
-        <TouchableOpacity onPress={() => handleOpenRatingModal(servicio.idService)}>
+        <TouchableOpacity
+          onPress={() => handleOpenRatingModal(servicio.idService)}
+        >
           <Image
             source={require("../../Imagenes/estrella.png")}
             style={styles.imagenCalificacion}
@@ -96,28 +112,33 @@ export default function ServiciosDetalles({ route }) {
         />
       </View>
       {servicio.avgRating !== null && ratingsImages[servicio.avgRating] ? (
-          <View style={styles.ratingContainer}>
-            <Image
-              source={ratingsImages[servicio.avgRating].source}
-              style={[styles.imagenCalificacionEstrellas, ratingsImages[servicio.avgRating].style]}
-            />
-          </View>
-        ) : null}
+        <View style={styles.ratingContainer}>
+          <Image
+            source={ratingsImages[servicio.avgRating].source}
+            style={[
+              styles.imagenCalificacionEstrellas,
+              ratingsImages[servicio.avgRating].style,
+            ]}
+          />
+        </View>
+      ) : null}
       <View style={styles.informacionServicio}>
         <Text style={styles.descripcion}>{servicio.serviceDescription}</Text>
-        <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
-            <Image
-                source={require("../../Imagenes/posicion.png")}
-                style={styles.imagenInformacionFiltros}
-            />
-            <Text style={styles.textoInformacionFiltros}>{servicio.address}</Text>
+        <View style={[styles.informacionFiltros, { flexDirection: "row" }]}>
+          <Image
+            source={require("../../Imagenes/posicion.png")}
+            style={styles.imagenInformacionFiltros}
+          />
+          <Text style={styles.textoInformacionFiltros}>{servicio.address}</Text>
         </View>
-        <View style={[styles.informacionFiltros, {flexDirection: 'row'}]}>
-            <Image
-                source={require("../../Imagenes/reloj.png")}
-                style={styles.imagenInformacionFiltros}
-            />
-            <Text style={styles.textoInformacionFiltros}>{servicio.openTime} - {servicio.closeTime}</Text>
+        <View style={[styles.informacionFiltros, { flexDirection: "row" }]}>
+          <Image
+            source={require("../../Imagenes/reloj.png")}
+            style={styles.imagenInformacionFiltros}
+          />
+          <Text style={styles.textoInformacionFiltros}>
+            {servicio.openTime} - {servicio.closeTime}
+          </Text>
         </View>
       </View>
       <View
@@ -135,10 +156,10 @@ export default function ServiciosDetalles({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    position: 'relative',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    position: "relative",
   },
   imagenServicio: {
     width: 200,
@@ -148,30 +169,30 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
     marginRight: 15,
   },
   descripcion: {
     fontSize: 16,
-    textAlign: 'left',
+    textAlign: "left",
     marginBottom: 20,
   },
   imagenInformacionFiltros: {
     width: 25,
     height: 25,
   },
-  textoInformacionFiltros:{
+  textoInformacionFiltros: {
     marginTop: 5,
     marginLeft: 5,
   },
   informacionServicio: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     borderRadius: 10,
     padding: 10,
-    width: '80%',
-    height: '20%',
-    justifyContent: 'center',
+    width: "80%",
+    height: "20%",
+    justifyContent: "center",
     elevation: 5,
     marginTop: 20,
   },
@@ -187,9 +208,9 @@ const styles = StyleSheet.create({
     width: 125,
     height: 30,
   },
-  ratingContainer:{
-    width: '100%',
-    marginLeft: '70%',
+  ratingContainer: {
+    width: "100%",
+    marginLeft: "70%",
   },
   botonFlotanteContainer: {
     position: "absolute",
