@@ -9,6 +9,7 @@ import {
   ScrollView,
   Modal,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import HeaderScreen from "../componentes/HeaderScreen";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
@@ -38,6 +39,7 @@ export default function InicioScreen() {
   const [isEditPermissionModalVisible, setEditPermissionModalVisible] =
     useState(false);
   const [permissionRole, setPermissionRole] = useState("");
+  const [isLoading, setisLoading] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -74,15 +76,35 @@ export default function InicioScreen() {
   };
 
   useEffect(() => {
-    fetchData();
-    getPermisos();
+    const getData = async () => {
+      try {
+        setisLoading(true);
+        await fetchData();
+        await getPermisos();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setisLoading(false);
+      }
+    };
+    getData();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
       if (isPageRefreshing) {
-        fetchData();
-        getPermisos();
+        const getData = async () => {
+          try {
+            setisLoading(true);
+            await fetchData();
+            await getPermisos();
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setisLoading(false);
+          }
+        };
+        getData();
         setPageRefreshing(false); // Restablece el estado después de la recarga
       }
     }, [isPageRefreshing])
@@ -735,6 +757,14 @@ export default function InicioScreen() {
           </View>
         </ScrollView>
       </Modal>
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -911,6 +941,23 @@ const styles = StyleSheet.create({
   },
   editCancelButton: {
     color: "red",
+    fontSize: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
     fontSize: 16,
   },
 });

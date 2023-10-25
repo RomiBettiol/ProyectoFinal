@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import Header from "../componentes/HeaderScreen";
 import axios from "axios";
@@ -68,6 +69,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const [successModalDeleteVisible, setSuccessModalDeleteVisible] =
     useState(false);
   const [errorModalDeleteVisible, setErrorModalDeleteVisible] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   // Cuando la publicación sea exitosa
   const handleSuccessfulRegionPublication = () => {
@@ -543,12 +545,22 @@ export default function ParametrizacionScreen({ navigation }) {
   };
 
   useEffect(() => {
-    getZonas();
-    getPetColors();
-    getPetTypes();
-    getPetBreeds();
-    getProvinces();
-    getRegions();
+    const fetchData = async () => {
+      try {
+        setisLoading(true);
+        getZonas();
+        getPetColors();
+        getPetTypes();
+        getPetBreeds();
+        getProvinces();
+        getRegions();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setisLoading(false);
+      }
+    };
+    fetchData();
   }, [permisos]);
 
   return (
@@ -854,6 +866,7 @@ export default function ParametrizacionScreen({ navigation }) {
             </View>
           ))}
         </View>
+        <View style={[{ marginTop: 20 }]}></View>
       </ScrollView>
       <ModalEditar
         isVisible={isModalVisible}
@@ -1031,6 +1044,14 @@ export default function ParametrizacionScreen({ navigation }) {
           </Text>
         </View>
       </Modal>
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -1113,5 +1134,22 @@ const styles = StyleSheet.create({
   modalText: {
     color: "white",
     textAlign: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });

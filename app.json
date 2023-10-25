@@ -5,6 +5,12 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "permissions": {
+      "mediaLibrary": {
+        "read": true,
+        "write": true
+      }
+    },
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",

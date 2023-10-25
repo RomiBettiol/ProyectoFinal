@@ -8,6 +8,7 @@ import {
   Modal,
   TextInput,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import Header from "../componentes/HeaderScreen";
 import { useRoute } from "@react-navigation/native";
@@ -59,6 +60,8 @@ export default function MiPerfil({ navigation }) {
 
   //Trae info del usuario
   useEffect(() => {
+    setIsLoading(true);
+
     axios
       .get(`https://buddy-app2.loca.lt/security/user/`, {
         headers: {
@@ -69,60 +72,64 @@ export default function MiPerfil({ navigation }) {
         setUser(response.data);
         setNewName(response.data[0].name);
         setNewUserName(response.data[0].userName);
-
-        // Declarar la constante idUser
         setIdUser(response.data[0].idUser);
-        setIsLoading(false);
-        // Luego puedes usar idUser como desees en tu componente.
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   }, [token, idUser]);
 
-  console.log("idUser1: ", idUser);
-
   useEffect(() => {
-    axios
-      .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
+    setIsLoading(true);
+
+    // Axios requests for publications and services
+    const publicationsRequest = axios.get(
+      `https://buddy-app2.loca.lt/publications/publication/ByUser`,
+      {
         headers: {
           "auth-token": token,
         },
-      })
-      .then((response) => {
-        if (response.data) {
-          setUserPublications(response.data);
+      }
+    );
+
+    const servicesRequest = axios.get(
+      `https://buddy-app2.loca.lt/services/service/ByUser`,
+      {
+        headers: {
+          "auth-token": token,
+        },
+      }
+    );
+
+    Promise.all([publicationsRequest, servicesRequest])
+      .then((responses) => {
+        const publicationsResponse = responses[0];
+        const servicesResponse = responses[1];
+
+        if (publicationsResponse.data) {
+          setUserPublications(publicationsResponse.data);
         } else {
           console.log(
             "No hay publicaciones de mascotas perdidas o en adopción."
           );
         }
-      })
-      .catch((error) => {
-        console.log("Error fetching user publications:", error);
-      });
 
-    axios
-      .get(`https://buddy-app2.loca.lt/services/service/ByUser`, {
-        headers: {
-          "auth-token": token,
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data) {
-          setUserService(response.data);
+        if (servicesResponse.data) {
+          setUserService(servicesResponse.data);
         } else {
           console.log("No hay publicaciones de servicio.");
         }
       })
       .catch((error) => {
-        console.log("Error fetching user services:", error);
+        console.log("Error fetching user publications or services:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-  }, []);
-
-  console.log("idUser: ", idUser);
+  }, [token]);
 
   const openModalService = () => {
     setModalServiceVisible(true);
@@ -278,9 +285,6 @@ export default function MiPerfil({ navigation }) {
     setSelectedPublication(publication);
     setOptionsModalVisible(true);
   };
-  useEffect(() => {
-    console.log("selectedPublication (after update): ", selectedPublication);
-  }, [selectedPublication]);
 
   const closeOptionsModal = () => {
     setSelectedPublication(null);
@@ -292,10 +296,6 @@ export default function MiPerfil({ navigation }) {
     setIdServicio(servicio.idService);
     setIsModalServiceVisible(true);
   };
-
-  useEffect(() => {
-    console.log("servicio (after update): ", idServicio);
-  }, [idServicio]);
 
   const closeOptionsModalService = () => {
     setServicio(null);
@@ -426,6 +426,7 @@ export default function MiPerfil({ navigation }) {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("auth-token");
+      await AsyncStorage.removeItem("permisos");
       navigation.navigate("InicioScreen");
     } catch (error) {
       setLogoutError("Hubo un error al cerrar sesión.");
@@ -468,82 +469,37 @@ export default function MiPerfil({ navigation }) {
       <Header />
       <ScrollView>
         <View style={[styles.principal, { flexDirection: "row" }]}>
-          {isLoading ? (
-            <Text>Cargando...</Text>
-          ) : (
-            <View style={{ flexDirection: "row" }}>
-              {user && user[0] && user[0].image && (
-                <Image
-                  source={{ uri: user[0].image }}
-                  style={styles.imagenUsuario}
-                />
+          <View style={{ flexDirection: "row" }}>
+            {user && user[0] && user[0].image && (
+              <Image
+                source={{ uri: user[0].image }}
+                style={styles.imagenUsuario}
+              />
+            )}
+            <View>
+              <Text style={styles.titulo}>MI PERFIL</Text>
+              {user && user[0] && user[0].userName ? (
+                <Text style={styles.textoUsuario}>{user[0].userName}</Text>
+              ) : (
+                <Text style={styles.textoUsuario}>Nombre de Usuario</Text>
               )}
-              <View>
-                <Text style={styles.titulo}>MI PERFIL</Text>
-                {user && user[0] && user[0].userName ? (
-                  <Text style={styles.textoUsuario}>{user[0].userName}</Text>
-                ) : (
-                  <Text style={styles.textoUsuario}>Nombre de Usuario</Text>
-                )}
-              </View>
-              <TouchableOpacity onPress={openModal}>
-                <Image
-                  source={require("../Imagenes/opciones.png")}
-                  style={styles.imagenOpciones}
-                />
-              </TouchableOpacity>
             </View>
-          )}
+            <TouchableOpacity onPress={openModal}>
+              <Image
+                source={require("../Imagenes/opciones.png")}
+                style={styles.imagenOpciones}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
-        {userService.map((servicio, index) => (
-          <View style={[styles.publicationContainer, { flexDirection: "row" }]}>
-            <Image
-              source={{ uri: servicio.images[0] }}
-              style={styles.imagenPublicaciones}
-            />
-            <View>
-              <View
-                style={[
-                  styles.informacionPublicacion,
-                  { flexDirection: "row" },
-                ]}
-              >
-                <TouchableOpacity style={styles.botonInformacion}>
-                  <Text>Servicio</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => openOptionsModalService(servicio)}
-                >
-                  <Image
-                    source={require("../Imagenes/opciones.png")}
-                    style={styles.imagenOpcionesPublicaciones}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.publicationTitle}>
-                {servicio.serviceTitle}
-              </Text>
-              <View style={[styles.containerfiltros, { flexDirection: "row" }]}>
-                <View style={{ flexDirection: "row" }}>
-                  <Image
-                    source={require("../Imagenes/marcador-de-posicion.png")}
-                    style={styles.imagenFiltros}
-                  />
-                  <Text>{servicio.address}</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        ))}
-        {userPublications.adoptions &&
-          userPublications.adoptions.length > 0 &&
-          userPublications.adoptions.map((adoption, index) => (
+        <View style={[{ alignItems: "center" }]}>
+          {userService.map((servicio, index) => (
             <View
               style={[styles.publicationContainer, { flexDirection: "row" }]}
             >
               <Image
-                source={{ uri: adoption.images[0] }}
+                source={{ uri: servicio.images[0] }}
                 style={styles.imagenPublicaciones}
               />
               <View>
@@ -553,103 +509,159 @@ export default function MiPerfil({ navigation }) {
                     { flexDirection: "row" },
                   ]}
                 >
-                  <TouchableOpacity style={styles.botonInformacion}>
-                    <Text>En adopción</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => openOptionsModal(adoption)}>
-                    <Image
-                      source={require("../Imagenes/opciones.png")}
-                      style={styles.imagenOpcionesPublicaciones}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.publicationTitle}>{adoption.title}</Text>
-                <View
-                  style={[styles.containerfiltros, { flexDirection: "row" }]}
-                >
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("../Imagenes/marcador-de-posicion.png")}
-                      style={styles.imagenFiltros}
-                    />
-                    <Text>{adoption.locality.localityName}</Text>
+                  <View style={[styles.botonInformacion, { marginRight: 200 }]}>
+                    <Text>Servicio</Text>
                   </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("../Imagenes/hueso.png")}
-                      style={styles.imagenFiltros}
-                    />
-                    <Text>{adoption.petBreed.petBreedName}</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-          ))}
-        {userPublications.searchs &&
-          userPublications.searchs.length > 0 &&
-          userPublications.searchs.map((search, index) => (
-            <View
-              style={[styles.publicationContainer, { flexDirection: "row" }]}
-            >
-              <Image
-                source={{ uri: search.images[0] }}
-                style={styles.imagenPublicaciones}
-              />
-              <View>
-                <View
-                  style={[
-                    styles.informacionPublicacion,
-                    { flexDirection: "row" },
-                  ]}
-                >
-                  <TouchableOpacity style={styles.botonInformacion}>
-                    <Text>En búsqueda</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => openOptionsModal(search)}>
-                    <Image
-                      source={require("../Imagenes/opciones.png")}
-                      style={styles.imagenOpcionesPublicaciones}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.publicationTitle}>{search.title}</Text>
-                <View
-                  style={[styles.containerfiltros, { flexDirection: "row" }]}
-                >
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("../Imagenes/marcador-de-posicion.png")}
-                      style={styles.imagenFiltros}
-                    />
-                    <Text>{search.locality.localityName}</Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <Image
-                      source={require("../Imagenes/hueso.png")}
-                      style={styles.imagenFiltros}
-                    />
-                    <Text>{search.petBreed.petBreedName}</Text>
-                  </View>
-                </View>
-                <View style={[{ flexDirection: "row" }, styles.containerFecha]}>
-                  <Image
-                    source={require("../Imagenes/calendario.png")}
-                    style={styles.imagenFiltros}
-                  />
-                  <Text>{formatLostDate(search.lostDate)}</Text>
-                  <Text
-                    style={
-                      search.isFound
-                        ? styles.textoInformacionBusquedaEncontrada // Usar el estilo para "Encontrada"
-                        : styles.textoInformacionBusquedaPerdida // Usar el estilo para "Perdida"
-                    }
+                  <TouchableOpacity
+                    onPress={() => openOptionsModalService(servicio)}
                   >
-                    {search.isFound ? "Encontrada" : "Perdida"}
-                  </Text>
+                    <Image
+                      source={require("../Imagenes/opciones.png")}
+                      style={styles.imagenOpcionesPublicaciones}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.publicationTitle}>
+                  {servicio.serviceTitle}
+                </Text>
+                <View
+                  style={[styles.containerfiltros, { flexDirection: "row" }]}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <Image
+                      source={require("../Imagenes/marcador-de-posicion.png")}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{servicio.address}</Text>
+                  </View>
                 </View>
               </View>
             </View>
           ))}
+          {userPublications.adoptions &&
+            userPublications.adoptions.length > 0 &&
+            userPublications.adoptions.map((adoption, index) => (
+              <View
+                style={[styles.publicationContainer, { flexDirection: "row" }]}
+              >
+                <Image
+                  source={{ uri: adoption.images[0] }}
+                  style={styles.imagenPublicaciones}
+                />
+                <View>
+                  <View
+                    style={[
+                      styles.informacionPublicacion,
+                      { flexDirection: "row" },
+                    ]}
+                  >
+                    <View
+                      style={[styles.botonInformacion, { marginRight: 175 }]}
+                    >
+                      <Text>En adopción</Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => openOptionsModal(adoption)}
+                    >
+                      <Image
+                        source={require("../Imagenes/opciones.png")}
+                        style={styles.imagenOpcionesPublicaciones}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={styles.publicationTitle}>{adoption.title}</Text>
+                  <View
+                    style={[styles.containerfiltros, { flexDirection: "row" }]}
+                  >
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("../Imagenes/marcador-de-posicion.png")}
+                        style={styles.imagenFiltros}
+                      />
+                      <Text>{adoption.locality.localityName}</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("../Imagenes/hueso.png")}
+                        style={styles.imagenFiltros}
+                      />
+                      <Text>{adoption.petBreed.petBreedName}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            ))}
+          {userPublications.searchs &&
+            userPublications.searchs.length > 0 &&
+            userPublications.searchs.map((search, index) => (
+              <View
+                style={[styles.publicationContainer, { flexDirection: "row" }]}
+              >
+                <Image
+                  source={{ uri: search.images[0] }}
+                  style={styles.imagenPublicaciones}
+                />
+                <View>
+                  <View
+                    style={[
+                      styles.informacionPublicacion,
+                      { flexDirection: "row" },
+                    ]}
+                  >
+                    <View style={styles.botonInformacion}>
+                      <Text>En búsqueda</Text>
+                    </View>
+                    <View>
+                      <Text
+                        style={[
+                          search.isFound
+                            ? styles.textoInformacionBusquedaEncontrada
+                            : styles.textoInformacionBusquedaPerdida,
+                          { marginRight: 110 },
+                        ]}
+                      >
+                        {search.isFound ? "Encontrada" : "Perdida"}
+                      </Text>
+                    </View>
+                    <TouchableOpacity onPress={() => openOptionsModal(search)}>
+                      <Image
+                        source={require("../Imagenes/opciones.png")}
+                        style={styles.imagenOpcionesPublicaciones}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={styles.publicationTitle}>{search.title}</Text>
+                  <View
+                    style={[styles.containerfiltros, { flexDirection: "row" }]}
+                  >
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("../Imagenes/marcador-de-posicion.png")}
+                        style={styles.imagenFiltros}
+                      />
+                      <Text>{search.locality.localityName}</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image
+                        source={require("../Imagenes/hueso.png")}
+                        style={styles.imagenFiltros}
+                      />
+                      <Text>{search.petBreed.petBreedName}</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={[{ flexDirection: "row" }, styles.containerFecha]}
+                  >
+                    <Image
+                      source={require("../Imagenes/calendario.png")}
+                      style={styles.imagenFiltros}
+                    />
+                    <Text>{formatLostDate(search.lostDate)}</Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+        </View>
 
         {/* Modal */}
         <Modal
@@ -1106,6 +1118,14 @@ export default function MiPerfil({ navigation }) {
           </Text>
         </View>
       )}
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -1129,8 +1149,8 @@ const styles = StyleSheet.create({
   imagenOpciones: {
     width: 20,
     height: 30,
-    marginTop: 25,
-    marginLeft: "55%",
+    marginTop: 5,
+    marginLeft: "52%",
   },
   textoUsuario: {
     marginLeft: 15,
@@ -1230,22 +1250,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   publicationContainer: {
-    padding: 1,
-    paddingRight: 15,
     backgroundColor: "#f0f0f0",
-    margin: 5,
+    // margin: 5,
     borderRadius: 15,
     elevation: 4,
-    width: "90%",
-    marginLeft: 25,
-    marginTop: 15,
+    width: "95%",
+    marginTop: 10,
     alignItems: "center",
+    marginBottom: 10,
   },
   imagenOpcionesPublicaciones: {
     width: 20,
     height: 20,
-    marginTop: 15,
-    marginLeft: 20,
+    marginTop: 5,
   },
   botonInformacion: {
     backgroundColor: "#f0f0f0",
@@ -1254,10 +1271,11 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 10,
     marginTop: 5,
-    marginLeft: 20,
+    marginLeft: 10,
+    marginRight: 10,
   },
   informacionPublicacion: {
-    justifyContent: "space-between",
+    alignItems: "center",
   },
   imagenFiltros: {
     width: 20,
@@ -1282,17 +1300,17 @@ const styles = StyleSheet.create({
   },
   imagenPublicaciones: {
     width: "30%",
-    height: 100,
+    height: "100%",
     borderRadius: 15,
   },
   textoInformacionBusquedaEncontrada: {
-    marginLeft: 15,
+    marginTop: 5,
     backgroundColor: "#CBC2C2",
     padding: 5,
   },
 
   textoInformacionBusquedaPerdida: {
-    marginLeft: 15,
+    marginTop: 5,
     backgroundColor: "#58DCD4",
     padding: 5,
   },
@@ -1354,6 +1372,24 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   confirmButtonText1: {
+    fontSize: 16,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
     fontSize: 16,
   },
 });

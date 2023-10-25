@@ -48,6 +48,7 @@ const SlideModal = ({ visible, onClose }) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("auth-token");
+      await AsyncStorage.removeItem("permisos");
       navigation.navigate("InicioScreen");
     } catch (error) {
       setLogoutError("Hubo un error al cerrar sesión.");

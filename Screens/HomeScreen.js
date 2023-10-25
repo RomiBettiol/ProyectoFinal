@@ -9,6 +9,7 @@ import {
   Dimensions,
   Modal,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import MenuHorizontal from "../componentes/MenuHorizontal";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
@@ -25,6 +26,8 @@ export default function HomeScreen({ navigation }) {
   const [notificacion, setNotifications] = useState(false);
   const [notificacionReaded, setNotificationsReaded] = useState(false);
   const [infoUsuario, setInfoUsuario] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const { token } = route.params;
 
   const buttons = [
     {
@@ -119,16 +122,11 @@ export default function HomeScreen({ navigation }) {
       if (response.status === 200) {
         setNotifications(response.data.notifications);
 
-        // Contar notificaciones con el atributo 'readed' en true
         const readNotificationsCount = response.data.notifications.filter(
           (notification) => notification.readed === false
         ).length;
+
         setNotificationsReaded(readNotificationsCount);
-        // Mostrar la cantidad de notificaciones con 'readed' en true en la consola
-        console.log(
-          "Cantidad de notificaciones con readed en true:",
-          readNotificationsCount
-        );
       } else {
         console.error("Error al obtener las notificaciones");
       }
@@ -138,16 +136,28 @@ export default function HomeScreen({ navigation }) {
   };
 
   useEffect(() => {
-    obtenerInformes();
-    obtenerPermisos();
-    fetchNotifications();
+    const fetchData = async () => {
+      try {
+        setisLoading(true);
+
+        await obtenerInformes();
+        await obtenerPermisos();
+        await fetchNotifications();
+      } catch (error) {
+        console.error("Error en la operación asincrónica:", error);
+      } finally {
+        setisLoading(false);
+      }
+    };
+
+    fetchData();
     //const intervalId = setInterval(() => {
     //fetchNotifications();
     //}, 5000); // 5000 milisegundos = 5 segundos
 
     // Limpia el intervalo cuando el componente se desmonta
     //return () => clearInterval(intervalId);
-  }, [token]);
+  }, []);
 
   const obtenerInformes = async () => {
     try {
@@ -176,17 +186,20 @@ export default function HomeScreen({ navigation }) {
     }
   }; // No hay dependencias, se ejecutará en cada renderizado del componente
 
-  useFocusEffect(
-    React.useCallback(() => {
-      obtenerPermisos();
-      obtenerInformes();
-      fetchNotifications();
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     setisLoading(true);
+  //     obtenerPermisos();
+  //     obtenerInformes();
+  //     fetchNotifications();
+  //     setisLoading(false);
+  //   }, [])
+  // );
 
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("auth-token");
+      await AsyncStorage.removeItem("permisos");
       navigation.navigate("InicioScreen");
     } catch (error) {
       setLogoutError("Hubo un error al cerrar sesión.");
@@ -218,9 +231,6 @@ export default function HomeScreen({ navigation }) {
     }
   }
 
-  // Accede al parámetro token
-  const { token } = route.params;
-
   const openModal = () => {
     setModalVisible(true);
   };
@@ -233,7 +243,7 @@ export default function HomeScreen({ navigation }) {
     const rows = [];
     let currentRow = [];
 
-    if (!permisos[0] || permisos.length === 0) {
+    if (permisos.length === 0) {
       return null;
     }
 
@@ -270,7 +280,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#DDC4B8" }}>
       <View style={styles.home}>
         <Image source={require("../Imagenes/logo2.png")} style={styles.logo} />
         <MenuHorizontal
@@ -316,6 +326,15 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity style={styles.botonAyuda} onPress={handleLogout}>
             <Text style={styles.textAyuda}>Cerrar Sesión</Text>
           </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
         </View>
       </Modal>
     </ScrollView>
@@ -444,5 +463,23 @@ const styles = StyleSheet.create({
   textAyuda: {
     fontSize: 16,
     padding: 5,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });
