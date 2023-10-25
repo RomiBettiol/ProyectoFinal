@@ -22,7 +22,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
   const sendNotificationRequest = async () => {
     try {
       const response = await axios.post(
-        "https://buddy-app2.loca.lt/reports/notification/",
+        "https://romibettiol.loca.lt/reports/notification/",
         null,
         {
           headers: {
@@ -59,7 +59,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://romibettiol.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },

@@ -36,7 +36,7 @@ const PublicacionDetalle = ({ route }) => {
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user`, {
+      .get(`https://romibettiol.loca.lt/security/user`, {
         headers: {
           "auth-token": token,
         },
@@ -67,7 +67,7 @@ const PublicacionDetalle = ({ route }) => {
     try {
       // Realizar una solicitud POST al servidor para crear un nuevo chat
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Search`,
+        `https://romibettiol.loca.lt/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Search`,
         null,
         {
           headers: {

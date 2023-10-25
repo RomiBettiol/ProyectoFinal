@@ -52,7 +52,7 @@ const EstablecimientoDetalleScreen = () => {
       };
 
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/security/establishment/${establishmentId}`,
+        `https://romibettiol.loca.lt/security/establishment/${establishmentId}`,
         config
       );
 
@@ -71,7 +71,7 @@ const EstablecimientoDetalleScreen = () => {
       };
 
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/security/establishment/document/${establishmentId}`,
+        `https://romibettiol.loca.lt/security/establishment/document/${establishmentId}`,
         config
       );
 
@@ -172,7 +172,7 @@ const EstablecimientoDetalleScreen = () => {
       };
 
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/security/establishment/validateEstablishment/${establishmentId}`,
+        `https://romibettiol.loca.lt/security/establishment/validateEstablishment/${establishmentId}`,
         data,
         config
       );
@@ -206,7 +206,7 @@ const EstablecimientoDetalleScreen = () => {
       };
 
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/security/establishment/validateEstablishment/${establishmentId}`,
+        `https://romibettiol.loca.lt/security/establishment/validateEstablishment/${establishmentId}`,
         data,
         config
       );

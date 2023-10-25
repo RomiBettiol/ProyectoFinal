@@ -42,7 +42,7 @@ const ModalAgregarLocalidad = ({
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/locality", newLocalidad, {
+      .post("https://romibettiol.loca.lt/parameters/locality", newLocalidad, {
         headers: { "auth-token": token },
       })
       .then((response) => {

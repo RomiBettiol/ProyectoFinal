@@ -13,7 +13,7 @@ export default function NotificacionesScreen({ navigation }) {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(
-          "https://buddy-app2.loca.lt/reports/notification/",
+          "https://romibettiol.loca.lt/reports/notification/",
           {
             headers: {
               "auth-token": token,

@@ -33,7 +33,7 @@ export default function ServiciosScreen({ navigation }) {
     const obtenerServicios = async () => {
       try {
         const response = await axios.get(
-          "https://buddy-app2.loca.lt/services/service/",
+          "https://romibettiol.loca.lt/services/service/",
           {
             headers: {
               "auth-token": token,

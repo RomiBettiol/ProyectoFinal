@@ -183,7 +183,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
     const fetchServiceDetails = async () => {
       try {
         const response = await axios.get(
-          `https://buddy-app2.loca.lt/services/service/${idService}`,
+          `https://romibettiol.loca.lt/services/service/${idService}`,
           {
             headers: {
               "auth-token": token,
@@ -243,7 +243,7 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
 
     try {
       const response = await axios.post(
-        "https://buddy-app2.loca.lt/services/service/",
+        "https://romibettiol.loca.lt/services/service/",
         {
           serviceTitle: title,
           serviceDescription: description,
@@ -392,43 +392,43 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
           token={token}
         />
         <Text style={styles.descripcionPublicacion}>Horario de atención</Text>
-        <View style={[styles.hora, { flexDirection: "row" }]}>
-          <TextInput
-            style={[styles.inputTexto2, !isHourValid && styles.inputError]}
-            value={numero1}
-            onChangeText={handleNumero1Change}
-            keyboardType="numeric"
-            maxLength={2}
-            placeholder="HH"
-          />
-          <Text style={styles.separadorHora}>:</Text>
-          <TextInput
-            style={[styles.inputTexto2, !isMinuteValid && styles.inputError]}
-            value={numero2}
-            onChangeText={handleNumero2Change}
-            keyboardType="numeric"
-            maxLength={2}
-            placeholder="MM"
-          />
-          <Text style={styles.separadorHora}>-</Text>
-          <TextInput
-            style={[styles.inputTexto2, !isHourValid && styles.inputError]}
-            value={numero3}
-            onChangeText={handleNumero3Change}
-            keyboardType="numeric"
-            maxLength={2}
-            placeholder="HH"
-          />
-          <Text style={styles.separadorHora}>:</Text>
-          <TextInput
-            style={[styles.inputTexto2, !isMinuteValid && styles.inputError]}
-            value={numero4}
-            onChangeText={handleNumero4Change}
-            keyboardType="numeric"
-            maxLength={2}
-            placeholder="MM"
-          />
-        </View>
+        <View style={[styles.hora, { flexDirection: "row", display: abierto24h ? "none" : "flex" }]}>
+        <TextInput
+          style={[styles.inputTexto2, !isHourValid && styles.inputError]}
+          value={numero1}
+          onChangeText={handleNumero1Change}
+          keyboardType="numeric"
+          maxLength={2}
+          placeholder="HH"
+        />
+        <Text style={styles.separadorHora}>:</Text>
+        <TextInput
+          style={[styles.inputTexto2, !isMinuteValid && styles.inputError]}
+          value={numero2}
+          onChangeText={handleNumero2Change}
+          keyboardType="numeric"
+          maxLength={2}
+          placeholder="MM"
+        />
+        <Text style={styles.separadorHora}>-</Text>
+        <TextInput
+          style={[styles.inputTexto2, !isHourValid && styles.inputError]}
+          value={numero3}
+          onChangeText={handleNumero3Change}
+          keyboardType="numeric"
+          maxLength={2}
+          placeholder="HH"
+        />
+        <Text style={styles.separadorHora}>:</Text>
+        <TextInput
+          style={[styles.inputTexto2, !isMinuteValid && styles.inputError]}
+          value={numero4}
+          onChangeText={handleNumero4Change}
+          keyboardType="numeric"
+          maxLength={2}
+          placeholder="MM"
+        />
+      </View>
         {!isHourValid && (
           <Text style={styles.errorText}>
             El formato de la hora debe ser HH (0 a 24).

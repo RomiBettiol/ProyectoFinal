@@ -14,7 +14,7 @@ const ListaValoresRazaPerros = ({
   const getRazas = () => {
     axios
       .get(
-        `https://buddy-app2.loca.lt/parameters/petBreed/byType/${selectedAnimal}`,
+        `https://romibettiol.loca.lt/parameters/petBreed/byType/${selectedAnimal}`,
         {
           headers: { "auth-token": token },
         }

@@ -51,7 +51,7 @@ export default function MisVacunas() {
   async function fetchVaccines() {
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
+        `https://romibettiol.loca.lt/mypet/vaccine/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -157,7 +157,7 @@ export default function MisVacunas() {
     console.log(vaccin.idVaccin);
     try {
       const response = await axios.delete(
-        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`,
+        `https://romibettiol.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`,
         {
           headers: {
             "auth-token": token,

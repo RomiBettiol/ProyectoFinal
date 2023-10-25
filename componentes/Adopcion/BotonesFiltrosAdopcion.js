@@ -126,7 +126,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/locality/", {
+      .get("https://romibettiol.loca.lt/parameters/locality/", {
         headers: {
           "auth-token": token,
         },
@@ -144,7 +144,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petColor/", {
+      .get("https://romibettiol.loca.lt/parameters/petColor/", {
         headers: {
           "auth-token": token,
         },
@@ -162,7 +162,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed/", {
+      .get("https://romibettiol.loca.lt/parameters/petBreed/", {
         headers: {
           "auth-token": token,
         },
@@ -197,7 +197,7 @@ const BotonesFiltrosAdopcion = () => {
     setLoading(true);
 
     const apiUrl =
-      "https://buddy-app2.loca.lt/publications/publication?modelType=adoption";
+      "https://romibettiol.loca.lt/publications/publication?modelType=adoption";
 
     axios
       .get(apiUrl, {

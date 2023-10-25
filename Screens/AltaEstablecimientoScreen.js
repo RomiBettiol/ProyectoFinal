@@ -31,7 +31,7 @@ const AltaEstablecimientoScreen = () => {
       };
 
       const response = await axios.get(
-        "https://buddy-app2.loca.lt/security/establishment/revision",
+        "https://romibettiol.loca.lt/security/establishment/revision",
         config
       );
 

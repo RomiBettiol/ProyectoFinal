@@ -24,7 +24,7 @@ const ModalEditarRegion = ({
   const handleEditRegion = () => {
     axios
       .put(
-        `https://buddy-app2.loca.lt/parameters/region/${editingRegion.idRegion}`,
+        `https://romibettiol.loca.lt/parameters/region/${editingRegion.idRegion}`,
         {
           regionName: regionName,
         },
