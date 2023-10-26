@@ -21,6 +21,9 @@ const ModalAgregarRaza = ({
   token,
 }) => {
   const [breedName, setBreedName] = useState("");
+  const [size, setSize] = useState("");
+  const [temperament, setTemperament] = useState("");
+  const [lifespan, setLifeSpan] = useState("");
   const [selectedPetTypeId, setSelectedPetTypeId] = useState("");
   const [showPetTypeList, setShowPetTypeList] = useState(false);
 
@@ -37,6 +40,9 @@ const ModalAgregarRaza = ({
     const newBreed = {
       petBreedName: breedName,
       idPetType: selectedPetTypeId,
+      size: size,
+      temperament: temperament,
+      lifespan: lifespan,
     };
 
     await axios
@@ -72,6 +78,25 @@ const ModalAgregarRaza = ({
             style={styles.inputRegion}
             value={breedName}
             onChangeText={setBreedName}
+          />
+          <Text style={styles.valorTexto}>Esperanza de vida</Text>
+          <TextInput
+            style={styles.inputRegion}
+            value={lifespan}
+            onChangeText={setLifeSpan}
+            keyboardType="numeric"
+          />
+          <Text style={styles.valorTexto}>Temperamento</Text>
+          <TextInput
+            style={styles.inputRegion}
+            value={temperament}
+            onChangeText={setTemperament}
+          />
+          <Text style={styles.valorTexto}>Tamaño</Text>
+          <TextInput
+            style={styles.inputRegion}
+            value={size}
+            onChangeText={setSize}
           />
           <TouchableOpacity
             style={styles.inputPicker}

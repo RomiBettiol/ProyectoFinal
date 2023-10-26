@@ -50,6 +50,15 @@ export default function ParametrizacionScreen({ navigation }) {
     useState(false);
   const [editingProvince, setEditingProvince] = useState(null);
   const [newProvinceName, setNewProvinceName] = useState("");
+  const [clima, setClima] = useState("");
+  const [extension, setExtension] = useState("");
+  const [densidad, setDensidad] = useState("");
+  const [poblacion, setPoblacion] = useState("");
+  const [legsNumber, setLegsNumber] = useState("");
+  const [weather, setWeather] = useState("");
+  const [coat, setCoat] = useState("");
+  const [enviroment, setEnviroment] = useState("");
+  const [diet, setDiet] = useState("");
   const [isAddProvinceModalVisible, setAddProvinceModalVisible] =
     useState(false);
   const [regions, setRegions] = useState([]);
@@ -163,12 +172,16 @@ export default function ParametrizacionScreen({ navigation }) {
     setPetBreeds(updatedBreeds);
   };
 
-  const handleAddProvince = (newProvinceName) => {
+  const handleAddProvince = (provinceData) => {
     const newProvince = {
-      provinceName: newProvinceName,
+      provinceName: provinceData.nombre,
       idCountry: "c4e7c89c-dcdb-4e27-90af-0123456789aa",
+      weather: provinceData.clima,
+      surface: provinceData.extension,
+      populationDensity: provinceData.densidad,
+      population: provinceData.poblacion
     };
-
+  
     axios
       .post("https://romibettiol.loca.lt/parameters/province/", newProvince, {
         headers: { "auth-token": token },
@@ -176,16 +189,15 @@ export default function ParametrizacionScreen({ navigation }) {
       .then((response) => {
         setSuccessModalVisible(true); // Mostrar el modal de éxito
         getProvinces(); // Actualizar la lista de provincias después de agregar
-
+        console.log(newProvince);
         // Ocultar el modal de éxito después de 1 segundo
         setTimeout(() => {
           setSuccessModalVisible(false);
         }, 1000);
       })
       .catch((error) => {
-        //console.error('Error al agregar provincia:', error);
         setErrorModalVisible(true); // Mostrar el modal de error
-
+        console.log(newProvince);
         // Ocultar el modal de error después de 2 segundos
         setTimeout(() => {
           setErrorModalVisible(false);
@@ -193,9 +205,15 @@ export default function ParametrizacionScreen({ navigation }) {
       });
   };
 
-  const handleAddType = (newTypeName) => {
+  const handleAddType = (tipoAnimalData) => {
     const newType = {
-      petTypeName: newTypeName,
+      petTypeName: tipoAnimalData.nombre,
+      weather: tipoAnimalData.weather,
+      legsNumber: tipoAnimalData.legsNumber,
+      diet: tipoAnimalData.diet,
+      enviroment: tipoAnimalData.enviroment,
+      coat: tipoAnimalData.coat,
+      weather: tipoAnimalData.weather,
     };
 
     axios
@@ -206,7 +224,7 @@ export default function ParametrizacionScreen({ navigation }) {
         //console.log('Tipo de animal agregado exitosamente:', response.data);
         setSuccessModalVisible(true); // Mostrar el modal de éxito
         getPetTypes(); // Actualizar la lista de tipos de animales después de agregar
-
+        console.log(newType);
         // Ocultar el modal de éxito después de 1 segundo
         setTimeout(() => {
           setSuccessModalVisible(false);
@@ -215,7 +233,7 @@ export default function ParametrizacionScreen({ navigation }) {
       .catch((error) => {
         //console.error('Error al agregar tipo de animal:', error);
         setErrorModalVisible(true); // Mostrar el modal de error
-
+        console.log(newType)
         // Ocultar el modal de error después de 2 segundos
         setTimeout(() => {
           setErrorModalVisible(false);
@@ -905,6 +923,16 @@ export default function ParametrizacionScreen({ navigation }) {
         onAdd={handleAddType}
         newTypeName={newTypeName}
         setNewTypeName={setNewTypeName}
+        legsNumber={legsNumber}
+        setLegsNumber={setLegsNumber}
+        diet={diet}
+        setDiet={setDiet}
+        enviroment={enviroment}
+        setEnviroment={setEnviroment}
+        coat={coat}
+        setCoat={setCoat}
+        weather={weather}
+        setWeather={setWeather}
         token={token}
       />
       <ModalEditarProvincia
@@ -922,6 +950,14 @@ export default function ParametrizacionScreen({ navigation }) {
         onAdd={handleAddProvince}
         newProvinceName={newProvinceName}
         setNewProvinceName={setNewProvinceName}
+        clima={clima} // Asegúrate de pasar el estado clima
+        setClima={setClima} // Asegúrate de pasar la función para actualizar el estado clima
+        extension={extension} // Asegúrate de pasar el estado extension
+        setExtension={setExtension} // Asegúrate de pasar la función para actualizar el estado extension
+        densidad={densidad} // Asegúrate de pasar el estado densidad
+        setDensidad={setDensidad} // Asegúrate de pasar la función para actualizar el estado densidad
+        poblacion={poblacion} // Asegúrate de pasar el estado densidad
+        setPoblacion={setPoblacion}
         token={token}
       />
       <ModalEditarRegion

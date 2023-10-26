@@ -20,6 +20,9 @@ const ModalEditarRaza = ({
   token,
 }) => {
   const [breedName, setBreedName] = useState("");
+  const [esperanzaVida, setEsperanzaVida] = useState("");
+  const [temperamento, setTemperamento] = useState("");
+  const [tamaño, setTamaño] = useState("");
 
   const handleEditBreed = () => {
     axios
@@ -27,6 +30,9 @@ const ModalEditarRaza = ({
         `https://romibettiol.loca.lt/parameters/petBreed/${editingBreed.idPetBreed}`,
         {
           petBreedName: breedName,
+          size: tamaño,
+          temperament: temperamento,
+          lifespan: esperanzaVida
         },
         {
           headers: { "auth-token": token },
@@ -55,11 +61,36 @@ const ModalEditarRaza = ({
         <View style={styles.modalContent}>
           <Text style={styles.tituloModal}>Editar Raza</Text>
           <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
-            <Text style={styles.valorTexto}>Valor</Text>
+            <Text style={styles.valorTexto}>Nombre</Text>
             <TextInput
               style={styles.inputLocalities}
               value={breedName}
               onChangeText={setBreedName}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Esperanza de vida</Text>
+            <TextInput
+              style={styles.inputVida}
+              value={esperanzaVida}
+              onChangeText={setEsperanzaVida}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Temperamento</Text>
+            <TextInput
+              style={styles.inputTemperamento}
+              value={temperamento}
+              onChangeText={setTemperamento}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Tamaño</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={tamaño}
+              onChangeText={setTamaño}
             />
           </View>
           <View style={[{ flexDirection: "row" }, styles.botonesDecidir]}>
@@ -99,6 +130,22 @@ const styles = StyleSheet.create({
   inputLocalities: {
     backgroundColor: "#EEE9E9",
     width: "70%",
+    height: 32,
+    borderRadius: 100,
+    textAlign: "center",
+    marginLeft: 20,
+  },
+  inputVida: {
+    backgroundColor: "#EEE9E9",
+    width: "40%",
+    height: 32,
+    borderRadius: 100,
+    textAlign: "center",
+    marginLeft: 20,
+  },
+  inputTemperamento: {
+    backgroundColor: "#EEE9E9",
+    width: "50%",
     height: 32,
     borderRadius: 100,
     textAlign: "center",

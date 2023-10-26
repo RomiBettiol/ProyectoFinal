@@ -25,6 +25,7 @@ const ModalAgregarLocalidad = ({
   const [showRegionList, setShowRegionList] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [postalCode, setPostalCode] = useState("");
 
   const handleAddLocalidad = () => {
     if (!localityName || !selectedRegionId) {
@@ -39,6 +40,7 @@ const ModalAgregarLocalidad = ({
     const newLocalidad = {
       localityName: localityName,
       idRegion: selectedRegionId,
+      postalCode: postalCode,
     };
 
     axios
@@ -69,12 +71,6 @@ const ModalAgregarLocalidad = ({
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.tituloModal}>Agregar localidad</Text>
-          <Text style={styles.valorTexto}>Nombre de la localidad</Text>
-          <TextInput
-            style={styles.inputRegion}
-            value={localityName}
-            onChangeText={setLocalityName}
-          />
           <TouchableOpacity
             style={styles.inputPicker}
             onPress={() => setShowRegionList(!showRegionList)}
@@ -102,6 +98,19 @@ const ModalAgregarLocalidad = ({
               ))}
             </ScrollView>
           )}
+          <Text style={styles.valorTexto}>Nombre de la localidad</Text>
+          <TextInput
+            style={styles.inputRegion}
+            value={localityName}
+            onChangeText={setLocalityName}
+          />
+          <Text style={styles.valorTexto}>Código Postal</Text>
+          <TextInput
+            style={styles.inputRegion}
+            value={postalCode}
+            onChangeText={setPostalCode}
+            keyboardType="numeric"
+          />
           <View style={[styles.botonesDecidir, { flexDirection: "row" }]}>
             <TouchableOpacity
               style={styles.botonesEditar}

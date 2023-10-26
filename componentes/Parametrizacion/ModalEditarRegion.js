@@ -20,6 +20,8 @@ const ModalEditarRegion = ({
   token,
 }) => {
   const [regionName, setRegionName] = useState("");
+  const [extension, setExtension] = useState("");
+  const [population, setPopulation] = useState("");
 
   const handleEditRegion = () => {
     axios
@@ -27,6 +29,8 @@ const ModalEditarRegion = ({
         `https://romibettiol.loca.lt/parameters/region/${editingRegion.idRegion}`,
         {
           regionName: regionName,
+          surface: extension,
+          population: population
         },
         {
           headers: { "auth-token": token },
@@ -55,11 +59,29 @@ const ModalEditarRegion = ({
         <View style={styles.modalContent}>
           <Text style={styles.tituloModal}>Editar Región</Text>
           <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
-            <Text style={styles.valorTexto}>Valor</Text>
+            <Text style={styles.valorTexto}>Nombre</Text>
             <TextInput
               style={styles.inputLocalities}
               value={regionName}
               onChangeText={setRegionName}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Extension</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={extension}
+              onChangeText={setExtension}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Poblacion</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={population}
+              onChangeText={setPopulation}
+              keyboardType="numeric"
             />
           </View>
           <View style={[{ flexDirection: "row" }, styles.botonesDecidir]}>
