@@ -9,11 +9,27 @@ const Header = (token) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
+        onPress={() => navigation.navigate('NotificacionesScreen',  token={token})}
+      >
+        <Image
+          source={require('../Imagenes/notificacion.png')}
+          style={styles.imagen1}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
         onPress={() => navigation.navigate('HomeScreen',  token={token})}
       >
         <Image
           source={require('../Imagenes/logoHeader.png')}
           style={styles.imagen2}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('MisChats',  token={token})}
+      >
+        <Image
+          source={require('../Imagenes/chat_without_content_v2_icon-icons.com_67752.png')}
+          style={styles.imagen1}
         />
       </TouchableOpacity>
     </View>

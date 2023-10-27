@@ -28,6 +28,7 @@ export default function ServiciosScreen({ navigation }) {
   const [selectedUserToReport, setSelectedUserToReport] = useState(null);
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const [filteredType, setFilteredType] = useState(null);
 
   useEffect(() => {
     const obtenerServicios = async () => {
@@ -119,7 +120,7 @@ export default function ServiciosScreen({ navigation }) {
       <View style={styles.contenedor1}>
         <Text style={styles.titulo}>Servicios para tu mascota</Text>
         <BotonesFiltroServicios onFilterChange={handleFilterChange} />
-        <BarraBusquedaServicios onSearch={handleSearch} />
+        <BarraBusquedaServicios onSearch={handleSearch} token={token} />
 
         {Object.keys(serviciosAgrupados).map((typeName) => (
           <View key={typeName}>
@@ -219,5 +220,10 @@ const styles = StyleSheet.create({
     bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
     right: 20, // Puedes ajustar esta cantidad según tus preferencias
     transform: [{ translateY: 0 }], // Inicialmente no se desplaza
+  },
+  imagenFiltrar: {
+    width: 30,
+    height: 30,
+    marginTop: 10,
   },
 });
