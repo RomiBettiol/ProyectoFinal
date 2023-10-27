@@ -8,6 +8,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import HeaderScreen from "../componentes/HeaderScreen";
 import { useRoute } from "@react-navigation/native";
@@ -22,8 +23,10 @@ export default function DenunciaScreen({ navigation }) {
   const [denunciaToReject, setDenunciaToReject] = useState(null);
   const [bloquearModalVisible, setBloquearModalVisible] = useState(false);
   const [denunciaToBloquear, setDenunciaToBloquear] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
 
   function loadDenuncias(token) {
+    setisLoading(true);
     // Realiza una solicitud GET al servidor para obtener las denuncias
     axios
       .get("https://buddy-app2.loca.lt/security/complaint/", {
@@ -33,6 +36,7 @@ export default function DenunciaScreen({ navigation }) {
       })
       .then((response) => {
         setDenuncias(response.data);
+        setisLoading(false);
       })
       .catch((error) => {
         console.error("Error al obtener denuncias:", error);
@@ -122,7 +126,9 @@ export default function DenunciaScreen({ navigation }) {
       <ScrollView>
         <Text style={styles.titulo}>Denuncias Pendientes</Text>
         {denuncias.length === 0 ? (
-          <View style={styles.emptyDenunciasContainer}></View>
+          <Text style={{ fontSize: 20, marginLeft: 35, marginTop: 10 }}>
+            No hay denuncias pendientes
+          </Text>
         ) : (
           denuncias.map((denuncia) => (
             <View key={denuncia.idComplaint} style={styles.denuncia}>
@@ -221,6 +227,14 @@ export default function DenunciaScreen({ navigation }) {
             >
               <Text>Cancelar</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
           </View>
         </View>
       </Modal>
@@ -329,5 +343,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     fontWeight: "500",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });

@@ -41,7 +41,7 @@ export function RegistrarseScreen({ navigation }) {
         userName: datosFormulario.usuario,
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
-        name: datosFormulario.nombre + ", " + datosFormulario.apellidos,
+        name: `${datosFormulario.nombre} ${datosFormulario.apellidos}`,
         phoneNumber: datosFormulario.nroTelefono,
         cuitCuil: datosFormulario.cuitCuil,
         address: datosFormulario.domicilio,

@@ -10,9 +10,10 @@ import {
   Modal,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import MenuHorizontal from "../componentes/MenuHorizontal";
-import { useRoute, useFocusEffect } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -23,6 +24,8 @@ export default function HomeScreen({ navigation }) {
   const [adoptionQuantity, setAdoptionQuantity] = useState("");
   const [lostPetsQuantity, setLostPetsQuantity] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalConfirmationVisible, setModalConfirmationVisible] =
+    useState(false);
   const [notificacion, setNotifications] = useState(false);
   const [notificacionReaded, setNotificationsReaded] = useState(false);
   const [infoUsuario, setInfoUsuario] = useState(false);
@@ -34,25 +37,27 @@ export default function HomeScreen({ navigation }) {
       title: "Encontrar mi mascota",
       image: require("../Imagenes/lupa.png"),
       permission: "READ_PUBLICACION_BUSQUEDA",
-      onPress: () => navigation.navigate("BusquedaScreen", { token }),
+      onPress: () => navigation.navigate("BusquedaScreen", { token, permisos }),
     },
     {
       title: "Adoptar una mascota",
       image: require("../Imagenes/mascota.png"),
       permission: "READ_PUBLICACION_ADOPCION",
-      onPress: () => navigation.navigate("AdoptarScreen", { token }),
+      onPress: () => navigation.navigate("AdoptarScreen", { token, permisos }),
     },
     {
       title: "Servicios para mi mascota",
       image: require("../Imagenes/perro.png"),
       permission: "READ_SERVICIOS",
-      onPress: () => navigation.navigate("ServiciosScreen", { token }),
+      onPress: () =>
+        navigation.navigate("ServiciosScreen", { token, permisos }),
     },
     {
       title: "Mi mascota",
       image: require("../Imagenes/huella.png"),
       permission: "READ_MI_MASCOTA",
-      onPress: () => navigation.navigate("MiMascotaScreen", { token }),
+      onPress: () =>
+        navigation.navigate("MiMascotaScreen", { token, permisos }),
     },
     {
       title: "Reportes",
@@ -136,6 +141,22 @@ export default function HomeScreen({ navigation }) {
   };
 
   useEffect(() => {
+    const backAction = () => {
+      if (route.name == "HomeScreen") {
+        setModalConfirmationVisible(true);
+        return true; // Evita que el botón de retroceso cierre la aplicación
+      }
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove(); // Limpia el evento cuando el componente se desmonta
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         setisLoading(true);
@@ -200,6 +221,7 @@ export default function HomeScreen({ navigation }) {
     try {
       await AsyncStorage.removeItem("auth-token");
       await AsyncStorage.removeItem("permisos");
+      setModalConfirmationVisible(false);
       navigation.navigate("InicioScreen");
     } catch (error) {
       setLogoutError("Hubo un error al cerrar sesión.");
@@ -230,6 +252,10 @@ export default function HomeScreen({ navigation }) {
       console.error("Error al obtener los permisos:", error);
     }
   }
+
+  const openConfirmationModal = () => {
+    setModalConfirmationVisible(true);
+  };
 
   const openModal = () => {
     setModalVisible(true);
@@ -285,6 +311,7 @@ export default function HomeScreen({ navigation }) {
         <Image source={require("../Imagenes/logo2.png")} style={styles.logo} />
         <MenuHorizontal
           token={token}
+          permisos={permisos}
           openModal={openModal}
           notificacionReaded={notificacionReaded}
         />
@@ -323,9 +350,43 @@ export default function HomeScreen({ navigation }) {
           >
             <Text style={styles.textAyuda}>Ayuda</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botonAyuda} onPress={handleLogout}>
+          <TouchableOpacity
+            style={styles.botonAyuda}
+            onPress={openConfirmationModal}
+          >
             <Text style={styles.textAyuda}>Cerrar Sesión</Text>
           </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalConfirmationVisible}
+        onRequestClose={() => {
+          setModalConfirmationVisible(false);
+        }}
+      >
+        <View style={styles.modalConfirmationContainer}>
+          <View style={styles.modalConfirmationContent}>
+            <Text style={styles.modalConfirmationText}>
+              ¿Estás seguro que quieres cerrar sesión?
+            </Text>
+            <View style={styles.modalConfirmationButtons}>
+              <TouchableOpacity
+                onPress={() => setModalConfirmationVisible(false)}
+              >
+                <Text style={styles.modalConfirmationCancelButton}>
+                  Cancelar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleLogout}>
+                <Text style={[styles.modalConfirmationConfirmButton]}>
+                  Confirmar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </Modal>
 
@@ -481,5 +542,44 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
+  },
+  modalConfirmationContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalConfirmationContent: {
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalConfirmationText: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  modalConfirmationButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  modalConfirmationConfirmButton: {
+    backgroundColor: "#FFB988",
+    marginHorizontal: 10,
+    padding: 10,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  modalConfirmationCancelButton: {
+    backgroundColor: "#CCCCCC",
+    padding: 10,
+    marginHorizontal: 10,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
   },
 });

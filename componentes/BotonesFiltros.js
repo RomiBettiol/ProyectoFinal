@@ -691,15 +691,17 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   imagenFiltroPublicacion: {
-    width: 15,
-    height: 15,
+    width: 12,
+    height: 12,
     marginRight: 2,
   },
   filtros: {
     marginTop: 15,
+    // justifyContent: "center",
   },
   miniFiltros: {
     marginRight: 5,
+    // alignContent: "center",
   },
   informacion: {
     marginRight: 3,
@@ -758,7 +760,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   texto1: {
-    fontSize: 12,
+    fontSize: 10,
   },
   imagenFiltrar: {
     width: 30,

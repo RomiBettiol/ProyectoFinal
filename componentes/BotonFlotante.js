@@ -10,13 +10,12 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SlideModal from "./SlideModal";
 
-const BotonFlotante = () => {
+const BotonFlotante = ({ token, permisos, permisosNecesario }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalOptionsPublications, setModalOptionsPublications] =
     useState(false);
   const route = useRoute();
-  const { token } = route.params;
 
   const handleNavigateToPublicacion = () => {
     if (route.name === "BusquedaScreen") {
@@ -57,20 +56,21 @@ const BotonFlotante = () => {
         </View>
       </TouchableOpacity>
       <SlideModal visible={modalVisible} onClose={handleCloseModal} />
-      <TouchableOpacity
-        style={styles.botonCrear}
-        onPress={() => {
-          handleNavigateToPublicacion();
-        }}
-      >
-        <View style={styles.fab2}>
-          <Image
-            source={require("../Imagenes/agregar.png")}
-            style={styles.imagenBoton}
-          />
-        </View>
-      </TouchableOpacity>
-
+      {(permisos.includes(permisosNecesario) || route.name === "MiPerfil") && (
+        <TouchableOpacity
+          style={styles.botonCrear}
+          onPress={() => {
+            handleNavigateToPublicacion();
+          }}
+        >
+          <View style={styles.fab2}>
+            <Image
+              source={require("../Imagenes/agregar.png")}
+              style={styles.imagenBoton}
+            />
+          </View>
+        </TouchableOpacity>
+      )}
       {/* Modal de opciones de publicación */}
       <Modal
         animationType="slide" // Puedes cambiar el tipo de animación según tus preferencias
@@ -80,30 +80,37 @@ const BotonFlotante = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("PublicacionAdopcion", { token });
-                handleCloseModalOptionsPublications();
-              }}
-            >
-              <Text style={styles.opcionModal}>Publicación Adopción</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("PublicacionBusqueda", { token });
-                handleCloseModalOptionsPublications();
-              }}
-            >
-              <Text style={styles.opcionModal}>Publicación Búsqueda</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("PublicarServicio", { token });
-                handleCloseModalOptionsPublications();
-              }}
-            >
-              <Text style={styles.opcionModal}>Publicación Servicio</Text>
-            </TouchableOpacity>
+            {permisos.includes("CREATE_PUBLICACION_ADOPCION") && (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("PublicacionAdopcion", { token });
+                  handleCloseModalOptionsPublications();
+                }}
+              >
+                <Text style={styles.opcionModal}>Publicación Adopción</Text>
+              </TouchableOpacity>
+            )}
+            {permisos.includes("CREATE_PUBLICACION_BUSQUEDA") && (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("PublicacionBusqueda", { token });
+                  handleCloseModalOptionsPublications();
+                }}
+              >
+                <Text style={styles.opcionModal}>Publicación Búsqueda</Text>
+              </TouchableOpacity>
+            )}
+            {permisos.includes("CREATE_SERVICIOS") && (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("PublicarServicio", { token });
+                  handleCloseModalOptionsPublications();
+                }}
+              >
+                <Text style={styles.opcionModal}>Publicación Servicio</Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               style={styles.botonCloseText}
               onPress={handleCloseModalOptionsPublications}

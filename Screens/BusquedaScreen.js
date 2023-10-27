@@ -16,7 +16,7 @@ export default function BusquedaScreen() {
   const navigation = useNavigation();
   const [buttonTransform, setButtonTransform] = useState(0);
   const route = useRoute(); // Obtiene la prop route
-  const { token } = route.params;
+  const { token, permisos } = route.params;
 
   return (
     <View style={styles.container}>
@@ -33,7 +33,11 @@ export default function BusquedaScreen() {
           { transform: [{ translateY: buttonTransform }] },
         ]}
       >
-        <BotonFlotante token={token} />
+        <BotonFlotante
+          token={token}
+          permisos={permisos}
+          permisosNecesario={"CREATE_PUBLICACION_BUSQUEDA"}
+        />
       </View>
     </View>
   );

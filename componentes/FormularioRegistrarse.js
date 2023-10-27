@@ -33,6 +33,9 @@ const FormularioRegistrarse = ({
   const [mostrarTexto, setMostrarTexto] = useState(false);
   const [mostrarTextoContrasena2, setMostrarTextoContrasena2] = useState(false);
   const [emailValido, setEmailValido] = useState(true);
+  const [numeroValido, setNumeroValido] = useState(true);
+  const [cuitValido, setCuitValido] = useState(true);
+  const [fechaValida, setFechaValida] = useState(true);
   const [domicilio, setDomicilio] = useState(datosFormulario.domicilio);
   const [nroTelefono, setNroTelefono] = useState(datosFormulario.nroTelefono);
   const [fechaNacimiento, setFechaNacimiento] = useState(
@@ -161,6 +164,49 @@ const FormularioRegistrarse = ({
     return emailRegex.test(email);
   };
 
+  const validarNumero = (nro) => {
+    const numeroRegex = /^[0-9]{10}$/;
+
+    if (numeroRegex.test(nro)) {
+      setNumeroValido(true);
+    } else {
+      setNumeroValido(false);
+    }
+  };
+
+  const validarCuit = (cuit) => {
+    const cuitRegex = /^[0-9]{10,11}$/;
+
+    if (cuitRegex.test(cuit)) {
+      setCuitValido(true);
+    } else {
+      setCuitValido(false);
+    }
+  };
+
+  const validarFecha = (fecha) => {
+    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!fechaRegex.test(fecha)) {
+      setFechaValida(false);
+      return;
+    }
+
+    const partesFecha = fecha.split("-");
+    const año = parseInt(partesFecha[0], 10);
+    const mes = parseInt(partesFecha[1], 10);
+    const dia = parseInt(partesFecha[2], 10);
+
+    const fechaActual = new Date();
+    const añoActual = fechaActual.getFullYear();
+
+    if (año > añoActual || mes < 1 || mes > 12 || dia < 1 || dia > 31) {
+      setFechaValida(false);
+      return;
+    }
+
+    setFechaValida(true);
+  };
+
   const isFormValid = () => {
     return (
       nombre.trim() !== "" &&
@@ -175,6 +221,9 @@ const FormularioRegistrarse = ({
       cuitCuil.trim() !== "" &&
       contrasena === contrasena2 &&
       emailValido &&
+      numeroValido &&
+      cuitValido &&
+      fechaValida &&
       requisitosContrasena.every((requisito) => requisito.cumplido)
     );
   };
@@ -225,7 +274,6 @@ const FormularioRegistrarse = ({
           placeholder="Nombre"
           value={nombre}
           onChangeText={setNombre}
-          onBlur={() => setEmailValido(validarEmail(nombre))}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -235,7 +283,7 @@ const FormularioRegistrarse = ({
         />
         <TextInput
           style={styles.input}
-          placeholder="Apellidos"
+          placeholder="Apellido"
           value={apellidos}
           onChangeText={setApellidos}
         />
@@ -292,10 +340,16 @@ const FormularioRegistrarse = ({
         />
         <TextInput
           style={styles.input}
-          placeholder="Numero de teléfono"
+          placeholder="Número de teléfono"
           value={nroTelefono}
           onChangeText={setNroTelefono}
+          onBlur={() => validarNumero(nroTelefono)}
         />
+      </View>
+      <View style={styles.controlContainer}>
+        {!numeroValido && (
+          <Text style={styles.textoContrasena2}>Ingrese un número válido </Text>
+        )}
       </View>
       <View style={styles.inputContainer}>
         <Image
@@ -307,10 +361,16 @@ const FormularioRegistrarse = ({
           placeholder="Fecha de nacimiento"
           value={fechaNacimiento}
           onChangeText={setFechaNacimiento}
+          onBlur={() => validarFecha(fechaNacimiento)}
         />
       </View>
-      <Text style={styles.textoContrasena2}>
-        El formato de fecha debe ser aaaa-mm-dd
+      <View style={styles.controlContainer}>
+        {!fechaValida && (
+          <Text style={styles.textoContrasena2}>Ingrese una fecha válida</Text>
+        )}
+      </View>
+      <Text style={styles.textoContrasena}>
+        El formato de fecha debe ser en formato (aaaa-mm-dd)
       </Text>
 
       <View style={styles.inputContainer}>
@@ -323,10 +383,18 @@ const FormularioRegistrarse = ({
           placeholder="Cuit / Cuil"
           value={cuitCuil}
           onChangeText={setCuitCuil}
+          onBlur={() => validarCuit(cuitCuil)}
         />
       </View>
-      <Text style={styles.textoContrasena2}>
-        El CUIT/CUIL debe tener 11 dígitos numéricos
+      <View style={styles.controlContainer}>
+        {!cuitValido && (
+          <Text style={styles.textoContrasena2}>
+            Ingrese un CUIT/CUIL válido
+          </Text>
+        )}
+      </View>
+      <Text style={styles.textoContrasena}>
+        El CUIT/CUIL debe ingresarlo sin guiones
       </Text>
 
       <View>

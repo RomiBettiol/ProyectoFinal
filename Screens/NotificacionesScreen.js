@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View, Text, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  ActivityIndicator,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import HeaderScreen from "../componentes/HeaderScreen";
@@ -8,9 +15,11 @@ export default function NotificacionesScreen({ navigation }) {
   const route = useRoute();
   const { token } = route.params;
   const [notifications, setNotifications] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
     const fetchNotifications = async () => {
+      setisLoading(true);
       try {
         const response = await axios.get(
           "https://buddy-app2.loca.lt/reports/notification/",
@@ -29,10 +38,13 @@ export default function NotificacionesScreen({ navigation }) {
         }
       } catch (error) {
         console.error("Error de red:", error);
+      } finally {
+        setisLoading(false);
       }
     };
 
     fetchNotifications();
+    setNotifications([]);
   }, [token]);
 
   const countUnreadNotifications = () => {
@@ -68,6 +80,11 @@ export default function NotificacionesScreen({ navigation }) {
           </View>
         )}
       </View>
+      {notifications.length == 0 && (
+        <Text style={{ marginLeft: 30, marginTop: 10, fontSize: 20 }}>
+          No hay notificaciones
+        </Text>
+      )}
       <ScrollView>
         {notifications.map((notification) => (
           <View
@@ -86,6 +103,14 @@ export default function NotificacionesScreen({ navigation }) {
           </View>
         ))}
       </ScrollView>
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -102,7 +127,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "gray",
     padding: 10,
     marginTop: 10,
-    marginLeft: 42,
+    marginLeft: 30,
   },
   titulo: {
     fontSize: 25,
@@ -129,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   contenedorNotificacion: {
-    marginLeft: 45,
+    marginLeft: 30,
     marginTop: 25,
     width: "80%",
   },
@@ -149,5 +174,22 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "gray",
     marginLeft: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });

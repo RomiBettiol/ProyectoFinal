@@ -17,7 +17,7 @@ import BotonFlotante from "../componentes/BotonFlotante";
 
 export default function MiPerfil({ navigation }) {
   const route = useRoute();
-  const { token } = route.params;
+  const { token, permisos } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [editPasswordModalVisible, setEditPasswordModalVisible] =
     useState(false);
@@ -1067,7 +1067,7 @@ export default function MiPerfil({ navigation }) {
           { transform: [{ translateY: buttonTransform }] },
         ]}
       >
-        <BotonFlotante token={token} />
+        <BotonFlotante token={token} permisos={permisos} />
       </View>
       {logoutError && (
         <View style={styles.errorContainer1}>

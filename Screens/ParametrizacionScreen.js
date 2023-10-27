@@ -430,6 +430,7 @@ export default function ParametrizacionScreen({ navigation }) {
   };
 
   const getZonas = () => {
+    setisLoading(true);
     axios
       .get("https://buddy-app2.loca.lt/parameters/locality/", {
         headers: { "auth-token": token },
@@ -537,6 +538,7 @@ export default function ParametrizacionScreen({ navigation }) {
         } else {
           setRegions([]);
         }
+        setisLoading(false);
       })
       .catch((error) => {
         console.error("Error en la solicitud GET de regiones:", error);
@@ -545,22 +547,12 @@ export default function ParametrizacionScreen({ navigation }) {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setisLoading(true);
-        getZonas();
-        getPetColors();
-        getPetTypes();
-        getPetBreeds();
-        getProvinces();
-        getRegions();
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setisLoading(false);
-      }
-    };
-    fetchData();
+    getZonas();
+    getPetColors();
+    getPetTypes();
+    getPetBreeds();
+    getProvinces();
+    getRegions();
   }, [permisos]);
 
   return (

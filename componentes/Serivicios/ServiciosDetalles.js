@@ -6,7 +6,7 @@ import BotonMenu from "../BotonMenu";
 
 export default function ServiciosDetalles({ route }) {
   const navigation = useNavigation();
-  const { servicio, token, source } = route.params;
+  const { servicio, token, source, permisos } = route.params;
   const [isRatingModalVisible, setRatingModalVisible] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,14 +92,16 @@ export default function ServiciosDetalles({ route }) {
       />
       <View style={{ flexDirection: "row" }}>
         <Text style={styles.titulo}>{servicio.serviceTitle}</Text>
-        <TouchableOpacity
-          onPress={() => handleOpenRatingModal(servicio.idService)}
-        >
-          <Image
-            source={require("../../Imagenes/estrella.png")}
-            style={styles.imagenCalificacion}
-          />
-        </TouchableOpacity>
+        {permisos.includes("WRITE_CALIFICACIONES") && (
+          <TouchableOpacity
+            onPress={() => handleOpenRatingModal(servicio.idService)}
+          >
+            <Image
+              source={require("../../Imagenes/estrella.png")}
+              style={styles.imagenCalificacion}
+            />
+          </TouchableOpacity>
+        )}
         <RatingModal
           isVisible={isRatingModalVisible}
           onClose={() => {
