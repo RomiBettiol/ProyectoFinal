@@ -29,6 +29,7 @@ export default function ServiciosScreen({ navigation }) {
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [filteredType, setFilteredType] = useState(null);
+  const [selectedZone, setSelectedZone] = useState(null);
 
   useEffect(() => {
     const obtenerServicios = async () => {
@@ -100,6 +101,21 @@ export default function ServiciosScreen({ navigation }) {
     }
   };
 
+  const handleFilterChangeHora = (filtro) => {
+    console.log('Mostras desde handleFilterChangeHora: ', filtro);
+    // Si filtro es null, muestra todos los servicios originales
+    if (filtro === null) {
+      setServicios(originalServicios);
+    } else {
+      // Filtra los servicios según el tipo de servicio seleccionado
+      const serviciosFiltrados = originalServicios.filter(
+        (servicio) => servicio.open24hs === filtro
+      );
+      // Actualiza el estado con los servicios filtrados
+      setServicios(serviciosFiltrados);
+    }
+  };
+
   const handleDenunciar = () => {
     setDenunciaModalVisible(true);
     setReportModalVisible(false); // Cierra el modal de reporte
@@ -114,13 +130,27 @@ export default function ServiciosScreen({ navigation }) {
     setDenunciaModalVisible(true);
   };
 
+  const handleZoneSelect = (zone) => {
+    setSelectedZone(zone);
+    // Aplicar el filtro por zona seleccionada
+    if (zone) {
+      const serviciosFiltradosPorZona = originalServicios.filter(
+        (servicio) => servicio.zone === zone
+      );
+      setServicios(serviciosFiltradosPorZona);
+    } else {
+      // Si no se selecciona ninguna zona, mostrar todas las publicaciones originales
+      setServicios(originalServicios);
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <HeaderScreen />
       <View style={styles.contenedor1}>
         <Text style={styles.titulo}>Servicios para tu mascota</Text>
         <BotonesFiltroServicios onFilterChange={handleFilterChange} />
-        <BarraBusquedaServicios onSearch={handleSearch} token={token} />
+        <BarraBusquedaServicios onSearch={handleSearch} onFilterChangeHora={handleFilterChangeHora} token={token} />
 
         {Object.keys(serviciosAgrupados).map((typeName) => (
           <View key={typeName}>

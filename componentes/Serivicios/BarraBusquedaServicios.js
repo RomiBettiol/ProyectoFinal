@@ -3,13 +3,14 @@ import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity, Modal, Flat
 import { useRoute } from "@react-navigation/native";
 import axios from 'axios';
 
-const SearchBarExample = ({ data, onSearch, onFilterChange }) => {
+const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
   const [searchText, setSearchText] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [zones, setZones] = useState([]); // Estado para almacenar las zonas
   const [zonesModalVisible, setZonesModalVisible] = useState(false);
+  const [filtroSeleccionadoHora, setFiltroSeleccionadoHora] = useState(null);
 
   console.log('token desde barra servicios: ', token);
 
@@ -20,6 +21,14 @@ const SearchBarExample = ({ data, onSearch, onFilterChange }) => {
 
   const handleToggleFilters = () => {
     setShowFilters(!showFilters);
+  };
+
+  const handleFilterPressHora = (filtro) => {
+    console.log(filtro);
+    const nuevoFiltro = filtro === filtroSeleccionadoHora ? null : filtro;
+    setFiltroSeleccionadoHora(nuevoFiltro);
+    console.log('MOSTRAR FILTRO: ',nuevoFiltro);
+    onFilterChangeHora(nuevoFiltro);
   };
 
   const fetchZones = async () => {
@@ -60,7 +69,7 @@ const SearchBarExample = ({ data, onSearch, onFilterChange }) => {
               source={require("../../Imagenes/filtrar.png")}
               style={styles.iconoFiltro}
             />
-            <TouchableOpacity onPress={fetchZones}>
+            <TouchableOpacity onPress={() => handleFilterPressHora(1)} style={filtroSeleccionadoHora === 1}>
               <Text>Abierto 24hs</Text>
             </TouchableOpacity>
           </View>
@@ -85,19 +94,23 @@ const SearchBarExample = ({ data, onSearch, onFilterChange }) => {
         transparent={true}
         visible={zonesModalVisible}
         onRequestClose={() => setZonesModalVisible(false)}
-        token={token}
-        style={styles.modalContainer}
       >
         <View style={styles.modalContainer}>
-          <FlatList
-            data={zones}
-            renderItem={({ item }) => <Text style={styles.zoneItem}>{item.localityName}</Text>}
-            keyExtractor={(item) => item.idLocality}
-          />
-          <Text>ROMI</Text>
-          <TouchableOpacity onPress={() => setZonesModalVisible(false)}>
-            <Text style={styles.closeButton}>Cerrar</Text>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Seleccione una zona:</Text>
+            <FlatList
+              data={zones.localities}
+              renderItem={({ item }) => (
+                <Text style={styles.zoneItem}>
+                  {item.localityName}
+                </Text>
+              )}
+              keyExtractor={(item) => item.idLocality}
+            />
+          <TouchableOpacity style={styles.closeButton} onPress={() => setZonesModalVisible(false)}>
+            <Text style={styles.closeButtonText}>Limpiar</Text>
           </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -109,7 +122,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    margin: 50,
+  },
+
+  modalContent: {
+    backgroundColor: '#fff', // Fondo blanco para el contenido del modal
+    padding: 20, // Espaciado interno para el contenido del modal
+    borderRadius: 10, // Bordes redondeados
+    height: "35%",
+  },
+
+ zoneItem: {
+    padding: 5,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "gray",
+  },
+
+  modalTitle: {
+    fontSize: 16,
+    marginBottom: 10,
   },
   
   container: {
@@ -161,6 +192,18 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginBottom: 2,
     marginTop: 10,
+  },
+  closeButton: {
+    backgroundColor: "#DDC4B8",
+    width: "30%",
+    height: 25,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: "center",
+    marginLeft: 0,
+    padding: 2,
+    elevation: 5,
+    marginLeft: 50,
   },
 });
 

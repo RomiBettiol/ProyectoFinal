@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking } from "react-native";
 import HeaderScreen from "../componentes/HeaderScreen";
 import { useRoute } from "@react-navigation/native";
 
@@ -7,14 +7,22 @@ export default function Backup({ navigation }) {
   const route = useRoute();
   const { token } = route.params;
 
+  const handleButtonPress = () => {
+    // Abre la URL en el navegador del dispositivo cuando se hace clic en el botón
+    Linking.openURL("https://www.cleardb.com/login.view");
+  };
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <HeaderScreen />
       <Text style={styles.titulo}>BackUp</Text>
       <Text style={styles.introduccion}>
-        En el siguiente tutorial se explica como obtener los backUp necesarios
+        Ingresa al siguiente botón y sigue los pasos para obtener los backUp necesarios
         siendo usuario administrador:
       </Text>
+      <TouchableOpacity onPress={handleButtonPress} style={styles.boton}>
+        <Text style={styles.botonTexto}>Ir a ClearDB</Text>
+      </TouchableOpacity>
       <Text style={styles.paso}>
         Paso 1: Ingresar al link: https://id.heroku.com/login
       </Text>
@@ -122,5 +130,17 @@ const styles = StyleSheet.create({
   aclaracion: {
     marginLeft: 35,
     padding: 5,
+  },
+  boton: {
+    backgroundColor: "#DDC4B8", // Color de fondo del botón
+    padding: 10,
+    margin: 20,
+    borderRadius: 5,
+    alignItems: "center",
+    elevation: 5,
+  },
+  botonTexto: {
+    color: "black", // Color del texto del botón
+    fontSize: 18,
   },
 });
