@@ -146,7 +146,7 @@ const ListaServiciosScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <Text style={styles.title}>Lista de Servicios</Text>
       <FlatList
         data={services}

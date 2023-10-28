@@ -65,7 +65,7 @@ const AltaEstablecimientoScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <Text style={styles.title}>Establecimientos en revision</Text>
       {!establishments[0] && (
         <View style={styles.ItemContainer}>

@@ -13,7 +13,7 @@ import {
   BackHandler,
 } from "react-native";
 import MenuHorizontal from "../componentes/MenuHorizontal";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -31,6 +31,7 @@ export default function HomeScreen({ navigation }) {
   const [infoUsuario, setInfoUsuario] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const { token } = route.params;
+  const [homeScreen, setHomeScreen] = useState(true);
 
   const buttons = [
     {
@@ -113,6 +114,27 @@ export default function HomeScreen({ navigation }) {
     // Agrega más botones aquí
   ];
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => {
+        backHandler.remove();
+      };
+    }, [])
+  );
+
+  const backAction = () => {
+    if (route.name === "HomeScreen") {
+      openConfirmationModal();
+      return true; // Evita que el botón de retroceso cierre la aplicación
+    }
+    return false; // Deja que el botón de retroceso funcione normalmente en otras pantallas
+  };
+
   const fetchNotifications = async () => {
     try {
       const response = await axios.get(
@@ -141,26 +163,9 @@ export default function HomeScreen({ navigation }) {
   };
 
   useEffect(() => {
-    const backAction = () => {
-      if (route.name == "HomeScreen") {
-        setModalConfirmationVisible(true);
-        return true; // Evita que el botón de retroceso cierre la aplicación
-      }
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove(); // Limpia el evento cuando el componente se desmonta
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
         setisLoading(true);
-
         await obtenerInformes();
         await obtenerPermisos();
         await fetchNotifications();
@@ -170,14 +175,7 @@ export default function HomeScreen({ navigation }) {
         setisLoading(false);
       }
     };
-
     fetchData();
-    //const intervalId = setInterval(() => {
-    //fetchNotifications();
-    //}, 5000); // 5000 milisegundos = 5 segundos
-
-    // Limpia el intervalo cuando el componente se desmonta
-    //return () => clearInterval(intervalId);
   }, []);
 
   const obtenerInformes = async () => {
@@ -560,6 +558,7 @@ const styles = StyleSheet.create({
   modalConfirmationText: {
     fontSize: 16,
     marginBottom: 20,
+    fontWeight: "bold",
     textAlign: "center",
   },
   modalConfirmationButtons: {

@@ -190,7 +190,7 @@ const PublicacionDetalle = ({ route }) => {
 
   return (
     <View>
-      <Header />
+      <Header token={token} />
       {!isProccessing ? (
         <View>
           <ScrollView horizontal={true}>

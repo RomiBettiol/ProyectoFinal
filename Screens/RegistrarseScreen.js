@@ -74,7 +74,7 @@ export function RegistrarseScreen({ navigation }) {
         setShowAlertServer(true);
       }
     } else {
-      let errorText = "Revise todos los campos";
+      let errorText = "Complete todos los campos";
       if (datosFormulario.nombre.trim() === "") {
         errorText = "Por favor, complete el nombre.";
       } else if (datosFormulario.contrasena !== datosFormulario.contrasena2) {

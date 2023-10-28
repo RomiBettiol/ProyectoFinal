@@ -121,7 +121,7 @@ export default function ServiciosScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <View style={styles.contenedor1}>
         <Text style={styles.titulo}>Servicios para tu mascota</Text>
         <BotonesFiltroServicios

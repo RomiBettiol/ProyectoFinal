@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
 
-const Header = (token) => {
+const Header = ({ token }) => {
   const navigation = useNavigation();
   const route = useRoute(); // Obtiene la prop route
   return (

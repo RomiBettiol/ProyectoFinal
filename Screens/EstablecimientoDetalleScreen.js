@@ -234,7 +234,7 @@ const EstablecimientoDetalleScreen = () => {
 
   return (
     <ScrollView>
-      <Header />
+      <Header token={token} />
       <Image
         source={{ uri: establishment.image }}
         style={styles.imagenPublicacion}

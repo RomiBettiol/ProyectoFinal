@@ -184,7 +184,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
 
   return (
     <View>
-      <Header />
+      <Header token={token} />
       {!isProccessing ? (
         <View>
           <ScrollView horizontal={true}>

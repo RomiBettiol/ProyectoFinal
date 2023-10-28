@@ -466,7 +466,7 @@ export default function MiPerfil({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Header />
+      <Header token={token} />
       <ScrollView>
         <View style={[styles.principal, { flexDirection: "row" }]}>
           <View style={{ flexDirection: "row" }}>

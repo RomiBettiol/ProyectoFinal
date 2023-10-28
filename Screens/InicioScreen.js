@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, Modal } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Modal,
+  BackHandler,
+} from "react-native";
+import { useRoute, useFocusEffect } from "@react-navigation/native";
 import { Image, CheckBox } from "react-native-elements";
 import { ImageBackground } from "react-native";
 import { navigation } from "@react-navigation/native";
@@ -11,6 +19,7 @@ export default function InicioScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [checkBox1, setCheckBox1] = useState(false);
   const [checkBox2, setCheckBox2] = useState(false);
+  const route = useRoute();
 
   const handleRegistro = () => {
     setModalVisible(true);
@@ -39,6 +48,27 @@ export default function InicioScreen({ navigation }) {
   const handleCancelar = () => {
     setModalVisible(false);
   };
+
+  const backAction = () => {
+    if (route.name === "InicioScreen") {
+      openConfirmationModal();
+      return true; // Evita que el botón de retroceso cierre la aplicación
+    }
+    return false; // Deja que el botón de retroceso funcione normalmente en otras pantallas
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => {
+        backHandler.remove();
+      };
+    }, [])
+  );
 
   return (
     <ImageBackground

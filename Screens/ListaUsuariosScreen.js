@@ -188,7 +188,7 @@ const ListaUsuariosScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <Text style={styles.title}>Lista de Usuarios</Text>
       <FlatList
         data={users}

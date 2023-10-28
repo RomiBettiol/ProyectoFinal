@@ -9,7 +9,7 @@ export default function Backup({ navigation }) {
 
   return (
     <ScrollView style={{ flex: 1 }}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <Text style={styles.titulo}>BackUp</Text>
       <Text style={styles.introduccion}>
         En el siguiente tutorial se explica como obtener los backUp necesarios

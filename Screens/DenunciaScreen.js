@@ -122,7 +122,7 @@ export default function DenunciaScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <ScrollView>
         <Text style={styles.titulo}>Denuncias Pendientes</Text>
         {denuncias.length === 0 ? (

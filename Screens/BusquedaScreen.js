@@ -17,6 +17,7 @@ export default function BusquedaScreen() {
   const [buttonTransform, setButtonTransform] = useState(0);
   const route = useRoute(); // Obtiene la prop route
   const { token, permisos } = route.params;
+  console.log(route.name);
 
   return (
     <View style={styles.container}>

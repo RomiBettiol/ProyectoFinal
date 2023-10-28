@@ -557,7 +557,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   return (
     <ScrollView>
-      <Header />
+      <Header token={token} />
       <Text style={styles.titulo}>Parametrización de filtros</Text>
       <ScrollView style={styles.scrollView}>
         <View style={[{ flexDirection: "row" }, styles.filtrosZona]}>

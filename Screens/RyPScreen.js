@@ -365,7 +365,7 @@ export default function InicioScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <View style={styles.rowContainer}>
         <Text style={styles.titulo}>Roles</Text>
         {permissions.includes("WRITE_ROLES") && (

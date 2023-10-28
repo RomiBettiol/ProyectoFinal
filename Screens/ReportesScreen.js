@@ -117,7 +117,7 @@ export default function ReportesScreen() {
 
   return (
     <View>
-      <Header />
+      <Header token={token} />
       <Text style={styles.titulo}>Reportes</Text>
       <View style={styles.Container}>
         <View style={[styles.informeUsuariosActivos, { flexDirection: "row" }]}>
