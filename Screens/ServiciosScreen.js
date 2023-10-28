@@ -35,7 +35,7 @@ export default function ServiciosScreen({ navigation }) {
     const obtenerServicios = async () => {
       try {
         const response = await axios.get(
-          "https://romibettiol.loca.lt/services/service/",
+          "https://buddy-app2.loca.lt/services/service/",
           {
             headers: {
               "auth-token": token,
@@ -101,20 +101,31 @@ export default function ServiciosScreen({ navigation }) {
     }
   };
 
-  const handleFilterChangeHora = (filtro) => {
+  const handleFilterChangeHora = (filtro, tipo) => {
     console.log('Mostras desde handleFilterChangeHora: ', filtro);
     // Si filtro es null, muestra todos los servicios originales
-    if (filtro === null) {
+    if (tipo == "Limpiar" || filtro == null) {
       setServicios(originalServicios);
-    } else {
-      // Filtra los servicios según el tipo de servicio seleccionado
+      return
+    } if(tipo == "24HS"){
       const serviciosFiltrados = originalServicios.filter(
         (servicio) => servicio.open24hs === filtro
       );
       // Actualiza el estado con los servicios filtrados
       setServicios(serviciosFiltrados);
+      return
+    }else {
+      // Filtra los servicios según el tipo de servicio seleccionado
+      const serviciosFiltrados = originalServicios.filter(
+        (servicio) => servicio.idLocality === filtro
+      );
+      // Actualiza el estado con los servicios filtrados
+      setServicios(serviciosFiltrados);
+      return
     }
   };
+
+
 
   const handleDenunciar = () => {
     setDenunciaModalVisible(true);

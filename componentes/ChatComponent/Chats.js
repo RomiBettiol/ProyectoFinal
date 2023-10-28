@@ -114,7 +114,7 @@ export default function Chats({
   const fetchArchivar = async () => {
     try {
       const response = await axios.post(
-        `https://romibettiol.loca.lt/chats/chat/archive/${idChat}/true`,
+        `https://buddy-app2.loca.lt/chats/chat/archive/${idChat}/true`,
         null,
         {
           headers: {
@@ -137,7 +137,7 @@ export default function Chats({
     console.log(idPublicacion);
     try {
       const response = await axios.post(
-        `https://romibettiol.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Search`,
+        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Search`,
         null,
         {
           headers: {
@@ -164,7 +164,7 @@ export default function Chats({
     console.log("idPublicacion dentro del try: ", idPublicacion);
     try {
       const response = await axios.post(
-        `https://romibettiol.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
+        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
         null,
         {
           headers: {
@@ -194,7 +194,7 @@ export default function Chats({
 
   useEffect(() => {
     axios
-      .get(`https://romibettiol.loca.lt/security/user/`, {
+      .get(`https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -212,7 +212,7 @@ export default function Chats({
   const fetchSMS = async () => {
     try {
       const response = await axios.get(
-        `https://romibettiol.loca.lt/chats/message/${idChat}`,
+        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
         {
           headers: {
             "auth-token": token,
@@ -230,7 +230,7 @@ export default function Chats({
   const fetchEnviar = async () => {
     try {
       const response = await axios.post(
-        `https://romibettiol.loca.lt/chats/message/${idChat}`,
+        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
         {
           headers: {
             "auth-token": token,
@@ -249,7 +249,7 @@ export default function Chats({
   const handleEnviarSMS = async () => {
     try {
       const response = await axios.post(
-        `https://romibettiol.loca.lt/chats/message/${idChat}`,
+        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
         {
           content: nuevoSMS,
         },

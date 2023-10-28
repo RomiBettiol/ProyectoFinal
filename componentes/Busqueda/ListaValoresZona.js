@@ -9,7 +9,7 @@ const ListaValoresZona = ({ setSelectedLocality, token }) => {
 
   const getZonas = () => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/locality/", {
+      .get("https://buddy-app2.loca.lt/parameters/locality/", {
         headers: { "auth-token": token },
       })
       .then((response) => {

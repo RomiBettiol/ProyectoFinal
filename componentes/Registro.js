@@ -37,7 +37,7 @@ const Registro = () => {
     if (formValid) {
       try {
         const response = await axios.post(
-          "https://romibettiol.loca.lt/security/auth/login",
+          "https://buddy-app2.loca.lt/security/auth/login",
           {
             headers: {
               "Content-Type": "application/json",

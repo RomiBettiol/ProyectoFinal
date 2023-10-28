@@ -122,7 +122,7 @@ export default function PublicacionBusqueda({ navigation }) {
       };
 
       const response = await axios.post(
-        "https://romibettiol.loca.lt/publications/publication/adoption",
+        "https://buddy-app2.loca.lt/publications/publication/adoption",
         postData,
         config
       );

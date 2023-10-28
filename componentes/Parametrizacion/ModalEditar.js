@@ -25,7 +25,7 @@ const ModalEditar = ({
   const handleEdit = () => {
     axios
       .put(
-        `https://romibettiol.loca.lt/parameters/locality/${editingZone.idLocality}`,
+        `https://buddy-app2.loca.lt/parameters/locality/${editingZone.idLocality}`,
         {
           localityName: localities,
           postalCode: postalCode

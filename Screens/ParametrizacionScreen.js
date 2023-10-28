@@ -183,7 +183,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
   
     axios
-      .post("https://romibettiol.loca.lt/parameters/province/", newProvince, {
+      .post("https://buddy-app2.loca.lt/parameters/province/", newProvince, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -217,7 +217,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("https://romibettiol.loca.lt/parameters/petType/", newType, {
+      .post("https://buddy-app2.loca.lt/parameters/petType/", newType, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -247,7 +247,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("https://romibettiol.loca.lt/parameters/petColor/", newColor, {
+      .post("https://buddy-app2.loca.lt/parameters/petColor/", newColor, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -268,7 +268,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleZoneDelete = (zoneId) => {
     axios
-      .delete(`https://romibettiol.loca.lt/parameters/locality/${zoneId}`, {
+      .delete(`https://buddy-app2.loca.lt/parameters/locality/${zoneId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -284,7 +284,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleBreedDelete = async (breedId) => {
     console.log("ID:", breedId);
     await axios
-      .delete(`https://romibettiol.loca.lt/parameters/petBreed/${breedId}`, {
+      .delete(`https://buddy-app2.loca.lt/parameters/petBreed/${breedId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -299,7 +299,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleColorDelete = (colorId) => {
     axios
-      .delete(`https://romibettiol.loca.lt/parameters/petColor/${colorId}`, {
+      .delete(`https://buddy-app2.loca.lt/parameters/petColor/${colorId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -314,7 +314,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleTypeDelete = (typeId) => {
     axios
-      .delete(`https://romibettiol.loca.lt/parameters/petType/${typeId}`, {
+      .delete(`https://buddy-app2.loca.lt/parameters/petType/${typeId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -329,7 +329,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleProvinceDelete = (provinceId) => {
     axios
-      .delete(`https://romibettiol.loca.lt/parameters/province/${provinceId}`, {
+      .delete(`https://buddy-app2.loca.lt/parameters/province/${provinceId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -344,7 +344,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleRegionDelete = (regionId) => {
     axios
-      .delete(`https://romibettiol.loca.lt/parameters/region/${regionId}`, {
+      .delete(`https://buddy-app2.loca.lt/parameters/region/${regionId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -447,7 +447,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getZonas = () => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/locality/", {
+      .get("https://buddy-app2.loca.lt/parameters/locality/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -467,7 +467,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetColors = () => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/petColor/", {
+      .get("https://buddy-app2.loca.lt/parameters/petColor/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -486,7 +486,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetTypes = () => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/petType/", {
+      .get("https://buddy-app2.loca.lt/parameters/petType/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -505,7 +505,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetBreeds = () => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/petBreed/", {
+      .get("https://buddy-app2.loca.lt/parameters/petBreed/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -524,7 +524,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getProvinces = () => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/province/", {
+      .get("https://buddy-app2.loca.lt/parameters/province/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -543,7 +543,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getRegions = () => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/region/", {
+      .get("https://buddy-app2.loca.lt/parameters/region/", {
         headers: { "auth-token": token },
       })
       .then((response) => {

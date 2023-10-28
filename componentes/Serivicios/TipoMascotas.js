@@ -8,7 +8,7 @@ const TipoMascota = ({ selectedTypes, setSelectedTypes }) => {
 
   useEffect(() => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/petType/")
+      .get("https://buddy-app2.loca.lt/parameters/petType/")
       .then((response) => {
         console.log("Tipos de animal exitosos:", response.data);
         setAnimalOptions(response.data.petTypes);

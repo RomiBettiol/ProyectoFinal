@@ -30,7 +30,7 @@ const ModalAgregarRegion = ({
 
   useEffect(() => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/province", {
+      .get("https://buddy-app2.loca.lt/parameters/province", {
         headers: {
           "auth-token": token,
         },
@@ -63,7 +63,7 @@ const ModalAgregarRegion = ({
     };
 
     axios
-      .post("https://romibettiol.loca.lt/parameters/region", newRegion, {
+      .post("https://buddy-app2.loca.lt/parameters/region", newRegion, {
         headers: {
           "auth-token": token,
         },

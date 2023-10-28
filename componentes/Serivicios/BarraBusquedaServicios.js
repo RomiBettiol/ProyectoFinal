@@ -11,6 +11,7 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
   const [zones, setZones] = useState([]); // Estado para almacenar las zonas
   const [zonesModalVisible, setZonesModalVisible] = useState(false);
   const [filtroSeleccionadoHora, setFiltroSeleccionadoHora] = useState(null);
+  const [idlocalidad, setIdlocalidad] = useState("")
 
   console.log('token desde barra servicios: ', token);
 
@@ -23,30 +24,45 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
     setShowFilters(!showFilters);
   };
 
-  const handleFilterPressHora = (filtro) => {
-    console.log(filtro);
-    const nuevoFiltro = filtro === filtroSeleccionadoHora ? null : filtro;
-    setFiltroSeleccionadoHora(nuevoFiltro);
-    console.log('MOSTRAR FILTRO: ',nuevoFiltro);
-    onFilterChangeHora(nuevoFiltro);
+  const handleFilterPress = (filtro, tipo) => {
+    if(tipo == "Limpiar"){
+      const nuevoFiltro = null
+      setFiltroSeleccionadoHora(nuevoFiltro);
+      onFilterChangeHora(nuevoFiltro, "Limpiar");
+      setZonesModalVisible(false)
+    } else if(tipo == "24HS"){
+      const nuevoFiltro = filtro === filtroSeleccionadoHora ? null : filtro;
+      setFiltroSeleccionadoHora(nuevoFiltro);
+      onFilterChangeHora(nuevoFiltro, "24HS");
+    }else{
+      const nuevoFiltro = filtro 
+      setFiltroSeleccionadoHora(nuevoFiltro);
+      onFilterChangeHora(nuevoFiltro, "Localidad")
+      setZonesModalVisible(false)
+    }
+  };
+
+  const handleFilterLocalidad = (id) => {
+    console.log(id);
+    // setZonesModalVisible(false)
   };
 
   const fetchZones = async () => {
     try {
-      const response = await axios.get('https://romibettiol.loca.lt/parameters/locality', {
+      const response = await axios.get('https://buddy-app2.loca.lt/parameters/locality', {
         headers: {
           'auth-token': token, // Agrega el token de autenticación en el encabezado
         },
       });
       if (response && response.data) {
         setZones(response.data); // Almacena las zonas en el estado
-        setZonesModalVisible(true); // Abre el modal con las zonas
-        console.log(response.data);
       } else {
         console.log('No se encontraron zonas.');
       }
     } catch (error) {
       console.error('Error al obtener las zonas:', error);
+    }finally{
+      setZonesModalVisible(true); // Abre el modal con las zonas
     }
   };
   
@@ -69,7 +85,7 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
               source={require("../../Imagenes/filtrar.png")}
               style={styles.iconoFiltro}
             />
-            <TouchableOpacity onPress={() => handleFilterPressHora(1)} style={filtroSeleccionadoHora === 1}>
+            <TouchableOpacity onPress={() => handleFilterPress(1, "24HS")} style={filtroSeleccionadoHora === 1}>
               <Text>Abierto 24hs</Text>
             </TouchableOpacity>
           </View>
@@ -101,14 +117,19 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
             <FlatList
               data={zones.localities}
               renderItem={({ item }) => (
-                <Text style={styles.zoneItem}>
-                  {item.localityName}
-                </Text>
+                <View key={item.idLocality}>
+                  <TouchableOpacity onPress={()=> {handleFilterPress(item.idLocality, "Localidad")}}>
+                    <Text style={styles.zoneItem}>
+                      {item.localityName}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                
               )}
               keyExtractor={(item) => item.idLocality}
             />
-          <TouchableOpacity style={styles.closeButton} onPress={() => setZonesModalVisible(false)}>
-            <Text style={styles.closeButtonText}>Limpiar</Text>
+          <TouchableOpacity style={styles.closeButton} onPress={() => handleFilterPress(null, "Limpiar")}>
+            <Text style={[styles.closeButtonText, {padding:1}]}>Limpiar</Text>
           </TouchableOpacity>
           </View>
         </View>

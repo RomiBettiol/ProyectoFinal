@@ -24,7 +24,7 @@ const ModalEditarColor = ({
   const handleEditColor = () => {
     axios
       .put(
-        `https://romibettiol.loca.lt/parameters/petColor/${editingColor.idPetColor}`,
+        `https://buddy-app2.loca.lt/parameters/petColor/${editingColor.idPetColor}`,
         {
           petColorName: colorName,
         },

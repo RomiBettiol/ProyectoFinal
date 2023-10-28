@@ -72,7 +72,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `https://romibettiol.loca.lt/mypet/pet/${mascota.idPet}`,
+        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
         {
           petName: updatedData.petName,
           birthDate: updatedData.birthDate,
@@ -106,7 +106,7 @@ export default function EditarMascota({
     console.log(raza);
     // Obtener tipos de mascotas
     axios
-      .get("https://romibettiol.loca.lt/parameters/petType", {
+      .get("https://buddy-app2.loca.lt/parameters/petType", {
         headers: {
           "auth-token": token,
         },
@@ -128,7 +128,7 @@ export default function EditarMascota({
 
     // Obtener razas de mascotas
     axios
-      .get("https://romibettiol.loca.lt/parameters/petBreed", {
+      .get("https://buddy-app2.loca.lt/parameters/petBreed", {
         headers: {
           "auth-token": token,
         },
@@ -229,7 +229,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `https://romibettiol.loca.lt/mypet/pet/${mascota.idPet}`,
+        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
         {
           headers: {
             "auth-token": token,

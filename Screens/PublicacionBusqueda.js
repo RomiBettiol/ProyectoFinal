@@ -121,7 +121,7 @@ export default function PublicacionBusqueda({ navigation }) {
         },
       };
       const response = await axios.post(
-        "https://romibettiol.loca.lt/publications/publication/search",
+        "https://buddy-app2.loca.lt/publications/publication/search",
         postData,
         config
       );
@@ -192,7 +192,7 @@ export default function PublicacionBusqueda({ navigation }) {
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
-          <Text style={styles.titulo}>Publica tu mascota</Text>
+          <Text style={styles.titulo}>Publicá tu mascota</Text>
           <ImagePickerComponent onImagesSelected={handleImagesSelected} />
 
           <View style={[{ flexDirection: "row" }, styles.subcontenedor1]}>

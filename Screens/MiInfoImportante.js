@@ -48,7 +48,7 @@ export default function MiInfoImportante() {
   async function fetchInformacion() {
     try {
       const response = await axios.get(
-        `https://romibettiol.loca.lt/mypet/information/${mascotaId}`,
+        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -98,7 +98,7 @@ export default function MiInfoImportante() {
     console.log(info.idInformation);
     try {
       const response = await axios.delete(
-        `https://romibettiol.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`,
+        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`,
         {
           headers: {
             "auth-token": token,

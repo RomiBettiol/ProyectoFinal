@@ -48,7 +48,7 @@ export default function MisTurnos() {
   async function fetchTurnos() {
     try {
       const response = await axios.get(
-        `https://romibettiol.loca.lt/mypet/turn/${mascotaId}`,
+        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -131,7 +131,7 @@ export default function MisTurnos() {
     console.log(turno.idTurn);
     try {
       const response = await axios.delete(
-        `https://romibettiol.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`,
+        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`,
         {
           headers: {
             "auth-token": token,

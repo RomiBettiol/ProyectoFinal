@@ -60,7 +60,7 @@ export default function MiPerfil({ navigation }) {
   //Trae info del usuario
   useEffect(() => {
     axios
-      .get(`https://romibettiol.loca.lt/security/user/`, {
+      .get(`https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -85,7 +85,7 @@ export default function MiPerfil({ navigation }) {
 
   useEffect(() => {
     axios
-      .get(`https://romibettiol.loca.lt/publications/publication/ByUser`, {
+      .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
         headers: {
           "auth-token": token,
         },
@@ -104,7 +104,7 @@ export default function MiPerfil({ navigation }) {
       });
 
     axios
-      .get(`https://romibettiol.loca.lt/services/service/ByUser`, {
+      .get(`https://buddy-app2.loca.lt/services/service/ByUser`, {
         headers: {
           "auth-token": token,
         },
@@ -205,7 +205,7 @@ export default function MiPerfil({ navigation }) {
       // Realiza la solicitud PUT a la URL con los datos actualizados
       axios
         .put(
-          `https://romibettiol.loca.lt/security/user/${idUser}`,
+          `https://buddy-app2.loca.lt/security/user/${idUser}`,
           updatedUserData,
           {
             headers: {
@@ -244,7 +244,7 @@ export default function MiPerfil({ navigation }) {
     // Realiza la solicitud PUT para actualizar la información del usuario
     axios
       .put(
-        `https://romibettiol.loca.lt/security/user/${idUser}`,
+        `https://buddy-app2.loca.lt/security/user/${idUser}`,
         updatedUserData,
         {
           headers: {
@@ -371,7 +371,7 @@ export default function MiPerfil({ navigation }) {
       console.log("idPublicacion: ", idPublicationToDelete);
       axios
         .delete(
-          `https://romibettiol.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
+          `https://buddy-app2.loca.lt/publications/publication/${idPublicationToDelete}?modelType=${modalType}`,
           {
             headers: {
               "auth-token": token,
@@ -397,7 +397,7 @@ export default function MiPerfil({ navigation }) {
     if (deleteSuccess || deleteFailure) {
       // Realiza la solicitud GET para cargar las publicaciones actualizadas
       axios
-        .get(`https://romibettiol.loca.lt/publications/publication/ByUser`, {
+        .get(`https://buddy-app2.loca.lt/publications/publication/ByUser`, {
           headers: {
             "auth-token": token,
           },
@@ -439,7 +439,7 @@ export default function MiPerfil({ navigation }) {
   const handleConfirmDelete = () => {
     // Realiza la solicitud DELETE utilizando Axios con el token de autorización
     axios
-      .delete(`https://romibettiol.loca.lt/services/service/${idServicio}`, {
+      .delete(`https://buddy-app2.loca.lt/services/service/${idServicio}`, {
         headers: {
           "auth-token": token, // Incluye el token en el encabezado de autorización
         },
@@ -484,6 +484,11 @@ export default function MiPerfil({ navigation }) {
                   <Text style={styles.textoUsuario}>{user[0].userName}</Text>
                 ) : (
                   <Text style={styles.textoUsuario}>Nombre de Usuario</Text>
+                )}
+                {user && user[0] && user[0].roleName ? (
+                  <Text style={styles.rolUsuario}>Rol: {user[0].roleName}</Text>
+                ) : (
+                  <Text style={styles.rolUsuario}>Rol del usuario</Text>
                 )}
               </View>
               <TouchableOpacity onPress={openModal}>
@@ -1135,6 +1140,10 @@ const styles = StyleSheet.create({
   textoUsuario: {
     marginLeft: 15,
     fontSize: 20,
+  },
+  rolUsuario: {
+    marginLeft: 15,
+    fontSize: 14,
   },
   textoPublicaciones: {
     marginTop: 25,

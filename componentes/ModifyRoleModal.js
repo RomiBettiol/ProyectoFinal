@@ -35,7 +35,7 @@ const ModifyRoleModal = ({
       };
 
       const response = await axios.get(
-        "https://romibettiol.loca.lt/security/role/",
+        "https://buddy-app2.loca.lt/security/role/",
         config
       );
 

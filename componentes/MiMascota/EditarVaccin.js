@@ -163,7 +163,7 @@ export default function EditarVaccin({
 
                 try {
                   const response = await axios.put(
-                    `https://romibettiol.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
+                    `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
                     updatedData,
                     {
                       headers: {

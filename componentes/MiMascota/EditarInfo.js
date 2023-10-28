@@ -41,7 +41,7 @@ export default function EditarInfo({
     try {
       console.log(updatedData);
       const response = await axios.put(
-        `https://romibettiol.loca.lt/mypet/information/${mascotaId}/${idInformation}`,
+        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}/${idInformation}`,
         updatedData,
         {
           headers: {

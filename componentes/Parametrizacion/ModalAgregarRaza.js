@@ -46,7 +46,7 @@ const ModalAgregarRaza = ({
     };
 
     await axios
-      .post("https://romibettiol.loca.lt/parameters/petBreed", newBreed, {
+      .post("https://buddy-app2.loca.lt/parameters/petBreed", newBreed, {
         headers: { "auth-token": token },
       })
       .then((response) => {

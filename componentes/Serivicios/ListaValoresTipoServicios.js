@@ -16,7 +16,7 @@ const ListaValoresTipoServicios = ({
 
   useEffect(() => {
     axios
-      .get("https://romibettiol.loca.lt/services/service/types", {
+      .get("https://buddy-app2.loca.lt/services/service/types", {
         headers: {
           "auth-token": token,
           "Cache-Control": "no-cache",

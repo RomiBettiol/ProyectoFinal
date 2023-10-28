@@ -161,7 +161,7 @@ export default function AltaVaccin({ visible, onClose, token }) {
                 setIsButtonDisabled(true); // Deshabilitar el botón
                 try {
                   const response = await axios.post(
-                    `https://romibettiol.loca.lt/mypet/vaccine/${mascotaId}`,
+                    `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
                     data,
                     {
                       headers: {

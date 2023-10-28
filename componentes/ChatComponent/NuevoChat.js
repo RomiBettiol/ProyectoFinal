@@ -57,7 +57,7 @@ export default function NuevoChat({ navigation }) {
 
   useEffect(() => {
     axios
-      .get(`https://romibettiol.loca.lt/security/user`, {
+      .get(`https://buddy-app2.loca.lt/security/user`, {
         headers: {
           "auth-token": token,
         },
@@ -89,7 +89,7 @@ export default function NuevoChat({ navigation }) {
     try {
       // Realizar una solicitud POST al servidor para crear un nuevo chat
       const response = await axios.post(
-        `https://romibettiol.loca.lt/chats/chat/${idSelectedUser}`,
+        `https://buddy-app2.loca.lt/chats/chat/${idSelectedUser}`,
         null,
         {
           headers: {
@@ -122,7 +122,7 @@ export default function NuevoChat({ navigation }) {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "https://romibettiol.loca.lt/security/user/all",
+        "https://buddy-app2.loca.lt/security/user/all",
         {
           headers: {
             "auth-token": token,

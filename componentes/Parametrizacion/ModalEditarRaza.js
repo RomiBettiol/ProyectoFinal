@@ -27,7 +27,7 @@ const ModalEditarRaza = ({
   const handleEditBreed = () => {
     axios
       .put(
-        `https://romibettiol.loca.lt/parameters/petBreed/${editingBreed.idPetBreed}`,
+        `https://buddy-app2.loca.lt/parameters/petBreed/${editingBreed.idPetBreed}`,
         {
           petBreedName: breedName,
           size: tamaño,

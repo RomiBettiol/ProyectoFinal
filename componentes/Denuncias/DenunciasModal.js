@@ -33,7 +33,7 @@ const DenunciasModal = ({
 
     // Realizar la solicitud POST utilizando Axios
     axios
-      .post("https://romibettiol.loca.lt/security/complaint/", complaintData, {
+      .post("https://buddy-app2.loca.lt/security/complaint/", complaintData, {
         headers: {
           "Content-Type": "application/json",
           "auth-token": token,

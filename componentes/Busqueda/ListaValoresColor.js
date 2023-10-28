@@ -9,7 +9,7 @@ const ListaValoresColor = ({ setSelectedColorId, token }) => {
 
   const getColores = () => {
     axios
-      .get("https://romibettiol.loca.lt/parameters/petColor/", {
+      .get("https://buddy-app2.loca.lt/parameters/petColor/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
