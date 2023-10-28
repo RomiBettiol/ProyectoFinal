@@ -20,6 +20,7 @@ const ModalEditar = ({
   token,
 }) => {
   const [localities, setLocalities] = useState("");
+  const [postalCode, setPostalCode] = useState("");
 
   const handleEdit = () => {
     axios
@@ -27,6 +28,7 @@ const ModalEditar = ({
         `https://buddy-app2.loca.lt/parameters/locality/${editingZone.idLocality}`,
         {
           localityName: localities,
+          postalCode: postalCode
         },
         {
           headers: { "auth-token": token },
@@ -35,6 +37,7 @@ const ModalEditar = ({
       .then((response) => {
         onEdit(localities);
         setLocalities(""); // Vaciar el TextInput
+        setPostalCode("");
         onSuccessUpdate();
         onClose(); // Cerrar el modal
       })
@@ -53,13 +56,22 @@ const ModalEditar = ({
     <Modal visible={isVisible} animationType="slide" transparent>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.tituloModal}>Editar filtro</Text>
+          <Text style={styles.tituloModal}>Editar Zona</Text>
           <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
-            <Text style={styles.valorTexto}>Valor</Text>
+            <Text style={styles.valorTexto}>Nombre</Text>
             <TextInput
               style={styles.inputLocalities}
               value={localities}
               onChangeText={setLocalities}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Código Postal</Text>
+            <TextInput
+              style={styles.inputCodigo}
+              value={postalCode}
+              onChangeText={setPostalCode}
+              keyboardType="numeric"
             />
           </View>
           <View style={[{ flexDirection: "row" }, styles.botonesDecidir]}>
@@ -96,6 +108,14 @@ const styles = StyleSheet.create({
   inputLocalities: {
     backgroundColor: "#EEE9E9",
     width: "70%",
+    height: 32,
+    borderRadius: 100,
+    textAlign: "center",
+    marginLeft: 20,
+  },
+  inputCodigo: {
+    backgroundColor: "#EEE9E9",
+    width: "50%",
     height: 32,
     borderRadius: 100,
     textAlign: "center",

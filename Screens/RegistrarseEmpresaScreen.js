@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Amplify, Storage } from "aws-amplify";
 import awsconfig from "../src/aws-exports";
+import TerminosCondiciones from "../componentes/TerminosCondiciones";
 Amplify.configure(awsconfig);
 
 export function RegistrarseEmpresaScreen({}) {
@@ -56,6 +57,8 @@ export function RegistrarseEmpresaScreen({}) {
   const [cuitCuilError, setCuitCuilError] = React.useState(false);
   const [nroTelefonoError, setNroTelefonoError] = React.useState(false);
   const [linkAWSError, setLinkAWSError] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [aceptoTerminos, setAceptoTerminos] = React.useState(false);
 
   const [mostrarTexto, setMostrarTexto] = React.useState(false);
   const [mostrarTextoContrasena2, setMostrarTextoContrasena2] =
@@ -244,7 +247,8 @@ export function RegistrarseEmpresaScreen({}) {
       isLinkAWSValid &&
       isNroTelefonoValid &&
       isFechaNacimientoValid &&
-      isCuitCuilValid;
+      isCuitCuilValid &&
+      aceptoTerminos;
 
     setFormValid(isFormValid);
   };
@@ -362,6 +366,15 @@ export function RegistrarseEmpresaScreen({}) {
       cuitCuil,
       awsImageLink,
     });
+  };
+
+  const handleAceptarTerminos = (resultado) => {
+    setAceptoTerminos(resultado)
+    setModalVisible(false)
+  };
+
+  const handleTerminos = () => {
+    setModalVisible(true); // Abre el modal de términos y condiciones
   };
 
   return (
@@ -596,6 +609,10 @@ export function RegistrarseEmpresaScreen({}) {
                 onBlur={() => setMostrarTextoContrasena2(false)}
               />
             </View>
+            <TouchableOpacity style={styles.terminos} onPress={()=>{handleTerminos()}}>
+              <Text style={styles.textoTerminos}>Aceptar términos y condiciones</Text>
+            </TouchableOpacity>
+            <TerminosCondiciones visible={modalVisible} onClose={handleAceptarTerminos} />
             <View style={styles.controlContainer}>
               {mostrarTextoContrasena2 && contrasena2 !== contrasena && (
                 <Text style={styles.textoContrasena2}>
@@ -792,5 +809,15 @@ const styles = StyleSheet.create({
   foto: {
     width: 30,
     height: 30,
+  },
+  terminos: {
+    marginBottom: 60,
+    marginTop: 10,
+    
+  },
+  textoTerminos: {
+    fontSize: 16,
+    textDecorationLine: "underline",
+    textAlign: 'center',
   },
 });

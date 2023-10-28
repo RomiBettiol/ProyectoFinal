@@ -5,6 +5,7 @@ import {
   View,
   Image,
   StyleSheet,
+  TouchableOpacity,
   Modal,
   ScrollView,
   Pressable,
@@ -451,6 +452,7 @@ const FormularioRegistrarse = ({
           )}
         </View>
       </View>
+     
     </View>
   );
 };
@@ -486,7 +488,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 80,
+    marginBottom: 10,
   },
 
   texto: {

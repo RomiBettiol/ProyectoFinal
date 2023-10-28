@@ -87,6 +87,21 @@ const FilterButtonsExample = () => {
     setModalVisible(false); // Cierra el modal después de seleccionar una localidad
   };
 
+  const handleZonaModalClose = () => {
+    setSelectedLocality(null); // Limpiar el valor de la localidad seleccionada
+    setModalVisible(false);
+  };
+
+  const handleColorModalClose = () => {
+    setSelectedColor(null);
+    setColorsModalVisible(false);
+  };
+
+  const handleBreedModalClose = () => {
+    setSelectedBreed(null);
+    setBreedModalVisible(false);
+  };
+
   const filterByLocality = (locality) => {
     setLoading(true);
 
@@ -120,6 +135,86 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     getPublicaciones();
   }, [selectedColor]);
+
+   // Función para aplicar los filtros múltiples
+   const applyFilters = () => {
+    let filteredData = [...publicaciones]; // Copiar todas las publicaciones
+
+    // Filtrar por tipo de animal
+    if (selectedFilter !== "") {
+      filteredData = filteredData.filter(
+        (item) =>
+          item.petBreed.petType.petTypeName.toUpperCase() ===
+          selectedFilter.toUpperCase()
+      );
+    }
+
+    // Filtrar por zona
+    if (selectedLocality !== null) {
+      filteredData = filteredData.filter(
+        (item) => item.locality.localityName === selectedLocality
+      );
+    }
+
+    // Filtrar por color
+    if (selectedColor !== null) {
+      filteredData = filteredData.filter((item) => {
+        if (item.petcolor && item.petcolor.petColorName) {
+          return (
+            item.petcolor.petColorName.toUpperCase() ===
+            selectedColor.toUpperCase()
+          );
+        }
+        return false;
+      });
+    }
+
+    // Filtrar por raza
+    if (selectedBreed !== null) {
+      filteredData = filteredData.filter(
+        (item) => item.petBreed.petBreedName === selectedBreed
+      );
+    }
+
+    // Actualizar el estado de las publicaciones filtradas
+    setFilteredPublicaciones(filteredData.slice(0, numPublicaciones));
+  };
+
+  // Efecto para aplicar los filtros cuando cambian los estados relevantes
+  useEffect(() => {
+    applyFilters();
+  }, [selectedFilter, selectedLocality, selectedColor, selectedBreed, numPublicaciones]);
+
+  useEffect(() => {
+    // Aplicar el filtro cuando se selecciona un tipo de animal
+    if (selectedFilter === "" || selectedFilter === "Todos") {
+      // Mostrar todas las publicaciones si no hay filtro seleccionado
+      setFilteredPublicaciones(publicaciones.slice(0, numPublicaciones));
+    } else if (selectedFilter === "Perro") {
+      const filteredData = publicaciones.filter(
+        (item) => item.petBreed.petType.petTypeName.toUpperCase() === "PERRO"
+      );
+      setFilteredPublicaciones(filteredData.slice(0, numPublicaciones));
+    } else if (selectedFilter === "Gato") {
+      const filteredData = publicaciones.filter(
+        (item) => item.petBreed.petType.petTypeName.toUpperCase() === "GATO"
+      );
+      setFilteredPublicaciones(filteredData.slice(0, numPublicaciones));
+    } else if (selectedFilter === "Conejo") {
+      const filteredData = publicaciones.filter(
+        (item) => item.petBreed.petType.petTypeName.toUpperCase() === "CONEJO"
+      );
+      setFilteredPublicaciones(filteredData.slice(0, numPublicaciones));
+    } else if (selectedFilter === "Otros") {
+      const filteredData = publicaciones.filter(
+        (item) =>
+          !["PERRO", "GATO", "CONEJO"].includes(
+            item.petBreed.petType.petTypeName.toUpperCase()
+          )
+      );
+      setFilteredPublicaciones(filteredData.slice(0, numPublicaciones));
+    }
+  }, [selectedFilter, numPublicaciones, publicaciones]);
 
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
@@ -160,7 +255,7 @@ const FilterButtonsExample = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed/", {
+      .get("https://buddy-app2.loca.lt/parameters/petBreed", {
         headers: {
           "auth-token": token,
         },
@@ -175,7 +270,7 @@ const FilterButtonsExample = () => {
       .catch((error) => {
         console.error("Error al obtener las razas desde el backend:", error);
       });
-  }, []);
+  }, [selectedFilter, token]);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -186,7 +281,8 @@ const FilterButtonsExample = () => {
     const filteredData = publicaciones.filter((item) =>
       item.title.toLowerCase().includes(searchText.toLowerCase())
     );
-
+  
+    // Actualizar las publicaciones filtradas
     setFilteredPublicaciones(filteredData);
   };
 
@@ -266,8 +362,21 @@ const FilterButtonsExample = () => {
   };
 
   const renderItem = ({ item }) => {
-    // Verificar si el índice del item es menor que numPublicaciones
-    if (publicaciones.indexOf(item) < numPublicaciones) {
+    // Verificar si el índice del item es menor que numPublicaciones y si coincide con el filtro seleccionado
+    if (
+      publicaciones.indexOf(item) < numPublicaciones &&
+      (selectedFilter === "" ||
+        (selectedFilter === "Perro" &&
+          item.petBreed.petType.petTypeName.toUpperCase() === "PERRO") ||
+        (selectedFilter === "Gato" &&
+          item.petBreed.petType.petTypeName.toUpperCase() === "GATO") ||
+        (selectedFilter === "Conejo" &&
+          item.petBreed.petType.petTypeName.toUpperCase() === "CONEJO") ||
+        (selectedFilter === "Otros" &&
+          !["PERRO", "GATO", "CONEJO"].includes(
+            item.petBreed.petType.petTypeName.toUpperCase()
+          )))
+    ) {
       return (
         <TouchableOpacity
           style={styles.itemContainer}
@@ -360,6 +469,8 @@ const FilterButtonsExample = () => {
     setSelectedAnimalType(null);
     setSelectedColor(null);
   };
+
+  console.log('token: ', token);
 
   return (
     <View style={styles.container}>
@@ -464,7 +575,6 @@ const FilterButtonsExample = () => {
               <Text style={styles.modalTitle}>Selecciona una localidad:</Text>
               <FlatList
                 data={[
-                  "Todas las localidades",
                   ...localities.map((item) => item.localityName),
                 ]}
                 renderItem={({ item }) => (
@@ -474,8 +584,8 @@ const FilterButtonsExample = () => {
                 )}
                 keyExtractor={(item) => item}
               />
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <Text style={styles.closeModalText}>Cerrar</Text>
+              <TouchableOpacity onPress={handleZonaModalClose}>
+                <Text style={styles.closeModalText}>Limpiar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -500,7 +610,6 @@ const FilterButtonsExample = () => {
               <Text style={styles.modalTitle}>Selecciona un color:</Text>
               <FlatList
                 data={[
-                  "Todos los colores",
                   ...petColors.map((color) => color.petColorName),
                 ]}
                 renderItem={({ item }) => (
@@ -510,8 +619,8 @@ const FilterButtonsExample = () => {
                 )}
                 keyExtractor={(item) => item}
               />
-              <TouchableOpacity onPress={() => setColorsModalVisible(false)}>
-                <Text style={styles.closeModalText}>Cerrar</Text>
+              <TouchableOpacity onPress={handleColorModalClose}>
+                <Text style={styles.closeModalText}>Limpiar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -533,7 +642,7 @@ const FilterButtonsExample = () => {
             <View style={styles.modalContentFiltro}>
               <Text style={styles.modalTitle}>Selecciona una raza:</Text>
               <FlatList
-                data={["Todas las razas", ...availableBreeds]}
+                data={[ ...availableBreeds]}
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => handleBreedChange(item)}>
                     <Text style={styles.breedOption}>{item}</Text>
@@ -541,8 +650,8 @@ const FilterButtonsExample = () => {
                 )}
                 keyExtractor={(item) => item}
               />
-              <TouchableOpacity onPress={() => setBreedModalVisible(false)}>
-                <Text style={styles.closeModalText}>Cerrar</Text>
+              <TouchableOpacity onPress={handleBreedModalClose}>
+                <Text style={styles.closeModalText}>Limpiar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -560,15 +669,11 @@ const FilterButtonsExample = () => {
         </TouchableOpacity>
       </View>
       <View>
-        <FlatList
-          data={
-            filteredPublicaciones.length > 0
-              ? filteredPublicaciones
-              : publicaciones
-          }
-          renderItem={renderItem}
-          keyExtractor={(item) => item.idPublicationSearch}
-        />
+      <FlatList
+        data={filteredPublicaciones}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.idPublicationSearch}
+      />
         {/* Mostrar el botón "Mostrar más publicaciones" solo si hay más de 10 publicaciones */}
         {numPublicaciones < publicaciones.length && (
           <TouchableOpacity

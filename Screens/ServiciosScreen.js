@@ -30,6 +30,8 @@ export default function ServiciosScreen({ navigation }) {
   const [selectedUserToReport, setSelectedUserToReport] = useState(null);
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const [filteredType, setFilteredType] = useState(null);
+  const [selectedZone, setSelectedZone] = useState(null);
   const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
@@ -105,6 +107,31 @@ export default function ServiciosScreen({ navigation }) {
     }
   };
 
+  const handleFilterChangeHora = (filtro, tipo) => {
+    console.log("Mostras desde handleFilterChangeHora: ", filtro);
+    // Si filtro es null, muestra todos los servicios originales
+    if (tipo == "Limpiar" || filtro == null) {
+      setServicios(originalServicios);
+      return;
+    }
+    if (tipo == "24HS") {
+      const serviciosFiltrados = originalServicios.filter(
+        (servicio) => servicio.open24hs === filtro
+      );
+      // Actualiza el estado con los servicios filtrados
+      setServicios(serviciosFiltrados);
+      return;
+    } else {
+      // Filtra los servicios según el tipo de servicio seleccionado
+      const serviciosFiltrados = originalServicios.filter(
+        (servicio) => servicio.idLocality === filtro
+      );
+      // Actualiza el estado con los servicios filtrados
+      setServicios(serviciosFiltrados);
+      return;
+    }
+  };
+
   const handleDenunciar = () => {
     setDenunciaModalVisible(true);
     setReportModalVisible(false); // Cierra el modal de reporte
@@ -119,16 +146,31 @@ export default function ServiciosScreen({ navigation }) {
     setDenunciaModalVisible(true);
   };
 
+  const handleZoneSelect = (zone) => {
+    setSelectedZone(zone);
+    // Aplicar el filtro por zona seleccionada
+    if (zone) {
+      const serviciosFiltradosPorZona = originalServicios.filter(
+        (servicio) => servicio.zone === zone
+      );
+      setServicios(serviciosFiltradosPorZona);
+    } else {
+      // Si no se selecciona ninguna zona, mostrar todas las publicaciones originales
+      setServicios(originalServicios);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
       <View style={styles.contenedor1}>
         <Text style={styles.titulo}>Servicios para tu mascota</Text>
-        <BotonesFiltroServicios
-          onFilterChange={handleFilterChange}
-          permisos={permisos}
+        <BotonesFiltroServicios onFilterChange={handleFilterChange} />
+        <BarraBusquedaServicios
+          onSearch={handleSearch}
+          onFilterChangeHora={handleFilterChangeHora}
+          token={token}
         />
-        <BarraBusquedaServicios onSearch={handleSearch} />
 
         {Object.keys(serviciosAgrupados).map((typeName) => (
           <View key={typeName}>
@@ -257,5 +299,10 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
+  },
+  imagenFiltrar: {
+    width: 30,
+    height: 30,
+    marginTop: 10,
   },
 });

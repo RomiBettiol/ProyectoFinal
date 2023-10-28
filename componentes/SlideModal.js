@@ -64,6 +64,7 @@ const SlideModal = ({ visible, onClose }) => {
   const [user, setUser] = useState("");
   const [idUser, setIdUser] = useState("");
   const [newUserImage, setNewUserImage] = useState("");
+  const [roleUser, setRoleUser] = useState("");
 
   //Trae info del usuario
   const fetchNombre = () => {
@@ -78,6 +79,7 @@ const SlideModal = ({ visible, onClose }) => {
         setNewName(response.data[0].name);
         setNewUserName(response.data[0].userName);
         setNewUserImage(response.data[0].image);
+        setRoleUser(response.data[0].roleName);
 
         // Declarar la constante idUser
         setIdUser(response.data[0].idUser);
@@ -132,6 +134,7 @@ const SlideModal = ({ visible, onClose }) => {
             >
               <Text style={styles.textoUsuario}>{newUserName}</Text>
             </TouchableOpacity>
+            <Text style={styles.rolUsuario}>Rol: {roleUser}</Text>
           </View>
           <View style={styles.menu}>
             <TouchableOpacity
@@ -284,6 +287,12 @@ const styles = StyleSheet.create({
   },
   textoUsuario: {
     fontSize: 20,
+    marginTop: 10,
+    marginRight: 5,
+    marginLeft: 20,
+  },
+  rolUsuario: {
+    fontSize: 14,
     marginTop: 10,
     marginRight: 5,
     marginLeft: 20,

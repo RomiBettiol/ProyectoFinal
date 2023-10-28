@@ -8,7 +8,9 @@ const Header = ({ token }) => {
   const route = useRoute(); // Obtiene la prop route
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("NotificacionesScreen", { token })}
+      >
         <Image
           source={require("../Imagenes/notificacion.png")}
           style={styles.imagen1}
@@ -25,12 +27,10 @@ const Header = ({ token }) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("HomeScreen", { token });
-        }}
+        onPress={() => navigation.navigate("MisChats", { token })}
       >
         <Image
-          source={require("../Imagenes/mensaje.png")}
+          source={require("../Imagenes/chat_without_content_v2_icon-icons.com_67752.png")}
           style={styles.imagen1}
         />
       </TouchableOpacity>

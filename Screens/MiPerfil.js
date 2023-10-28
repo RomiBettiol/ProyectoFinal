@@ -483,6 +483,25 @@ export default function MiPerfil({ navigation }) {
               ) : (
                 <Text style={styles.textoUsuario}>Nombre de Usuario</Text>
               )}
+              <View>
+                <Text style={styles.titulo}>MI PERFIL</Text>
+                {user && user[0] && user[0].userName ? (
+                  <Text style={styles.textoUsuario}>{user[0].userName}</Text>
+                ) : (
+                  <Text style={styles.textoUsuario}>Nombre de Usuario</Text>
+                )}
+                {user && user[0] && user[0].roleName ? (
+                  <Text style={styles.rolUsuario}>Rol: {user[0].roleName}</Text>
+                ) : (
+                  <Text style={styles.rolUsuario}>Rol del usuario</Text>
+                )}
+              </View>
+              <TouchableOpacity onPress={openModal}>
+                <Image
+                  source={require("../Imagenes/opciones.png")}
+                  style={styles.imagenOpciones}
+                />
+              </TouchableOpacity>
             </View>
             <TouchableOpacity onPress={openModal}>
               <Image
@@ -1155,6 +1174,10 @@ const styles = StyleSheet.create({
   textoUsuario: {
     marginLeft: 15,
     fontSize: 20,
+  },
+  rolUsuario: {
+    marginLeft: 15,
+    fontSize: 14,
   },
   textoPublicaciones: {
     marginTop: 25,

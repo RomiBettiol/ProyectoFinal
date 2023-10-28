@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   View,
   Text,
@@ -15,12 +15,32 @@ const ModalAgregarProvincia = ({
   onAdd,
   newProvinceName,
   setNewProvinceName,
+  clima,
+  setClima,
+  extension,
+  setExtension,
+  densidad,
+  setDensidad,
+  poblacion,
+  setPoblacion,
   token,
 }) => {
+
   const handleAgregarProvinciaClick = () => {
-    onAdd(newProvinceName); // Pasar el valor del nuevo nombre de provincia a la función para agregar
+    const provinciaData = {
+      nombre: newProvinceName,
+      clima: clima,
+      extension: extension,
+      densidad: densidad,
+      poblacion: poblacion
+    };
+
+    onAdd(provinciaData); // Pasar los datos de la nueva provincia a la función para agregar
     onClose(); // Cerrar el modal después de agregar
     setNewProvinceName(""); // Reiniciar el estado del nombre de la nueva provincia
+    setClima("");
+    setExtension("");
+    setDensidad("");
   };
 
   return (
@@ -29,11 +49,46 @@ const ModalAgregarProvincia = ({
         <View style={styles.modalContent}>
           <Text style={styles.tituloModal}>Agregar Provincia</Text>
           <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
-            <Text style={styles.valorTexto}>Valor</Text>
+            <Text style={styles.valorTexto}>Nombre</Text>
             <TextInput
               style={styles.inputLocalities}
               value={newProvinceName}
               onChangeText={setNewProvinceName}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Clima</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={clima}
+              onChangeText={setClima}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Extensión</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={extension}
+              onChangeText={setExtension}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Densidad</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={densidad}
+              onChangeText={setDensidad}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Poblacion</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={poblacion}
+              onChangeText={setPoblacion}
+              keyboardType="numeric"
             />
           </View>
           <View style={[{ flexDirection: "row" }, styles.botonesDecidir]}>

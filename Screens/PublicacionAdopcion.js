@@ -10,6 +10,7 @@ import {
   Modal,
   Image,
   Pressable,
+  Switch,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker"; // Importa la librería de selección de imágenesimport HeaderScreen from '../HeaderScreen';
 import HeaderScreen from "../componentes/HeaderScreen";
@@ -42,6 +43,7 @@ export default function PublicacionBusqueda({ navigation }) {
   const route = useRoute();
   const { token } = route.params;
   const [isValidPhone, setIsValidPhone] = useState(false);
+  const [castrado, setCastrado] = useState(false);
 
   //donde guardo las imagenes
   const [selectedImages, setSelectedImages] = useState([]);
@@ -108,8 +110,8 @@ export default function PublicacionBusqueda({ navigation }) {
         idPetBreed: selectedBreedId,
         idPetColor: selectedColorId,
         idLocality: selectedLocality,
+        sterilized: castrado,
         contactPhone,
-        newOwnerName: "",
       };
 
       console.log("Datos a publicar:", postData);
@@ -242,6 +244,7 @@ export default function PublicacionBusqueda({ navigation }) {
             {selectedAnimal && (
               <ListaValoresRazaPerros
                 selectedAnimal={selectedAnimal}
+                setSelectedBreedId={setSelectedBreedId}
                 token={token}
               />
             )}
@@ -263,6 +266,15 @@ export default function PublicacionBusqueda({ navigation }) {
               Ingresa 10 caracteres.
             </Text>
           )}
+        </View>
+        <View style={[styles.switchContainer, { flexDirection: "row" }]}>
+          <Switch
+            value={castrado}
+            onValueChange={setCastrado}
+            trackColor={{ false: "#EB2727", true: "#8ADC58" }}
+            thumbColor={castrado ? "#ffffff" : "#ffffff"}
+          />
+          <Text style={styles.open24hs}>Castrado</Text>
         </View>
         <Modal
           visible={isModalVisible}
@@ -390,5 +402,13 @@ const styles = StyleSheet.create({
   tipoAnimal: {
     marginLeft: "3%",
     fontSize: 16,
+  },
+  open24hs: {
+    marginTop: 12,
+    fontSize: 16,
+  },
+  switchContainer: {
+    marginTop: 10,
+    marginLeft: 28,
   },
 });
