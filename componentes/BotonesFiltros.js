@@ -136,8 +136,8 @@ const FilterButtonsExample = () => {
     getPublicaciones();
   }, [selectedColor]);
 
-   // Función para aplicar los filtros múltiples
-   const applyFilters = () => {
+  // Función para aplicar los filtros múltiples
+  const applyFilters = () => {
     let filteredData = [...publicaciones]; // Copiar todas las publicaciones
 
     // Filtrar por tipo de animal
@@ -183,7 +183,13 @@ const FilterButtonsExample = () => {
   // Efecto para aplicar los filtros cuando cambian los estados relevantes
   useEffect(() => {
     applyFilters();
-  }, [selectedFilter, selectedLocality, selectedColor, selectedBreed, numPublicaciones]);
+  }, [
+    selectedFilter,
+    selectedLocality,
+    selectedColor,
+    selectedBreed,
+    numPublicaciones,
+  ]);
 
   useEffect(() => {
     // Aplicar el filtro cuando se selecciona un tipo de animal
@@ -281,7 +287,7 @@ const FilterButtonsExample = () => {
     const filteredData = publicaciones.filter((item) =>
       item.title.toLowerCase().includes(searchText.toLowerCase())
     );
-  
+
     // Actualizar las publicaciones filtradas
     setFilteredPublicaciones(filteredData);
   };
@@ -470,7 +476,7 @@ const FilterButtonsExample = () => {
     setSelectedColor(null);
   };
 
-  console.log('token: ', token);
+  console.log("token: ", token);
 
   return (
     <View style={styles.container}>
@@ -574,9 +580,7 @@ const FilterButtonsExample = () => {
             <View style={styles.modalContentFiltro}>
               <Text style={styles.modalTitle}>Selecciona una localidad:</Text>
               <FlatList
-                data={[
-                  ...localities.map((item) => item.localityName),
-                ]}
+                data={[...localities.map((item) => item.localityName)]}
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => handleLocalityChange(item)}>
                     <Text style={styles.localityOption}>{item}</Text>
@@ -609,9 +613,7 @@ const FilterButtonsExample = () => {
             <View style={styles.modalContentFiltro}>
               <Text style={styles.modalTitle}>Selecciona un color:</Text>
               <FlatList
-                data={[
-                  ...petColors.map((color) => color.petColorName),
-                ]}
+                data={[...petColors.map((color) => color.petColorName)]}
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => handleColorChange(item)}>
                     <Text style={styles.colorOption}>{item}</Text>
@@ -642,7 +644,7 @@ const FilterButtonsExample = () => {
             <View style={styles.modalContentFiltro}>
               <Text style={styles.modalTitle}>Selecciona una raza:</Text>
               <FlatList
-                data={[ ...availableBreeds]}
+                data={[...availableBreeds]}
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => handleBreedChange(item)}>
                     <Text style={styles.breedOption}>{item}</Text>
@@ -669,11 +671,11 @@ const FilterButtonsExample = () => {
         </TouchableOpacity>
       </View>
       <View>
-      <FlatList
-        data={filteredPublicaciones}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.idPublicationSearch}
-      />
+        <FlatList
+          data={filteredPublicaciones}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.idPublicationSearch}
+        />
         {/* Mostrar el botón "Mostrar más publicaciones" solo si hay más de 10 publicaciones */}
         {numPublicaciones < publicaciones.length && (
           <TouchableOpacity

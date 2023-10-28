@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
-import axios from 'axios';
+import axios from "axios";
 
 const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [zones, setZones] = useState([]); // Estado para almacenar las zonas
   const [zonesModalVisible, setZonesModalVisible] = useState(false);
   const [filtroSeleccionadoHora, setFiltroSeleccionadoHora] = useState(null);
-  const [idlocalidad, setIdlocalidad] = useState("")
+  const [idlocalidad, setIdlocalidad] = useState("");
 
-  console.log('token desde barra servicios: ', token);
+  console.log("token desde barra servicios: ", token);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -25,20 +34,20 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
   };
 
   const handleFilterPress = (filtro, tipo) => {
-    if(tipo == "Limpiar"){
-      const nuevoFiltro = null
+    if (tipo == "Limpiar") {
+      const nuevoFiltro = null;
       setFiltroSeleccionadoHora(nuevoFiltro);
       onFilterChangeHora(nuevoFiltro, "Limpiar");
-      setZonesModalVisible(false)
-    } else if(tipo == "24HS"){
+      setZonesModalVisible(false);
+    } else if (tipo == "24HS") {
       const nuevoFiltro = filtro === filtroSeleccionadoHora ? null : filtro;
       setFiltroSeleccionadoHora(nuevoFiltro);
       onFilterChangeHora(nuevoFiltro, "24HS");
-    }else{
-      const nuevoFiltro = filtro 
+    } else {
+      const nuevoFiltro = filtro;
       setFiltroSeleccionadoHora(nuevoFiltro);
-      onFilterChangeHora(nuevoFiltro, "Localidad")
-      setZonesModalVisible(false)
+      onFilterChangeHora(nuevoFiltro, "Localidad");
+      setZonesModalVisible(false);
     }
   };
 
@@ -49,23 +58,25 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
 
   const fetchZones = async () => {
     try {
-      const response = await axios.get('https://buddy-app2.loca.lt/parameters/locality', {
-        headers: {
-          'auth-token': token, // Agrega el token de autenticación en el encabezado
-        },
-      });
+      const response = await axios.get(
+        "https://buddy-app2.loca.lt/parameters/locality",
+        {
+          headers: {
+            "auth-token": token, // Agrega el token de autenticación en el encabezado
+          },
+        }
+      );
       if (response && response.data) {
         setZones(response.data); // Almacena las zonas en el estado
       } else {
-        console.log('No se encontraron zonas.');
+        console.log("No se encontraron zonas.");
       }
     } catch (error) {
-      console.error('Error al obtener las zonas:', error);
-    }finally{
+      console.error("Error al obtener las zonas:", error);
+    } finally {
       setZonesModalVisible(true); // Abre el modal con las zonas
     }
   };
-  
 
   return (
     <View>
@@ -85,13 +96,16 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
               source={require("../../Imagenes/filtrar.png")}
               style={styles.iconoFiltro}
             />
-            <TouchableOpacity onPress={() => handleFilterPress(1, "24HS")} style={filtroSeleccionadoHora === 1}>
+            <TouchableOpacity
+              onPress={() => handleFilterPress(1, "24HS")}
+              style={filtroSeleccionadoHora === 1}
+            >
               <Text>Abierto 24hs</Text>
             </TouchableOpacity>
           </View>
         </View>
       )}
-      <View style={[styles.container, { flexDirection: 'row' }]}>
+      <View style={[styles.container, { flexDirection: "row" }]}>
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar..."
@@ -118,19 +132,25 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
               data={zones.localities}
               renderItem={({ item }) => (
                 <View key={item.idLocality}>
-                  <TouchableOpacity onPress={()=> {handleFilterPress(item.idLocality, "Localidad")}}>
-                    <Text style={styles.zoneItem}>
-                      {item.localityName}
-                    </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleFilterPress(item.idLocality, "Localidad");
+                    }}
+                  >
+                    <Text style={styles.zoneItem}>{item.localityName}</Text>
                   </TouchableOpacity>
                 </View>
-                
               )}
               keyExtractor={(item) => item.idLocality}
             />
-          <TouchableOpacity style={styles.closeButton} onPress={() => handleFilterPress(null, "Limpiar")}>
-            <Text style={[styles.closeButtonText, {padding:1}]}>Limpiar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => handleFilterPress(null, "Limpiar")}
+            >
+              <Text style={[styles.closeButtonText, { padding: 1 }]}>
+                Limpiar
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -141,19 +161,19 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     margin: 50,
   },
 
   modalContent: {
-    backgroundColor: '#fff', // Fondo blanco para el contenido del modal
+    backgroundColor: "#fff", // Fondo blanco para el contenido del modal
     padding: 20, // Espaciado interno para el contenido del modal
     borderRadius: 10, // Bordes redondeados
     height: "35%",
   },
 
- zoneItem: {
+  zoneItem: {
     padding: 5,
     borderBottomWidth: 0.5,
     borderBottomColor: "gray",
@@ -163,16 +183,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
-  
+
   container: {
     padding: 5,
     marginTop: 15,
   },
   searchInput: {
     height: 40,
-    width: '88%',
-    borderColor: '#EEE9E9',
-    backgroundColor: '#EEE9E9',
+    width: "88%",
+    borderColor: "#EEE9E9",
+    backgroundColor: "#EEE9E9",
     borderWidth: 1,
     paddingHorizontal: 10,
     borderRadius: 50,
@@ -185,13 +205,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   filtersContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 15,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   filterButton: {
-    backgroundColor: '#007AFF',
-    color: '#FFFFFF',
+    backgroundColor: "#007AFF",
+    color: "#FFFFFF",
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 10,
@@ -219,7 +239,7 @@ const styles = StyleSheet.create({
     width: "30%",
     height: 25,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     justifyContent: "center",
     marginLeft: 0,
     padding: 2,

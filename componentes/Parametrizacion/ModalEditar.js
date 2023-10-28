@@ -28,7 +28,7 @@ const ModalEditar = ({
         `https://buddy-app2.loca.lt/parameters/locality/${editingZone.idLocality}`,
         {
           localityName: localities,
-          postalCode: postalCode
+          postalCode: postalCode,
         },
         {
           headers: { "auth-token": token },

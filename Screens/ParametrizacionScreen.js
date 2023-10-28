@@ -181,9 +181,9 @@ export default function ParametrizacionScreen({ navigation }) {
       weather: provinceData.clima,
       surface: provinceData.extension,
       populationDensity: provinceData.densidad,
-      population: provinceData.poblacion
+      population: provinceData.poblacion,
     };
-  
+
     axios
       .post("https://buddy-app2.loca.lt/parameters/province/", newProvince, {
         headers: { "auth-token": token },
@@ -235,7 +235,7 @@ export default function ParametrizacionScreen({ navigation }) {
       .catch((error) => {
         //console.error('Error al agregar tipo de animal:', error);
         setErrorModalVisible(true); // Mostrar el modal de error
-        console.log(newType)
+        console.log(newType);
         // Ocultar el modal de error después de 2 segundos
         setTimeout(() => {
           setErrorModalVisible(false);

@@ -30,7 +30,7 @@ const ModalEditarRegion = ({
         {
           regionName: regionName,
           surface: extension,
-          population: population
+          population: population,
         },
         {
           headers: { "auth-token": token },

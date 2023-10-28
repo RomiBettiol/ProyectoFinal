@@ -32,7 +32,7 @@ const ModalEditarRaza = ({
           petBreedName: breedName,
           size: tamaño,
           temperament: temperamento,
-          lifespan: esperanzaVida
+          lifespan: esperanzaVida,
         },
         {
           headers: { "auth-token": token },

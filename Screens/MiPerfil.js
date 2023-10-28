@@ -477,12 +477,6 @@ export default function MiPerfil({ navigation }) {
               />
             )}
             <View>
-              <Text style={styles.titulo}>MI PERFIL</Text>
-              {user && user[0] && user[0].userName ? (
-                <Text style={styles.textoUsuario}>{user[0].userName}</Text>
-              ) : (
-                <Text style={styles.textoUsuario}>Nombre de Usuario</Text>
-              )}
               <View>
                 <Text style={styles.titulo}>MI PERFIL</Text>
                 {user && user[0] && user[0].userName ? (
@@ -496,20 +490,17 @@ export default function MiPerfil({ navigation }) {
                   <Text style={styles.rolUsuario}>Rol del usuario</Text>
                 )}
               </View>
-              <TouchableOpacity onPress={openModal}>
-                <Image
-                  source={require("../Imagenes/opciones.png")}
-                  style={styles.imagenOpciones}
-                />
-              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={openModal}>
-              <Image
-                source={require("../Imagenes/opciones.png")}
-                style={styles.imagenOpciones}
-              />
-            </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            onPress={openModal}
+            style={styles.contendorImagenOpciones}
+          >
+            <Image
+              source={require("../Imagenes/opciones.png")}
+              style={styles.imagenOpciones}
+            />
+          </TouchableOpacity>
         </View>
         <Text style={styles.textoPublicaciones}>Publicaciones activas</Text>
         <View style={[{ alignItems: "center" }]}>
@@ -531,14 +522,6 @@ export default function MiPerfil({ navigation }) {
                   <View style={[styles.botonInformacion, { marginRight: 200 }]}>
                     <Text>Servicio</Text>
                   </View>
-                  <TouchableOpacity
-                    onPress={() => openOptionsModalService(servicio)}
-                  >
-                    <Image
-                      source={require("../Imagenes/opciones.png")}
-                      style={styles.imagenOpcionesPublicaciones}
-                    />
-                  </TouchableOpacity>
                 </View>
                 <Text style={styles.publicationTitle}>
                   {servicio.serviceTitle}
@@ -555,6 +538,18 @@ export default function MiPerfil({ navigation }) {
                   </View>
                 </View>
               </View>
+              <TouchableOpacity
+                onPress={() => openOptionsModalService(servicio)}
+                style={[
+                  styles.contendorImagenOpcionesPublicaciones,
+                  { top: 5, right: 5 },
+                ]}
+              >
+                <Image
+                  source={require("../Imagenes/opciones.png")}
+                  style={styles.imagenOpcionesPublicaciones}
+                />
+              </TouchableOpacity>
             </View>
           ))}
           {userPublications.adoptions &&
@@ -579,14 +574,6 @@ export default function MiPerfil({ navigation }) {
                     >
                       <Text>En adopción</Text>
                     </View>
-                    <TouchableOpacity
-                      onPress={() => openOptionsModal(adoption)}
-                    >
-                      <Image
-                        source={require("../Imagenes/opciones.png")}
-                        style={styles.imagenOpcionesPublicaciones}
-                      />
-                    </TouchableOpacity>
                   </View>
                   <Text style={styles.publicationTitle}>{adoption.title}</Text>
                   <View
@@ -608,6 +595,18 @@ export default function MiPerfil({ navigation }) {
                     </View>
                   </View>
                 </View>
+                <TouchableOpacity
+                  onPress={() => openOptionsModal(adoption)}
+                  style={[
+                    styles.contendorImagenOpcionesPublicaciones,
+                    { top: 5, right: 5 },
+                  ]}
+                >
+                  <Image
+                    source={require("../Imagenes/opciones.png")}
+                    style={styles.imagenOpcionesPublicaciones}
+                  />
+                </TouchableOpacity>
               </View>
             ))}
           {userPublications.searchs &&
@@ -642,12 +641,6 @@ export default function MiPerfil({ navigation }) {
                         {search.isFound ? "Encontrada" : "Perdida"}
                       </Text>
                     </View>
-                    <TouchableOpacity onPress={() => openOptionsModal(search)}>
-                      <Image
-                        source={require("../Imagenes/opciones.png")}
-                        style={styles.imagenOpcionesPublicaciones}
-                      />
-                    </TouchableOpacity>
                   </View>
                   <Text style={styles.publicationTitle}>{search.title}</Text>
                   <View
@@ -678,6 +671,18 @@ export default function MiPerfil({ navigation }) {
                     <Text>{formatLostDate(search.lostDate)}</Text>
                   </View>
                 </View>
+                <TouchableOpacity
+                  onPress={() => openOptionsModal(search)}
+                  style={[
+                    styles.contendorImagenOpcionesPublicaciones,
+                    { top: 5, right: 5 },
+                  ]}
+                >
+                  <Image
+                    source={require("../Imagenes/opciones.png")}
+                    style={styles.imagenOpcionesPublicaciones}
+                  />
+                </TouchableOpacity>
               </View>
             ))}
         </View>
@@ -1165,11 +1170,13 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginTop: 10,
   },
+  contendorImagenOpciones: {
+    position: "absolute",
+    right: 10,
+  },
   imagenOpciones: {
-    width: 20,
+    width: 30,
     height: 30,
-    marginTop: 5,
-    marginLeft: "52%",
   },
   textoUsuario: {
     marginLeft: 15,
@@ -1282,10 +1289,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
+  contendorImagenOpcionesPublicaciones: {
+    position: "absolute",
+  },
   imagenOpcionesPublicaciones: {
     width: 20,
     height: 20,
-    marginTop: 5,
   },
   botonInformacion: {
     backgroundColor: "#f0f0f0",

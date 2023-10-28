@@ -34,7 +34,7 @@ const ModalEditarProvincia = ({
           weather: clima,
           population: poblacion,
           surface: extension,
-          populationDensity: densidad
+          populationDensity: densidad,
         },
         {
           headers: { "auth-token": token },
