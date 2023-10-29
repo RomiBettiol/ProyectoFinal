@@ -212,6 +212,7 @@ const PublicacionDetalle = ({ route }) => {
                 <Text>¡Tengo info!</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                style={styles.contendorIconos}
                 onPress={() => {
                   navigation.navigate("ModalTraza", {
                     idPublicationSearch: publicacion.idPublicationSearch,
@@ -582,11 +583,14 @@ const styles = StyleSheet.create({
   descripcionPublicacion: {
     fontSize: 16,
   },
+  contendorIconos: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+  },
   iconos: {
-    width: 25,
-    height: 25,
-    // marginLeft: 10,
-    marginRight: 10,
+    width: 30,
+    height: 30,
   },
   containerDescripcion: {
     justifyContent: "space-between",

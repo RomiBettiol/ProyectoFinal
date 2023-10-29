@@ -476,8 +476,6 @@ const FilterButtonsExample = () => {
     setSelectedColor(null);
   };
 
-  console.log("token: ", token);
-
   return (
     <View style={styles.container}>
       <View style={styles.filterContainer}>

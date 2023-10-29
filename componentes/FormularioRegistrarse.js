@@ -209,13 +209,29 @@ const FormularioRegistrarse = ({
   };
 
   const isFormValid = () => {
+    console.log(
+      nombre.trim() !== "",
+      apellidos.trim() !== "",
+      email.trim() !== "",
+      usuario.trim() !== "",
+      contrasena.trim() !== "",
+      domicilio.trim() !== "",
+      nroTelefono.trim() !== "",
+      fechaNacimiento.trim() !== "",
+      cuitCuil.trim() !== "",
+      contrasena === contrasena2,
+      emailValido,
+      numeroValido,
+      cuitValido,
+      fechaValida,
+      requisitosContrasena.every((requisito) => requisito.cumplido)
+    );
     return (
       nombre.trim() !== "" &&
       apellidos.trim() !== "" &&
       email.trim() !== "" &&
       usuario.trim() !== "" &&
       contrasena.trim() !== "" &&
-      image.trim() !== "" &&
       domicilio.trim() !== "" &&
       nroTelefono.trim() !== "" &&
       fechaNacimiento.trim() !== "" &&
@@ -452,7 +468,6 @@ const FormularioRegistrarse = ({
           )}
         </View>
       </View>
-     
     </View>
   );
 };

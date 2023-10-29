@@ -231,6 +231,7 @@ export default function EditarPublicacionAdopcion({ route }) {
                 selectedAnimal={selectedAnimal}
                 setSelectedAnimal={setSelectedAnimal}
                 setSelectedAnimalId={setSelectedAnimalId}
+                token={token}
               />
             </ScrollView>
             <ListaValoresColor

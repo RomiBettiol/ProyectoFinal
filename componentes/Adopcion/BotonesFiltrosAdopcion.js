@@ -47,7 +47,8 @@ const BotonesFiltrosAdopcion = () => {
   };
 
   const handleReportModal = (publication) => {
-    setSelectedPublicationToReport(publication.idPublicationSearch);
+    setSelectedPublicationToReport(publication.idPublicationAdoption);
+    console.log(selectedPublicationToReport);
     setSelectedUserToReport(publication.user.idUser);
 
     setReportModalVisible(true);

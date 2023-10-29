@@ -46,8 +46,6 @@ export function RegistrarseScreen({ navigation }) {
   };
 
   const handleSubmit = async () => {
-    console.log(formValid);
-    console.log(aceptoTerminos);
     if (formValid && aceptoTerminos) {
       const data = {
         userName: datosFormulario.usuario,
@@ -131,6 +129,7 @@ export function RegistrarseScreen({ navigation }) {
         setErrorMessage(errorText);
         return;
       }
+      console.log(errorMessage);
     }
   };
 
