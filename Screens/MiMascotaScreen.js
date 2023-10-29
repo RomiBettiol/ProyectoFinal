@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import HeaderScreen from "../componentes/HeaderScreen";
@@ -43,6 +44,7 @@ export default function MiMascotaScreen() {
   const [error404, setError404] = useState(false);
   const route = useRoute(); // Obtiene la prop route
   const { token } = route.params;
+  const [isLoading, setisLoading] = useState(false);
 
   const toggleNuevaMascotaModal = () => {
     setShowNuevaMascotaModal(!showNuevaMascotaModal);
@@ -100,6 +102,7 @@ export default function MiMascotaScreen() {
 
   const fetchMascotas = async () => {
     try {
+      setisLoading(true);
       const response = await axios.get(
         "https://buddy-app2.loca.lt/mypet/pet",
         {
@@ -116,6 +119,8 @@ export default function MiMascotaScreen() {
     } catch (error) {
       if (error.response && error.response.status === 404) {
       }
+    } finally {
+      setisLoading(false);
     }
     console.log("estoy saliendo del try");
   };
@@ -131,7 +136,7 @@ export default function MiMascotaScreen() {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contenedor1}>
           <Text style={styles.titulo}>Mi mascota</Text>
@@ -333,6 +338,14 @@ export default function MiMascotaScreen() {
             </View>
           </View>
         </Modal>
+        <Modal visible={isLoading} transparent>
+          <View style={styles.loadingContainer}>
+            <View style={styles.loadingContent}>
+              <ActivityIndicator size="large" color="#0000ff" />
+              <Text style={styles.loadingText}>Cargando...</Text>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );
@@ -497,5 +510,22 @@ const styles = StyleSheet.create({
   confirmButtonCancel: {
     backgroundColor: "red",
     marginLeft: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });

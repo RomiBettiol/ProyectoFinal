@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import HeaderScreen from "../componentes/HeaderScreen";
@@ -21,9 +22,11 @@ const AltaEstablecimientoScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { token } = route.params;
+  const [isLoading, setisLoading] = useState(false);
 
   const fetchData = async () => {
     try {
+      setisLoading(true);
       const config = {
         headers: {
           "auth-token": token,
@@ -38,6 +41,8 @@ const AltaEstablecimientoScreen = () => {
       setEstablishments(response.data);
     } catch (error) {
       console.log("Error fetching data:", error);
+    } finally {
+      setisLoading(false);
     }
   };
 
@@ -60,7 +65,7 @@ const AltaEstablecimientoScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <Text style={styles.title}>Establecimientos en revision</Text>
       {!establishments[0] && (
         <View style={styles.ItemContainer}>
@@ -92,6 +97,14 @@ const AltaEstablecimientoScreen = () => {
           </View>
         </View>
       ))}
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -162,6 +175,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#fff",
     fontWeight: "bold",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });
 

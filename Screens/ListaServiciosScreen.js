@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import HeaderScreen from "../componentes/HeaderScreen";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
@@ -23,9 +24,11 @@ const ListaServiciosScreen = () => {
   const [responseMessage, setResponseMessage] = useState("");
   const [isPageRefreshing, setPageRefreshing] = useState(false);
   const [isConfirming, setConfirming] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   const fetchData = async () => {
     try {
+      setisLoading(true);
       const config = {
         headers: {
           "auth-token": token,
@@ -40,6 +43,8 @@ const ListaServiciosScreen = () => {
       setServices(response.data);
     } catch (error) {
       console.error("Error fetching services data:", error);
+    } finally {
+      setisLoading(false);
     }
   };
 
@@ -141,7 +146,7 @@ const ListaServiciosScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <Text style={styles.title}>Lista de Servicios</Text>
       <FlatList
         data={services}
@@ -207,6 +212,14 @@ const ListaServiciosScreen = () => {
             >
               <Text style={styles.closeButton}>Cerrar</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
           </View>
         </View>
       </Modal>
@@ -328,6 +341,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: "#fff",
     fontWeight: "bold",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });
 

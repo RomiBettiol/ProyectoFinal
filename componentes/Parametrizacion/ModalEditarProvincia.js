@@ -20,6 +20,10 @@ const ModalEditarProvincia = ({
   token,
 }) => {
   const [provinceName, setProvinceName] = useState("");
+  const [clima, setClima] = useState("");
+  const [densidad, setDensidad] = useState("");
+  const [extension, setExtension] = useState("");
+  const [poblacion, setPoblacion] = useState("");
 
   const handleEditProvince = () => {
     axios
@@ -27,6 +31,10 @@ const ModalEditarProvincia = ({
         `https://buddy-app2.loca.lt/parameters/province/${editingProvince.idProvince}`,
         {
           provinceName: provinceName,
+          weather: clima,
+          population: poblacion,
+          surface: extension,
+          populationDensity: densidad,
         },
         {
           headers: { "auth-token": token },
@@ -55,11 +63,46 @@ const ModalEditarProvincia = ({
         <View style={styles.modalContent}>
           <Text style={styles.tituloModal}>Editar Provincia</Text>
           <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
-            <Text style={styles.valorTexto}>Valor</Text>
+            <Text style={styles.valorTexto}>Nombre</Text>
             <TextInput
               style={styles.inputLocalities}
               value={provinceName}
               onChangeText={setProvinceName}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Clima</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={clima}
+              onChangeText={setClima}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Densidad</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={densidad}
+              onChangeText={setDensidad}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Extension</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={extension}
+              onChangeText={setExtension}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Poblacion</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={poblacion}
+              onChangeText={setPoblacion}
+              keyboardType="numeric"
             />
           </View>
           <View style={[{ flexDirection: "row" }, styles.botonesDecidir]}>

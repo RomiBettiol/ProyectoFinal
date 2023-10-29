@@ -16,7 +16,7 @@ export default function AdoptarScreen() {
   const navigation = useNavigation();
   const [buttonTransform, setButtonTransform] = useState(0);
   const route = useRoute(); // Obtiene la prop route
-  const { token } = route.params;
+  const { token, permisos } = route.params;
 
   return (
     <View style={styles.container}>
@@ -34,7 +34,11 @@ export default function AdoptarScreen() {
           { transform: [{ translateY: buttonTransform }] },
         ]}
       >
-        <BotonFlotante token={token} />
+        <BotonFlotante
+          token={token}
+          permisos={permisos}
+          permisosNecesario={"CREATE_PUBLICACION_ADOPCION"}
+        />
       </View>
     </View>
   );

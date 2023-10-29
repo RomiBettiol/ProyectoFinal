@@ -25,6 +25,8 @@ const ModalAgregarRegion = ({
   const [showProvinceList, setShowProvinceList] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [population, setPopulation] = useState("");
+  const [surface, setSurface] = useState("");
 
   useEffect(() => {
     axios
@@ -56,6 +58,8 @@ const ModalAgregarRegion = ({
     const newRegion = {
       regionName: regionName,
       idProvince: selectedProvinceId,
+      surface: surface,
+      population: population,
     };
 
     axios
@@ -68,6 +72,8 @@ const ModalAgregarRegion = ({
         onAdd(newRegion);
         setRegionName("");
         setSelectedProvinceId("");
+        setPopulation("");
+        setSurface("");
         setShowSuccess(true); // Mostrar el mensaje de éxito inmediatamente
         onClose(); // Cerrar el modal
 
@@ -102,7 +108,24 @@ const ModalAgregarRegion = ({
               onChangeText={setRegionName}
             />
           </View>
-
+          <View style={styles.valorFiltro}>
+            <Text style={styles.valorTexto}>Población</Text>
+            <TextInput
+              style={styles.inputRegion}
+              value={population}
+              onChangeText={setPopulation}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={styles.valorFiltro}>
+            <Text style={styles.valorTexto}>Extensión</Text>
+            <TextInput
+              style={styles.inputRegion}
+              value={surface}
+              onChangeText={setSurface}
+              keyboardType="numeric"
+            />
+          </View>
           <View style={styles.valorFiltro}>
             <TouchableOpacity
               style={styles.inputPicker}

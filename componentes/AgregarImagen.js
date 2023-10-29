@@ -1,37 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Pressable,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
-import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from '../src/aws-exports';
+import { Amplify, Storage } from "aws-amplify";
+import awsconfig from "../src/aws-exports";
 Amplify.configure(awsconfig);
 
-const AgregarImagen = ( {onImagesSelected } ) => {
-  const [selectedImages, setSelectedImages] = React.useState('' );
+const AgregarImagen = ({ onImagesSelected }) => {
+  const [selectedImages, setSelectedImages] = React.useState("");
   const [showModal, setShowModal] = useState(false);
-  
 
   const options = {
-    title: 'Seleccionar imagen',
-    cancelButtonTitle: 'Cancelar',
-    takePhotoButtonTitle: 'Tomar foto',
-    chooseFromLibraryButtonTitle: 'Elegir de la galería',
-    mediaType: 'photo',
+    title: "Seleccionar imagen",
+    cancelButtonTitle: "Cancelar",
+    takePhotoButtonTitle: "Tomar foto",
+    chooseFromLibraryButtonTitle: "Elegir de la galería",
+    mediaType: "photo",
     quality: 1,
   };
 
-   
-
-  
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync(options);
 
     if (!result.canceled) {
       const updatedImages = [...selectedImages, result.uri];
-        console.log("mostrando los url: ", updatedImages)
-        setSelectedImages(updatedImages);
-        onImagesSelected(updatedImages);
+      setSelectedImages(updatedImages);
+      onImagesSelected(updatedImages);
     }
   };
 
@@ -46,14 +49,20 @@ const AgregarImagen = ( {onImagesSelected } ) => {
   return (
     <TouchableOpacity style={styles.botonGaleria} onPress={openGallery}>
       {selectedImages ? (
-        <Image source={{ uri: selectedImages.localUri }} style={styles.selectedImage} />
+        <Image
+          source={{ uri: selectedImages.localUri }}
+          style={styles.selectedImage}
+        />
       ) : (
         <>
-          <Image source={require('../Imagenes/fotos.png')} style={styles.foto} />
+          <Image
+            source={require("../Imagenes/fotos.png")}
+            style={styles.foto}
+          />
           <Text style={styles.botonFoto}>Seleccionar foto</Text>
         </>
       )}
-  
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -81,11 +90,11 @@ export default AgregarImagen;
 
 const styles = StyleSheet.create({
   botonGaleria: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     height: 100,
-    width: '50%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "50%",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 30,
     marginTop: 30,
     elevation: 3,
@@ -106,31 +115,31 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
     borderRadius: 20,
     padding: 25,
-    alignItems: 'center',
+    alignItems: "center",
     elevation: 5,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
   },
   modalButton: {
-    backgroundColor: '#EEE9E9',
+    backgroundColor: "#EEE9E9",
     borderRadius: 10,
     padding: 10,
     elevation: 2,
     marginTop: 10,
   },
   modalButtonText: {
-    color: 'grey',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "grey",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

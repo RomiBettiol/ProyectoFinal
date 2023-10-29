@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { WebView } from "react-native-webview";
 import ListaValoresDias from "../componentes/Busqueda/ListaValoresDias";
@@ -37,6 +38,7 @@ const EstablecimientoDetalleScreen = () => {
   const [isAcceptButtonDisabled, setAcceptButtonDisabled] = useState(false);
   const { token, establishmentId } = route.params;
   const navigation = useNavigation();
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -232,7 +234,7 @@ const EstablecimientoDetalleScreen = () => {
 
   return (
     <ScrollView>
-      <Header />
+      <Header token={token} />
       <Image
         source={{ uri: establishment.image }}
         style={styles.imagenPublicacion}
@@ -389,6 +391,14 @@ const EstablecimientoDetalleScreen = () => {
           </View>
         </View>
       </Modal>
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -501,6 +511,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
     textAlign: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });
 

@@ -15,12 +15,38 @@ const ModalAgregarTipoAnimal = ({
   onAdd,
   newTypeName,
   setNewTypeName,
+  legsNumber,
+  setLegsNumber,
+  diet,
+  setDiet,
+  enviroment,
+  setEnviroment,
+  coat,
+  setCoat,
+  weather,
+  setWeather,
   token,
 }) => {
+
   const handleAgregarTipoAnimalClick = () => {
-    onAdd(newTypeName); // Pasar el valor del nuevo tipo de animal a la función para agregar
+    const tipoAnimalData = {
+      nombre: newTypeName,
+      weather: weather,
+      legsNumber: legsNumber,
+      diet: diet,
+      enviroment: enviroment,
+      coat: coat,
+      weather: weather,
+    };
+
+    onAdd(tipoAnimalData); // Pasar los datos de la nueva provincia a la función para agregar
     onClose(); // Cerrar el modal después de agregar
-    setNewTypeName(""); // Reiniciar el estado del nombre del nuevo tipo de animal
+    setNewTypeName("");
+    setLegsNumber("");
+    setDiet("");
+    setEnviroment("");
+    setCoat("");
+    setWeather("");
   };
 
   return (
@@ -29,11 +55,52 @@ const ModalAgregarTipoAnimal = ({
         <View style={styles.modalContent}>
           <Text style={styles.tituloModal}>Agregar</Text>
           <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
-            <Text style={styles.valorTexto}>Valor</Text>
+            <Text style={styles.valorTexto}>Nombre</Text>
             <TextInput
               style={styles.inputLocalities}
               value={newTypeName}
               onChangeText={setNewTypeName}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Nº Patas</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={legsNumber}
+              onChangeText={setLegsNumber}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Dieta</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={diet}
+              onChangeText={setDiet}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Habitad</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={enviroment}
+              onChangeText={setEnviroment}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Pelaje</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={coat}
+              onChangeText={setCoat}
+            />
+          </View>
+          <View style={[{ flexDirection: "row" }, styles.valorFiltro]}>
+            <Text style={styles.valorTexto}>Clima</Text>
+            <TextInput
+              style={styles.inputLocalities}
+              value={weather}
+              onChangeText={setWeather}
             />
           </View>
           <View style={[{ flexDirection: "row" }, styles.botonesDecidir]}>

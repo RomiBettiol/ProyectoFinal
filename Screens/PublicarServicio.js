@@ -392,7 +392,12 @@ export default function PublicarServicio({ setAnimalId, animalId }) {
           token={token}
         />
         <Text style={styles.descripcionPublicacion}>Horario de atención</Text>
-        <View style={[styles.hora, { flexDirection: "row" }]}>
+        <View
+          style={[
+            styles.hora,
+            { flexDirection: "row", display: abierto24h ? "none" : "flex" },
+          ]}
+        >
           <TextInput
             style={[styles.inputTexto2, !isHourValid && styles.inputError]}
             value={numero1}

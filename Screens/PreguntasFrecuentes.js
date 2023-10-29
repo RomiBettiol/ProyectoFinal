@@ -26,7 +26,7 @@ export default function PreguntasFrecuentes() {
 
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <ScrollView>
         <Text style={styles.titulo}>Preguntas Frecuentes</Text>
         <TouchableOpacity

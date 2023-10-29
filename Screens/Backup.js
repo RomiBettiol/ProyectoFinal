@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Linking } from "react-native";
 import HeaderScreen from "../componentes/HeaderScreen";
 import { useRoute } from "@react-navigation/native";
 
@@ -7,43 +7,30 @@ export default function Backup({ navigation }) {
   const route = useRoute();
   const { token } = route.params;
 
+  const handleButtonPress = () => {
+    // Abre la URL en el navegador del dispositivo cuando se hace clic en el botón
+    Linking.openURL("https://www.cleardb.com/login.view");
+  };
+
   return (
     <ScrollView style={{ flex: 1 }}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <Text style={styles.titulo}>BackUp</Text>
       <Text style={styles.introduccion}>
-        En el siguiente tutorial se explica como obtener los backUp necesarios
-        siendo usuario administrador:
+        Ingresa al siguiente botón y sigue los pasos para realizar backups.
       </Text>
+      <TouchableOpacity onPress={handleButtonPress} style={styles.boton}>
+        <Text style={styles.botonTexto}>Ir a ClearDB</Text>
+      </TouchableOpacity>
       <Text style={styles.paso}>
-        Paso 1: Ingresar al link: https://id.heroku.com/login
+        Paso 1: Realizar el login con el usuario y contraseña de la base de datos. De ser necesario solicitar credenciales a soporte.
       </Text>
-      <View style={{ flexDirection: "row" }}>
-        <Text style={styles.textoNegro}>
-          Para obtener las credenciales, se debe consultar a los administradores
-          de la aplicación.
-        </Text>
-      </View>
-
       <Image
         source={require("../Imagenes/Backup-1.png")}
         style={styles.imagenPaso}
       />
-      <Text style={styles.paso}>Paso 2: Elegir la opción buddy-bd</Text>
-      <Image
-        source={require("../Imagenes/Backup-2.png")}
-        style={styles.imagenPaso}
-      />
-      <Text style={styles.paso}>Paso 3: Ingresar a ClearDB MySQL</Text>
-      <Text style={styles.aclaracion}>
-        La opción que se debe elegir está subrayada en rojo.
-      </Text>
-      <Image
-        source={require("../Imagenes/Backup-3.png")}
-        style={styles.imagenPaso}
-      />
       <Text style={styles.paso}>
-        Paso 4: Elegir la opción heroku_e82a625715a153f
+        Paso 2: Elegir la opción heroku_e82a625715a153f
       </Text>
       <Text style={styles.aclaracion}>
         La opción que se debe elegir está subrayada en rojo.
@@ -53,7 +40,7 @@ export default function Backup({ navigation }) {
         style={styles.imagenPaso}
       />
       <Text style={styles.paso}>
-        Paso 5: Ingresar a la pestaña Backups & jobs
+        Paso 3: Ingresar a la pestaña Backups & jobs
       </Text>
       <Text style={styles.aclaracion}>
         La opción que se debe elegir está subrayada en rojo.
@@ -63,13 +50,16 @@ export default function Backup({ navigation }) {
         style={styles.imagenPaso}
       />
       <Text style={styles.paso}>
-        Paso 6: En esta pantalla verá la lista de backUps existentes, se podrá
+        Paso 4: En esta pantalla verá la lista de backUps existentes, se podrá
         elegir la opción de exportar o de reestablecer el último backUp.{" "}
       </Text>
       <Image
         source={require("../Imagenes/Backup-6.png")}
         style={styles.imagenPaso}
       />
+      <Text style={styles.paso}>
+        Para la restauración de un BackUp se calcula 1MB cada 10min, esto debe ser tenido en cuenta a la hora de realizar la restauración. 
+      </Text>
     </ScrollView>
   );
 }
@@ -112,7 +102,7 @@ const styles = StyleSheet.create({
   },
   imagenPaso: {
     width: "95%",
-    height: 300,
+    height: 250,
     marginLeft: 15,
     marginTop: 10,
     marginBottom: 20,
@@ -122,5 +112,17 @@ const styles = StyleSheet.create({
   aclaracion: {
     marginLeft: 35,
     padding: 5,
+  },
+  boton: {
+    backgroundColor: "#DDC4B8", // Color de fondo del botón
+    padding: 10,
+    margin: 20,
+    borderRadius: 5,
+    alignItems: "center",
+    elevation: 5,
+  },
+  botonTexto: {
+    color: "black", // Color del texto del botón
+    fontSize: 18,
   },
 });

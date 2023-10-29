@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 
-export default function BotonesFiltroServicios({ onFilterChange }) {
+export default function BotonesFiltroServicios({ onFilterChange, permisos }) {
   const [filtroSeleccionado, setFiltroSeleccionado] = useState(null);
 
   const handleFilterPress = (filtro) => {
@@ -11,16 +11,16 @@ export default function BotonesFiltroServicios({ onFilterChange }) {
   };
 
   return (
-    <View style={[styles.container, { flexDirection: 'row' }]}>
+    <View style={[styles.container, { flexDirection: "row" }]}>
       <TouchableOpacity
         style={[
           styles.filterButton,
-          filtroSeleccionado === 'VETERINARIA' && styles.selectedButton,
+          filtroSeleccionado === "VETERINARIA" && styles.selectedButton,
         ]}
-        onPress={() => handleFilterPress('VETERINARIA')}
+        onPress={() => handleFilterPress("VETERINARIA")}
       >
         <Image
-          source={require('../../Imagenes/veterinaria.png')}
+          source={require("../../Imagenes/veterinaria.png")}
           style={styles.imagenFiltro}
         />
         <Text style={styles.textoFiltros}>Veterinaria</Text>
@@ -28,12 +28,12 @@ export default function BotonesFiltroServicios({ onFilterChange }) {
       <TouchableOpacity
         style={[
           styles.filterButton,
-          filtroSeleccionado === 'PET SHOP' && styles.selectedButton,
+          filtroSeleccionado === "PET SHOP" && styles.selectedButton,
         ]}
-        onPress={() => handleFilterPress('PET SHOP')}
+        onPress={() => handleFilterPress("PET SHOP")}
       >
         <Image
-          source={require('../../Imagenes/petshop.png')}
+          source={require("../../Imagenes/petshop.png")}
           style={styles.imagenFiltro}
         />
         <Text style={styles.textoFiltros}>Pet Shop</Text>
@@ -41,12 +41,12 @@ export default function BotonesFiltroServicios({ onFilterChange }) {
       <TouchableOpacity
         style={[
           styles.filterButton,
-          filtroSeleccionado === 'REFUGIO' && styles.selectedButton,
+          filtroSeleccionado === "REFUGIO" && styles.selectedButton,
         ]}
-        onPress={() => handleFilterPress('REFUGIO')}
+        onPress={() => handleFilterPress("REFUGIO")}
       >
         <Image
-          source={require('../../Imagenes/refugios.png')}
+          source={require("../../Imagenes/refugios.png")}
           style={styles.imagenFiltro}
         />
         <Text style={styles.textoFiltros}>Refugios</Text>
@@ -62,16 +62,16 @@ const styles = StyleSheet.create({
   filterButton: {
     paddingHorizontal: 10,
     paddingVertical: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 10,
     elevation: 7,
     width: 90,
     marginLeft: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   selectedButton: {
-    backgroundColor: '#DDC4B8',
+    backgroundColor: "#DDC4B8",
   },
   imagenFiltro: {
     width: 55,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Header from "../HeaderScreen";
 import axios from "axios";
+import ViewShot from "react-native-view-shot";
+import * as FileSystem from "expo-file-system";
 
 const PublicacionDetalle = ({ route }) => {
   const navigation = useNavigation();
@@ -19,13 +21,12 @@ const PublicacionDetalle = ({ route }) => {
   const { token } = route.params;
   const [idUserAutor, setIdUserAutor] = useState("");
   const [userAutor, setUserAutor] = useState("");
-
+  const [isProccessing, setIsProcessing] = useState(false);
+  const [isDownloading, setisDownloading] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [showCongratulationsModal, setShowCongratulationsModal] =
     useState(false);
-
-  const carouselImages = publicacion.images;
-  console.log("carrousel setteado: ", carouselImages);
+  const carrouselImages = publicacion.images;
   const formatLostDate = (dateString) => {
     const fechaObj = new Date(dateString);
     const year = fechaObj.getFullYear();
@@ -33,6 +34,7 @@ const PublicacionDetalle = ({ route }) => {
     const day = String(fechaObj.getDate()).padStart(2, "0");
     return `${day}-${month}-${year}`;
   };
+  const viewShotRef = useRef();
 
   useEffect(() => {
     axios
@@ -50,6 +52,7 @@ const PublicacionDetalle = ({ route }) => {
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
+    console.log(userAutor);
   }, [token, idUserAutor]);
 
   const handleNewChat = async (selectedUser) => {
@@ -88,8 +91,7 @@ const PublicacionDetalle = ({ route }) => {
           idAutor: selectedUser.idUser,
           idReference: idSearch,
           referenceType: "SEARCH",
-          imagenPublicacion: carouselImages[0],
-          
+          imagenPublicacion: carrouselImages[0],
         });
       } else if (response.status === 200) {
         setMensaje(
@@ -107,7 +109,7 @@ const PublicacionDetalle = ({ route }) => {
               image: selectedUser.image,
               idReference: idSearch,
               referenceType: "SEARCH",
-              imagenPublicacion: carouselImages[0],
+              imagenPublicacion: carrouselImages[0],
             });
           }, 4000);
         } else {
@@ -138,7 +140,7 @@ const PublicacionDetalle = ({ route }) => {
             image: selectedUser.image,
             idReference: idSearch,
             referenceType: "SEARCH",
-            imagenPublicacion: carouselImages[0],
+            imagenPublicacion: carrouselImages[0],
           });
         }, 8000);
       } else {
@@ -146,114 +148,403 @@ const PublicacionDetalle = ({ route }) => {
       }
     }
   };
+
+  const handleCaptureScreen = async () => {
+    try {
+      setisDownloading(true);
+      const result = await viewShotRef.current.capture();
+      const capturedImageUri = result;
+
+      if (capturedImageUri) {
+        const permissions =
+          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+        if (permissions.granted) {
+          const base64 = await FileSystem.readAsStringAsync(capturedImageUri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          const mimetype = capturedImageUri.endsWith(".jpg")
+            ? "image/jpeg"
+            : "image/png";
+
+          await FileSystem.StorageAccessFramework.createFileAsync(
+            permissions.directoryUri,
+            `Captura_${publicacion.title}`,
+            mimetype
+          )
+            .then(async (uri) => {
+              await FileSystem.writeAsStringAsync(uri, base64, {
+                encoding: FileSystem.EncodingType.Base64,
+              });
+            })
+            .catch((e) => console.log(e));
+        }
+      } else {
+        console.log("URI de la imagen capturada no válida");
+      }
+    } catch (error) {
+      console.log("Error al capturar la pantalla:", error);
+    } finally {
+      setisDownloading(false);
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <View>
-      <Header />
-      <ScrollView horizontal={true}>
-        {carouselImages.map((item, index) => (
-          <Image
-            key={index}
-            source={{ uri: item }}
-            style={styles.imagenPublicacion}
-          />
-        ))}
-      </ScrollView>
-      <View style={styles.informacion}>
-        <View style={[{ flexDirection: "row" }, styles.containerIconos]}>
-          <TouchableOpacity>
-            <Image
-              source={require("../../Imagenes/compartir.png")}
-              style={styles.iconos}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("ModalTraza", {
-                idPublicationSearch: publicacion.idPublicationSearch,
-                token,
-                userNamePublicacion: publicacion.user.userName,
-              });
-            }}
-          >
-            <Image
-              source={require("../../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png")}
-              style={styles.iconos}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={[{ flexDirection: "row" }, styles.contenedorTitulo]}>
-          <Text style={styles.tituloPublicacion}>{publicacion?.title}</Text>
-          <TouchableOpacity
-            style={styles.botonInformacion}
-            onPress={() => handleNewChat(publicacion?.user)} // Agregar lógica de manejo de clic aquí
-          >
-            <Text>¡Tengo info!</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.containerDescripcion}>
-          <Text style={styles.descripcionPublicacion}>
-            {publicacion?.description}
-          </Text>
-          <View style={[styles.informacionFiltros, { flexDirection: "row" }]}>
-            <View style={styles.derecha}>
-              <View style={[styles.itemInfoFiltro, { flexDirection: "row" }]}>
+      <Header token={token} />
+      {!isProccessing ? (
+        <View>
+          <ScrollView horizontal={true}>
+            {carrouselImages.map((item, index) => (
+              <Image
+                key={index}
+                source={{ uri: item }}
+                style={styles.imagenPublicacion}
+              />
+            ))}
+          </ScrollView>
+          <View style={styles.informacion}>
+            <View style={[{ flexDirection: "row" }, styles.contenedorTitulo]}>
+              <Text style={styles.tituloPublicacion}>{publicacion?.title}</Text>
+              <TouchableOpacity
+                style={styles.botonInformacion}
+                onPress={() => handleNewChat(publicacion?.user)} // Agregar lógica de manejo de clic aquí
+              >
+                <Text>¡Tengo info!</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.contendorIconos}
+                onPress={() => {
+                  navigation.navigate("ModalTraza", {
+                    idPublicationSearch: publicacion.idPublicationSearch,
+                    token,
+                    userNamePublicacion: publicacion.user.userName,
+                  });
+                }}
+              >
                 <Image
-                  source={require("../../Imagenes/marcador-de-posicion.png")}
+                  source={require("../../Imagenes/direction_gps_location_map_maps_navigation_pin_icon_123206.png")}
                   style={styles.iconos}
                 />
-                <Text style={styles.texto}>
-                  {publicacion?.locality.localityName}
-                </Text>
-              </View>
-              <View style={[styles.itemInfoFiltro, { flexDirection: "row" }]}>
-                <Image
-                  source={require("../../Imagenes/hueso.png")}
-                  style={styles.iconos}
-                />
-                <Text style={styles.texto}>
-                  {publicacion?.petBreed.petBreedName}
-                </Text>
-              </View>
-              <View style={[styles.itemInfoFiltro, { flexDirection: "row" }]}>
-                <Image
-                  source={require("../../Imagenes/dueno.png")}
-                  style={styles.iconos}
-                />
-                <Text style={styles.texto}>{publicacion?.user.userName}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.containerDescripcion}>
+              <Text style={styles.descripcionPublicacion}>
+                {publicacion?.description}
+              </Text>
+              <View
+                style={[styles.informacionFiltros, { flexDirection: "row" }]}
+              >
+                <View style={styles.derecha}>
+                  <View
+                    style={[styles.itemInfoFiltro, { flexDirection: "row" }]}
+                  >
+                    <Image
+                      source={require("../../Imagenes/marcador-de-posicion.png")}
+                      style={styles.iconos}
+                    />
+                    <Text style={styles.texto}>
+                      {publicacion?.locality.localityName}
+                    </Text>
+                  </View>
+                  <View
+                    style={[styles.itemInfoFiltro, { flexDirection: "row" }]}
+                  >
+                    <Image
+                      source={require("../../Imagenes/hueso.png")}
+                      style={styles.iconos}
+                    />
+                    <Text style={styles.texto}>
+                      {publicacion?.petBreed.petBreedName}
+                    </Text>
+                  </View>
+                  <View
+                    style={[styles.itemInfoFiltro, { flexDirection: "row" }]}
+                  >
+                    <Image
+                      source={require("../../Imagenes/dueno.png")}
+                      style={styles.iconos}
+                    />
+                    <Text style={styles.texto}>
+                      {publicacion?.user.userName}
+                    </Text>
+                  </View>
+                  {userAutor[0] && (
+                    <View
+                      style={[styles.itemInfoFiltro, { flexDirection: "row" }]}
+                    >
+                      <Image
+                        source={require("../../Imagenes/telefono.png")}
+                        style={styles.iconos}
+                      />
+                      <Text style={styles.texto}>
+                        {userAutor[0].phoneNumber}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+                <View style={styles.izquierda}>
+                  <View
+                    style={[styles.itemInfoFiltro, { flexDirection: "row" }]}
+                  >
+                    <Image
+                      source={require("../../Imagenes/paleta-de-color.png")}
+                      style={styles.iconos}
+                    />
+                    <Text style={styles.texto}>
+                      {publicacion?.petcolor.petColorName}
+                    </Text>
+                  </View>
+                  <View
+                    style={[styles.itemInfoFiltro, { flexDirection: "row" }]}
+                  >
+                    <Image
+                      source={require("../../Imagenes/huella.png")}
+                      style={styles.iconos}
+                    />
+                    <Text style={styles.texto}>
+                      {publicacion?.petBreed.petType.petTypeName}
+                    </Text>
+                  </View>
+                  <View
+                    style={[styles.itemInfoFiltro, { flexDirection: "row" }]}
+                  >
+                    <Image
+                      source={require("../../Imagenes/calendario.png")}
+                      style={styles.iconos}
+                    />
+                    <Text style={styles.texto}>
+                      {formatLostDate(publicacion?.lostDate)}
+                    </Text>
+                  </View>
+                  {userAutor[0] && (
+                    <View
+                      style={[styles.itemInfoFiltro, { flexDirection: "row" }]}
+                    >
+                      <Image
+                        source={require("../../Imagenes/email.png")}
+                        style={styles.iconos}
+                      />
+                      <Text style={styles.texto}>{userAutor[0].mail}</Text>
+                    </View>
+                  )}
+                </View>
               </View>
             </View>
-            <View style={styles.izquierda}>
-              <View style={[styles.itemInfoFiltro, { flexDirection: "row" }]}>
-                <Image
-                  source={require("../../Imagenes/paleta-de-color.png")}
-                  style={styles.iconos}
-                />
-                <Text style={styles.texto}>
-                  {publicacion?.petcolor.petColorName}
-                </Text>
-              </View>
-              <View style={[styles.itemInfoFiltro, { flexDirection: "row" }]}>
-                <Image
-                  source={require("../../Imagenes/huella.png")}
-                  style={styles.iconos}
-                />
-                <Text style={styles.texto}>
-                  {publicacion?.petBreed.petType.petTypeName}
-                </Text>
-              </View>
-              <View style={[styles.itemInfoFiltro, { flexDirection: "row" }]}>
-                <Image
-                  source={require("../../Imagenes/calendario.png")}
-                  style={styles.iconos}
-                />
-                <Text style={styles.texto}>
-                  {formatLostDate(publicacion?.lostDate)}
-                </Text>
-              </View>
-            </View>
+            <TouchableOpacity
+              style={styles.botonDescarga}
+              onPress={() => {
+                // handleCaptureScreen();
+                setIsProcessing(true);
+              }}
+            >
+              <Text>¡Descarga un folleto para compartilo!</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
+      ) : (
+        <View style={{ backgroundColor: "white" }}>
+          <View
+            style={{
+              marginLeft: 10,
+              marginTop: 10,
+              marginBottom: 10,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 20 }}>Vista previa de la captura</Text>
+            {!isDownloading && (
+              <TouchableOpacity
+                style={[
+                  {
+                    marginTop: 3,
+                    padding: 5,
+                    marginLeft: "15%",
+                    backgroundColor: "#DDC4B8",
+                  },
+                ]}
+                onPress={() => {
+                  handleCaptureScreen();
+                }}
+              >
+                <Text>¡Descarga la captura!</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <ViewShot
+            ref={viewShotRef}
+            options={{ format: "jpg", quality: 0.9 }}
+            style={styles.container}
+          >
+            <View style={{ backgroundColor: "white" }}>
+              {carrouselImages.length === 1 && (
+                <Image
+                  source={{ uri: carrouselImages[0] }}
+                  style={{
+                    alignSelf: "center",
+                    width: "95%",
+                    height: "55%",
+                    // aspectRatio: 1,
+                  }}
+                />
+              )}
+              {carrouselImages.length === 2 &&
+                carrouselImages.map((item, index) => (
+                  <Image
+                    key={index}
+                    source={{ uri: item }}
+                    style={{
+                      width: "60%",
+                      height: "28%",
+                      margin: 5,
+                      alignSelf: "center",
+                    }}
+                  />
+                ))}
+              {carrouselImages.length === 3 && (
+                <>
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
+                    <Image
+                      source={{ uri: carrouselImages[0] }}
+                      style={{
+                        width: "45%",
+                        aspectRatio: 1,
+                        margin: 5,
+                      }}
+                    />
+                    <Image
+                      source={{ uri: carrouselImages[1] }}
+                      style={{
+                        width: "45%",
+                        aspectRatio: 1,
+                        margin: 5,
+                      }}
+                    />
+                  </View>
+                  <Image
+                    source={{ uri: carrouselImages[2] }}
+                    style={{
+                      width: "45%",
+                      aspectRatio: 1,
+                      // margin: 5,
+                      alignSelf: "center",
+                    }}
+                  />
+                </>
+              )}
+              {carrouselImages.length === 4 && (
+                <>
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
+                    <Image
+                      source={{ uri: carrouselImages[0] }}
+                      style={{
+                        width: "45%",
+                        aspectRatio: 1,
+                        margin: 5,
+                      }}
+                    />
+                    <Image
+                      source={{ uri: carrouselImages[1] }}
+                      style={{
+                        width: "45%",
+                        aspectRatio: 1,
+                        margin: 5,
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
+                    <Image
+                      source={{ uri: carrouselImages[2] }}
+                      style={{
+                        width: "45%",
+                        aspectRatio: 1,
+                        margin: 5,
+                      }}
+                    />
+                    <Image
+                      source={{ uri: carrouselImages[3] }}
+                      style={{
+                        width: "45%",
+                        aspectRatio: 1,
+                        margin: 5,
+                      }}
+                    />
+                  </View>
+                </>
+              )}
+              <Text
+                style={{
+                  fontSize: 30,
+                  alignSelf: "center",
+                  fontWeight: "bold",
+                  textDecorationLine: "underline",
+                }}
+              >
+                {publicacion.title}
+              </Text>
+              <Text style={{ fontSize: 18, marginLeft: 10, marginRight: 10 }}>
+                {publicacion.description}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  margin: 10,
+                  fontWeight: "bold",
+                }}
+              >
+                Información adcional:
+              </Text>
+              <Text style={{ fontSize: 18, marginLeft: 10, marginRight: 10 }}>
+                Se trata de un {publicacion.petBreed.petType.petTypeName} de
+                raza {publicacion?.petBreed.petBreedName} de color{" "}
+                {publicacion.petcolor.petColorName}. La ultima vez que se lo vió
+                fue en la fecha {formatLostDate(publicacion.lostDate)} en la
+                localidad {publicacion?.locality.localityName}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  margin: 10,
+                  fontWeight: "bold",
+                }}
+              >
+                Contacto:
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  marginLeft: 10,
+                  marginRight: 10,
+                  marginBottom: 20,
+                }}
+              >
+                En caso de tener alguna información comuniquese con{" "}
+                {userAutor[0]?.name} a mi telefono: {userAutor[0]?.phoneNumber}{" "}
+                o a mi mail: {userAutor[0]?.mail}
+              </Text>
+              <Image
+                source={require("../../Imagenes/logo2.png")}
+                style={{
+                  width: 300,
+                  height: 300,
+                  bottom: 0,
+                  position: "absolute",
+                  alignSelf: "center",
+                  opacity: 0.2,
+                }}
+              />
+            </View>
+          </ViewShot>
+        </View>
+      )}
       <Modal
         transparent={true}
         visible={showCongratulationsModal}
@@ -271,43 +562,44 @@ const PublicacionDetalle = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  container: { height: "85%", width: "100%", alignContent: "center" },
+
   imagenPublicacion: {
-    width: 500,
-    height: 380,
+    width: 440,
+    height: 400,
   },
   informacion: {
     backgroundColor: "#ffffff",
-    height: "100%",
+    height: 500,
     width: "100%",
-    borderRadius: 25,
+    borderRadius: 20,
     position: "absolute",
-    marginTop: 480,
+    marginTop: 380,
     padding: 30,
     paddingTop: 20,
   },
   tituloPublicacion: {
     fontSize: 22,
-    marginBottom: 20,
     fontWeight: "bold",
   },
   descripcionPublicacion: {
     fontSize: 16,
   },
-  iconos: {
-    width: 25,
-    height: 25,
-    marginLeft: 10,
-    marginRight: 10,
+  contendorIconos: {
+    position: "absolute",
+    top: 0,
+    right: 0,
   },
-  containerIconos: {
-    marginLeft: "75%",
+  iconos: {
+    width: 30,
+    height: 30,
   },
   containerDescripcion: {
     justifyContent: "space-between",
     height: 280,
   },
   izquierda: {
-    marginLeft: 30,
+    marginLeft: 50,
   },
   itemInfoFiltro: {
     marginTop: 10,
@@ -319,18 +611,19 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   botonInformacion: {
-    backgroundColor: "red",
     padding: 3,
     marginLeft: 10,
+    marginRight: 80,
     height: 30,
     width: 90,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 3,
     backgroundColor: "#DDC4B8",
   },
   contenedorTitulo: {
-    marginTop: 15,
+    marginTop: 10,
+    alignItems: "center",
+    marginBottom: 20,
   },
   modalContainer: {
     flex: 1,
@@ -359,6 +652,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     backgroundColor: "#FFB984", // Cambia el color de fondo del botón de acuerdo a tus preferencias
     borderRadius: 5,
+  },
+  botonDescarga: {
+    marginRight: 80,
+    height: 30,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#DDC4B8",
   },
 });
 

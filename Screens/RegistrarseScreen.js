@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import FormularioRegistrarse from "../componentes/FormularioRegistrarse";
 import axios, { AxiosError } from "axios";
 import BotonImagenRegis from "../componentes/BotonImagenRegis";
+import TerminosCondiciones from "../componentes/TerminosCondiciones";
 
 import { Amplify, Storage } from "aws-amplify";
 import awsconfig from "../src/aws-exports";
@@ -17,6 +18,8 @@ export function RegistrarseScreen({ navigation }) {
   const [showAlert, setShowAlert] = React.useState(false); // Estado para mostrar/ocultar el cuadro de diálogo personalizado
   const [showAlertServer, setShowAlertServer] = React.useState(false); // Estado para mostrar/ocultar el cuadro de diálogo personalizado del back-end
   const [error, setError] = React.useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [aceptoTerminos, setAceptoTerminos] = useState(false);
   const [datosFormulario, setDatosFormulario] = useState({
     nombre: "",
     apellidos: "",
@@ -33,15 +36,22 @@ export function RegistrarseScreen({ navigation }) {
 
   const [errorMessage, setErrorMessage] = React.useState("");
 
+  const handleTerminos = () => {
+    setModalVisible(true); // Abre el modal de términos y condiciones
+  };
+
+  const handleAceptarTerminos = (resultado) => {
+    setAceptoTerminos(resultado);
+    setModalVisible(false);
+  };
+
   const handleSubmit = async () => {
-    console.log("formValid: ", formValid);
-    console.log("formValid: ", datosFormulario);
-    if (formValid) {
+    if (formValid && aceptoTerminos) {
       const data = {
         userName: datosFormulario.usuario,
         mail: datosFormulario.email,
         password: datosFormulario.contrasena,
-        name: datosFormulario.nombre + ", " + datosFormulario.apellidos,
+        name: `${datosFormulario.nombre} ${datosFormulario.apellidos}`,
         phoneNumber: datosFormulario.nroTelefono,
         cuitCuil: datosFormulario.cuitCuil,
         address: datosFormulario.domicilio,
@@ -74,28 +84,51 @@ export function RegistrarseScreen({ navigation }) {
         setShowAlertServer(true);
       }
     } else {
+      setErrorMessage("");
       let errorText = "Revise todos los campos";
       if (datosFormulario.nombre.trim() === "") {
         errorText = "Por favor, complete el nombre.";
+        setErrorMessage(errorText);
+        return;
       } else if (datosFormulario.contrasena !== datosFormulario.contrasena2) {
         errorText = "Las contraseñas no coinciden.";
+        setErrorMessage(errorText);
+        return;
       } else if (datosFormulario.usuario.trim() === "") {
         errorText = "Por favor, complete el nombre de usuario.";
+        setErrorMessage(errorText);
+        return;
       } else if (datosFormulario.email.trim() === "") {
         errorText = "Por favor, complete el mail.";
+        setErrorMessage(errorText);
+        return;
       } else if (datosFormulario.apellidos.trim() === "") {
         errorText = "Por favor, complete lo/s apellido/s.";
+        setErrorMessage(errorText);
+        return;
       } else if (datosFormulario.domicilio.trim() === "") {
         errorText = "Por favor, complete el domicilio.";
+        setErrorMessage(errorText);
+        return;
       } else if (datosFormulario.fechaNacimiento.trim() === "") {
         errorText = "Por favor, complete la fecha de nacimiento.";
+        setErrorMessage(errorText);
+        return;
       } else if (datosFormulario.cuitCuil.trim() === "") {
         errorText = "Por favor, complete el Cuit/Cuil.";
+        setErrorMessage(errorText);
+        return;
       } else if (datosFormulario.nroTelefono.trim() === "") {
-        errorText = "Por favor, complete el numero de telefono.";
+        errorText = "Por favor, complete el número de teléfono.";
+        setErrorMessage(errorText);
+        return;
       }
-
-      setErrorMessage(errorText);
+      console.log(aceptoTerminos, formValid);
+      if (!aceptoTerminos && formValid) {
+        errorText = "Debe aceptar los terminos y condiciones";
+        setErrorMessage(errorText);
+        return;
+      }
       console.log(errorMessage);
     }
   };
@@ -119,7 +152,19 @@ export function RegistrarseScreen({ navigation }) {
         datosFormulario={datosFormulario}
         onDatosChange={setDatosFormulario} // Aquí ahora pasamos el setter directamente
       />
+      <TouchableOpacity
+        style={styles.terminos}
+        onPress={() => {
+          handleTerminos();
+        }}
+      >
+        <Text style={styles.textoTerminos}>Aceptar términos y condiciones</Text>
+      </TouchableOpacity>
 
+      <TerminosCondiciones
+        visible={modalVisible}
+        onClose={handleAceptarTerminos}
+      />
       <View style={styles.footerBoton}>
         <TouchableOpacity
           style={[
@@ -228,7 +273,7 @@ const styles = StyleSheet.create({
   },
 
   botonRegistro: {
-    marginTop: 70,
+    marginTop: 10,
     backgroundColor: "#FFB984",
     alignItems: "center",
     justifyContent: "center",
@@ -267,6 +312,15 @@ const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: 16,
     color: "#fff",
+  },
+  terminos: {
+    marginBottom: 60,
+    marginTop: 10,
+  },
+  textoTerminos: {
+    fontSize: 16,
+    textDecorationLine: "underline",
+    textAlign: "center",
   },
 });
 

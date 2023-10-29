@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 
-const MenuHorizontal = ({ openModal, notificacionReaded }) => {
+const MenuHorizontal = ({ openModal, notificacionReaded, permisos }) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { token } = route.params;
@@ -80,7 +80,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded }) => {
     >
       <TouchableOpacity
         style={styles.menuItem}
-        onPress={() => navigation.navigate("MiPerfil", { token })}
+        onPress={() => navigation.navigate("MiPerfil", { token, permisos })}
       >
         <Image source={{ uri: user.image }} style={styles.imagenMenu} />
       </TouchableOpacity>

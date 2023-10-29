@@ -18,8 +18,7 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
   const [title, setTitle] = useState(""); // Estado para el título
   const [description, setDescription] = useState(""); // Estado para la descripción
   const navigation = useNavigation();
-
-  console.log("RatingModal: ", token);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const resetValues = () => {
     setTitle("");
@@ -54,15 +53,14 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
       .then((response) => {
         // Aquí puedes manejar la respuesta exitosa si es necesario
         console.log("Respuesta del servidor:", response.data);
+        onClose();
+        navigation.navigate("HomeScreen", { token });
       })
       .catch((error) => {
         // Manejar errores de la solicitud POST
         console.error("Error en la solicitud POST:", error);
+        setErrorMessage("No se puede calificar un servicio propio");
       });
-
-    // Cerrar el modal después de enviar la calificación
-    onClose();
-    navigation.navigate("HomeScreen", { token });
   };
 
   return (
@@ -127,6 +125,25 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
           </View>
         </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={!!errorMessage}
+        onRequestClose={() => {
+          setErrorMessage("");
+        }}
+      >
+        <View style={styles.modalConfirmationContainer}>
+          <View style={styles.modalConfirmationContent}>
+            <Text style={styles.modalConfirmationText}>{errorMessage}</Text>
+            <View style={styles.modalConfirmationButtons}>
+              <TouchableOpacity onPress={() => setErrorMessage("")}>
+                <Text style={styles.modalConfirmationCancelButton}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </Modal>
   );
 };
@@ -197,6 +214,38 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: "black",
+  },
+  modalConfirmationContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalConfirmationContent: {
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalConfirmationText: {
+    fontSize: 16,
+    marginBottom: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalConfirmationButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  modalConfirmationCancelButton: {
+    backgroundColor: "#CCCCCC",
+    padding: 10,
+    marginHorizontal: 10,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 

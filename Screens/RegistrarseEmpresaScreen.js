@@ -20,12 +20,16 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Amplify, Storage } from "aws-amplify";
 import awsconfig from "../src/aws-exports";
+import TerminosCondiciones from "../componentes/TerminosCondiciones";
 Amplify.configure(awsconfig);
 
 export function RegistrarseEmpresaScreen({}) {
   const [nombre, setNombre] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [isValidEmail, setIsValidEmail] = React.useState(true);
+  const [isValidNro, setIsValidNro] = React.useState(true);
+  const [isValidCuit, setIsValidCuit] = React.useState(true);
+  const [isValidFecha, setIsValidFecha] = React.useState(true);
   const [usuario, setUsuario] = React.useState("");
   const [contrasena, setContrasena] = React.useState("");
   const [contrasena2, setContrasena2] = React.useState("");
@@ -53,6 +57,8 @@ export function RegistrarseEmpresaScreen({}) {
   const [cuitCuilError, setCuitCuilError] = React.useState(false);
   const [nroTelefonoError, setNroTelefonoError] = React.useState(false);
   const [linkAWSError, setLinkAWSError] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [aceptoTerminos, setAceptoTerminos] = React.useState(false);
 
   const [mostrarTexto, setMostrarTexto] = React.useState(false);
   const [mostrarTextoContrasena2, setMostrarTextoContrasena2] =
@@ -158,6 +164,52 @@ export function RegistrarseEmpresaScreen({}) {
     setIsValidEmail(emailRegex.test(text));
   };
 
+  const handleFechaChange = (fecha) => {
+    setFechaNacimiento(fecha);
+    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!fechaRegex.test(fecha)) {
+      setIsValidFecha(false);
+      return;
+    }
+
+    const partesFecha = fecha.split("-");
+    const año = parseInt(partesFecha[0], 10);
+    const mes = parseInt(partesFecha[1], 10);
+    const dia = parseInt(partesFecha[2], 10);
+
+    const fechaActual = new Date();
+    const añoActual = fechaActual.getFullYear();
+
+    if (año > añoActual || mes < 1 || mes > 12 || dia < 1 || dia > 31) {
+      setIsValidFecha(false);
+      return;
+    }
+
+    setIsValidFecha(true);
+  };
+
+  const handleNroChange = (nro) => {
+    const numeroRegex = /^[0-9]{10}$/;
+    setNroTelefono(nro);
+
+    if (numeroRegex.test(nro)) {
+      setIsValidNro(true);
+    } else {
+      setIsValidNro(false);
+    }
+  };
+
+  const handleCuitChange = (cuit) => {
+    const cuitRegex = /^[0-9]{11,12}$/;
+    setCuitCuil(cuit);
+
+    if (cuitRegex.test(cuit)) {
+      setIsValidCuit(true);
+    } else {
+      setIsValidCuit(false);
+    }
+  };
+
   const validateForm = () => {
     const isEmailValid = email !== "" && isValidEmail;
     const isNombreValid = nombre !== "";
@@ -195,22 +247,10 @@ export function RegistrarseEmpresaScreen({}) {
       isLinkAWSValid &&
       isNroTelefonoValid &&
       isFechaNacimientoValid &&
-      isCuitCuilValid;
+      isCuitCuilValid &&
+      aceptoTerminos;
 
     setFormValid(isFormValid);
-
-    console.log("Email Error:", emailError);
-    console.log("Nombre Error:", nombreError);
-    console.log("Usuario Error:", usuarioError);
-    console.log("Contraseña Error:", contrasenaError);
-    console.log("Confirmación de Contraseña Error:", contrasena2Error);
-    console.log("Checkbox Error:", checkBoxError);
-    console.log("Form Valid:", isFormValid);
-    console.log("awsLink Error:", linkAWS);
-    console.log("Domicilio Error:", linkAWS);
-    console.log("Nro de telefono Error:", linkAWS);
-    console.log("CuitCuil Error:", linkAWS);
-    console.log("Fecha creacion Error:", linkAWS);
   };
 
   ///// upload image ////
@@ -326,6 +366,15 @@ export function RegistrarseEmpresaScreen({}) {
       cuitCuil,
       awsImageLink,
     });
+  };
+
+  const handleAceptarTerminos = (resultado) => {
+    setAceptoTerminos(resultado)
+    setModalVisible(false)
+  };
+
+  const handleTerminos = () => {
+    setModalVisible(true); // Abre el modal de términos y condiciones
   };
 
   return (
@@ -458,8 +507,15 @@ export function RegistrarseEmpresaScreen({}) {
               style={[styles.input, usuarioError && styles.inputError]} // Aplicar estilo de error si hay un error en el usuario
               placeholder="Numero de teléfono"
               value={nroTelefono}
-              onChangeText={setNroTelefono}
+              onChangeText={handleNroChange}
             />
+          </View>
+          <View style={styles.controlContainer}>
+            {!isValidNro && (
+              <Text style={styles.textoContrasena2}>
+                Ingrese un número válido
+              </Text>
+            )}
           </View>
           <View style={styles.inputContainer}>
             <Image
@@ -470,10 +526,17 @@ export function RegistrarseEmpresaScreen({}) {
               style={[styles.input, usuarioError && styles.inputError]} // Aplicar estilo de error si hay un error en el usuario
               placeholder="Fecha de fundación"
               value={fechaNacimiento}
-              onChangeText={setFechaNacimiento}
+              onChangeText={handleFechaChange}
             />
           </View>
-          <Text style={styles.textoContrasena2}>
+          <View style={styles.controlContainer}>
+            {!isValidFecha && (
+              <Text style={styles.textoContrasena2}>
+                Ingrese una fecha válida
+              </Text>
+            )}
+          </View>
+          <Text style={styles.textoContrasena}>
             El formato de fecha debe ser aaaa-mm-dd
           </Text>
 
@@ -486,11 +549,18 @@ export function RegistrarseEmpresaScreen({}) {
               style={[styles.input, usuarioError && styles.inputError]} // Aplicar estilo de error si hay un error en el usuario
               placeholder="Cuit / Cuil"
               value={cuitCuil}
-              onChangeText={setCuitCuil}
+              onChangeText={handleCuitChange}
             />
           </View>
-          <Text style={styles.textoContrasena2}>
-            El CUIT/CUIL debe tener 11 dígitos numéricos
+          <View style={styles.controlContainer}>
+            {!isValidCuit && (
+              <Text style={styles.textoContrasena2}>
+                Ingrese un CUIT/CUIL válido
+              </Text>
+            )}
+          </View>
+          <Text style={styles.textoContrasena}>
+            El CUIT/CUIL debe ingresarlo sin guiones
           </Text>
 
           <View>
@@ -539,6 +609,10 @@ export function RegistrarseEmpresaScreen({}) {
                 onBlur={() => setMostrarTextoContrasena2(false)}
               />
             </View>
+            <TouchableOpacity style={styles.terminos} onPress={()=>{handleTerminos()}}>
+              <Text style={styles.textoTerminos}>Aceptar términos y condiciones</Text>
+            </TouchableOpacity>
+            <TerminosCondiciones visible={modalVisible} onClose={handleAceptarTerminos} />
             <View style={styles.controlContainer}>
               {mostrarTextoContrasena2 && contrasena2 !== contrasena && (
                 <Text style={styles.textoContrasena2}>
@@ -735,5 +809,15 @@ const styles = StyleSheet.create({
   foto: {
     width: 30,
     height: 30,
+  },
+  terminos: {
+    marginBottom: 60,
+    marginTop: 10,
+    
+  },
+  textoTerminos: {
+    fontSize: 16,
+    textDecorationLine: "underline",
+    textAlign: 'center',
   },
 });

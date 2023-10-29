@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
+  Modal,
 } from "react-native";
 import HeaderScreen from "../componentes/HeaderScreen";
 import axios from "axios"; // Importar Axios
@@ -18,7 +20,7 @@ import DenunciasModalServicio from "../componentes/Denuncias/DenunciasModalServc
 
 export default function ServiciosScreen({ navigation }) {
   const route = useRoute(); // Obtiene la prop route
-  const { token } = route.params;
+  const { token, permisos } = route.params;
   const [servicios, setServicios] = useState([]);
   const [buttonTransform, setButtonTransform] = useState(0);
   const [originalServicios, setOriginalServicios] = useState([]);
@@ -28,10 +30,14 @@ export default function ServiciosScreen({ navigation }) {
   const [selectedUserToReport, setSelectedUserToReport] = useState(null);
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const [filteredType, setFilteredType] = useState(null);
+  const [selectedZone, setSelectedZone] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
     const obtenerServicios = async () => {
       try {
+        setisLoading(true);
         const response = await axios.get(
           "https://buddy-app2.loca.lt/services/service/",
           {
@@ -50,6 +56,8 @@ export default function ServiciosScreen({ navigation }) {
         }
       } catch (error) {
         console.error("Error al obtener los servicios:", error);
+      } finally {
+        setisLoading(false);
       }
     };
 
@@ -58,7 +66,7 @@ export default function ServiciosScreen({ navigation }) {
 
   // Función para manejar la navegación a ServiciosDetalle y pasar el servicio seleccionado
   const navigateToServicioDetalle = (servicio) => {
-    navigation.navigate("ServiciosDetalle", { servicio, token });
+    navigation.navigate("ServiciosDetalle", { servicio, token, permisos });
   };
 
   // Agrupar servicios por serviceTypeName
@@ -99,6 +107,31 @@ export default function ServiciosScreen({ navigation }) {
     }
   };
 
+  const handleFilterChangeHora = (filtro, tipo) => {
+    console.log("Mostras desde handleFilterChangeHora: ", filtro);
+    // Si filtro es null, muestra todos los servicios originales
+    if (tipo == "Limpiar" || filtro == null) {
+      setServicios(originalServicios);
+      return;
+    }
+    if (tipo == "24HS") {
+      const serviciosFiltrados = originalServicios.filter(
+        (servicio) => servicio.open24hs === filtro
+      );
+      // Actualiza el estado con los servicios filtrados
+      setServicios(serviciosFiltrados);
+      return;
+    } else {
+      // Filtra los servicios según el tipo de servicio seleccionado
+      const serviciosFiltrados = originalServicios.filter(
+        (servicio) => servicio.idLocality === filtro
+      );
+      // Actualiza el estado con los servicios filtrados
+      setServicios(serviciosFiltrados);
+      return;
+    }
+  };
+
   const handleDenunciar = () => {
     setDenunciaModalVisible(true);
     setReportModalVisible(false); // Cierra el modal de reporte
@@ -113,13 +146,31 @@ export default function ServiciosScreen({ navigation }) {
     setDenunciaModalVisible(true);
   };
 
+  const handleZoneSelect = (zone) => {
+    setSelectedZone(zone);
+    // Aplicar el filtro por zona seleccionada
+    if (zone) {
+      const serviciosFiltradosPorZona = originalServicios.filter(
+        (servicio) => servicio.zone === zone
+      );
+      setServicios(serviciosFiltradosPorZona);
+    } else {
+      // Si no se selecciona ninguna zona, mostrar todas las publicaciones originales
+      setServicios(originalServicios);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <HeaderScreen />
+      <HeaderScreen token={token} />
       <View style={styles.contenedor1}>
         <Text style={styles.titulo}>Servicios para tu mascota</Text>
         <BotonesFiltroServicios onFilterChange={handleFilterChange} />
-        <BarraBusquedaServicios onSearch={handleSearch} />
+        <BarraBusquedaServicios
+          onSearch={handleSearch}
+          onFilterChangeHora={handleFilterChangeHora}
+          token={token}
+        />
 
         {Object.keys(serviciosAgrupados).map((typeName) => (
           <View key={typeName}>
@@ -165,8 +216,20 @@ export default function ServiciosScreen({ navigation }) {
           { transform: [{ translateY: buttonTransform }] },
         ]}
       >
-        <BotonFlotante token={token} />
+        <BotonFlotante
+          token={token}
+          permisos={permisos}
+          permisosNecesario={"CREATE_SERVICIOS"}
+        />
       </View>
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -219,5 +282,27 @@ const styles = StyleSheet.create({
     bottom: 20, // Puedes ajustar esta cantidad según tus preferencias
     right: 20, // Puedes ajustar esta cantidad según tus preferencias
     transform: [{ translateY: 0 }], // Inicialmente no se desplaza
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+  },
+  imagenFiltrar: {
+    width: 30,
+    height: 30,
+    marginTop: 10,
   },
 });

@@ -9,6 +9,8 @@ import {
   Dimensions,
   Modal,
   TouchableWithoutFeedback,
+  ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import MenuHorizontal from "../componentes/MenuHorizontal";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
@@ -22,34 +24,41 @@ export default function HomeScreen({ navigation }) {
   const [adoptionQuantity, setAdoptionQuantity] = useState("");
   const [lostPetsQuantity, setLostPetsQuantity] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalConfirmationVisible, setModalConfirmationVisible] =
+    useState(false);
   const [notificacion, setNotifications] = useState(false);
   const [notificacionReaded, setNotificationsReaded] = useState(false);
   const [infoUsuario, setInfoUsuario] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const { token } = route.params;
+  const [homeScreen, setHomeScreen] = useState(true);
 
   const buttons = [
     {
       title: "Encontrar mi mascota",
       image: require("../Imagenes/lupa.png"),
       permission: "READ_PUBLICACION_BUSQUEDA",
-      onPress: () => navigation.navigate("BusquedaScreen", { token }),
+      onPress: () => navigation.navigate("BusquedaScreen", { token, permisos }),
     },
     {
       title: "Adoptar una mascota",
       image: require("../Imagenes/mascota.png"),
       permission: "READ_PUBLICACION_ADOPCION",
-      onPress: () => navigation.navigate("AdoptarScreen", { token }),
+      onPress: () => navigation.navigate("AdoptarScreen", { token, permisos }),
     },
     {
       title: "Servicios para mi mascota",
       image: require("../Imagenes/perro.png"),
       permission: "READ_SERVICIOS",
-      onPress: () => navigation.navigate("ServiciosScreen", { token }),
+      onPress: () =>
+        navigation.navigate("ServiciosScreen", { token, permisos }),
     },
     {
       title: "Mi mascota",
       image: require("../Imagenes/huella.png"),
       permission: "READ_MI_MASCOTA",
-      onPress: () => navigation.navigate("MiMascotaScreen", { token }),
+      onPress: () =>
+        navigation.navigate("MiMascotaScreen", { token, permisos }),
     },
     {
       title: "Reportes",
@@ -105,6 +114,27 @@ export default function HomeScreen({ navigation }) {
     // Agrega más botones aquí
   ];
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => {
+        backHandler.remove();
+      };
+    }, [])
+  );
+
+  const backAction = () => {
+    if (route.name === "HomeScreen") {
+      openConfirmationModal();
+      return true; // Evita que el botón de retroceso cierre la aplicación
+    }
+    return false; // Deja que el botón de retroceso funcione normalmente en otras pantallas
+  };
+
   const fetchNotifications = async () => {
     try {
       const response = await axios.get(
@@ -119,16 +149,11 @@ export default function HomeScreen({ navigation }) {
       if (response.status === 200) {
         setNotifications(response.data.notifications);
 
-        // Contar notificaciones con el atributo 'readed' en true
         const readNotificationsCount = response.data.notifications.filter(
           (notification) => notification.readed === false
         ).length;
+
         setNotificationsReaded(readNotificationsCount);
-        // Mostrar la cantidad de notificaciones con 'readed' en true en la consola
-        console.log(
-          "Cantidad de notificaciones con readed en true:",
-          readNotificationsCount
-        );
       } else {
         console.error("Error al obtener las notificaciones");
       }
@@ -138,16 +163,20 @@ export default function HomeScreen({ navigation }) {
   };
 
   useEffect(() => {
-    obtenerInformes();
-    obtenerPermisos();
-    fetchNotifications();
-    //const intervalId = setInterval(() => {
-    //fetchNotifications();
-    //}, 5000); // 5000 milisegundos = 5 segundos
-
-    // Limpia el intervalo cuando el componente se desmonta
-    //return () => clearInterval(intervalId);
-  }, [token]);
+    const fetchData = async () => {
+      try {
+        setisLoading(true);
+        await obtenerInformes();
+        await obtenerPermisos();
+        await fetchNotifications();
+      } catch (error) {
+        console.error("Error en la operación asincrónica:", error);
+      } finally {
+        setisLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const obtenerInformes = async () => {
     try {
@@ -176,17 +205,21 @@ export default function HomeScreen({ navigation }) {
     }
   }; // No hay dependencias, se ejecutará en cada renderizado del componente
 
-  useFocusEffect(
-    React.useCallback(() => {
-      obtenerPermisos();
-      obtenerInformes();
-      fetchNotifications();
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     setisLoading(true);
+  //     obtenerPermisos();
+  //     obtenerInformes();
+  //     fetchNotifications();
+  //     setisLoading(false);
+  //   }, [])
+  // );
 
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("auth-token");
+      await AsyncStorage.removeItem("permisos");
+      setModalConfirmationVisible(false);
       navigation.navigate("InicioScreen");
     } catch (error) {
       setLogoutError("Hubo un error al cerrar sesión.");
@@ -218,8 +251,9 @@ export default function HomeScreen({ navigation }) {
     }
   }
 
-  // Accede al parámetro token
-  const { token } = route.params;
+  const openConfirmationModal = () => {
+    setModalConfirmationVisible(true);
+  };
 
   const openModal = () => {
     setModalVisible(true);
@@ -233,7 +267,7 @@ export default function HomeScreen({ navigation }) {
     const rows = [];
     let currentRow = [];
 
-    if (!permisos[0] || permisos.length === 0) {
+    if (permisos.length === 0) {
       return null;
     }
 
@@ -270,11 +304,12 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#DDC4B8" }}>
       <View style={styles.home}>
         <Image source={require("../Imagenes/logo2.png")} style={styles.logo} />
         <MenuHorizontal
           token={token}
+          permisos={permisos}
           openModal={openModal}
           notificacionReaded={notificacionReaded}
         />
@@ -313,9 +348,52 @@ export default function HomeScreen({ navigation }) {
           >
             <Text style={styles.textAyuda}>Ayuda</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botonAyuda} onPress={handleLogout}>
+          <TouchableOpacity
+            style={styles.botonAyuda}
+            onPress={openConfirmationModal}
+          >
             <Text style={styles.textAyuda}>Cerrar Sesión</Text>
           </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalConfirmationVisible}
+        onRequestClose={() => {
+          setModalConfirmationVisible(false);
+        }}
+      >
+        <View style={styles.modalConfirmationContainer}>
+          <View style={styles.modalConfirmationContent}>
+            <Text style={styles.modalConfirmationText}>
+              ¿Estás seguro que quieres cerrar sesión?
+            </Text>
+            <View style={styles.modalConfirmationButtons}>
+              <TouchableOpacity
+                onPress={() => setModalConfirmationVisible(false)}
+              >
+                <Text style={styles.modalConfirmationCancelButton}>
+                  Cancelar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleLogout}>
+                <Text style={[styles.modalConfirmationConfirmButton]}>
+                  Confirmar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
         </View>
       </Modal>
     </ScrollView>
@@ -444,5 +522,63 @@ const styles = StyleSheet.create({
   textAyuda: {
     fontSize: 16,
     padding: 5,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+  },
+  modalConfirmationContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalConfirmationContent: {
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalConfirmationText: {
+    fontSize: 16,
+    marginBottom: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalConfirmationButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  modalConfirmationConfirmButton: {
+    backgroundColor: "#FFB988",
+    marginHorizontal: 10,
+    padding: 10,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  modalConfirmationCancelButton: {
+    backgroundColor: "#CCCCCC",
+    padding: 10,
+    marginHorizontal: 10,
+    borderRadius: 5,
+    color: "#fff",
+    fontWeight: "bold",
   },
 });

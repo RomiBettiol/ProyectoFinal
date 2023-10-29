@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import Header from "../componentes/HeaderScreen";
 import BotonMenu from "../componentes/BotonMenu";
 import axios from "axios";
@@ -14,9 +14,10 @@ export default function ReportesScreen() {
   const [adoptionQuantity, setAdoptionQuantity] = useState("");
   const route = useRoute();
   const { token } = route.params;
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
-    // Realizar la solicitud GET utilizando Axios
+    setisLoading(true);
     axios
       .get("https://buddy-app2.loca.lt/reports/count/founds-success", {
         headers: {
@@ -107,15 +108,16 @@ export default function ReportesScreen() {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
         setAdoptionQuantity(quantity); // Actualizar el estado con el valor quantity
+        setisLoading(false);
       })
       .catch((error) => {
         console.error("Error al obtener el contador:", error);
       });
-  }, []);
+  }, [token]);
 
   return (
     <View>
-      <Header />
+      <Header token={token} />
       <Text style={styles.titulo}>Reportes</Text>
       <View style={styles.Container}>
         <View style={[styles.informeUsuariosActivos, { flexDirection: "row" }]}>
@@ -157,6 +159,14 @@ export default function ReportesScreen() {
         </View>
       </View>
       <BotonMenu />
+      <Modal visible={isLoading} transparent>
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -236,5 +246,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     elevation: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });
