@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Dimensions } from 'react-native';
 
 
@@ -15,7 +15,31 @@ const VaccinModal = ({ visible, vaccinContent, onClose, vaccin }) => {
     console.log('ATENTE:', day)
     const [hora, setHora] = useState(hor);
     const [minutos, setMinutos] = useState(min);
-    
+
+
+    const datePartsProx = vaccin.nextVaccineDate ? vaccin.nextVaccineDate.split('-') : [null, null, null];
+    const yearProx = datePartsProx[2] ? parseInt(datePartsProx[2], 10) : null;
+    const monthProx = datePartsProx[1] ? parseInt(datePartsProx[1], 10) : null;
+    const dayProx = datePartsProx[0] ? parseInt(datePartsProx[0], 10) : null;
+
+    const [showNextDoseDate, setShowNextDoseDate] = useState(false);
+
+   // En tu componente EditarVaccin, dentro de la función return, antes de usarlos:
+ 
+const formattedDay = day ? day.toString().padStart(2, '0') : '';
+const formattedMonth =month ? month.toString().padStart(2, '0') : '';
+const formattedYear = year ? year.toString().padStart(4, '0') : '';
+
+const formattedYearProx = yearProx ? yearProx.toString().padStart(4, '0') : '';
+const formattedMonthProx = monthProx ? monthProx.toString().padStart(2, '0') : '';
+const formattedDayProx = dayProx  ? dayProx .toString().padStart(2, '0') : '';
+
+    useEffect(() => {
+        
+        console.log("DOSISSSSSS ", vaccin.doseQuantity )      
+        // Actualizar el estado para mostrar u ocultar la fecha de próxima dosis
+        setShowNextDoseDate(parseInt(vaccin.doseQuantity, 10) > 1);
+      }, [vaccin.doseQuantity]);
     return (
         <View>
           <View style={styles.modalContainer}>
@@ -40,6 +64,76 @@ const VaccinModal = ({ visible, vaccinContent, onClose, vaccin }) => {
             value={vaccin.descriptionVaccine}
             />
           </View>
+
+          <View style={styles.subcontenedor1}>
+            <Text style={styles.tituloDescripcion}>Cantidad de dosis</Text>
+            <TextInput
+              style={styles.inputTextoCant}
+              value={vaccin.doseQuantity.toString()}
+              editable={false} // Campo de solo lectura
+            />
+          </View>
+          {/* Mostrar los elementos relacionados con la fecha de próxima dosis si es necesario */}
+          {showNextDoseDate &&(
+            <>
+            <View style={styles.subcontenedor1}>
+                <Text style={styles.tituloDescripcion}>Fecha de próxima dosis</Text>
+                <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
+                                <TextInput
+                                    style={styles.input}
+                                    value={formattedYearProx.toString()}
+                                    maxLength={2}
+                                    minLength={2}
+                                    editable={false} // Campo de solo lectura
+                                />
+                                <Text style={styles.inputDivider}> - </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    value={formattedMonthProx.toString()}
+                                    maxLength={2}
+                                    minLength={2}
+                                    editable={false} // Campo de solo lectura
+                                />
+                                <Text style={styles.inputDivider}> - </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    value={formattedDayProx.toString()}
+                                    maxLength={4}
+                                    minLength={4}
+                                    editable={false} // Campo de solo lectura
+                                />
+                    </View>
+            </View>
+              
+            </>
+          )}
+          
+          <Text style={styles.tituloDescripcion}>Fecha de turno</Text>
+          <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
+                            <TextInput
+                                style={styles.input}
+                                value={formattedDay.toString()}
+                                maxLength={2}
+                                minLength={2}
+                                editable={false} // Campo de solo lectura
+                            />
+                            <Text style={styles.inputDivider}> - </Text>
+                            <TextInput
+                                style={styles.input}
+                                value={formattedMonth.toString()}
+                                maxLength={2}
+                                minLength={2}
+                                editable={false} // Campo de solo lectura
+                            />
+                            <Text style={styles.inputDivider}> - </Text>
+                            <TextInput
+                                style={styles.input}
+                                value={formattedYear.toString()}
+                                maxLength={4}
+                                minLength={4}
+                                editable={false} // Campo de solo lectura
+                            />
+          </View>
           <View style={styles.inputContainer}>
                         <Text style={styles.label}>Hora:</Text>
                         <View style={styles.horaInputContainer}>
@@ -58,29 +152,6 @@ const VaccinModal = ({ visible, vaccinContent, onClose, vaccin }) => {
                             />
                         </View>
             </View>
-          <Text style={styles.textoFecha}>Fecha de turno</Text>
-          <View style={[{ flexDirection: 'row' }, styles.subcontenedor4]}>
-                            <TextInput
-                                style={styles.input}
-                                value={day.toString()}
-                                maxLength={2}
-                                editable={false} // Campo de solo lectura
-                            />
-                            <Text style={styles.inputDivider}> - </Text>
-                            <TextInput
-                                style={styles.input}
-                                value={month.toString()}
-                                maxLength={2}
-                                editable={false} // Campo de solo lectura
-                            />
-                            <Text style={styles.inputDivider}> - </Text>
-                            <TextInput
-                                style={styles.input}
-                                value={year.toString()}
-                                maxLength={4}
-                                editable={false} // Campo de solo lectura
-                            />
-          </View>
           <View style={[{ flexDirection: 'row' }, styles.subcontenedor5]}>
             <TouchableOpacity
                           style={styles.closeButton}
@@ -108,7 +179,7 @@ const styles = StyleSheet.create({
       borderRadius: 25,
       padding: 20,
       width: windowWidth * 0.95,
-      height:windowHeight * 0.65,
+      height:windowHeight * 0.9,
       textAlign: 'center',
       alignItems: 'center', // Para centrar horizont
   },
@@ -126,9 +197,22 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
     },
+    cantVaccin:{
+        width: '100%',
+    },
     inputTexto: {
         backgroundColor: '#EEE9E9',
         width: '90%',
+        height: 32,
+        borderRadius: 100,
+        textAlign: 'center',
+        paddingStart:5,
+        marginHorizontal:2,
+        color:'black'
+    },
+    inputTextoCant: {
+        backgroundColor: '#EEE9E9',
+        width: '100%',
         height: 32,
         borderRadius: 100,
         textAlign: 'center',
@@ -142,7 +226,7 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 10,
         textAlign: 'center',
-        marginVertical:20,        
+        marginVertical:10,        
         color:'black',
     },
     textoFecha: {
@@ -194,6 +278,7 @@ const styles = StyleSheet.create({
   tituloDescripcion:{
     marginStart:0,
     marginTop:10,
+    marginBottom:10,
   },
   });
       

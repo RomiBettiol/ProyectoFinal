@@ -18,7 +18,7 @@ export default function ReportesScreen() {
   useEffect(() => {
     // Realizar la solicitud GET utilizando Axios
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/founds-success", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /reports/count/founds-success", {
         headers: {
           "auth-token": token,
         },
@@ -34,7 +34,7 @@ export default function ReportesScreen() {
 
     // Servicios activos
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/services-actives", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /reports/count/services-actives", {
         headers: {
           "auth-token": token,
         },
@@ -50,7 +50,7 @@ export default function ReportesScreen() {
 
     // Usuarios activos
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/users-actives", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /reports/count/users-actives", {
         headers: {
           "auth-token": token,
         },
@@ -66,7 +66,7 @@ export default function ReportesScreen() {
 
     // Mascotas perdidas
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/losts-actives", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /reports/count/losts-actives", {
         headers: {
           "auth-token": token,
         },
@@ -82,7 +82,7 @@ export default function ReportesScreen() {
 
     // Mascotas en adopción
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/adoptions-actives", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /reports/count/adoptions-actives", {
         headers: {
           "auth-token": token,
         },
@@ -98,7 +98,7 @@ export default function ReportesScreen() {
 
     // Mascotas adoptadas
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/adoptions-success", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /reports/count/adoptions-success", {
         headers: {
           "auth-token": token,
         },

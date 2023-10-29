@@ -37,6 +37,7 @@ export default function EditarTurno({
   const [selectedMonth, setSelectedMonth] = useState(month);
   const [selectedDay, setSelectedDay] = useState(day);
   const [selectedYear, setSelectedYear] = useState(year);
+  console.log("a ver...", year, month, day)
   const [hora, setHora] = useState(hor);
   const [minutos, setMinutos] = useState(min);
   const [titleTurn, setTitleTurn] = useState(turno.titleTurn);
@@ -44,6 +45,12 @@ export default function EditarTurno({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
+
+  const formattedDay = selectedDay.toString().padStart(2, '0');
+  const formattedMonth = selectedMonth.toString().padStart(2, '0');
+  const formattedMinutes = minutos.toString().padStart(2, '0');
+  const formattedHour = hora.toString().padStart(2, '0');
+  const formattedYear = selectedYear.toString().padStart(4, '0');
 
   const [turnData, setTurnData] = useState({
     titleTurn: "",
@@ -74,11 +81,43 @@ export default function EditarTurno({
         error: "Ingrese una hora válida (00-23) y minutos válidos (00-59)",
       });
     }
-  }, [turnData.hora, turnData.minutos]);
+    // Validar la fecha
+    const fechaValida =
+    /^\d{4}$/.test(selectedYear) &&
+    /^\d{2}$/.test(selectedMonth) &&
+    /^\d{2}$/.test(selectedDay) &&
+    parseInt(selectedYear, 10) >= new Date().getFullYear() &&
+    parseInt(selectedMonth, 10) >= 1 &&
+    parseInt(selectedMonth, 10) <= 12 &&
+    parseInt(selectedDay, 10) >= 1 &&
+    parseInt(selectedDay, 10) <= new Date(selectedYear, selectedMonth, 0).getDate();
+
+    // Validar la fecha
+    if (fechaValida) {
+      const daysInMonth = new Date(selectedYear, parseInt(selectedMonth, 10), 0).getDate();
+      if (selectedDay >= 1 && selectedDay <= daysInMonth) {
+        setTurnData({ ...turnData, error: null });
+        setIsButtonDisabled(false);
+      } else {
+        setTurnData({
+          ...turnData,
+          error: "El día ingresado no es válido para el mes seleccionado",
+        });
+        setIsButtonDisabled(true);
+      }
+    } else {
+      setTurnData({
+        ...turnData,
+        error: "La fecha debe ser mayor o igual a la fecha actual y el mes debe estar entre 1 y 12",
+      });
+      setIsButtonDisabled(true);
+    }
+}, [turnData.hora, turnData.minutos, selectedYear, selectedMonth, selectedDay]);
+
   const updatedData = {
     titleTurn: titleTurn,
     descriptionTurn: descriptionTurn, // Agregar a los datos actualizados
-    turnDate: `${selectedYear}-${selectedMonth}-${selectedDay} ${hora}:${minutos}:00`,
+    turnDate: `${formattedYear}-${formattedMonth}-${formattedDay} ${formattedHour}:${formattedMinutes}:00`,
   };
   const handleEditeTurno = async () => {
     const idTurn = turno.idTurn; // Obtén la ID de la mascota desde los props
@@ -86,7 +125,7 @@ export default function EditarTurno({
     console.log(turno.idTurn);
     try {
       const response = await axios.put(
-        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/turn/${mascotaId}/${idTurn}`,
         {
           titleTurn: updatedData.titleTurn,
           descriptionTurn: updatedData.descriptionTurn,
@@ -167,19 +206,31 @@ export default function EditarTurno({
           )}
           <Text style={styles.textoFecha}>Fecha de turno</Text>
           <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
-            <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
-            {selectedMonth && (
-              <ListaValoresDiasMascota
-                selectedMonth={selectedMonth} // Pasa el mes seleccionado
-                selectedValue={selectedDay} // Pasa el día seleccionado
-                setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
-              />
-            )}
-            <ListaValoresAñoMascota
-              setSelectedValue={setSelectedYear}
-              selectedValue={selectedYear}
-            />
-          </View>
+          <TextInput
+            style={styles.input}
+           // placeholder="YYYY"
+           value={selectedYear.toString()}
+           onChangeText={(text) => setSelectedYear(text)}
+           maxLength={4}
+            minLength={4}
+          />
+          <Text style={styles.textoFecha}>/</Text>
+          <TextInput
+            style={styles.input}
+            value={selectedMonth.toString()}
+            onChangeText={(text) => setSelectedMonth(text)}
+            maxLength={2}
+            minLength={2}
+          />
+          <Text style={styles.textoFecha}>/</Text>
+          <TextInput
+            style={styles.input}
+            value={selectedDay.toString()}
+            onChangeText={(text) => setSelectedDay(text)}
+            maxLength={2}
+            minLength={2}
+          />
+        </View>
           <View style={[{ flexDirection: "row" }, styles.subcontenedor5]}>
             <TouchableOpacity
               style={styles.closeButton}
@@ -189,7 +240,7 @@ export default function EditarTurno({
 
                 try {
                   const response = await axios.put(
-                    `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
+                    `https://62ed-190-177-142-160.ngrok-free.app /mypet/turn/${mascotaId}/${idTurn}`,
                     updatedData,
                     {
                       headers: {
@@ -280,7 +331,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 10,
     textAlign: "center",
-    marginVertical: 20,
+    marginVertical: 10,
   },
   textoFecha: {
     fontSize: 16,

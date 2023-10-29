@@ -26,7 +26,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user`, {
+      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user`, {
         headers: {
           "auth-token": token,
         },
@@ -46,7 +46,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
     const idSelectedUser = selectedUser.idUser;
     const idAutor = idUserAutor;
     const idAdopcion = publicacion.idPublicationAdoption;
-    const image = selectedUser.image;
+    const image = publicacion.user.image;
     console.log(
       "idUserautor: ",
       idAutor,
@@ -61,7 +61,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
       //  console.log('antes del post ')
       // Realizar una solicitud POST al servidor para crear un nuevo chat
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Adoption`,
+        `https://62ed-190-177-142-160.ngrok-free.app /chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Adoption`,
         null,
         {
           headers: {
@@ -77,13 +77,14 @@ const PublicacionDetalleAdopcion = ({ route }) => {
           idUserRecep: idSelectedUser,
           nombre: selectedUser.userName,
           image: selectedUser.image,
+          idAutor: selectedUser.idUser,
           idReference: idAdopcion,
           referenceType: "ADOPTION",
           imagenPublicacion: carouselImages[0],
         });
       } else if (response.status === 200) {
         setMensaje(
-          response.data.message + ". Lo redirigiremos al chat existente..."
+          "Ya existe un chat por con este usuario, no es posible crear otro. Lo redirigiremos en unos segundos..."
         );
         setShowCongratulationsModal(true);
 
@@ -114,10 +115,9 @@ const PublicacionDetalleAdopcion = ({ route }) => {
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const id = error.response.data.chat.idChat;
-        console.log("error 400 mensaje: ", error.response.data.message);
+        console.log("Ya existe un chat por esta publicación. ", error.response.data.message);
         setMensaje(
-          error.response.data.message +
-            ". Lo redirigiremos al chat existente..."
+            "Ya existe un chat por esta publicación. Lo redirigiremos en unos segundos..."
         );
         setShowCongratulationsModal(true);
         setTimeout(() => {

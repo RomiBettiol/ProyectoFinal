@@ -28,7 +28,7 @@ const ModalAgregarRegion = ({
 
   useEffect(() => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/province", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/province", {
         headers: {
           "auth-token": token,
         },
@@ -59,7 +59,7 @@ const ModalAgregarRegion = ({
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/region", newRegion, {
+      .post("https://62ed-190-177-142-160.ngrok-free.app /parameters/region", newRegion, {
         headers: {
           "auth-token": token,
         },

@@ -44,11 +44,14 @@ export default function MiInfoImportante() {
   const route = useRoute();
   const mascotaId = route.params?.mascotaId;
   const { token } = route.params;
-
+  const [mensaje, setMensaje] = useState("");
+  const [image, setImage] = useState('');
+  const [mascotas, setMascotas] = useState('');
+  const color  = route.params?.color;
   async function fetchInformacion() {
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/information/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -71,6 +74,9 @@ export default function MiInfoImportante() {
       }
     }
   }
+  useEffect(() => {
+    fetchInformacion();
+  }, [showSuccessModal]);
 
   const filterAndSearchInformacion = () => {
     return informacion.filter((info) => {
@@ -98,7 +104,7 @@ export default function MiInfoImportante() {
     console.log(info.idInformation);
     try {
       const response = await axios.delete(
-        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/information/${mascotaId}/${info.idInformation}`,
         {
           headers: {
             "auth-token": token,
@@ -120,18 +126,42 @@ export default function MiInfoImportante() {
     setShowSuccessModal(false);
     setOverlayVisible(false); // Cierra el modal NuevaMascota
   };
-
   useEffect(() => {
-    fetchInformacion();
-  }, [showSuccessModal]);
+    const fetchMascotas= async () => {
+      try {
+        const response = await axios.get(`https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/${mascotaId}`,
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          setMascotas(response.data);
+          console.log("mascota: ",mascotas);
+          setImage(response.data.pet[0].image);
+          console.log("image: ", image);
+        } else {
+          setMascotas(response.data);
+        }
+      } catch (error) {
+        console.error("Error de red:", error);
+      }
+    };
+
+    fetchMascotas();
+  }, [token]);
+
+  
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contentContainer1}>
-          <View style={styles.container1}>
+          <View style={[styles.container1 , {backgroundColor: color} ]}>
             <Image
-              source={require("../Imagenes/perrito.jpeg")}
+              source={{uri: image}}
               style={styles.imagMascota}
             />
             <View style={styles.containerTitulo}>
@@ -340,7 +370,6 @@ const styles = StyleSheet.create({
   container1: {
     width: "100%",
     height: 70,
-    backgroundColor: "#B8F7B7",
     borderRadius: 20,
     justifyContent: "flex-start", // Para centrar vertical
     alignItems: "center", // Para centrar horizontal

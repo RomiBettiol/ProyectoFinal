@@ -46,6 +46,7 @@ export default function NuevaMascota({
   const [idPetBreed, setIdPetBreed] = useState("");
   const [idPetType, setIdPetType] = useState("");
   const [selectedAnimal, setSelectedAnimal] = useState([]);
+  const [selectedColorId, setSelectedColorId] = useState([]);
   const [selectedAnimalId, setSelectedAnimalId] = useState("");
   const [petTypeOptions, setPetTypeOptions] = useState();
   const [petBreedOptions, setPetBreedOptions] = useState([]);
@@ -66,6 +67,7 @@ export default function NuevaMascota({
   ////end upload img ////
 
   const authtoken = token;
+  console.log(token)
 
   const [petData, setPetData] = useState({
     petName: "",
@@ -93,7 +95,7 @@ export default function NuevaMascota({
     console.log(idPetBreed);
     // Obtener tipos de mascotas
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/petType", {
         headers: {
           "auth-token": token,
         },
@@ -178,6 +180,7 @@ export default function NuevaMascota({
 
   const sendPetData = async (imageLink) => {
     const authtoken = token;
+    console.log(authtoken)
     const config = {
       headers: {
         "auth-token": authtoken,
@@ -190,12 +193,14 @@ export default function NuevaMascota({
       idPetType: selectedAnimalId,
       idPetBreed: selectedBreedId,
       image: imageLink, // Agrega el enlace de la imagen al objeto data
+      idPetColor: selectedColorId,
+
     };
 
     console.log(data);
 
     const response = await axios.post(
-      "https://buddy-app2.loca.lt/mypet/pet/",
+      "https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/",
       data,
       config
     );
@@ -279,18 +284,23 @@ export default function NuevaMascota({
           <View style={styles.subtitulo}>
             <Text style={styles.label}>Tipo de Animal</Text>
           </View>
-
-          <ScrollView horizontal={true}>
-            <View>
-              <ListaValoresAnimal
-                selectedAnimal={selectedAnimal}
-                setSelectedAnimal={setSelectedAnimal}
-                setSelectedAnimalId={setSelectedAnimalId}
-                token={token}
-              />
-            </View>
+          <View style={[styles.dropdown, { borderRadius: 100 }]}>    
+              <ListaValoresColor
+                  selectedColorId={selectedColorId}
+                  setSelectedColorId={setSelectedColorId}
+                  token={token}
+                />
+           </View>
+          
+          <ScrollView horizontal={true} >     
+                <ListaValoresAnimal
+                  selectedAnimal={selectedAnimal}
+                  setSelectedAnimal={setSelectedAnimal}
+                  setSelectedAnimalId={setSelectedAnimalId}
+                  token={token}
+                />
           </ScrollView>
-
+         
           <View style={[styles.dropdown, { borderRadius: 100 }]}>
             {selectedAnimal && (
               <ListaValoresRazaPerros
@@ -340,13 +350,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     marginTop: 35,
-    padding: 5,
+    height:'95%',
+    width:'95%'
   },
   dropdown: {
-    backgroundColor: "#EEE9E9",
     width: "90%",
-    margin: 10,
     padding: 0,
+    alignItems: "center", // Para centrar horizont
     justifyContent: "center",
   },
 
@@ -356,13 +366,14 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
+    
   },
   contenedor1: {
     paddingTop: 0,
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
-    width: "100%",
+  //  width: "100%",
   },
   inputTexto: {
     backgroundColor: "#EEE9E9",
@@ -417,7 +428,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginTop: 35,
+    marginTop: 15,
   },
   closeButtonText: {
     fontSize: 16,
@@ -476,4 +487,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+ 
 });

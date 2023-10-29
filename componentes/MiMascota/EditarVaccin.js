@@ -9,9 +9,12 @@ import {
   Keyboard,
   Dimensions,
 } from "react-native";
-import ListaValoresDiasMascota from "./ListaValoresDiasMascota";
-import ListaValoresMesesMascota from "./ListaValoresMesesMascota";
-import ListaValoresAñoMascota from "./ListaValoresAñoMascota";
+import ListaValoresDiasM from "./ListaValoresDiasM";
+import ListaValoresMesM from "./ListaValoresMesM";
+import ListaValoresAñoM from "./ListaValoresAñoM";
+import ListaValoresDiasMascotaProx from "./ListaValoresDiasMascotaProx";
+import ListaValoresMesesMascotaProx from "./ListaValoresMesesMascotaProx";
+import ListaValoresAñoMascotaProx from "./ListaValoresAñoMascotaProx";
 import axios from "axios";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -36,9 +39,24 @@ export default function EditarVaccin({
   const [selectedMonth, setSelectedMonth] = useState(month);
   const [selectedDay, setSelectedDay] = useState(day);
   const [selectedYear, setSelectedYear] = useState(year);
+
+  const datePartsProx = vaccin.nextVaccineDate ? vaccin.nextVaccineDate.split('-') : [null, null, null];
+  const [doseQuantityError, setDoseQuantityError] = useState("");
+  const yearProx= datePartsProx[2] ? parseInt(datePartsProx[2], 10) :null;
+  const monthProx= datePartsProx[1] ? parseInt(datePartsProx[1], 10) : null;
+  const dayProx = datePartsProx[0] ? parseInt(datePartsProx[0], 10) : null;
+  
+  const [selectedMonthProx, setSelectedMonthProx] = useState(month);
+  const [selectedYearProx, setSelectedYearProx] = useState(year);
+  const [selectedDayProx, setSelectedDayProx] = useState(year);
+ // Agregar un estado para rastrear si se debe mostrar la fecha de próxima dosis
+  const [showNextDoseDate, setShowNextDoseDate] = useState(false);
   const [hora, setHora] = useState(hor);
   const [minutos, setMinutos] = useState(min);
   const [titleVaccin, setTitleVaccin] = useState(vaccin.titleVaccine);
+  const [doseQuantity, setDoseQuantity] = useState(vaccin.doseQuantity);
+  console.log("cant dosis:   ", doseQuantity)
+  const [nextVaccineDate, setNextVaccineDate] = useState(vaccin.nextVaccineDate);
   const [descriptionVaccin, setDescriptionVaccin] = useState(
     vaccin.descriptionVaccine
   );
@@ -46,12 +64,30 @@ export default function EditarVaccin({
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
 
+  // En tu componente EditarVaccin, dentro de la función return, antes de usarlos:
+  const formattedDay = selectedDay.toString().padStart(2, '0');
+  const formattedMonth = selectedMonth.toString().padStart(2, '0');
+  const formattedMinutes = minutos.toString().padStart(2, '0');
+  const formattedHour = hora.toString().padStart(2, '0');
+    // En tu componente EditarVaccin, dentro de la función return, antes de usarlo:
+  const formattedYear = selectedYear.toString().padStart(4, '0');
+  
+  const formattedYearProx = selectedYearProx ? selectedYearProx.toString().padStart(4, '0') : '';
+  const formattedMonthProx = selectedMonthProx ? selectedYearProx.toString().padStart(2, '0') : '';
+  const formattedDayProx = selectedDayProx ? selectedYearProx.toString().padStart(2, '0') : '';
+
+
+
+
   const [vaccinData, setVaccinData] = useState({
     titleVaccin: "",
     descriptionVaccin: "",
     vaccinDate: "",
-    hora: hora, // Nuevo estado para la hora
-    minutos: minutos, // Nuevo estado para los minutos
+    hora: formattedHour, // Nuevo estado para la hora
+    minutos: formattedMinutes, // Nuevo estado para los minutos
+    doseQuantity: doseQuantity,
+    nextVaccineDate: nextVaccineDate,
+
   });
   useEffect(() => {
     // Validar la hora y minutos
@@ -76,11 +112,41 @@ export default function EditarVaccin({
       });
     }
   }, [vaccinData.hora, vaccinData.minutos]);
+
+
   const updatedData = {
     titleVaccine: titleVaccin,
     descriptionVaccine: descriptionVaccin, // Agregar a los datos actualizados
-    vaccineDate: `${selectedYear}-${selectedMonth}-${selectedDay} ${hora}:${minutos}:00`,
+    vaccineDate: `${formattedYear}-${formattedMonth}-${formattedDay} ${hora}:${minutos}:00`,
+    nextVaccineDate: formattedYearProx  && formattedDayProx && formattedMonthProx ? `${formattedYearProx}-${formattedMonthProx }-${formattedDayProx } 00:00:00` : null,
+    doseQuantity:doseQuantity,
   };
+  // ...
+
+// En la función useEffect que valida la cantidad de dosis
+useEffect(() => {
+  
+  // Validar la cantidad de dosis
+  const doseQuantityValid =
+    /^\d+$/.test(doseQuantity) &&
+    parseInt(doseQuantity, 10) >= 1 &&
+    parseInt(doseQuantity, 10) <= 10;
+
+  if (doseQuantityValid) {
+    setDoseQuantityError("");
+    setIsButtonDisabled(false);
+  } else {
+    setDoseQuantityError("La cantidad de dosis debe ser un número del 1 al 10");
+    setIsButtonDisabled(true);
+  }
+
+  // Actualizar el estado para mostrar u ocultar la fecha de próxima dosis
+  setShowNextDoseDate(parseInt(doseQuantity, 10) > 1);
+}, [doseQuantity]);
+
+// ...
+
+  
   return (
     <View>
       <View style={styles.modalContainer}>
@@ -108,6 +174,76 @@ export default function EditarVaccin({
               //   onFocus={() => Keyboard.show()}
             />
           </View>
+
+          <View style={styles.cantVaccin}>
+            <Text>Cantidad de dosis</Text>
+            <TextInput
+              style={styles.inputTextoCant}
+              value={doseQuantity.toString()}
+              onChangeText={(text) => {
+                setDoseQuantityError("La cantidad de dosis debe ser un número del 1 al 10");
+                setDoseQuantity(text);
+              }}
+            />
+             {doseQuantityError ? (
+                <Text style={styles.errorText}>{doseQuantityError}</Text>
+              ) : null}
+          </View>
+          {/* Mostrar los elementos relacionados con la fecha de próxima dosis si es necesario */}
+          {showNextDoseDate &&(
+            <>
+              <Text style={styles.textoFecha}>Fecha de próxima dosis</Text>
+              <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
+                <TextInput
+                  style={styles.input}
+                  value={yearProx.toString()}
+                  maxLength={4}
+                  minLength={4}
+                  onChangeText={(text) => setSelectedYearProx(text)}
+                />
+                <Text style={styles.textoFecha}>/</Text>
+                <TextInput
+                  style={styles.input}
+                  maxLength={2}
+                  minLength={2}
+                  value={monthProx.toString()}
+                  onChangeText={(text) => setSelectedMonthProx(text)}
+                />
+                <Text style={styles.textoFecha}>/</Text>
+                <TextInput
+                  style={styles.input}
+                  maxLength={2}
+                  minLength={2}
+                  value={dayProx.toString()}
+                  onChangeText={(text) => setSelectedDayProx(text)}
+                />
+              </View>
+            </>
+          )}
+         
+          <Text style={styles.textoFecha}>Fecha de vacuna</Text>
+          <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
+            <TextInput
+              style={styles.input}
+              minLength={4}
+              value={formattedYear.toString()}
+              onChangeText={(text) => setSelectedYear(text)}
+            />
+            <Text style={styles.textoFecha}>/</Text>
+            <TextInput
+              style={styles.input}
+              minLength
+              value={formattedMonth.toString()}
+              onChangeText={(text) => setSelectedMonth(text)}
+            />
+            <Text style={styles.textoFecha}>/</Text>
+            <TextInput
+              style={styles.input}
+              minLength
+              value={formattedDay.toString()}
+              onChangeText={(text) => setSelectedDay(text)}
+            />
+          </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Hora:</Text>
             <View style={styles.horaInputContainer}>
@@ -121,6 +257,7 @@ export default function EditarVaccin({
                   setHora(text);
                 }}
                 maxLength={2}
+                minLength={2}
               />
               <Text style={styles.inputDivider}> : </Text>
               <TextInput
@@ -133,27 +270,13 @@ export default function EditarVaccin({
                   setMinutos(text);
                 }}
                 maxLength={2}
+                minLength={2}
               />
             </View>
           </View>
           {vaccinData.error && (
             <Text style={styles.errorText}>{vaccinData.error}</Text>
           )}
-          <Text style={styles.textoFecha}>Fecha de vacuna</Text>
-          <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
-            <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
-            {selectedMonth && (
-              <ListaValoresDiasMascota
-                selectedMonth={selectedMonth} // Pasa el mes seleccionado
-                selectedValue={selectedDay} // Pasa el día seleccionado
-                setSelectedValue={setSelectedDay} // Pasa la función para actualizar el día
-              />
-            )}
-            <ListaValoresAñoMascota
-              setSelectedValue={setSelectedYear}
-              selectedValue={selectedYear}
-            />
-          </View>
           <View style={[{ flexDirection: "row" }, styles.subcontenedor5]}>
             <TouchableOpacity
               style={styles.closeButton}
@@ -163,7 +286,7 @@ export default function EditarVaccin({
 
                 try {
                   const response = await axios.put(
-                    `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
+                    `https://62ed-190-177-142-160.ngrok-free.app /mypet/vaccine/${mascotaId}/${idVaccin}`,
                     updatedData,
                     {
                       headers: {
@@ -174,6 +297,8 @@ export default function EditarVaccin({
                   console.log("Respuesta del servidor:", response.data);
                   setShowSuccessModal(true);
                 } catch (error) {
+                  console.log(error)
+                  console.log( error.message)
                   setShowErrorModal(true);
                 }
                 // setOverlayVisible(false); // Cierra el overlay después de eliminar
@@ -222,7 +347,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 20,
     width: windowWidth * 0.95,
-    height: windowHeight * 0.65,
+    height: windowHeight * 0.9,
     textAlign: "center",
     alignItems: "center", // Para centrar horizont
   },
@@ -287,6 +412,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  inputTextoCant: {
+    backgroundColor: "#EEE9E9",
+    width: "50%",
+    height: 32,
+    borderRadius: 100,
+    textAlign: "center",
+    paddingStart: 5,
+    marginHorizontal: 2,
+  },
   input: {
     height: 40,
     backgroundColor: "#EEE9E9",
@@ -303,5 +437,10 @@ const styles = StyleSheet.create({
   tituloDescripcion: {
     marginStart: 0,
     marginTop: 10,
+  },
+  cantVaccin:{
+    textAlign: "center",
+    alignItems: "center", // Para centrar horizontal
+    width: "100%",
   },
 });

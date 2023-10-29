@@ -24,7 +24,7 @@ const ModalEditar = ({
   const handleEdit = () => {
     axios
       .put(
-        `https://buddy-app2.loca.lt/parameters/locality/${editingZone.idLocality}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /parameters/locality/${editingZone.idLocality}`,
         {
           localityName: localities,
         },

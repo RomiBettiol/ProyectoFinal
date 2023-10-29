@@ -16,6 +16,7 @@ import ListaValoresDiasMascota from "../MiMascota/ListaValoresDiasMascota";
 import ListaValoresMesesMascota from "../MiMascota/ListaValoresMesesMascota";
 import ListaValoresAñoMascota from "../MiMascota/ListaValoresAñoMascota";
 import ListaValoresRazaPerros from "../Busqueda/ListaValoresRazaPerros";
+import ListaValoresColor from "../Busqueda/ListaValoresColor";
 import ListaValoresAnimal from "../Busqueda/ListaValoresAnimal";
 import AgregarImagen from "../AgregarImagen";
 import axios from "axios";
@@ -49,6 +50,7 @@ export default function EditarMascota({
   const [selectedAnimal, setSelectedAnimal] = useState([]);
   const [selectedAnimalId, setSelectedAnimalId] = useState("");
   const [selectedBreedId, setSelectedBreedId] = useState("");
+  const [selectedColorId, setSelectedColorId] = useState([]);
   const [idPetBreed, setIdPetBreed] = useState("");
   const [idPetType, setIdPetType] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -65,6 +67,7 @@ export default function EditarMascota({
       idPetBreed: selectedBreedId,
       month: selectedMonth, // Agregar a los datos actualizados
       year: selectedYear, // Agregar a los datos actualizados
+      idPetColor: selectedColorId,
       // Otras propiedades que quieras actualizar
       birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
     };
@@ -72,7 +75,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/${mascota.idPet}`,
         {
           petName: updatedData.petName,
           birthDate: updatedData.birthDate,
@@ -106,7 +109,7 @@ export default function EditarMascota({
     console.log(raza);
     // Obtener tipos de mascotas
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/petType", {
         headers: {
           "auth-token": token,
         },
@@ -128,7 +131,7 @@ export default function EditarMascota({
 
     // Obtener razas de mascotas
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/petBreed", {
         headers: {
           "auth-token": token,
         },
@@ -229,7 +232,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/${mascota.idPet}`,
         {
           headers: {
             "auth-token": token,
@@ -240,6 +243,7 @@ export default function EditarMascota({
           idPetType: updatedData.idPetType,
           idPetBreed: updatedData.idPetBreed,
           image: updatedData.image,
+          idPetColor: selectedColorId,
           // Otros datos que puedas necesitar
         }
       );
@@ -313,7 +317,9 @@ export default function EditarMascota({
             />
           </View>
           {/* Campo de edición para la fecha */}
-          <Text style={styles.textoFecha}>Fecha de nacimiento:</Text>
+          <View style={styles.subtitulo}>
+            <Text style={styles.label}>Fecha de nacimiento:</Text>
+          </View>
           <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
             <ListaValoresMesesMascota setSelectedMonth={setSelectedMonth} />
             {selectedMonth && (
@@ -328,6 +334,16 @@ export default function EditarMascota({
               selectedValue={selectedYear}
             />
           </View>
+          <View style={styles.subtitulo}>
+            <Text style={styles.label}>Tipo de Animal</Text>
+          </View>
+          <View style={[styles.dropdown, { borderRadius: 100 }]}>   
+              <ListaValoresColor
+                  selectedColorId={selectedColorId}
+                  setSelectedColorId={setSelectedColorId}
+                  token={token}
+                />
+           </View>
           <ScrollView horizontal={true}>
             <View>
               <ListaValoresAnimal
@@ -384,15 +400,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     marginTop: 35,
+    height:'95%',
+    width:'95%'
   },
 
   dropdown: {
-    backgroundColor: "#EEE9E9",
     width: "90%",
-    height: 50,
-    margin: 10,
     padding: 0,
     justifyContent: "center",
+    alignItems: "center", // Para centrar horizont
   },
   titulo: {
     marginTop: 10,
@@ -518,5 +534,14 @@ const styles = StyleSheet.create({
     color: "grey",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  subtitulo: {
+    textAlign: "left",
+    width: "90%",
+    margin: 5,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 2,
   },
 });

@@ -120,7 +120,7 @@ export default function PublicacionBusqueda({ navigation }) {
       };
 
       const response = await axios.post(
-        "https://buddy-app2.loca.lt/publications/publication/adoption",
+        "https://62ed-190-177-142-160.ngrok-free.app /publications/publication/adoption",
         postData,
         config
       );

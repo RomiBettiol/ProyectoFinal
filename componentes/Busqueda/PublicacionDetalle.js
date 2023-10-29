@@ -36,7 +36,7 @@ const PublicacionDetalle = ({ route }) => {
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user`, {
+      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user`, {
         headers: {
           "auth-token": token,
         },
@@ -56,6 +56,7 @@ const PublicacionDetalle = ({ route }) => {
     const idSelectedUser = selectedUser.idUser;
     const idAutor = idUserAutor;
     const idAdopcion = publicacion.idPublicationSearch;
+    const image = publicacion.user.image;
     console.log(
       "idUserautor: ",
       idAutor,
@@ -67,7 +68,7 @@ const PublicacionDetalle = ({ route }) => {
     try {
       // Realizar una solicitud POST al servidor para crear un nuevo chat
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Search`,
+        `https://62ed-190-177-142-160.ngrok-free.app /chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Search`,
         null,
         {
           headers: {
@@ -84,9 +85,11 @@ const PublicacionDetalle = ({ route }) => {
           idUserRecep: idSelectedUser,
           nombre: selectedUser.userName,
           image: selectedUser.image,
+          idAutor: selectedUser.idUser,
           idReference: idSearch,
           referenceType: "SEARCH",
           imagenPublicacion: carouselImages[0],
+          
         });
       } else if (response.status === 200) {
         setMensaje(

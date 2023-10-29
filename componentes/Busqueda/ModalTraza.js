@@ -41,7 +41,7 @@ export default function ModalTraza({ navigation, route }) {
   //Trae info del usuario
   const fetchNombre = () => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -74,7 +74,7 @@ export default function ModalTraza({ navigation, route }) {
   const fetchTraces = async () => {
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/publications/trace/${idPublicationSearch}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /publications/trace/${idPublicationSearch}`,
         {
           headers: {
             "auth-token": token,
@@ -124,7 +124,7 @@ export default function ModalTraza({ navigation, route }) {
     console.log("información:", selectedTrace.idTrace);
     try {
       const response = await axios.delete(
-        `https://buddy-app2.loca.lt/publications/trace/${selectedTrace.idTrace}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /publications/trace/${selectedTrace.idTrace}`,
         {
           headers: {
             "auth-token": token,
@@ -162,7 +162,7 @@ export default function ModalTraza({ navigation, route }) {
       try {
         // Realizar la solicitud POST
         const response = await axios.post(
-          "https://buddy-app2.loca.lt/publications/trace/",
+          "https://62ed-190-177-142-160.ngrok-free.app /publications/trace/",
           data,
           {
             headers: {

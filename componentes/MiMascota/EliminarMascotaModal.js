@@ -11,7 +11,7 @@ const EliminarMascotaModal = ({
 }) => {
   const eliminarMascota = async () => {
     try {
-      await axios.delete(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`, {
+      await axios.delete(`https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/${mascotaId}`, {
         headers: {
           "auth-token": token,
         },

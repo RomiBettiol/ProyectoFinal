@@ -47,11 +47,15 @@ export default function MisVacunas() {
   const [buttonTransform, setButtonTransform] = useState(0);
   const [mensaje, setMensaje] = useState("");
   const [error404, setError404] = useState(false);
+  const [image, setImage] = useState('');
+  const [mascotas, setMascotas] = useState('');
+  const color  = route.params?.color;
+  
 
   async function fetchVaccines() {
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/vaccine/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -74,6 +78,10 @@ export default function MisVacunas() {
       }
     }
   }
+
+  useEffect(() => {
+    fetchVaccines();
+  }, [mascotaId, token]);
 
   const filterAndSearchVaccines = () => {
     return vaccines
@@ -157,7 +165,7 @@ export default function MisVacunas() {
     console.log(vaccin.idVaccin);
     try {
       const response = await axios.delete(
-        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`,
         {
           headers: {
             "auth-token": token,
@@ -189,18 +197,43 @@ export default function MisVacunas() {
     console.log(vaccines);
   }, [vaccines]);
 
+  
   useEffect(() => {
-    fetchVaccines();
-  }, []);
+    const fetchMascotas= async () => {
+      try {
+        const response = await axios.get(`https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/${mascotaId}`,
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          setMascotas(response.data);
+          console.log("mascota: ",mascotas);
+          setImage(response.data.pet[0].image);
+          console.log("image: ", image);
+        } else {
+          setMascotas(response.data);
+        }
+      } catch (error) {
+        console.error("Error de red:", error);
+      }
+    };
+
+    fetchMascotas();
+  }, [token]);
+
 
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contentContainer1}>
-          <View style={styles.container1}>
+         <View style={[styles.container1 , {backgroundColor: color} ]}>
             <Image
-              source={require("../Imagenes/perrito.jpeg")}
+              source={{uri: image}}
               style={styles.imagMascota}
             />
             <View style={styles.containerTitulo}>
@@ -228,7 +261,7 @@ export default function MisVacunas() {
               {/* Generar las opciones de años dinámicamente */}
               {Array.from(
                 { length: 10 },
-                (_, i) => new Date().getFullYear() - i
+                (_, i) => new Date().getFullYear() + i
               ).map((year) => (
                 <Picker.Item key={year} label={year.toString()} value={year} />
               ))}
@@ -286,7 +319,7 @@ export default function MisVacunas() {
                             />
                           </TouchableOpacity>
 
-                          <View style={styles.dia}>
+                          <View style={[styles.dia , {backgroundColor: color}]}>
                             <Text style={styles.numero}>{dia(vaccin)}</Text>
                           </View>
                           <Text>{vaccin.vaccineHour}</Text>
@@ -423,7 +456,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 20,
     width: windowWidth * 0.95,
-    height: windowHeight * 0.65,
+    height: windowHeight * 0.9,
     textAlign: "center",
     alignItems: "center", // Para centrar horizont
   },
@@ -432,6 +465,7 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 16,
+    
   },
   contentContainer1: {
     flex: 1,
@@ -449,7 +483,6 @@ const styles = StyleSheet.create({
   container1: {
     width: "100%",
     height: 70,
-    backgroundColor: "#B8F7B7",
     borderRadius: 20,
     justifyContent: "flex-start", // Para centrar vertical
     alignItems: "center", // Para centrar horizontal
@@ -458,7 +491,9 @@ const styles = StyleSheet.create({
   },
   containerTitulo: {
     alignItems: "center", // Para centrar horizontal
-    width: "80%",
+    width: "90%",
+    height:"100%",
+    justifyContent: 'center',
   },
   subtitulo: {
     fontSize: 16,

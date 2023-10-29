@@ -170,7 +170,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/province/", newProvince, {
+      .post("https://62ed-190-177-142-160.ngrok-free.app /parameters/province/", newProvince, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -199,7 +199,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/petType/", newType, {
+      .post("https://62ed-190-177-142-160.ngrok-free.app /parameters/petType/", newType, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -229,7 +229,7 @@ export default function ParametrizacionScreen({ navigation }) {
     };
 
     axios
-      .post("https://buddy-app2.loca.lt/parameters/petColor/", newColor, {
+      .post("https://62ed-190-177-142-160.ngrok-free.app /parameters/petColor/", newColor, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -250,7 +250,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleZoneDelete = (zoneId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/locality/${zoneId}`, {
+      .delete(`https://62ed-190-177-142-160.ngrok-free.app /parameters/locality/${zoneId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -266,7 +266,7 @@ export default function ParametrizacionScreen({ navigation }) {
   const handleBreedDelete = async (breedId) => {
     console.log("ID:", breedId);
     await axios
-      .delete(`https://buddy-app2.loca.lt/parameters/petBreed/${breedId}`, {
+      .delete(`https://62ed-190-177-142-160.ngrok-free.app /parameters/petBreed/${breedId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -281,7 +281,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleColorDelete = (colorId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/petColor/${colorId}`, {
+      .delete(`https://62ed-190-177-142-160.ngrok-free.app /parameters/petColor/${colorId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -296,7 +296,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleTypeDelete = (typeId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/petType/${typeId}`, {
+      .delete(`https://62ed-190-177-142-160.ngrok-free.app /parameters/petType/${typeId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -311,7 +311,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleProvinceDelete = (provinceId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/province/${provinceId}`, {
+      .delete(`https://62ed-190-177-142-160.ngrok-free.app /parameters/province/${provinceId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -326,7 +326,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const handleRegionDelete = (regionId) => {
     axios
-      .delete(`https://buddy-app2.loca.lt/parameters/region/${regionId}`, {
+      .delete(`https://62ed-190-177-142-160.ngrok-free.app /parameters/region/${regionId}`, {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -429,7 +429,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getZonas = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/locality/", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/locality/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -449,7 +449,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetColors = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petColor/", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/petColor/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -468,7 +468,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetTypes = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType/", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/petType/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -487,7 +487,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getPetBreeds = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed/", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/petBreed/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -506,7 +506,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getProvinces = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/province/", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/province/", {
         headers: { "auth-token": token },
       })
       .then((response) => {
@@ -525,7 +525,7 @@ export default function ParametrizacionScreen({ navigation }) {
 
   const getRegions = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/region/", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/region/", {
         headers: { "auth-token": token },
       })
       .then((response) => {

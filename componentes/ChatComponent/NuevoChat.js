@@ -57,7 +57,7 @@ export default function NuevoChat({ navigation }) {
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user`, {
+      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user`, {
         headers: {
           "auth-token": token,
         },
@@ -89,7 +89,7 @@ export default function NuevoChat({ navigation }) {
     try {
       // Realizar una solicitud POST al servidor para crear un nuevo chat
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/${idSelectedUser}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /chats/chat/${idSelectedUser}`,
         null,
         {
           headers: {
@@ -122,7 +122,7 @@ export default function NuevoChat({ navigation }) {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "https://buddy-app2.loca.lt/security/user/all",
+        "https://62ed-190-177-142-160.ngrok-free.app /security/user/all",
         {
           headers: {
             "auth-token": token,

@@ -48,10 +48,12 @@ export default function Archivados({ navigation }) {
   const [totalMensajesNoLeidos, setTotalMensajesNoLeidos] = useState("");
   const [idUser, setIdUser] = useState("");
   const [modalArchivo, setModalArchivo] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+ 
   // UseEffect para obtener el idUser
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -98,7 +100,7 @@ export default function Archivados({ navigation }) {
 
   useEffect(() => {
     axios
-      .get("https://buddy-app2.loca.lt/chats/chat/true", {
+      .get("https://62ed-190-177-142-160.ngrok-free.app /chats/chat/true", {
         headers: {
           "auth-token": token,
         },
@@ -148,7 +150,7 @@ export default function Archivados({ navigation }) {
   //Trae info del usuario
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -172,15 +174,13 @@ export default function Archivados({ navigation }) {
     setModalArchivo(false);
   };
   const handleDeleteCancelled = () => {
-    // Cierra el modal de eliminación y reinicia el estado de confirmación
-    setIsDeleteModalVisible(false);
-    setIsConfirmedToDelete(false);
+    setModalArchivo(false);
   };
 
   const fetchDesArchivar = async () => {
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/archive/${selectedIdChat}/false`,
+        `https://62ed-190-177-142-160.ngrok-free.app /chats/chat/archive/${selectedIdChat}/false`,
         null,
         {
           headers: {

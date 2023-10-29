@@ -75,7 +75,13 @@ import AgregarImagenRegistro from "../componentes/AgregarImagenRegistro";
 import NotificacionesScreen from "../Screens/NotificacionesScreen";
 import Backup from "../Screens/Backup";
 import Header from "../componentes/HeaderScreen";
+import ListaValoresDiasMascotaProx from "../componentes/MiMascota/ListaValoresDiasMascotaProx";
+import ListaValoresAñoMascotaProx from "../componentes/MiMascota/ListaValoresAñoMascotaProx";
+import ListaValoresMesesMascotaProx from "../componentes/MiMascota/ListaValoresMesesMascotaProx";
 
+import ListaValoresDiasM from "../componentes/MiMascota/ListaValoresDiasM";
+import ListaValoresAñoM from "../componentes/MiMascota/ListaValoresAñoM";
+import ListaValoresMesM from "../componentes/MiMascota/ListaValoresMesM";
 //chats
 import MisChats from "../Screens/MisChats";
 import Chats from "../componentes/ChatComponent/Chats";
@@ -252,6 +258,15 @@ export default function MainStack() {
         <Stack.Screen name="ServiciosScreen" component={ServiciosScreen} />
         <Stack.Screen name="ServiciosDetalle" component={ServiciosDetalles} />
         <Stack.Screen name="PublicarServicio" component={PublicarServicio} />
+
+        <Stack.Screen name="ListaValoresDiasMascotaProx" component={ListaValoresDiasMascotaProx} />
+        <Stack.Screen name="ListaValoresAñoMascotaProx" component={ListaValoresAñoMascotaProx} />
+        <Stack.Screen name="ListaValoresMesesMascotaProx" component={ListaValoresMesesMascotaProx} />
+
+        <Stack.Screen name="ListaValoresDiasM" component={ListaValoresDiasM} />
+        <Stack.Screen name="ListaValoresAñoM" component={ListaValoresAñoM} />
+        <Stack.Screen name="ListaValoresMesM" component={ListaValoresMesM} />
+
         <Stack.Screen
           name="OptionModalService"
           component={OptionModalService}

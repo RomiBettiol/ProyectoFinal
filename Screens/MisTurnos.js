@@ -41,14 +41,20 @@ export default function MisTurnos() {
   const [showTurnoModal, setShowTurnoModal] = useState(false);
   const route = useRoute();
   const mascotaId = route.params?.mascotaId;
+  const color  = route.params?.color;
+  console.log("COLOR: ",color)
   const { token } = route.params;
   const [error404, setError404] = useState(false);
   const [buttonTransform, setButtonTransform] = useState(0);
+  const [mensaje, setMensaje] = useState("");
+  const [image, setImage] = useState('');
+  const [mascotas, setMascotas] = useState('');
+  
 
   async function fetchTurnos() {
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/turn/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -68,6 +74,10 @@ export default function MisTurnos() {
   }
 
   console.log(turnos);
+  useEffect(() => {
+    fetchTurnos();
+  }, []);
+
 
   const filterAndSearchTurnos = () => {
     return turnos
@@ -131,7 +141,7 @@ export default function MisTurnos() {
     console.log(turno.idTurn);
     try {
       const response = await axios.delete(
-        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /mypet/turn/${mascotaId}/${turno.idTurn}`,
         {
           headers: {
             "auth-token": token,
@@ -161,19 +171,42 @@ export default function MisTurnos() {
     setShowTurnoModal(false);
     setOverlayVisible(false); // Cierra el modal NuevaMascota
   };
-
   useEffect(() => {
-    fetchTurnos();
-  }, []);
+    const fetchMascotas= async () => {
+      try {
+        const response = await axios.get(`https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/${mascotaId}`,
+          {
+            headers: {
+              "auth-token": token,
+            },
+          }
+        );
 
+        if (response.status === 200) {
+          setMascotas(response.data);
+          console.log("mascota: ",mascotas);
+          setImage(response.data.pet[0].image);
+          console.log("image: ", image);
+        } else {
+          setMascotas(response.data);
+        }
+      } catch (error) {
+        console.error("Error de red:", error);
+      }
+    };
+
+    fetchMascotas();
+  }, [token]);
+
+  
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contentContainer1}>
-          <View style={styles.container1}>
+          <View style={[styles.container1 , {backgroundColor: color} ]}>
             <Image
-              source={require("../Imagenes/perrito.jpeg")}
+              source={{uri: image}}
               style={styles.imagMascota}
             />
             <View style={styles.containerTitulo}>
@@ -259,7 +292,7 @@ export default function MisTurnos() {
                             />
                           </TouchableOpacity>
 
-                          <View style={styles.dia}>
+                          <View style={[styles.dia, {backgroundColor: color}]}>
                             <Text style={styles.numero}>{dia(turno)}</Text>
                           </View>
                           <Text>{turno.turnHour}</Text>
@@ -319,7 +352,7 @@ export default function MisTurnos() {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <AltaTurno onClose={toggleAltaTurnoModal} />
+              <AltaTurno onClose={toggleAltaTurnoModal} token={token} />
             </View>
           </View>
         </Modal>
@@ -430,7 +463,7 @@ const styles = StyleSheet.create({
   container1: {
     width: "100%",
     height: 70,
-    backgroundColor: "#B8F7B7",
+    //backgroundColor: "#B8F7B7",
     borderRadius: 20,
     justifyContent: "flex-start", // Para centrar vertical
     alignItems: "center", // Para centrar horizontal

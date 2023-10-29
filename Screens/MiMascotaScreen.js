@@ -101,7 +101,7 @@ export default function MiMascotaScreen() {
   const fetchMascotas = async () => {
     try {
       const response = await axios.get(
-        "  https://buddy-app2.loca.lt/mypet/pet",
+        "https://62ed-190-177-142-160.ngrok-free.app /mypet/pet",
         {
           headers: {
             "auth-token": token,
@@ -187,6 +187,7 @@ export default function MiMascotaScreen() {
                     ]}
                     onPress={() => {
                       navigation.navigate("MisTurnos", {
+                        color: colores[index % colores.length],
                         mascotaId: mascota.idPet, // Pasa el ID de la mascota seleccionada
                         token: token,
                       });
@@ -206,6 +207,7 @@ export default function MiMascotaScreen() {
                     ]}
                     onPress={() => {
                       navigation.navigate("MisVacunas", {
+                        color: colores[index % colores.length],
                         mascotaId: mascota.idPet, // Pasa el ID de la mascota seleccionada
                         token: token,
                       });
@@ -400,7 +402,7 @@ const styles = StyleSheet.create({
     margin: 15,
     padding: 5,
     width: windowWidth * 0.95, // Aproximadamente la mitad del ancho de la pantalla
-    height: windowHeight * 0.75, // Aproximadamente la mitad del alto de la pantalla
+    height: windowHeight * 0.88, // Aproximadamente la mitad del alto de la pantalla
   },
   closeButton: {
     marginTop: 10,

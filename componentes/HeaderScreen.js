@@ -8,7 +8,9 @@ const Header = (token) => {
   const route = useRoute(); // Obtiene la prop route
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('NotificacionesScreen',  token={token})}
+        >
         <Image
           source={require('../Imagenes/notificacion.png')}
           style={styles.imagen1}
@@ -22,7 +24,9 @@ const Header = (token) => {
           style={styles.imagen2}
         />
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity
+      onPress={() => navigation.navigate('MisChats',  token={token})}
+      >
         <Image
           source={require('../Imagenes/mensaje.png')}
           style={styles.imagen1}

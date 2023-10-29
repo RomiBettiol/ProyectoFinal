@@ -49,6 +49,7 @@ export default function Chats({
   const [SMS, setSMS] = useState([]);
   const [chat, setChat] = useState(false);
   const route = useRoute();
+  const [tipo, setTipo] = useState("");
   const [userAutor, setUserAutor] = useState("");
   const { token } = route.params;
   const [buttonTransform, setButtonTransform] = useState(0);
@@ -69,7 +70,7 @@ export default function Chats({
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isCloseModalVisible, setIsCloseModalVisible] = useState(false);
   const [isConfirmedToDelete, setIsConfirmedToDelete] = useState(false);
-
+  const [idAutor, setIdAutor] = useState("");;
   const [showCongratulationsModal, setShowCongratulationsModal] =
     useState(false);
   const [navigateToHome, setNavigateToHome] = useState(false);
@@ -114,7 +115,7 @@ export default function Chats({
   const fetchArchivar = async () => {
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/archive/${idChat}/true`,
+        `https://62ed-190-177-142-160.ngrok-free.app /chats/chat/archive/${idChat}/true`,
         null,
         {
           headers: {
@@ -137,7 +138,7 @@ export default function Chats({
     console.log(idPublicacion);
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Search`,
+        `https://62ed-190-177-142-160.ngrok-free.app /publications/publication/solve/${idPublicacion}?modelType=Search`,
         null,
         {
           headers: {
@@ -164,7 +165,7 @@ export default function Chats({
     console.log("idPublicacion dentro del try: ", idPublicacion);
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
+        `https://62ed-190-177-142-160.ngrok-free.app /publications/publication/solve/${idPublicacion}?modelType=Adoption`,
         null,
         {
           headers: {
@@ -194,7 +195,7 @@ export default function Chats({
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -212,7 +213,7 @@ export default function Chats({
   const fetchSMS = async () => {
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /chats/message/${idChat}`,
         {
           headers: {
             "auth-token": token,
@@ -230,7 +231,7 @@ export default function Chats({
   const fetchEnviar = async () => {
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /chats/message/${idChat}`,
         {
           headers: {
             "auth-token": token,
@@ -249,7 +250,7 @@ export default function Chats({
   const handleEnviarSMS = async () => {
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
+        `https://62ed-190-177-142-160.ngrok-free.app /chats/message/${idChat}`,
         {
           content: nuevoSMS,
         },
@@ -319,7 +320,30 @@ export default function Chats({
       scrollViewRef.current.scrollToEnd({ animated: false });
     }
   }, [SMS]);
-
+  const idUserPublic = async () => {
+   
+    try {
+      const response = await axios.get(
+        `https://62ed-190-177-142-160.ngrok-free.app //publications/publication/${idReference}?modelType=${referenceType}`,
+        null,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      );
+      console.log("Respuesta del servidor:", response.data);
+      console.log("idAUTOR: ",response.data.publication.user.idUser)
+      setIdAutor(response.data.publication.user.idUser);
+    } catch (error) {
+      console.log("Respuesta del servidor:", error);
+     
+    }}
+  
+  useEffect(() => {
+    idUserPublic();
+  }, []);
+   
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
@@ -380,7 +404,7 @@ export default function Chats({
               >
                 <View style={styles.modalContainer}>
                   <View style={styles.modalContent}>
-                    {referenceType[0] === "SEARCH" ? (
+                    {referenceType[0] === "SEARCH" && idUserAutor !== idAutor ? ( // Comprueba si es SEARCH y el idUserAutor es diferente de idAutor
                       <View style={(alignItems = "center")}>
                         <Text style={styles.modalText}>
                           ¡Mascota encontrada!
@@ -400,7 +424,7 @@ export default function Chats({
                           </TouchableOpacity>
                         </View>
                       </View>
-                    ) : referenceType[0] === "ADOPTION" ? (
+                    ) : referenceType[0] === "ADOPTION" && idUserAutor !== idAutor ? ( // Comprueba si es ADOPTION y el idUserAutor es diferente de idAutor
                       <View>
                         <Text style={styles.modalText}>¡Mascota adoptada!</Text>
                         <View style={styles.modalButtons}>
