@@ -95,7 +95,7 @@ export default function NuevaMascota({
     console.log(idPetBreed);
     // Obtener tipos de mascotas
     axios
-      .get("https://62ed-190-177-142-160.ngrok-free.app /parameters/petType", {
+      .get("https://buddy-app2.loca.lt/parameters/petType", {
         headers: {
           "auth-token": token,
         },
@@ -200,7 +200,7 @@ export default function NuevaMascota({
     console.log(data);
 
     const response = await axios.post(
-      "https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/",
+      "https://buddy-app2.loca.lt/mypet/pet/",
       data,
       config
     );

@@ -54,7 +54,7 @@ export default function MisTurnos() {
   async function fetchTurnos() {
     try {
       const response = await axios.get(
-        `https://62ed-190-177-142-160.ngrok-free.app /mypet/turn/${mascotaId}`,
+        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -141,7 +141,7 @@ export default function MisTurnos() {
     console.log(turno.idTurn);
     try {
       const response = await axios.delete(
-        `https://62ed-190-177-142-160.ngrok-free.app /mypet/turn/${mascotaId}/${turno.idTurn}`,
+        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`,
         {
           headers: {
             "auth-token": token,
@@ -174,7 +174,7 @@ export default function MisTurnos() {
   useEffect(() => {
     const fetchMascotas= async () => {
       try {
-        const response = await axios.get(`https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/${mascotaId}`,
+        const response = await axios.get(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
           {
             headers: {
               "auth-token": token,

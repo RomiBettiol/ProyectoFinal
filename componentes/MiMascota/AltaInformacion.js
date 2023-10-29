@@ -81,7 +81,7 @@ export default function AltaInformacion({ visible, onClose, token }) {
                 setIsButtonDisabled1(true);
                 try {
                   const response = await axios.post(
-                    `https://62ed-190-177-142-160.ngrok-free.app /mypet/information/${mascotaId}`,
+                    `https://buddy-app2.loca.lt/mypet/information/${mascotaId}`,
                     data,
                     {
                       headers: {

@@ -55,7 +55,7 @@ export default function MisVacunas() {
   async function fetchVaccines() {
     try {
       const response = await axios.get(
-        `https://62ed-190-177-142-160.ngrok-free.app /mypet/vaccine/${mascotaId}`,
+        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -165,7 +165,7 @@ export default function MisVacunas() {
     console.log(vaccin.idVaccin);
     try {
       const response = await axios.delete(
-        `https://62ed-190-177-142-160.ngrok-free.app /mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`,
+        `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${vaccin.idVaccine}`,
         {
           headers: {
             "auth-token": token,
@@ -201,7 +201,7 @@ export default function MisVacunas() {
   useEffect(() => {
     const fetchMascotas= async () => {
       try {
-        const response = await axios.get(`https://62ed-190-177-142-160.ngrok-free.app /mypet/pet/${mascotaId}`,
+        const response = await axios.get(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
           {
             headers: {
               "auth-token": token,

@@ -31,7 +31,7 @@ const AltaEstablecimientoScreen = () => {
       };
 
       const response = await axios.get(
-        "https://62ed-190-177-142-160.ngrok-free.app /security/establishment/revision",
+        "https://buddy-app2.loca.lt/security/establishment/revision",
         config
       );
 

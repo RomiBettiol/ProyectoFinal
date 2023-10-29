@@ -42,7 +42,7 @@ const ModalAgregarLocalidad = ({
     };
 
     axios
-      .post("https://62ed-190-177-142-160.ngrok-free.app /parameters/locality", newLocalidad, {
+      .post("https://buddy-app2.loca.lt/parameters/locality", newLocalidad, {
         headers: { "auth-token": token },
       })
       .then((response) => {

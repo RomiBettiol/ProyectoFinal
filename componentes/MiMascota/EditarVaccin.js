@@ -286,7 +286,7 @@ useEffect(() => {
 
                 try {
                   const response = await axios.put(
-                    `https://62ed-190-177-142-160.ngrok-free.app /mypet/vaccine/${mascotaId}/${idVaccin}`,
+                    `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}/${idVaccin}`,
                     updatedData,
                     {
                       headers: {

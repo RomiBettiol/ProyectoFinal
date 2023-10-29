@@ -208,7 +208,7 @@ export default function AltaTurno({ visible, onClose  }) {
               console
               try {
                 const response = await axios.post(
-                  `https://62ed-190-177-142-160.ngrok-free.app /mypet/turn/${mascotaId}`,
+                  `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}`,
                   {
                     titleTurn: data.titleTurn,
                     descriptionTurn: data.descriptionTurn,

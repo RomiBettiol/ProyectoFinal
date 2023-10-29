@@ -50,7 +50,7 @@ export default function MisChats({ navigation }) {
   // UseEffect para obtener el idUser
   useEffect(() => {
     axios
-      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user/`, {
+      .get(`https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -97,7 +97,7 @@ export default function MisChats({ navigation }) {
 
   const fetchChats = async () => {
     axios
-      .get("https://62ed-190-177-142-160.ngrok-free.app /chats/chat/false", {
+      .get("https://buddy-app2.loca.lt/chats/chat/false", {
         headers: {
           "auth-token": token,
         },
@@ -151,7 +151,7 @@ export default function MisChats({ navigation }) {
   //Trae info del usuario
   useEffect(() => {
     axios
-      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user/`, {
+      .get(`https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },

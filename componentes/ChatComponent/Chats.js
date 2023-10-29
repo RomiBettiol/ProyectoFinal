@@ -54,12 +54,12 @@ export default function Chats({
   const { token } = route.params;
   const [buttonTransform, setButtonTransform] = useState(0);
   const data = route.params;
-  console.log("data", data);
+  //console.log("data", data);
   const idChat = data.chatId;
   const idReference = useState(data.idReference || "");
   const referenceType = useState(data.referenceType || "");
-  console.log("type 1: ", data.referenceType);
-  console.log("type 2: ", referenceType[0]);
+  //console.log("type 1: ", data.referenceType);
+  //console.log("type 2: ", referenceType[0]);
 
   const receptor = data.idUserRecep;
   const nombreRecep = data.nombre;
@@ -78,9 +78,7 @@ export default function Chats({
   const [imagePublicacion, setImagePublicacion] = useState(
     data.imagenPublicacion || ""
   );
-  console.log("imagen publicacion: ", imagePublicacion);
-
-  console.log("IDcHAT: ", idChat);
+  console.log("A COMPARAR ID USER AUTOR: ", idAutor, "idUserAutor: ", idUserAutor)
   const showDeleteModal = () => {
     setIsDeleteModalVisible(true);
   };
@@ -115,7 +113,7 @@ export default function Chats({
   const fetchArchivar = async () => {
     try {
       const response = await axios.post(
-        `https://62ed-190-177-142-160.ngrok-free.app /chats/chat/archive/${idChat}/true`,
+        `https://buddy-app2.loca.lt/chats/chat/archive/${idChat}/true`,
         null,
         {
           headers: {
@@ -124,21 +122,21 @@ export default function Chats({
         }
       );
 
-      console.log("Chats archivado");
+     // console.log("Chats archivado");
       setTimeout(() => {
         navigation.navigate("Archivados", { token });
       }, 1000);
     } catch (error) {
       console.error("Error al archivar:", error);
     }
-    console.log("Estoy saliendo del try");
+   // console.log("Estoy saliendo del try");
   };
   const fetchCerrarSearch = async () => {
     const idPublicacion = idReference[0];
-    console.log(idPublicacion);
+   // console.log(idPublicacion);
     try {
       const response = await axios.post(
-        `https://62ed-190-177-142-160.ngrok-free.app /publications/publication/solve/${idPublicacion}?modelType=Search`,
+        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Search`,
         null,
         {
           headers: {
@@ -147,7 +145,7 @@ export default function Chats({
         }
       );
 
-      console.log("Publciacion cerrada");
+     // console.log("Publciacion cerrada");
       // Muestra el modal de felicitación
       setShowCongratulationsModal(true);
 
@@ -158,14 +156,14 @@ export default function Chats({
     } catch (error) {
       console.error("Error al cerrar publicacion:", error);
     }
-    console.log("Estoy saliendo del try");
+   // console.log("Estoy saliendo del try");
   };
   const fetchCerrarAdoption = async () => {
     const idPublicacion = idReference[0];
-    console.log("idPublicacion dentro del try: ", idPublicacion);
+   // console.log("idPublicacion dentro del try: ", idPublicacion);
     try {
       const response = await axios.post(
-        `https://62ed-190-177-142-160.ngrok-free.app /publications/publication/solve/${idPublicacion}?modelType=Adoption`,
+        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
         null,
         {
           headers: {
@@ -174,7 +172,7 @@ export default function Chats({
         }
       );
 
-      console.log("Publciacion cerrada");
+    //  console.log("Publciacion cerrada");
       // Muestra el modal de felicitación
       setShowCongratulationsModal(true);
 
@@ -195,25 +193,25 @@ export default function Chats({
 
   useEffect(() => {
     axios
-      .get(`https://62ed-190-177-142-160.ngrok-free.app /security/user/`, {
+      .get(`https://buddy-app2.loca.lt/security/user/`, {
         headers: {
           "auth-token": token,
         },
       })
       .then((response) => {
         // Declarar la constante idUser
+        setUserAutor(response.data[0].idUser)
         setImageEmisor(response.data[0].image);
-        console.log("USUARIO ID!: ", imageEmisor);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, [token]);
+  }, []);
 
   const fetchSMS = async () => {
     try {
       const response = await axios.get(
-        `https://62ed-190-177-142-160.ngrok-free.app /chats/message/${idChat}`,
+        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
         {
           headers: {
             "auth-token": token,
@@ -221,17 +219,17 @@ export default function Chats({
         }
       );
       setSMS(response.data); // Actualiza las publicaciones en el estado
-      console.log("Mensajes:", response.data);
+    //  console.log("Mensajes:", response.data);
     } catch (error) {
       console.error("Error al cargar mensajes:", error);
     }
-    console.log("Estoy saliendo del try");
+  //  console.log("Estoy saliendo del try");
   };
 
   const fetchEnviar = async () => {
     try {
       const response = await axios.post(
-        `https://62ed-190-177-142-160.ngrok-free.app /chats/message/${idChat}`,
+        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
         {
           headers: {
             "auth-token": token,
@@ -239,18 +237,18 @@ export default function Chats({
           content: nuevoSMS,
         }
       );
-      setSMS(response.data); // Actualiza las publicaciones en el estado
+     // setSMS(response.data); // Actualiza las publicaciones en el estado
       console.log("mensajes: ", response.data);
     } catch (error) {
       console.error("Error al cargar mensajes:", error);
     }
-    console.log("estoy saliendo del try");
+ //   console.log("estoy saliendo del try");
   };
 
   const handleEnviarSMS = async () => {
     try {
       const response = await axios.post(
-        `https://62ed-190-177-142-160.ngrok-free.app /chats/message/${idChat}`,
+        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
         {
           content: nuevoSMS,
         },
@@ -304,14 +302,11 @@ export default function Chats({
     fetchData();
   }, []);
 
-  useEffect(() => {
-    //fetchSMSPeriodically(); // Iniciar la actualización periódica
-    console.log(SMS);
-  }, []);
+ 
 
   useEffect(() => {
     fetchSMS();
-    console.log(SMS);
+   // console.log(SMS);
   }, []);
 
   useEffect(() => {
@@ -321,10 +316,10 @@ export default function Chats({
     }
   }, [SMS]);
   const idUserPublic = async () => {
-   
+   console.log(id)
     try {
       const response = await axios.get(
-        `https://62ed-190-177-142-160.ngrok-free.app //publications/publication/${idReference}?modelType=${referenceType}`,
+        `https://buddy-app2.loca.lt/publications/publication/${idReference}?modelType=${referenceType}`,
         null,
         {
           headers: {
@@ -332,18 +327,18 @@ export default function Chats({
           },
         }
       );
-      console.log("Respuesta del servidor:", response.data);
-      console.log("idAUTOR: ",response.data.publication.user.idUser)
+     
+      console.log("id autor public: ", response.data)
       setIdAutor(response.data.publication.user.idUser);
     } catch (error) {
       console.log("Respuesta del servidor:", error);
      
-    }}
+  }}
   
   useEffect(() => {
     idUserPublic();
   }, []);
-   
+   //console.log(token)
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />

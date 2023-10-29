@@ -380,7 +380,7 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
                 setIsButtonDisabled(true); // Deshabilitar el botón
                 try {
                   const response = await axios.post(
-                    `https://62ed-190-177-142-160.ngrok-free.app /mypet/vaccine/${mascotaId}`,
+                    `https://buddy-app2.loca.lt/mypet/vaccine/${mascotaId}`,
                     data,
                     {
                       headers: {

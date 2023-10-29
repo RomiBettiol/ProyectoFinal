@@ -112,7 +112,7 @@ export default function EditarPublicacionAdopcion({ route }) {
       });
 
       const response = await axios.put(
-        `https://62ed-190-177-142-160.ngrok-free.app /publications/publication/${idPublicationAdoption}?modelType=adoption`,
+        `https://buddy-app2.loca.lt/publications/publication/${idPublicationAdoption}?modelType=adoption`,
         {
           title: title,
           description: description,

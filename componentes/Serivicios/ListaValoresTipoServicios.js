@@ -16,7 +16,7 @@ const ListaValoresTipoServicios = ({
 
   useEffect(() => {
     axios
-      .get("https://62ed-190-177-142-160.ngrok-free.app /services/service/types", {
+      .get("https://buddy-app2.loca.lt/services/service/types", {
         headers: {
           "auth-token": token,
           "Cache-Control": "no-cache",
