@@ -75,7 +75,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/mypet/pet/${mascota.idPet}`,
         {
           petName: updatedData.petName,
           birthDate: updatedData.birthDate,
@@ -109,7 +109,7 @@ export default function EditarMascota({
     console.log(raza);
     // Obtener tipos de mascotas
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/parameters/petType", {
         headers: {
           "auth-token": token,
         },
@@ -131,7 +131,7 @@ export default function EditarMascota({
 
     // Obtener razas de mascotas
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/parameters/petBreed", {
         headers: {
           "auth-token": token,
         },
@@ -232,7 +232,7 @@ export default function EditarMascota({
     console.log(updatedData);
     try {
       const response = await axios.put(
-        `https://buddy-app2.loca.lt/mypet/pet/${mascota.idPet}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/mypet/pet/${mascota.idPet}`,
         {
           headers: {
             "auth-token": token,

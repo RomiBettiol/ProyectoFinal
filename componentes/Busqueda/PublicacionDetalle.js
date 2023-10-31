@@ -35,14 +35,18 @@ const PublicacionDetalle = ({ route }) => {
     return `${day}-${month}-${year}`;
   };
   const viewShotRef = useRef();
+  console.log(publicacion.user.idUser);
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user`, {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        `https://37e1-186-12-32-189.ngrok-free.app/security/user/byId/${publicacion.user.idUser}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         setUserAutor(response.data);
         setIdUserAutor(response.data[0].idUser);
@@ -71,7 +75,7 @@ const PublicacionDetalle = ({ route }) => {
     try {
       // Realizar una solicitud POST al servidor para crear un nuevo chat
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Search`,
+        `https://37e1-186-12-32-189.ngrok-free.app/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Search`,
         null,
         {
           headers: {
@@ -591,8 +595,9 @@ const styles = StyleSheet.create({
     right: 0,
   },
   iconos: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
+    marginRight: 10,
   },
   containerDescripcion: {
     justifyContent: "space-between",
@@ -603,6 +608,7 @@ const styles = StyleSheet.create({
   },
   itemInfoFiltro: {
     marginTop: 10,
+    alignContent: "center",
   },
   texto: {
     marginTop: 3,

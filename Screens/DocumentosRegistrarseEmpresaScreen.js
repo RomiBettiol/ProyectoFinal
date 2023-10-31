@@ -281,7 +281,7 @@ export default function DocumentosRegistrarseEmpresaScreen({ route }) {
     console.log(data);
 
     const response = await axios.post(
-      "https://buddy-app2.loca.lt/security/user/register",
+      "https://37e1-186-12-32-189.ngrok-free.app/security/user/register",
       data,
       config
     );

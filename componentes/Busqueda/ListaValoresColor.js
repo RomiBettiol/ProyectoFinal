@@ -9,7 +9,7 @@ const ListaValoresColor = ({ setSelectedColorId, token }) => {
 
   const getColores = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petColor/", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/parameters/petColor/", {
         headers: { "auth-token": token },
       })
       .then((response) => {

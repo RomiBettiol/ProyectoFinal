@@ -53,7 +53,7 @@ export default function Archivados({ navigation }) {
   // UseEffect para obtener el idUser
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://37e1-186-12-32-189.ngrok-free.app/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -100,7 +100,7 @@ export default function Archivados({ navigation }) {
 
   useEffect(() => {
     axios
-      .get("https://buddy-app2.loca.lt/chats/chat/true", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/chats/chat/true", {
         headers: {
           "auth-token": token,
         },
@@ -150,7 +150,7 @@ export default function Archivados({ navigation }) {
   //Trae info del usuario
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://37e1-186-12-32-189.ngrok-free.app/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -180,7 +180,7 @@ export default function Archivados({ navigation }) {
   const fetchDesArchivar = async () => {
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/archive/${selectedIdChat}/false`,
+        `https://37e1-186-12-32-189.ngrok-free.app/chats/chat/archive/${selectedIdChat}/false`,
         null,
         {
           headers: {

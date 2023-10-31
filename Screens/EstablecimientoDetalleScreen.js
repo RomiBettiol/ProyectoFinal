@@ -54,7 +54,7 @@ const EstablecimientoDetalleScreen = () => {
       };
 
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/security/establishment/${establishmentId}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/security/establishment/${establishmentId}`,
         config
       );
 
@@ -73,7 +73,7 @@ const EstablecimientoDetalleScreen = () => {
       };
 
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/security/establishment/document/${establishmentId}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/security/establishment/document/${establishmentId}`,
         config
       );
 
@@ -174,7 +174,7 @@ const EstablecimientoDetalleScreen = () => {
       };
 
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/security/establishment/validateEstablishment/${establishmentId}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/security/establishment/validateEstablishment/${establishmentId}`,
         data,
         config
       );
@@ -208,7 +208,7 @@ const EstablecimientoDetalleScreen = () => {
       };
 
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/security/establishment/validateEstablishment/${establishmentId}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/security/establishment/validateEstablishment/${establishmentId}`,
         data,
         config
       );

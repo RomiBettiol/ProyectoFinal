@@ -19,11 +19,14 @@ export default function ReportesScreen() {
   useEffect(() => {
     setisLoading(true);
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/founds-success", {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        "https://37e1-186-12-32-189.ngrok-free.app/reports/count/founds-success",
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -35,11 +38,14 @@ export default function ReportesScreen() {
 
     // Servicios activos
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/services-actives", {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        "https://37e1-186-12-32-189.ngrok-free.app/reports/count/services-actives",
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -51,11 +57,14 @@ export default function ReportesScreen() {
 
     // Usuarios activos
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/users-actives", {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        "https://37e1-186-12-32-189.ngrok-free.app/reports/count/users-actives",
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -67,11 +76,14 @@ export default function ReportesScreen() {
 
     // Mascotas perdidas
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/losts-actives", {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        "https://37e1-186-12-32-189.ngrok-free.app/reports/count/losts-actives",
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -83,11 +95,14 @@ export default function ReportesScreen() {
 
     // Mascotas en adopción
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/adoptions-actives", {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        "https://37e1-186-12-32-189.ngrok-free.app/reports/count/adoptions-actives",
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;
@@ -99,11 +114,14 @@ export default function ReportesScreen() {
 
     // Mascotas adoptadas
     axios
-      .get("https://buddy-app2.loca.lt/reports/count/adoptions-success", {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        "https://37e1-186-12-32-189.ngrok-free.app/reports/count/adoptions-success",
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         // Extraer el valor quantity de la respuesta
         const { quantity } = response.data;

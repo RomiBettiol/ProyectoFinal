@@ -49,7 +49,11 @@ const RatingModal = ({ isVisible, onClose, onRatingSubmit, idService }) => {
 
     // Realizar la solicitud POST con el encabezado de autenticación
     axios
-      .post("https://buddy-app2.loca.lt/services/rating/", requestData, config)
+      .post(
+        "https://37e1-186-12-32-189.ngrok-free.app/services/rating/",
+        requestData,
+        config
+      )
       .then((response) => {
         // Aquí puedes manejar la respuesta exitosa si es necesario
         console.log("Respuesta del servidor:", response.data);

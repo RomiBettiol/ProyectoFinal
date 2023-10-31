@@ -14,7 +14,7 @@ const ListaValoresRazaPerros = ({
   const getRazas = () => {
     axios
       .get(
-        `https://buddy-app2.loca.lt/parameters/petBreed/byType/${selectedAnimal}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/parameters/petBreed/byType/${selectedAnimal}`,
         {
           headers: { "auth-token": token },
         }

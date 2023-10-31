@@ -46,9 +46,13 @@ const ModalAgregarRaza = ({
     };
 
     await axios
-      .post("https://buddy-app2.loca.lt/parameters/petBreed", newBreed, {
-        headers: { "auth-token": token },
-      })
+      .post(
+        "https://37e1-186-12-32-189.ngrok-free.app/parameters/petBreed",
+        newBreed,
+        {
+          headers: { "auth-token": token },
+        }
+      )
       .then((response) => {
         console.log(response);
         onAdd(newBreed);

@@ -12,7 +12,7 @@ const ListaValoresAnimal = ({
 
   useEffect(() => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petType/", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/parameters/petType/", {
         headers: { "auth-token": token },
       })
       .then((response) => {

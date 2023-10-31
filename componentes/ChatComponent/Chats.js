@@ -118,7 +118,7 @@ export default function Chats({
   const fetchArchivar = async () => {
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/archive/${idChat}/true`,
+        `https://37e1-186-12-32-189.ngrok-free.app/chats/chat/archive/${idChat}/true`,
         null,
         {
           headers: {
@@ -142,7 +142,7 @@ export default function Chats({
     // console.log(idPublicacion);
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=search`,
+        `https://37e1-186-12-32-189.ngrok-free.app/publications/publication/solve/${idPublicacion}?modelType=search`,
         null,
         {
           headers: {
@@ -169,7 +169,7 @@ export default function Chats({
     // console.log("idPublicacion dentro del try: ", idPublicacion);
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
+        `https://37e1-186-12-32-189.ngrok-free.app/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
 
         {
           headers: {
@@ -199,7 +199,7 @@ export default function Chats({
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://37e1-186-12-32-189.ngrok-free.app/security/user/`, {
         headers: {
           "auth-token": token,
         },
@@ -217,7 +217,7 @@ export default function Chats({
   const fetchSMS = async () => {
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/chats/message/${idChat}`,
         {
           headers: {
             "auth-token": token,
@@ -235,7 +235,7 @@ export default function Chats({
   const fetchEnviar = async () => {
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/chats/message/${idChat}`,
         {
           headers: {
             "auth-token": token,
@@ -254,7 +254,7 @@ export default function Chats({
   const handleEnviarSMS = async () => {
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/message/${idChat}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/chats/message/${idChat}`,
         {
           content: nuevoSMS,
         },
@@ -327,7 +327,7 @@ export default function Chats({
 
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/publications/publication/${ref}?modelType=${type}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/publications/publication/${ref}?modelType=${type}`,
 
         {
           headers: {

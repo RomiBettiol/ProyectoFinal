@@ -116,7 +116,7 @@ export default function PublicarServicio() {
 
     try {
       const response = await axios.put(
-        `https://buddy-app2.loca.lt/services/service/${idService}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/services/service/${idService}`,
         {
           serviceTitle: title,
           serviceDescription: description,
@@ -285,7 +285,7 @@ export default function PublicarServicio() {
     const fetchServiceDetails = async () => {
       try {
         const response = await axios.get(
-          `https://buddy-app2.loca.lt/services/service/${idService}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/services/service/${idService}`,
           {
             headers: {
               "auth-token": token,

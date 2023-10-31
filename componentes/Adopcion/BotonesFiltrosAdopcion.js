@@ -226,7 +226,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las zonas desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/locality/", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/parameters/locality/", {
         headers: {
           "auth-token": token,
         },
@@ -244,7 +244,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener los colores desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petColor/", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/parameters/petColor/", {
         headers: {
           "auth-token": token,
         },
@@ -262,7 +262,7 @@ const BotonesFiltrosAdopcion = () => {
   useEffect(() => {
     // Realizar la solicitud HTTP para obtener las razas desde el backend
     axios
-      .get("https://buddy-app2.loca.lt/parameters/petBreed", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/parameters/petBreed", {
         headers: {
           "auth-token": token,
         },
@@ -297,7 +297,7 @@ const BotonesFiltrosAdopcion = () => {
     setLoading(true);
 
     const apiUrl =
-      "https://buddy-app2.loca.lt/publications/publication?modelType=adoption";
+      "https://37e1-186-12-32-189.ngrok-free.app/publications/publication?modelType=adoption";
 
     axios
       .get(apiUrl, {

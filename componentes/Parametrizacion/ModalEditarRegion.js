@@ -26,7 +26,7 @@ const ModalEditarRegion = ({
   const handleEditRegion = () => {
     axios
       .put(
-        `https://buddy-app2.loca.lt/parameters/region/${editingRegion.idRegion}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/parameters/region/${editingRegion.idRegion}`,
         {
           regionName: regionName,
           surface: extension,

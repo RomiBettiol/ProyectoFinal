@@ -22,7 +22,7 @@ export default function NotificacionesScreen({ navigation }) {
       setisLoading(true);
       try {
         const response = await axios.get(
-          "https://buddy-app2.loca.lt/reports/notification/",
+          "https://37e1-186-12-32-189.ngrok-free.app/reports/notification/",
           {
             headers: {
               "auth-token": token,

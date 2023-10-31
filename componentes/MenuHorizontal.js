@@ -22,7 +22,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded, permisos }) => {
   const sendNotificationRequest = async () => {
     try {
       const response = await axios.post(
-        "https://buddy-app2.loca.lt/reports/notification/",
+        "https://37e1-186-12-32-189.ngrok-free.app/reports/notification/",
         null,
         {
           headers: {
@@ -59,7 +59,7 @@ const MenuHorizontal = ({ openModal, notificacionReaded, permisos }) => {
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://37e1-186-12-32-189.ngrok-free.app/security/user/`, {
         headers: {
           "auth-token": token,
         },

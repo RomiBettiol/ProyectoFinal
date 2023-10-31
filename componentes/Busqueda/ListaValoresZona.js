@@ -9,7 +9,7 @@ const ListaValoresZona = ({ setSelectedLocality, token }) => {
 
   const getZonas = () => {
     axios
-      .get("https://buddy-app2.loca.lt/parameters/locality/", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/parameters/locality/", {
         headers: { "auth-token": token },
       })
       .then((response) => {

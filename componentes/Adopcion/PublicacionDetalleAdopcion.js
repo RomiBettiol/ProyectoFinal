@@ -29,11 +29,14 @@ const PublicacionDetalleAdopcion = ({ route }) => {
 
   useEffect(() => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user`, {
-        headers: {
-          "auth-token": token,
-        },
-      })
+      .get(
+        `https://37e1-186-12-32-189.ngrok-free.app/security/user/byId/${publicacion.user.idUser}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      )
       .then((response) => {
         setUserAutor(response.data);
         setIdUserAutor(response.data[0].idUser);
@@ -64,7 +67,7 @@ const PublicacionDetalleAdopcion = ({ route }) => {
       //  console.log('antes del post ')
       // Realizar una solicitud POST al servidor para crear un nuevo chat
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Adoption`,
+        `https://37e1-186-12-32-189.ngrok-free.app/chats/chat/${idSelectedUser}?idReference=${idAdopcion}&referenceType=Adoption`,
         null,
         {
           headers: {

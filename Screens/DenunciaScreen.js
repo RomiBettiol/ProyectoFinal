@@ -29,7 +29,7 @@ export default function DenunciaScreen({ navigation }) {
     setisLoading(true);
     // Realiza una solicitud GET al servidor para obtener las denuncias
     axios
-      .get("https://buddy-app2.loca.lt/security/complaint/", {
+      .get("https://37e1-186-12-32-189.ngrok-free.app/security/complaint/", {
         headers: {
           "auth-token": token,
         },
@@ -40,6 +40,7 @@ export default function DenunciaScreen({ navigation }) {
       })
       .catch((error) => {
         console.error("Error al obtener denuncias:", error);
+        setisLoading(false);
       });
   }
 
@@ -72,7 +73,7 @@ export default function DenunciaScreen({ navigation }) {
       // Realizar una solicitud DELETE al servidor para eliminar la denuncia con el encabezado personalizado
       axios
         .delete(
-          `https://buddy-app2.loca.lt/security/complaint/${denunciaToReject}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/security/complaint/${denunciaToReject}`,
           { headers }
         )
         .then((response) => {
@@ -104,7 +105,7 @@ export default function DenunciaScreen({ navigation }) {
 
     axios
       .post(
-        `https://buddy-app2.loca.lt/security/complaint/execute/${data.validate}/${idComplaint}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/security/complaint/execute/${data.validate}/${idComplaint}`,
         null,
         {
           headers: headers,

@@ -137,7 +137,7 @@ export default function EditarTurno({
     console.log(turno.idTurn);
     try {
       const response = await axios.put(
-        `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/mypet/turn/${mascotaId}/${idTurn}`,
         {
           titleTurn: updatedData.titleTurn,
           descriptionTurn: updatedData.descriptionTurn,
@@ -252,7 +252,7 @@ export default function EditarTurno({
 
                 try {
                   const response = await axios.put(
-                    `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${idTurn}`,
+                    `https://37e1-186-12-32-189.ngrok-free.app/mypet/turn/${mascotaId}/${idTurn}`,
                     updatedData,
                     {
                       headers: {

@@ -59,7 +59,7 @@ const SearchBarExample = ({ data, onSearch, onFilterChangeHora }) => {
   const fetchZones = async () => {
     try {
       const response = await axios.get(
-        "https://buddy-app2.loca.lt/parameters/locality",
+        "https://37e1-186-12-32-189.ngrok-free.app/parameters/locality",
         {
           headers: {
             "auth-token": token, // Agrega el token de autenticación en el encabezado

@@ -11,11 +11,14 @@ const EliminarMascotaModal = ({
 }) => {
   const eliminarMascota = async () => {
     try {
-      await axios.delete(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`, {
-        headers: {
-          "auth-token": token,
-        },
-      });
+      await axios.delete(
+        `https://37e1-186-12-32-189.ngrok-free.app/mypet/pet/${mascotaId}`,
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      );
       onConfirm();
     } catch (error) {
       console.error("Error eliminando la mascota:", error);

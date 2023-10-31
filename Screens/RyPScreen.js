@@ -51,12 +51,12 @@ export default function InicioScreen() {
       };
 
       const rolesResponse = await axios.get(
-        "https://buddy-app2.loca.lt/security/role/every",
+        "https://37e1-186-12-32-189.ngrok-free.app/security/role/every",
         config
       );
 
       const permisosResponse = await axios.get(
-        "https://buddy-app2.loca.lt/security/permission/",
+        "https://37e1-186-12-32-189.ngrok-free.app/security/permission/",
         config
       );
 
@@ -77,7 +77,7 @@ export default function InicioScreen() {
       };
 
       const permisosResponse = await axios.get(
-        `https://buddy-app2.loca.lt/security/role/${id}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/security/role/${id}`,
         config
       );
       setPermisosRol(permisosResponse.data.permissions);
@@ -152,12 +152,12 @@ export default function InicioScreen() {
       let response;
       if (state === "ACTIVO") {
         response = await axios.delete(
-          `https://buddy-app2.loca.lt/security/${type}/${id}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/security/${type}/${id}`,
           config
         );
       } else {
         response = await axios.post(
-          `https://buddy-app2.loca.lt/security/${type}/active/${id}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/security/${type}/active/${id}`,
           {},
           config
         );
@@ -209,7 +209,7 @@ export default function InicioScreen() {
         };
 
         response = await axios.post(
-          `https://buddy-app2.loca.lt/security/${type}/`,
+          `https://37e1-186-12-32-189.ngrok-free.app/security/${type}/`,
           data,
           config
         );
@@ -225,7 +225,7 @@ export default function InicioScreen() {
           };
 
           response = await axios.post(
-            `https://buddy-app2.loca.lt/security/${type}/`,
+            `https://37e1-186-12-32-189.ngrok-free.app/security/${type}/`,
             data,
             config
           );
@@ -282,7 +282,7 @@ export default function InicioScreen() {
         };
 
         response = await axios.put(
-          `https://buddy-app2.loca.lt/security/${type}/${id}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/security/${type}/${id}`,
           data,
           config
         );
@@ -297,7 +297,7 @@ export default function InicioScreen() {
           };
 
           response = await axios.put(
-            `https://buddy-app2.loca.lt/security/${type}/${id}`,
+            `https://37e1-186-12-32-189.ngrok-free.app/security/${type}/${id}`,
             data,
             config
           );
@@ -350,12 +350,12 @@ export default function InicioScreen() {
 
       if (permissionRole.includes(tokenClaim)) {
         response = await axios.delete(
-          `https://buddy-app2.loca.lt/security/role/take/${id}/${idPermission}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/security/role/take/${id}/${idPermission}`,
           config
         );
       } else {
         response = await axios.post(
-          `https://buddy-app2.loca.lt/security/role/add/${id}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/security/role/add/${id}`,
           data,
           config
         );

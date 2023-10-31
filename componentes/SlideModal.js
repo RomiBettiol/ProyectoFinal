@@ -69,7 +69,7 @@ const SlideModal = ({ visible, onClose }) => {
   //Trae info del usuario
   const fetchNombre = () => {
     axios
-      .get(`https://buddy-app2.loca.lt/security/user/`, {
+      .get(`https://37e1-186-12-32-189.ngrok-free.app/security/user/`, {
         headers: {
           "auth-token": token,
         },

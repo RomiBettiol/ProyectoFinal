@@ -63,7 +63,7 @@ export function RegistrarseScreen({ navigation }) {
       // Hacer la petición POST al backend usando axios
       try {
         const response = await axios.post(
-          "https://buddy-app2.loca.lt/security/user/register",
+          "https://37e1-186-12-32-189.ngrok-free.app/security/user/register",
           data,
           {
             headers: {

@@ -36,7 +36,7 @@ const ListaServiciosScreen = () => {
       };
 
       const response = await axios.get(
-        "https://buddy-app2.loca.lt/services/service/every",
+        "https://37e1-186-12-32-189.ngrok-free.app/services/service/every",
         config
       );
 
@@ -80,12 +80,12 @@ const ListaServiciosScreen = () => {
       let response;
       if (serviceState === "ACTIVO") {
         response = await axios.delete(
-          `https://buddy-app2.loca.lt/services/service/${serviceId}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/services/service/${serviceId}`,
           config
         );
       } else {
         response = await axios.post(
-          `https://buddy-app2.loca.lt/services/serviceState/changeState/${serviceId}/ACTIVO`,
+          `https://37e1-186-12-32-189.ngrok-free.app/services/serviceState/changeState/${serviceId}/ACTIVO`,
           {},
           config
         );

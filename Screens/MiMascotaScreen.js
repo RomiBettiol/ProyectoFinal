@@ -103,11 +103,14 @@ export default function MiMascotaScreen() {
   const fetchMascotas = async () => {
     try {
       setisLoading(true);
-      const response = await axios.get("https://buddy-app2.loca.lt/mypet/pet", {
-        headers: {
-          "auth-token": token,
-        },
-      });
+      const response = await axios.get(
+        "https://37e1-186-12-32-189.ngrok-free.app/mypet/pet",
+        {
+          headers: {
+            "auth-token": token,
+          },
+        }
+      );
       const mascotasData = response.data.pets;
       setMascotas(mascotasData);
       setBotonesVisibles(Array(mascotasData.length).fill(false)); // Inicializa el estado

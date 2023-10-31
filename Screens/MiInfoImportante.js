@@ -51,7 +51,7 @@ export default function MiInfoImportante() {
   async function fetchInformacion() {
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/mypet/information/${mascotaId}`,
         {
           headers: {
             "auth-token": token,
@@ -104,7 +104,7 @@ export default function MiInfoImportante() {
     console.log(info.idInformation);
     try {
       const response = await axios.delete(
-        `https://buddy-app2.loca.lt/mypet/information/${mascotaId}/${info.idInformation}`,
+        `https://37e1-186-12-32-189.ngrok-free.app/mypet/information/${mascotaId}/${info.idInformation}`,
         {
           headers: {
             "auth-token": token,
@@ -130,7 +130,7 @@ export default function MiInfoImportante() {
     const fetchMascotas = async () => {
       try {
         const response = await axios.get(
-          `https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
+          `https://37e1-186-12-32-189.ngrok-free.app/mypet/pet/${mascotaId}`,
           {
             headers: {
               "auth-token": token,
