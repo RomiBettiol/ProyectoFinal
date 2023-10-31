@@ -76,13 +76,15 @@ export default function HomeScreen({ navigation }) {
       title: "Lista de usuarios",
       image: require("../Imagenes/usuario_screen.png"),
       permission: "READ_LISTA_USUARIOS",
-      onPress: () => navigation.navigate("ListaUsuariosScreen", { token }),
+      onPress: () =>
+        navigation.navigate("ListaUsuariosScreen", { token, permisos }),
     },
     {
       title: "Lista de servicios",
       image: require("../Imagenes/servicios.png"),
       permission: "READ_LISTA_SERVICIOS",
-      onPress: () => navigation.navigate("ListaServiciosScreen", { token }),
+      onPress: () =>
+        navigation.navigate("ListaServiciosScreen", { token, permisos }),
     },
     {
       title: "Alta de establecimientos",
@@ -120,7 +122,7 @@ export default function HomeScreen({ navigation }) {
         "hardwareBackPress",
         backAction
       );
-
+      fetchData();
       return () => {
         backHandler.remove();
       };
@@ -162,20 +164,26 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+  const fetchData = async () => {
+    try {
+      setisLoading(true);
+      await obtenerInformes();
+      await obtenerPermisos();
+      await fetchNotifications();
+    } catch (error) {
+      console.error("Error en la operación asincrónica:", error);
+    } finally {
+      setisLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setisLoading(true);
-        await obtenerInformes();
-        await obtenerPermisos();
-        await fetchNotifications();
-      } catch (error) {
-        console.error("Error en la operación asincrónica:", error);
-      } finally {
-        setisLoading(false);
-      }
-    };
+    // const intervalId = setInterval(() => {
+    //   fetchNotifications();
+    // }, 5000); // 5000 milisegundos = 5 segundos
     fetchData();
+    // // Limpia el intervalo cuando el componente se desmonta
+    // return () => clearInterval(intervalId);
   }, []);
 
   const obtenerInformes = async () => {

@@ -14,7 +14,6 @@ const BotonSlide = ({ token }) => {
     setModalVisible(true);
   };
 
-  console.log("console logg en boton sldie");
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.botonMenu} onPress={handleOpenModal}>

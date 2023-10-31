@@ -90,7 +90,6 @@ export default function PublicacionBusqueda({ navigation }) {
     } else {
       setIsValidPhone(false); // Si contactPhone no tiene 10 caracteres, establece isValidPhone en falso
     }
-
     if (title.length >= 4) {
       setIsValid(true);
     } else {
@@ -114,7 +113,6 @@ export default function PublicacionBusqueda({ navigation }) {
         contactPhone,
       };
 
-      console.log("Datos a publicar:", postData);
       const config = {
         headers: {
           "auth-token": token,
@@ -126,7 +124,6 @@ export default function PublicacionBusqueda({ navigation }) {
         postData,
         config
       );
-      console.log("Solicitud POST exitosa:", response.data);
       setIsSuccessful(true);
       setIsModalVisible(true);
       setModalMessage("¡Publicación exitosa!");

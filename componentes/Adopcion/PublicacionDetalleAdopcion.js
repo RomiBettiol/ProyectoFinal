@@ -118,9 +118,12 @@ const PublicacionDetalleAdopcion = ({ route }) => {
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const id = error.response.data.chat.idChat;
-        console.log("Ya existe un chat por esta publicación. ", error.response.data.message);
+        console.log(
+          "Ya existe un chat por esta publicación. ",
+          error.response.data.message
+        );
         setMensaje(
-            "Ya existe un chat por esta publicación. Lo redirigiremos en unos segundos..."
+          "Ya existe un chat por esta publicación. Lo redirigiremos en unos segundos..."
         );
         setShowCongratulationsModal(true);
         setTimeout(() => {

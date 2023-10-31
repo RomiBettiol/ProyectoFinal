@@ -176,8 +176,7 @@ const FormularioRegistrarse = ({
   };
 
   const validarCuit = (cuit) => {
-    const cuitRegex = /^[0-9]{10,11}$/;
-
+    const cuitRegex = /^[0-9]{11}$/;
     if (cuitRegex.test(cuit)) {
       setCuitValido(true);
     } else {
@@ -209,23 +208,23 @@ const FormularioRegistrarse = ({
   };
 
   const isFormValid = () => {
-    console.log(
-      nombre.trim() !== "",
-      apellidos.trim() !== "",
-      email.trim() !== "",
-      usuario.trim() !== "",
-      contrasena.trim() !== "",
-      domicilio.trim() !== "",
-      nroTelefono.trim() !== "",
-      fechaNacimiento.trim() !== "",
-      cuitCuil.trim() !== "",
-      contrasena === contrasena2,
-      emailValido,
-      numeroValido,
-      cuitValido,
-      fechaValida,
-      requisitosContrasena.every((requisito) => requisito.cumplido)
-    );
+    // console.log(
+    //   nombre.trim() !== "",
+    //   apellidos.trim() !== "",
+    //   email.trim() !== "",
+    //   usuario.trim() !== "",
+    //   contrasena.trim() !== "",
+    //   domicilio.trim() !== "",
+    //   nroTelefono.trim() !== "",
+    //   fechaNacimiento.trim() !== "",
+    //   cuitCuil.trim() !== "",
+    //   contrasena === contrasena2,
+    //   emailValido,
+    //   numeroValido,
+    //   cuitValido,
+    //   fechaValida,
+    //   requisitosContrasena.every((requisito) => requisito.cumplido)
+    // );
     return (
       nombre.trim() !== "" &&
       apellidos.trim() !== "" &&
@@ -315,7 +314,7 @@ const FormularioRegistrarse = ({
           placeholder="Mail"
           value={email}
           onChangeText={setEmail}
-          onBlur={() => setEmailValido(validarEmail(email))}
+          onEndEditing={() => setEmailValido(validarEmail(email))}
         />
       </View>
       <View style={styles.controlContainer}>
@@ -360,7 +359,7 @@ const FormularioRegistrarse = ({
           placeholder="Número de teléfono"
           value={nroTelefono}
           onChangeText={setNroTelefono}
-          onBlur={() => validarNumero(nroTelefono)}
+          onEndEditing={() => validarNumero(nroTelefono)}
         />
       </View>
       <View style={styles.controlContainer}>
@@ -378,7 +377,7 @@ const FormularioRegistrarse = ({
           placeholder="Fecha de nacimiento"
           value={fechaNacimiento}
           onChangeText={setFechaNacimiento}
-          onBlur={() => validarFecha(fechaNacimiento)}
+          onEndEditing={() => validarFecha(fechaNacimiento)}
         />
       </View>
       <View style={styles.controlContainer}>
@@ -400,7 +399,7 @@ const FormularioRegistrarse = ({
           placeholder="Cuit / Cuil"
           value={cuitCuil}
           onChangeText={setCuitCuil}
-          onBlur={() => validarCuit(cuitCuil)}
+          onEndEditing={() => validarCuit(cuitCuil)}
         />
       </View>
       <View style={styles.controlContainer}>
@@ -430,7 +429,6 @@ const FormularioRegistrarse = ({
             }}
             secureTextEntry={true}
             onFocus={() => setMostrarTexto(true)}
-            onBlur={() => setMostrarTexto(false)}
           />
         </View>
         <View style={styles.controlContainer}>

@@ -70,7 +70,7 @@ export default function Chats({
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isCloseModalVisible, setIsCloseModalVisible] = useState(false);
   const [isConfirmedToDelete, setIsConfirmedToDelete] = useState(false);
-  const [idAutor, setIdAutor] = useState("");;
+  const [idAutor, setIdAutor] = useState("");
   const [showCongratulationsModal, setShowCongratulationsModal] =
     useState(false);
   const [navigateToHome, setNavigateToHome] = useState(false);
@@ -122,18 +122,19 @@ export default function Chats({
         }
       );
 
-     // console.log("Chats archivado");
+      // console.log("Chats archivado");
       setTimeout(() => {
         navigation.navigate("Archivados", { token });
       }, 1000);
     } catch (error) {
       console.error("Error al archivar:", error);
     }
-   // console.log("Estoy saliendo del try");
+    // console.log("Estoy saliendo del try");
   };
   const fetchCerrarSearch = async () => {
     const idPublicacion = idReference[0];
-    console.log(idPublicacion);
+
+    // console.log(idPublicacion);
     try {
       const response = await axios.post(
         `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=search`,
@@ -145,7 +146,7 @@ export default function Chats({
         }
       );
 
-     // console.log("Publciacion cerrada");
+      // console.log("Publciacion cerrada");
       // Muestra el modal de felicitación
       setShowCongratulationsModal(true);
 
@@ -156,11 +157,11 @@ export default function Chats({
     } catch (error) {
       console.error("Error al cerrar publicacion:", error);
     }
-   // console.log("Estoy saliendo del try");
+    // console.log("Estoy saliendo del try");
   };
   const fetchCerrarAdoption = async () => {
     const idPublicacion = idReference[0];
-   // console.log("idPublicacion dentro del try: ", idPublicacion);
+    // console.log("idPublicacion dentro del try: ", idPublicacion);
     try {
       const response = await axios.post(
         `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
@@ -172,7 +173,7 @@ export default function Chats({
         }
       );
 
-    //  console.log("Publciacion cerrada");
+      //  console.log("Publciacion cerrada");
       // Muestra el modal de felicitación
       setShowCongratulationsModal(true);
 
@@ -200,7 +201,7 @@ export default function Chats({
       })
       .then((response) => {
         // Declarar la constante idUser
-        setUserAutor(response.data[0].idUser)
+        setUserAutor(response.data[0].idUser);
         setImageEmisor(response.data[0].image);
       })
       .catch((error) => {
@@ -219,11 +220,11 @@ export default function Chats({
         }
       );
       setSMS(response.data); // Actualiza las publicaciones en el estado
-    //  console.log("Mensajes:", response.data);
+      //  console.log("Mensajes:", response.data);
     } catch (error) {
       console.error("Error al cargar mensajes:", error);
     }
-  //  console.log("Estoy saliendo del try");
+    //  console.log("Estoy saliendo del try");
   };
 
   const fetchEnviar = async () => {
@@ -237,12 +238,12 @@ export default function Chats({
           content: nuevoSMS,
         }
       );
-     // setSMS(response.data); // Actualiza las publicaciones en el estado
+      // setSMS(response.data); // Actualiza las publicaciones en el estado
       console.log("mensajes: ", response.data);
     } catch (error) {
       console.error("Error al cargar mensajes:", error);
     }
- //   console.log("estoy saliendo del try");
+    //   console.log("estoy saliendo del try");
   };
 
   const handleEnviarSMS = async () => {
@@ -302,11 +303,9 @@ export default function Chats({
     fetchData();
   }, []);
 
- 
-
   useEffect(() => {
     fetchSMS();
-   // console.log(SMS);
+    // console.log(SMS);
   }, []);
 
   useEffect(() => {
@@ -320,6 +319,7 @@ export default function Chats({
    const ref = idReference[0]
    console.log("type: ", referenceType[0])
    const type = referenceType[0]
+
     try {
       const response = await axios.get(
         `https://buddy-app2.loca.lt/publications/publication/${ref}?modelType=${type}`,
@@ -337,11 +337,12 @@ export default function Chats({
      
   }}
   
+
   useEffect(() => {
     console.log("USE EFFECT")
     idUserPublic();
   }, []);
-   console.log(token)
+
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />

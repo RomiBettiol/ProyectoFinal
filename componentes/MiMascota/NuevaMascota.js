@@ -67,7 +67,7 @@ export default function NuevaMascota({
   ////end upload img ////
 
   const authtoken = token;
-  console.log(token)
+  console.log(token);
 
   const [petData, setPetData] = useState({
     petName: "",
@@ -180,7 +180,7 @@ export default function NuevaMascota({
 
   const sendPetData = async (imageLink) => {
     const authtoken = token;
-    console.log(authtoken)
+    console.log(authtoken);
     const config = {
       headers: {
         "auth-token": authtoken,
@@ -194,7 +194,6 @@ export default function NuevaMascota({
       idPetBreed: selectedBreedId,
       image: imageLink, // Agrega el enlace de la imagen al objeto data
       idPetColor: selectedColorId,
-
     };
 
     console.log(data);
@@ -284,23 +283,23 @@ export default function NuevaMascota({
           <View style={styles.subtitulo}>
             <Text style={styles.label}>Tipo de Animal</Text>
           </View>
-          <View style={[styles.dropdown, { borderRadius: 100 }]}>    
-              <ListaValoresColor
-                  selectedColorId={selectedColorId}
-                  setSelectedColorId={setSelectedColorId}
-                  token={token}
-                />
-           </View>
-          
-          <ScrollView horizontal={true} >     
-                <ListaValoresAnimal
-                  selectedAnimal={selectedAnimal}
-                  setSelectedAnimal={setSelectedAnimal}
-                  setSelectedAnimalId={setSelectedAnimalId}
-                  token={token}
-                />
+          <View style={[styles.dropdown, { borderRadius: 100 }]}>
+            <ListaValoresColor
+              selectedColorId={selectedColorId}
+              setSelectedColorId={setSelectedColorId}
+              token={token}
+            />
+          </View>
+
+          <ScrollView horizontal={true}>
+            <ListaValoresAnimal
+              selectedAnimal={selectedAnimal}
+              setSelectedAnimal={setSelectedAnimal}
+              setSelectedAnimalId={setSelectedAnimalId}
+              token={token}
+            />
           </ScrollView>
-         
+
           <View style={[styles.dropdown, { borderRadius: 100 }]}>
             {selectedAnimal && (
               <ListaValoresRazaPerros
@@ -350,8 +349,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     marginTop: 35,
-    height:'95%',
-    width:'95%'
+    height: "95%",
+    width: "95%",
   },
   dropdown: {
     width: "90%",
@@ -366,14 +365,13 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    
   },
   contenedor1: {
     paddingTop: 0,
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
-  //  width: "100%",
+    //  width: "100%",
   },
   inputTexto: {
     backgroundColor: "#EEE9E9",
@@ -487,5 +485,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
- 
 });

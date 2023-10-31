@@ -16,7 +16,7 @@ import axios from "axios";
 const ListaServiciosScreen = () => {
   const [services, setServices] = useState([]);
   const route = useRoute();
-  const { token } = route.params;
+  const { token, permisos } = route.params;
   const [serviceId, setServiceId] = useState(null);
   const [serviceState, setServiceState] = useState("");
   const [isConfirmationModalVisible, setConfirmationModalVisible] =
@@ -125,20 +125,22 @@ const ListaServiciosScreen = () => {
               Tipo: {item.serviceTypeName}{" "}
             </Text>
           </View>
-          <View style={styles.optionsContainer}>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => {
-                setServiceState(item.serviceStateName);
-                setServiceId(item.idService);
-                setConfirmationModalVisible(true);
-              }}
-            >
-              <Text style={styles.optionButtonText}>
-                {isServiceActive ? "Dar de Baja" : "Activar Servicio"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {permisos.includes("WRITE_SERVICIOS") && (
+            <View style={styles.optionsContainer}>
+              <TouchableOpacity
+                style={styles.optionButton}
+                onPress={() => {
+                  setServiceState(item.serviceStateName);
+                  setServiceId(item.idService);
+                  setConfirmationModalVisible(true);
+                }}
+              >
+                <Text style={styles.optionButtonText}>
+                  {isServiceActive ? "Dar de Baja" : "Activar Servicio"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     );

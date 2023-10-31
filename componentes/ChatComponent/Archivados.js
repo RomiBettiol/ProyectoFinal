@@ -49,7 +49,7 @@ export default function Archivados({ navigation }) {
   const [idUser, setIdUser] = useState("");
   const [modalArchivo, setModalArchivo] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
- 
+
   // UseEffect para obtener el idUser
   useEffect(() => {
     axios

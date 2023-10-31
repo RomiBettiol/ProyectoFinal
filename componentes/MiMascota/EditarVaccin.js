@@ -40,23 +40,27 @@ export default function EditarVaccin({
   const [selectedDay, setSelectedDay] = useState(day);
   const [selectedYear, setSelectedYear] = useState(year);
 
-  const datePartsProx = vaccin.nextVaccineDate ? vaccin.nextVaccineDate.split('-') : [null, null, null];
+  const datePartsProx = vaccin.nextVaccineDate
+    ? vaccin.nextVaccineDate.split("-")
+    : [null, null, null];
   const [doseQuantityError, setDoseQuantityError] = useState("");
-  const yearProx= datePartsProx[2] ? parseInt(datePartsProx[2], 10) :null;
-  const monthProx= datePartsProx[1] ? parseInt(datePartsProx[1], 10) : null;
+  const yearProx = datePartsProx[2] ? parseInt(datePartsProx[2], 10) : null;
+  const monthProx = datePartsProx[1] ? parseInt(datePartsProx[1], 10) : null;
   const dayProx = datePartsProx[0] ? parseInt(datePartsProx[0], 10) : null;
-  
+
   const [selectedMonthProx, setSelectedMonthProx] = useState(month);
   const [selectedYearProx, setSelectedYearProx] = useState(year);
   const [selectedDayProx, setSelectedDayProx] = useState(year);
- // Agregar un estado para rastrear si se debe mostrar la fecha de próxima dosis
+  // Agregar un estado para rastrear si se debe mostrar la fecha de próxima dosis
   const [showNextDoseDate, setShowNextDoseDate] = useState(false);
   const [hora, setHora] = useState(hor);
   const [minutos, setMinutos] = useState(min);
   const [titleVaccin, setTitleVaccin] = useState(vaccin.titleVaccine);
   const [doseQuantity, setDoseQuantity] = useState(vaccin.doseQuantity);
-  console.log("cant dosis:   ", doseQuantity)
-  const [nextVaccineDate, setNextVaccineDate] = useState(vaccin.nextVaccineDate);
+  console.log("cant dosis:   ", doseQuantity);
+  const [nextVaccineDate, setNextVaccineDate] = useState(
+    vaccin.nextVaccineDate
+  );
   const [descriptionVaccin, setDescriptionVaccin] = useState(
     vaccin.descriptionVaccine
   );
@@ -65,19 +69,22 @@ export default function EditarVaccin({
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
 
   // En tu componente EditarVaccin, dentro de la función return, antes de usarlos:
-  const formattedDay = selectedDay.toString().padStart(2, '0');
-  const formattedMonth = selectedMonth.toString().padStart(2, '0');
-  const formattedMinutes = minutos.toString().padStart(2, '0');
-  const formattedHour = hora.toString().padStart(2, '0');
-    // En tu componente EditarVaccin, dentro de la función return, antes de usarlo:
-  const formattedYear = selectedYear.toString().padStart(4, '0');
-  
-  const formattedYearProx = selectedYearProx ? selectedYearProx.toString().padStart(4, '0') : '';
-  const formattedMonthProx = selectedMonthProx ? selectedYearProx.toString().padStart(2, '0') : '';
-  const formattedDayProx = selectedDayProx ? selectedYearProx.toString().padStart(2, '0') : '';
+  const formattedDay = selectedDay.toString().padStart(2, "0");
+  const formattedMonth = selectedMonth.toString().padStart(2, "0");
+  const formattedMinutes = minutos.toString().padStart(2, "0");
+  const formattedHour = hora.toString().padStart(2, "0");
+  // En tu componente EditarVaccin, dentro de la función return, antes de usarlo:
+  const formattedYear = selectedYear.toString().padStart(4, "0");
 
-
-
+  const formattedYearProx = selectedYearProx
+    ? selectedYearProx.toString().padStart(4, "0")
+    : "";
+  const formattedMonthProx = selectedMonthProx
+    ? selectedYearProx.toString().padStart(2, "0")
+    : "";
+  const formattedDayProx = selectedDayProx
+    ? selectedYearProx.toString().padStart(2, "0")
+    : "";
 
   const [vaccinData, setVaccinData] = useState({
     titleVaccin: "",
@@ -87,7 +94,6 @@ export default function EditarVaccin({
     minutos: formattedMinutes, // Nuevo estado para los minutos
     doseQuantity: doseQuantity,
     nextVaccineDate: nextVaccineDate,
-
   });
   useEffect(() => {
     // Validar la hora y minutos
@@ -113,40 +119,42 @@ export default function EditarVaccin({
     }
   }, [vaccinData.hora, vaccinData.minutos]);
 
-
   const updatedData = {
     titleVaccine: titleVaccin,
     descriptionVaccine: descriptionVaccin, // Agregar a los datos actualizados
     vaccineDate: `${formattedYear}-${formattedMonth}-${formattedDay} ${hora}:${minutos}:00`,
-    nextVaccineDate: formattedYearProx  && formattedDayProx && formattedMonthProx ? `${formattedYearProx}-${formattedMonthProx }-${formattedDayProx } 00:00:00` : null,
-    doseQuantity:doseQuantity,
+    nextVaccineDate:
+      formattedYearProx && formattedDayProx && formattedMonthProx
+        ? `${formattedYearProx}-${formattedMonthProx}-${formattedDayProx} 00:00:00`
+        : null,
+    doseQuantity: doseQuantity,
   };
   // ...
 
-// En la función useEffect que valida la cantidad de dosis
-useEffect(() => {
-  
-  // Validar la cantidad de dosis
-  const doseQuantityValid =
-    /^\d+$/.test(doseQuantity) &&
-    parseInt(doseQuantity, 10) >= 1 &&
-    parseInt(doseQuantity, 10) <= 10;
+  // En la función useEffect que valida la cantidad de dosis
+  useEffect(() => {
+    // Validar la cantidad de dosis
+    const doseQuantityValid =
+      /^\d+$/.test(doseQuantity) &&
+      parseInt(doseQuantity, 10) >= 1 &&
+      parseInt(doseQuantity, 10) <= 10;
 
-  if (doseQuantityValid) {
-    setDoseQuantityError("");
-    setIsButtonDisabled(false);
-  } else {
-    setDoseQuantityError("La cantidad de dosis debe ser un número del 1 al 10");
-    setIsButtonDisabled(true);
-  }
+    if (doseQuantityValid) {
+      setDoseQuantityError("");
+      setIsButtonDisabled(false);
+    } else {
+      setDoseQuantityError(
+        "La cantidad de dosis debe ser un número del 1 al 10"
+      );
+      setIsButtonDisabled(true);
+    }
 
-  // Actualizar el estado para mostrar u ocultar la fecha de próxima dosis
-  setShowNextDoseDate(parseInt(doseQuantity, 10) > 1);
-}, [doseQuantity]);
+    // Actualizar el estado para mostrar u ocultar la fecha de próxima dosis
+    setShowNextDoseDate(parseInt(doseQuantity, 10) > 1);
+  }, [doseQuantity]);
 
-// ...
+  // ...
 
-  
   return (
     <View>
       <View style={styles.modalContainer}>
@@ -181,16 +189,18 @@ useEffect(() => {
               style={styles.inputTextoCant}
               value={doseQuantity.toString()}
               onChangeText={(text) => {
-                setDoseQuantityError("La cantidad de dosis debe ser un número del 1 al 10");
+                setDoseQuantityError(
+                  "La cantidad de dosis debe ser un número del 1 al 10"
+                );
                 setDoseQuantity(text);
               }}
             />
-             {doseQuantityError ? (
-                <Text style={styles.errorText}>{doseQuantityError}</Text>
-              ) : null}
+            {doseQuantityError ? (
+              <Text style={styles.errorText}>{doseQuantityError}</Text>
+            ) : null}
           </View>
           {/* Mostrar los elementos relacionados con la fecha de próxima dosis si es necesario */}
-          {showNextDoseDate &&(
+          {showNextDoseDate && (
             <>
               <Text style={styles.textoFecha}>Fecha de próxima dosis</Text>
               <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
@@ -220,7 +230,7 @@ useEffect(() => {
               </View>
             </>
           )}
-         
+
           <Text style={styles.textoFecha}>Fecha de vacuna</Text>
           <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
             <TextInput
@@ -297,8 +307,8 @@ useEffect(() => {
                   console.log("Respuesta del servidor:", response.data);
                   setShowSuccessModal(true);
                 } catch (error) {
-                  console.log(error)
-                  console.log( error.message)
+                  console.log(error);
+                  console.log(error.message);
                   setShowErrorModal(true);
                 }
                 // setOverlayVisible(false); // Cierra el overlay después de eliminar
@@ -438,7 +448,7 @@ const styles = StyleSheet.create({
     marginStart: 0,
     marginTop: 10,
   },
-  cantVaccin:{
+  cantVaccin: {
     textAlign: "center",
     alignItems: "center", // Para centrar horizontal
     width: "100%",

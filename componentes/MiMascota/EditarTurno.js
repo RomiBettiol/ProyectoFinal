@@ -37,7 +37,7 @@ export default function EditarTurno({
   const [selectedMonth, setSelectedMonth] = useState(month);
   const [selectedDay, setSelectedDay] = useState(day);
   const [selectedYear, setSelectedYear] = useState(year);
-  console.log("a ver...", year, month, day)
+  console.log("a ver...", year, month, day);
   const [hora, setHora] = useState(hor);
   const [minutos, setMinutos] = useState(min);
   const [titleTurn, setTitleTurn] = useState(turno.titleTurn);
@@ -46,11 +46,11 @@ export default function EditarTurno({
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Estado para habilitar/deshabilitar el botón
 
-  const formattedDay = selectedDay.toString().padStart(2, '0');
-  const formattedMonth = selectedMonth.toString().padStart(2, '0');
-  const formattedMinutes = minutos.toString().padStart(2, '0');
-  const formattedHour = hora.toString().padStart(2, '0');
-  const formattedYear = selectedYear.toString().padStart(4, '0');
+  const formattedDay = selectedDay.toString().padStart(2, "0");
+  const formattedMonth = selectedMonth.toString().padStart(2, "0");
+  const formattedMinutes = minutos.toString().padStart(2, "0");
+  const formattedHour = hora.toString().padStart(2, "0");
+  const formattedYear = selectedYear.toString().padStart(4, "0");
 
   const [turnData, setTurnData] = useState({
     titleTurn: "",
@@ -83,18 +83,23 @@ export default function EditarTurno({
     }
     // Validar la fecha
     const fechaValida =
-    /^\d{4}$/.test(selectedYear) &&
-    /^\d{2}$/.test(selectedMonth) &&
-    /^\d{2}$/.test(selectedDay) &&
-    parseInt(selectedYear, 10) >= new Date().getFullYear() &&
-    parseInt(selectedMonth, 10) >= 1 &&
-    parseInt(selectedMonth, 10) <= 12 &&
-    parseInt(selectedDay, 10) >= 1 &&
-    parseInt(selectedDay, 10) <= new Date(selectedYear, selectedMonth, 0).getDate();
+      /^\d{4}$/.test(selectedYear) &&
+      /^\d{2}$/.test(selectedMonth) &&
+      /^\d{2}$/.test(selectedDay) &&
+      parseInt(selectedYear, 10) >= new Date().getFullYear() &&
+      parseInt(selectedMonth, 10) >= 1 &&
+      parseInt(selectedMonth, 10) <= 12 &&
+      parseInt(selectedDay, 10) >= 1 &&
+      parseInt(selectedDay, 10) <=
+        new Date(selectedYear, selectedMonth, 0).getDate();
 
     // Validar la fecha
     if (fechaValida) {
-      const daysInMonth = new Date(selectedYear, parseInt(selectedMonth, 10), 0).getDate();
+      const daysInMonth = new Date(
+        selectedYear,
+        parseInt(selectedMonth, 10),
+        0
+      ).getDate();
       if (selectedDay >= 1 && selectedDay <= daysInMonth) {
         setTurnData({ ...turnData, error: null });
         setIsButtonDisabled(false);
@@ -108,11 +113,18 @@ export default function EditarTurno({
     } else {
       setTurnData({
         ...turnData,
-        error: "La fecha debe ser mayor o igual a la fecha actual y el mes debe estar entre 1 y 12",
+        error:
+          "La fecha debe ser mayor o igual a la fecha actual y el mes debe estar entre 1 y 12",
       });
       setIsButtonDisabled(true);
     }
-}, [turnData.hora, turnData.minutos, selectedYear, selectedMonth, selectedDay]);
+  }, [
+    turnData.hora,
+    turnData.minutos,
+    selectedYear,
+    selectedMonth,
+    selectedDay,
+  ]);
 
   const updatedData = {
     titleTurn: titleTurn,
@@ -206,31 +218,31 @@ export default function EditarTurno({
           )}
           <Text style={styles.textoFecha}>Fecha de turno</Text>
           <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
-          <TextInput
-            style={styles.input}
-           // placeholder="YYYY"
-           value={selectedYear.toString()}
-           onChangeText={(text) => setSelectedYear(text)}
-           maxLength={4}
-            minLength={4}
-          />
-          <Text style={styles.textoFecha}>/</Text>
-          <TextInput
-            style={styles.input}
-            value={selectedMonth.toString()}
-            onChangeText={(text) => setSelectedMonth(text)}
-            maxLength={2}
-            minLength={2}
-          />
-          <Text style={styles.textoFecha}>/</Text>
-          <TextInput
-            style={styles.input}
-            value={selectedDay.toString()}
-            onChangeText={(text) => setSelectedDay(text)}
-            maxLength={2}
-            minLength={2}
-          />
-        </View>
+            <TextInput
+              style={styles.input}
+              // placeholder="YYYY"
+              value={selectedYear.toString()}
+              onChangeText={(text) => setSelectedYear(text)}
+              maxLength={4}
+              minLength={4}
+            />
+            <Text style={styles.textoFecha}>/</Text>
+            <TextInput
+              style={styles.input}
+              value={selectedMonth.toString()}
+              onChangeText={(text) => setSelectedMonth(text)}
+              maxLength={2}
+              minLength={2}
+            />
+            <Text style={styles.textoFecha}>/</Text>
+            <TextInput
+              style={styles.input}
+              value={selectedDay.toString()}
+              onChangeText={(text) => setSelectedDay(text)}
+              maxLength={2}
+              minLength={2}
+            />
+          </View>
           <View style={[{ flexDirection: "row" }, styles.subcontenedor5]}>
             <TouchableOpacity
               style={styles.closeButton}
