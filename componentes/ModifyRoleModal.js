@@ -54,24 +54,33 @@ const ModifyRoleModal = ({
     setSelectedRole(selectedUserRole);
   }, [isVisible, selectedUserRole]);
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={[
-        styles.optionItem,
-        item.roleName === selectedRole && styles.selectedOption,
-      ]}
-      onPress={() => setSelectedRole(item.roleName)}
-    >
-      <Text
+  const rolesToExclude = ["REFUGIO", "VETERINARIA", "PETSHOP"];
+
+  const renderItem = ({ item }) => {
+    // if (rolesToExclude.includes(item.roleName)) {
+    //   // No renderizar el elemento
+    //   return null;
+    // }
+
+    return (
+      <TouchableOpacity
         style={[
-          styles.optionText,
-          item.roleName === selectedRole && styles.selectedOptionText,
+          styles.optionItem,
+          item.roleName === selectedRole && styles.selectedOption,
         ]}
+        onPress={() => setSelectedRole(item.roleName)}
       >
-        {item.roleName}
-      </Text>
-    </TouchableOpacity>
-  );
+        <Text
+          style={[
+            styles.optionText,
+            item.roleName === selectedRole && styles.selectedOptionText,
+          ]}
+        >
+          {item.roleName}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   const handleConfirm = () => {
     setIsConfirming(true); // Establecer el estado como confirmación en progreso
