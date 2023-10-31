@@ -46,7 +46,8 @@ export default function MisChats({ navigation }) {
   const [isSelected, setIsSelected] = useState(false);
   const [totalMensajesNoLeidos, setTotalMensajesNoLeidos] = useState("");
   const [idUser, setIdUser] = useState("");
-
+  const contador = chats.length;
+  console.log("contador",contador)
   // UseEffect para obtener el idUser
   useEffect(() => {
     axios
@@ -96,31 +97,32 @@ export default function MisChats({ navigation }) {
   console.log("Filtered users:", searchChats());
 
   const fetchChats = async () => {
-    axios
-      .get("https://buddy-app2.loca.lt/chats/chat/false", {
-        headers: {
-          "auth-token": token,
-        },
-      })
-      .then((response) => {
-        const chatsActualizados = response.data.map((chat) => {
-          chat.chat.updatedAt = formatFecha(chat.chat.updatedAt);
+  axios
+    .get("https://buddy-app2.loca.lt/chats/chat/false", {
+      headers: {
+        "auth-token": token,
+      },
+    })
+    .then((response) => {
+      const chatsActualizados = response.data.map((chat) => {
+        chat.chat.updatedAt = formatFecha(chat.chat.updatedAt);
 
-          // Contar mensajes no leídos
-          const mensajesNoLeidos = contarMensajesNoLeidos(chat);
-          chat.mensajesNoLeidos = mensajesNoLeidos;
+        // Contar mensajes no leídos
+        const mensajesNoLeidos = contarMensajesNoLeidos(chat);
+        chat.mensajesNoLeidos = mensajesNoLeidos;
 
-          // Obtener el último mensaje
-          const ultimoMensaje =
-            chat.chat.messages[chat.chat.messages.length - 1];
-          chat.ultimoMensaje = ultimoMensaje;
-          return chat;
-        });
-        setChats(chatsActualizados); // Actualiza el estado chats con los datos obtenidos
-        console.log("Chats", chatsActualizados); // Registra los chats actualizados
+        // Obtener el último mensaje
+        const ultimoMensaje = chat.chat.messages[chat.chat.messages.length - 1];
+        chat.ultimoMensaje = ultimoMensaje;
+        return chat;
       });
-    searchChats(chats);
-  };
+      setChats(chatsActualizados); // Actualiza el estado chats con los datos obtenidos
+      setTotalMensajesNoLeidos(chatsActualizados.length); // Actualiza el contador con la cantidad de chats
+      console.log("Chats", chatsActualizados); // Registra los chats actualizados
+    });
+  searchChats(chats);
+};
+
 
   useEffect(() => {
     fetchChats();
@@ -172,7 +174,7 @@ export default function MisChats({ navigation }) {
           <Text style={styles.titulo}>Chats</Text>
         </View>
         <View style={styles.contador}>
-          <Text>{totalMensajesNoLeidos}</Text>
+          <Text>{contador}</Text>
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("NuevoChat", { token })}

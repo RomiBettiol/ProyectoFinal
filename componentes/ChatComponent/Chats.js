@@ -78,7 +78,7 @@ export default function Chats({
   const [imagePublicacion, setImagePublicacion] = useState(
     data.imagenPublicacion || ""
   );
-  console.log("A COMPARAR ID USER AUTOR: ", idAutor, "idUserAutor: ", idUserAutor)
+  console.log("A COMPARAR ID USER AUTOR: ", idAutor, "idUserAutor: ", userAutor)
   const showDeleteModal = () => {
     setIsDeleteModalVisible(true);
   };
@@ -133,11 +133,11 @@ export default function Chats({
   };
   const fetchCerrarSearch = async () => {
     const idPublicacion = idReference[0];
-   // console.log(idPublicacion);
+    console.log(idPublicacion);
     try {
       const response = await axios.post(
-        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Search`,
-        null,
+        `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=search`,
+       null,
         {
           headers: {
             "auth-token": token,
@@ -164,7 +164,7 @@ export default function Chats({
     try {
       const response = await axios.post(
         `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
-        null,
+       
         {
           headers: {
             "auth-token": token,
@@ -316,29 +316,32 @@ export default function Chats({
     }
   }, [SMS]);
   const idUserPublic = async () => {
-   console.log(id)
+   console.log("A VER:",idReference[0])
+   const ref = idReference[0]
+   console.log("type: ", referenceType[0])
+   const type = referenceType[0]
     try {
       const response = await axios.get(
-        `https://buddy-app2.loca.lt/publications/publication/${idReference}?modelType=${referenceType}`,
-        null,
+        `https://buddy-app2.loca.lt/publications/publication/${ref}?modelType=${type}`,
+       
         {
           headers: {
             "auth-token": token,
           },
         }
       );
-     
-      console.log("id autor public: ", response.data)
+      console.log("id autor public: ", response.data.publication.user.idUser)
       setIdAutor(response.data.publication.user.idUser);
     } catch (error) {
-      console.log("Respuesta del servidor:", error);
+      console.log("Respuesta del servidor:", error.message);
      
   }}
   
   useEffect(() => {
+    console.log("USE EFFECT")
     idUserPublic();
   }, []);
-   //console.log(token)
+   console.log(token)
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
@@ -399,7 +402,7 @@ export default function Chats({
               >
                 <View style={styles.modalContainer}>
                   <View style={styles.modalContent}>
-                    {referenceType[0] === "SEARCH" && idUserAutor !== idAutor ? ( // Comprueba si es SEARCH y el idUserAutor es diferente de idAutor
+                    {referenceType[0] === "SEARCH" && userAutor == idAutor ? ( // Comprueba si es SEARCH y el idUserAutor es diferente de idAutor
                       <View style={(alignItems = "center")}>
                         <Text style={styles.modalText}>
                           ¡Mascota encontrada!
@@ -419,7 +422,7 @@ export default function Chats({
                           </TouchableOpacity>
                         </View>
                       </View>
-                    ) : referenceType[0] === "ADOPTION" && idUserAutor !== idAutor ? ( // Comprueba si es ADOPTION y el idUserAutor es diferente de idAutor
+                    ) : referenceType[0] === "ADOPTION" && userAutor == idAutor ? ( // Comprueba si es ADOPTION y el idUserAutor es diferente de idAutor
                       <View>
                         <Text style={styles.modalText}>¡Mascota adoptada!</Text>
                         <View style={styles.modalButtons}>
