@@ -17,7 +17,7 @@ import HeaderScreen from "../componentes/HeaderScreen";
 const ListaUsuariosScreen = () => {
   const [users, setUsers] = useState([]);
   const route = useRoute();
-  const { token } = route.params;
+  const { token, permisos } = route.params;
   const [userId, setUserId] = useState(null);
   const [userState, setUserState] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
@@ -158,29 +158,31 @@ const ListaUsuariosScreen = () => {
             </Text>
             <Text style={styles.userInfoText}>Rol: {item.roleName}</Text>
           </View>
-          <View style={styles.optionsContainer}>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => {
-                setUserId(item.idUser);
-                showModifyRoleModal(item.roleName);
-              }}
-            >
-              <Text style={styles.optionButtonText}>Modificar Rol</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => {
-                setUserState(item.userStateName);
-                setUserId(item.idUser);
-                setConfirmationModalVisible(true);
-              }}
-            >
-              <Text style={styles.optionButtonText}>
-                {isUserActive ? "Dar de Baja" : "Activar Usuario"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {permisos.includes("WRITE_USUARIOS") && (
+            <View style={styles.optionsContainer}>
+              <TouchableOpacity
+                style={styles.optionButton}
+                onPress={() => {
+                  setUserId(item.idUser);
+                  showModifyRoleModal(item.roleName);
+                }}
+              >
+                <Text style={styles.optionButtonText}>Modificar Rol</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.optionButton}
+                onPress={() => {
+                  setUserState(item.userStateName);
+                  setUserId(item.idUser);
+                  setConfirmationModalVisible(true);
+                }}
+              >
+                <Text style={styles.optionButtonText}>
+                  {isUserActive ? "Dar de Baja" : "Activar Usuario"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     );

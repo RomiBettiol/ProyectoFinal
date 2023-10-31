@@ -19,7 +19,7 @@ import ErrorModal from "./ErrorModal";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native"; // Import the useRoute hook
 
-export default function AltaVaccin({ visible, onClose}) {
+export default function AltaVaccin({ visible, onClose, token }) {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
@@ -42,27 +42,36 @@ export default function AltaVaccin({ visible, onClose}) {
   const [isTitleComplete, setIsTitleComplete] = useState(false);
   const [isDescriptionComplete, setIsDescriptionComplete] = useState(false);
 
-   
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
   const currentDay = String(currentDate.getDate()).padStart(2, "0");
 
-  
   // En tu componente EditarVaccin, dentro de la función return, antes de usarlos:
- 
-const formattedDay = selectedDay ? selectedDay.toString().padStart(2, '0') : '';
-const formattedMonth = selectedMonth ? selectedMonth.toString().padStart(2, '0') : '';
-const formattedYear = selectedYear ? selectedYear.toString().padStart(4, '0') : '';
 
-const formattedYearProx = selectedYearProx ? selectedYearProx.toString().padStart(4, '0') : '';
-const formattedMonthProx = selectedMonthProx ? selectedMonthProx.toString().padStart(2, '0') : '';
-const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2, '0') : '';
+  const formattedDay = selectedDay
+    ? selectedDay.toString().padStart(2, "0")
+    : "";
+  const formattedMonth = selectedMonth
+    ? selectedMonth.toString().padStart(2, "0")
+    : "";
+  const formattedYear = selectedYear
+    ? selectedYear.toString().padStart(4, "0")
+    : "";
 
+  const formattedYearProx = selectedYearProx
+    ? selectedYearProx.toString().padStart(4, "0")
+    : "";
+  const formattedMonthProx = selectedMonthProx
+    ? selectedMonthProx.toString().padStart(2, "0")
+    : "";
+  const formattedDayProx = selectedDayProx
+    ? selectedDayProx.toString().padStart(2, "0")
+    : "";
 
-  const formattedMinutes = minutos.toString().padStart(2, '0');
-  const formattedHour = hora.toString().padStart(2, '0');
-  
+  const formattedMinutes = minutos.toString().padStart(2, "0");
+  const formattedHour = hora.toString().padStart(2, "0");
+
   const [vaccinData, setVaccinData] = useState({
     titleVaccin: "",
     descriptionVaccin: "",
@@ -70,7 +79,6 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
     hora: "", // Nuevo estado para la hora
     minutos: "", // Nuevo estado para los minutos
     doseQuantity: "",
-
   });
   const validateHoraMinutos = (hora, minutos) => {
     const horaValida =
@@ -82,25 +90,21 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
 
     return horaValida && minutosValidos;
   };
- 
-
- 
 
   const data = {
     titleVaccine: vaccinData.titleVaccin,
     descriptionVaccine: vaccinData.descriptionVaccin,
     vaccineDate: `${formattedYear}-${formattedMonth}-${formattedDay} ${hora}:${minutos}:00`,
     doseQuantity: vaccinData.doseQuantity,
-    nextVaccineDate: ''
+    nextVaccineDate: `${selectedYearProx}-${selectedMonthProx}-${selectedDayProx} 00:00:00`,
   };
-  
+
   // Agregar nextVaccineDate solo si hay datos válidos
-  
+
   if (formattedYearProx && formattedMonthProx && formattedDayProx) {
     data.nextVaccineDate = `${formattedYearProx}-${formattedMonthProx}-${formattedDayProx} 00:00:00`;
   }
-  
-  console.log("DATA: ", data);
+
   const [doseQuantityError, setDoseQuantityError] = useState("");
 
   useEffect(() => {
@@ -132,7 +136,9 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
 
       // Mensaje de error para la cantidad de dosis
       if (!doseQuantityValid) {
-        setDoseQuantityError("La cantidad de dosis debe ser un número del 1 al 10");
+        setDoseQuantityError(
+          "La cantidad de dosis debe ser un número del 1 al 10"
+        );
       } else {
         setDoseQuantityError(""); // Borrar el mensaje de error si la cantidad es válida
       }
@@ -157,71 +163,70 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
       // Mostrar la fecha de próxima dosis si la cantidad de dosis es mayor que 1
       setShowNextDoseDate(parseInt(vaccinData.doseQuantity, 10) > 1);
     } else {
-      setDoseQuantityError("La cantidad de dosis debe ser un número del 1 al 10");
+      setDoseQuantityError(
+        "La cantidad de dosis debe ser un número del 1 al 10"
+      );
       setIsButtonDisabled(true);
       setShowNextDoseDate(false); // Ocultar la fecha de próxima dosis si no cumple la condición
     }
   }, [vaccinData.doseQuantity]);
   const validateFecha = (year, month, day) => {
-    if (
-      year === currentYear &&
-      month === currentMonth &&
-      day === currentDay
-    ) {
+    if (year === currentYear && month === currentMonth && day === currentDay) {
       return true; // La fecha es igual a la fecha actual
     } else {
-      const selectedDate = new Date(
-        year,
-        parseInt(month, 10) - 1,
-        day
-      );
-  
-      
-        // Validar que el mes esté entre 1 y 12
-        if (parseInt(month, 10) >= 1 && parseInt(month, 10) <= 12) {
-          // Validar los días según el mes
-          const daysInMonth = new Date(year, month, 0).getDate();
-          if (day >= 1 && day <= daysInMonth) {
-            return true;
-          }
-        
+      const selectedDate = new Date(year, parseInt(month, 10) - 1, day);
+
+      // Validar que el mes esté entre 1 y 12
+      if (parseInt(month, 10) >= 1 && parseInt(month, 10) <= 12) {
+        // Validar los días según el mes
+        const daysInMonth = new Date(year, month, 0).getDate();
+        if (day >= 1 && day <= daysInMonth) {
+          return true;
+        }
       }
       return false;
     }
   };
-  
+
   useEffect(() => {
     const horaValida = validateHoraMinutos(vaccinData.hora, vaccinData.minutos);
     const fechaValida = validateFecha(selectedYear, selectedMonth, selectedDay);
-    
-    if (horaValida && fechaValida ) {
+
+    if (horaValida && fechaValida) {
       setVaccinData({ ...vaccinData, error: null });
       setIsButtonDisabled(false);
     } else {
       let errorMessage = "";
-  
+
       if (!horaValida) {
-        errorMessage = "Ingrese una hora válida (00-23) y minutos válidos (00-59)";
+        errorMessage =
+          "Ingrese una hora válida (00-23) y minutos válidos (00-59)";
       }
-  
+
       if (!fechaValida) {
         errorMessage += errorMessage ? "\n" : "";
-        errorMessage += "La fecha debe tener el mes entre 1 y 12 y días válidos.";
+        errorMessage +=
+          "La fecha debe tener el mes entre 1 y 12 y días válidos.";
       }
-  
-     
-  
+
       setVaccinData({
         ...vaccinData,
         error: errorMessage,
       });
-  
+
       setIsButtonDisabled(true);
     }
-  }, [vaccinData.hora, vaccinData.minutos, selectedYear, selectedMonth, selectedDay, selectedYearProx, selectedMonthProx, selectedDayProx]);
-  
-  
- 
+  }, [
+    vaccinData.hora,
+    vaccinData.minutos,
+    selectedYear,
+    selectedMonth,
+    selectedDay,
+    selectedYearProx,
+    selectedMonthProx,
+    selectedDayProx,
+  ]);
+
   return (
     <View>
       <View style={styles.modalContainer}>
@@ -276,59 +281,59 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
 
           {/* Mostrar los elementos relacionados con la fecha de próxima dosis si es necesario */}
           {showNextDoseDate && (
-           <>
-           <Text style={styles.textoFecha}>Fecha de próxima dosis</Text>
-           <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
-             <TextInput
-               style={styles.input}
-               placeholder="YYYY"
-               value={selectedYearProx}
-               onChangeText={(text) => setSelectedYearProx(text)}
-             />
-             <Text style={styles.textoFecha}>/</Text>
-             <TextInput
-               style={styles.input}
-               placeholder="MM"
-               value={selectedMonthProx}
-               onChangeText={(text) => setSelectedMonthProx(text)}
-             />
-             <Text style={styles.textoFecha}>/</Text>
-             <TextInput
-               style={styles.input}
-               placeholder="DD"
-               value={selectedDayProx}
-               onChangeText={(text) => setSelectedDayProx(text)}
-             />
-           </View>
-         </>
+            <>
+              <Text style={styles.textoFecha}>Fecha de próxima dosis</Text>
+              <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="YYYY"
+                  value={selectedYearProx}
+                  onChangeText={(text) => setSelectedYearProx(text)}
+                />
+                <Text style={styles.textoFecha}>/</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="MM"
+                  value={selectedMonthProx}
+                  onChangeText={(text) => setSelectedMonthProx(text)}
+                />
+                <Text style={styles.textoFecha}>/</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="DD"
+                  value={selectedDayProx}
+                  onChangeText={(text) => setSelectedDayProx(text)}
+                />
+              </View>
+            </>
           )}
-        
+
           <Text style={styles.textoFecha}>Fecha de vacuna</Text>
           <View style={[{ flexDirection: "row" }, styles.subcontenedor4]}>
-          <TextInput
-            style={styles.input}
-            placeholder="YYYY"
-            minLengh={4}
-            value={selectedYear}
-            onChangeText={(text) => setSelectedYear(text)}
-          />
-          <Text style={styles.textoFecha}>/</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="MM"
-            value={selectedMonth}
-            minLengh={2}
-            onChangeText={(text) => setSelectedMonth(text)}
-          />
-          <Text style={styles.textoFecha}>/</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="DD"
-            value={selectedDay}
-            minLengh={2}
-            onChangeText={(text) => setSelectedDay(text)}
-          />
-        </View>
+            <TextInput
+              style={styles.input}
+              placeholder="YYYY"
+              minLengh={4}
+              value={selectedYear}
+              onChangeText={(text) => setSelectedYear(text)}
+            />
+            <Text style={styles.textoFecha}>/</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="MM"
+              value={selectedMonth}
+              minLengh={2}
+              onChangeText={(text) => setSelectedMonth(text)}
+            />
+            <Text style={styles.textoFecha}>/</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="DD"
+              value={selectedDay}
+              minLengh={2}
+              onChangeText={(text) => setSelectedDay(text)}
+            />
+          </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Hora:</Text>
             <View style={styles.horaInputContainer}>
@@ -365,18 +370,19 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
           {vaccinData.error && (
             <Text style={styles.errorText}>{vaccinData.error}</Text>
           )}
-          
+
           <View style={[{ flexDirection: "row" }, styles.subcontenedor5]}>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={async () => {
-                console.log("hora: ", hora);
-                console.log("fecha y hora: ", data.vaccineDate);
                 setIsButtonDisabled1(true);
-                if (isButtonDisabled || !isTitleComplete || !isDescriptionComplete) {
+                if (
+                  isButtonDisabled ||
+                  !isTitleComplete ||
+                  !isDescriptionComplete
+                ) {
                   return; // Si el botón está deshabilitado, no hacer nada
                 }
-
                 setIsButtonDisabled(true); // Deshabilitar el botón
                 try {
                   const response = await axios.post(
@@ -388,11 +394,9 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
                       },
                     }
                   );
-                  console.log("Respuesta del servidor:", response.data);
                   setShowSuccessModal(true);
                 } catch (error) {
                   setShowErrorModal(true);
-                
                 }
                 setTimeout(() => {
                   setIsButtonDisabled(false); // Habilitar el botón nuevamente después de 2 segundos
@@ -417,7 +421,7 @@ const formattedDayProx = selectedDayProx ? selectedDayProx.toString().padStart(2
           setShowSuccessModal(false);
           onClose(); // Cerrar el modal EditarVacuna
         }}
-        message="Vacuna creado correctamente"
+        message="Vacuna creada correctamente"
       />
       <ErrorModal
         visible={showErrorModal}
@@ -514,7 +518,7 @@ const styles = StyleSheet.create({
     alignItems: "center", // Para centrar horizontal
     width: "95%",
   },
-  cantVaccin:{
+  cantVaccin: {
     textAlign: "center",
     alignItems: "center", // Para centrar horizontal
     width: "100%",

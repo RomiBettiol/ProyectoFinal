@@ -58,11 +58,17 @@ const Registro = () => {
 
           navigation.navigate("HomeScreen", { token });
         } else {
-          setError(response.data.message || "Error desconocido");
+          setError(
+            response.data.message ||
+              "No se ha podido iniciar sesión. Intente nuevamente más tarde"
+          );
           setShowAlertServer(true);
         }
       } catch (error) {
-        setError(error.response?.data?.message || "Error desconocido");
+        setError(
+          error.response?.data?.message ||
+            "No se ha podido iniciar sesión. Intente nuevamente más tarde"
+        );
         setShowAlertServer(true);
       }
     } else {

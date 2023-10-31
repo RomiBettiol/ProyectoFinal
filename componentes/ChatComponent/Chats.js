@@ -70,7 +70,7 @@ export default function Chats({
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isCloseModalVisible, setIsCloseModalVisible] = useState(false);
   const [isConfirmedToDelete, setIsConfirmedToDelete] = useState(false);
-  const [idAutor, setIdAutor] = useState("");;
+  const [idAutor, setIdAutor] = useState("");
   const [showCongratulationsModal, setShowCongratulationsModal] =
     useState(false);
   const [navigateToHome, setNavigateToHome] = useState(false);
@@ -78,7 +78,12 @@ export default function Chats({
   const [imagePublicacion, setImagePublicacion] = useState(
     data.imagenPublicacion || ""
   );
-  console.log("A COMPARAR ID USER AUTOR: ", idAutor, "idUserAutor: ", idUserAutor)
+  console.log(
+    "A COMPARAR ID USER AUTOR: ",
+    idAutor,
+    "idUserAutor: ",
+    idUserAutor
+  );
   const showDeleteModal = () => {
     setIsDeleteModalVisible(true);
   };
@@ -122,18 +127,18 @@ export default function Chats({
         }
       );
 
-     // console.log("Chats archivado");
+      // console.log("Chats archivado");
       setTimeout(() => {
         navigation.navigate("Archivados", { token });
       }, 1000);
     } catch (error) {
       console.error("Error al archivar:", error);
     }
-   // console.log("Estoy saliendo del try");
+    // console.log("Estoy saliendo del try");
   };
   const fetchCerrarSearch = async () => {
     const idPublicacion = idReference[0];
-   // console.log(idPublicacion);
+    // console.log(idPublicacion);
     try {
       const response = await axios.post(
         `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Search`,
@@ -145,7 +150,7 @@ export default function Chats({
         }
       );
 
-     // console.log("Publciacion cerrada");
+      // console.log("Publciacion cerrada");
       // Muestra el modal de felicitación
       setShowCongratulationsModal(true);
 
@@ -156,11 +161,11 @@ export default function Chats({
     } catch (error) {
       console.error("Error al cerrar publicacion:", error);
     }
-   // console.log("Estoy saliendo del try");
+    // console.log("Estoy saliendo del try");
   };
   const fetchCerrarAdoption = async () => {
     const idPublicacion = idReference[0];
-   // console.log("idPublicacion dentro del try: ", idPublicacion);
+    // console.log("idPublicacion dentro del try: ", idPublicacion);
     try {
       const response = await axios.post(
         `https://buddy-app2.loca.lt/publications/publication/solve/${idPublicacion}?modelType=Adoption`,
@@ -172,7 +177,7 @@ export default function Chats({
         }
       );
 
-    //  console.log("Publciacion cerrada");
+      //  console.log("Publciacion cerrada");
       // Muestra el modal de felicitación
       setShowCongratulationsModal(true);
 
@@ -200,7 +205,7 @@ export default function Chats({
       })
       .then((response) => {
         // Declarar la constante idUser
-        setUserAutor(response.data[0].idUser)
+        setUserAutor(response.data[0].idUser);
         setImageEmisor(response.data[0].image);
       })
       .catch((error) => {
@@ -219,11 +224,11 @@ export default function Chats({
         }
       );
       setSMS(response.data); // Actualiza las publicaciones en el estado
-    //  console.log("Mensajes:", response.data);
+      //  console.log("Mensajes:", response.data);
     } catch (error) {
       console.error("Error al cargar mensajes:", error);
     }
-  //  console.log("Estoy saliendo del try");
+    //  console.log("Estoy saliendo del try");
   };
 
   const fetchEnviar = async () => {
@@ -237,12 +242,12 @@ export default function Chats({
           content: nuevoSMS,
         }
       );
-     // setSMS(response.data); // Actualiza las publicaciones en el estado
+      // setSMS(response.data); // Actualiza las publicaciones en el estado
       console.log("mensajes: ", response.data);
     } catch (error) {
       console.error("Error al cargar mensajes:", error);
     }
- //   console.log("estoy saliendo del try");
+    //   console.log("estoy saliendo del try");
   };
 
   const handleEnviarSMS = async () => {
@@ -302,11 +307,9 @@ export default function Chats({
     fetchData();
   }, []);
 
- 
-
   useEffect(() => {
     fetchSMS();
-   // console.log(SMS);
+    // console.log(SMS);
   }, []);
 
   useEffect(() => {
@@ -316,7 +319,7 @@ export default function Chats({
     }
   }, [SMS]);
   const idUserPublic = async () => {
-   console.log(id)
+    console.log(id);
     try {
       const response = await axios.get(
         `https://buddy-app2.loca.lt/publications/publication/${idReference}?modelType=${referenceType}`,
@@ -327,18 +330,18 @@ export default function Chats({
           },
         }
       );
-     
-      console.log("id autor public: ", response.data)
+
+      console.log("id autor public: ", response.data);
       setIdAutor(response.data.publication.user.idUser);
     } catch (error) {
       console.log("Respuesta del servidor:", error);
-     
-  }}
-  
+    }
+  };
+
   useEffect(() => {
     idUserPublic();
   }, []);
-   //console.log(token)
+  //console.log(token)
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
@@ -399,7 +402,8 @@ export default function Chats({
               >
                 <View style={styles.modalContainer}>
                   <View style={styles.modalContent}>
-                    {referenceType[0] === "SEARCH" && idUserAutor !== idAutor ? ( // Comprueba si es SEARCH y el idUserAutor es diferente de idAutor
+                    {referenceType[0] === "SEARCH" &&
+                    idUserAutor !== idAutor ? ( // Comprueba si es SEARCH y el idUserAutor es diferente de idAutor
                       <View style={(alignItems = "center")}>
                         <Text style={styles.modalText}>
                           ¡Mascota encontrada!
@@ -419,7 +423,8 @@ export default function Chats({
                           </TouchableOpacity>
                         </View>
                       </View>
-                    ) : referenceType[0] === "ADOPTION" && idUserAutor !== idAutor ? ( // Comprueba si es ADOPTION y el idUserAutor es diferente de idAutor
+                    ) : referenceType[0] === "ADOPTION" &&
+                      idUserAutor !== idAutor ? ( // Comprueba si es ADOPTION y el idUserAutor es diferente de idAutor
                       <View>
                         <Text style={styles.modalText}>¡Mascota adoptada!</Text>
                         <View style={styles.modalButtons}>

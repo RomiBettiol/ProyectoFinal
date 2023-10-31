@@ -103,18 +103,13 @@ export default function MiMascotaScreen() {
   const fetchMascotas = async () => {
     try {
       setisLoading(true);
-      const response = await axios.get(
-        "https://buddy-app2.loca.lt/mypet/pet",
-        {
-          headers: {
-            "auth-token": token,
-          },
-        }
-      );
+      const response = await axios.get("https://buddy-app2.loca.lt/mypet/pet", {
+        headers: {
+          "auth-token": token,
+        },
+      });
       const mascotasData = response.data.pets;
-      console.log(mascotasData);
       setMascotas(mascotasData);
-      console.log(mascotas);
       setBotonesVisibles(Array(mascotasData.length).fill(false)); // Inicializa el estado
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -131,7 +126,6 @@ export default function MiMascotaScreen() {
 
   const idMascotaSeleccionada = (mascotaId) => {
     setSelectedMascotaId(mascotaId);
-    console.log(selectedMascotaId);
   };
 
   return (
@@ -232,6 +226,7 @@ export default function MiMascotaScreen() {
                     ]}
                     onPress={() => {
                       navigation.navigate("MiInfoImportante", {
+                        color: colores[index % colores.length],
                         mascotaId: mascota.idPet, // Pasa el ID de la mascota seleccionada
                         token: token,
                       });

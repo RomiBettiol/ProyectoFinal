@@ -41,15 +41,13 @@ export default function MisTurnos() {
   const [showTurnoModal, setShowTurnoModal] = useState(false);
   const route = useRoute();
   const mascotaId = route.params?.mascotaId;
-  const color  = route.params?.color;
-  console.log("COLOR: ",color)
+  const color = route.params?.color;
   const { token } = route.params;
   const [error404, setError404] = useState(false);
   const [buttonTransform, setButtonTransform] = useState(0);
   const [mensaje, setMensaje] = useState("");
-  const [image, setImage] = useState('');
-  const [mascotas, setMascotas] = useState('');
-  
+  const [image, setImage] = useState("");
+  const [mascotas, setMascotas] = useState("");
 
   async function fetchTurnos() {
     try {
@@ -73,11 +71,9 @@ export default function MisTurnos() {
     }
   }
 
-  console.log(turnos);
   useEffect(() => {
     fetchTurnos();
   }, []);
-
 
   const filterAndSearchTurnos = () => {
     return turnos
@@ -138,7 +134,6 @@ export default function MisTurnos() {
   };
   // Dentro de la función que maneja la opción "Eliminar"
   const handleDeleteTurno = async () => {
-    console.log(turno.idTurn);
     try {
       const response = await axios.delete(
         `https://buddy-app2.loca.lt/mypet/turn/${mascotaId}/${turno.idTurn}`,
@@ -148,7 +143,6 @@ export default function MisTurnos() {
           },
         }
       );
-      console.log("Turno eliminado:", response.data);
       setShowSuccessModal(true);
     } catch (error) {
       console.error("Error eliminando la mascota:", error);
@@ -172,9 +166,10 @@ export default function MisTurnos() {
     setOverlayVisible(false); // Cierra el modal NuevaMascota
   };
   useEffect(() => {
-    const fetchMascotas= async () => {
+    const fetchMascotas = async () => {
       try {
-        const response = await axios.get(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
+        const response = await axios.get(
+          `https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
           {
             headers: {
               "auth-token": token,
@@ -184,10 +179,9 @@ export default function MisTurnos() {
 
         if (response.status === 200) {
           setMascotas(response.data);
-          console.log("mascota: ",mascotas);
+
           setImage(response.data.pet[0].image);
-          console.log("image: ", image);
-        } else {
+
           setMascotas(response.data);
         }
       } catch (error) {
@@ -198,17 +192,13 @@ export default function MisTurnos() {
     fetchMascotas();
   }, [token]);
 
-  
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contentContainer1}>
-          <View style={[styles.container1 , {backgroundColor: color} ]}>
-            <Image
-              source={{uri: image}}
-              style={styles.imagMascota}
-            />
+          <View style={[styles.container1, { backgroundColor: color }]}>
+            <Image source={{ uri: image }} style={styles.imagMascota} />
             <View style={styles.containerTitulo}>
               <Text style={styles.titulo}>MIS TURNOS</Text>
             </View>
@@ -234,7 +224,7 @@ export default function MisTurnos() {
               {/* Generar las opciones de años dinámicamente */}
               {Array.from(
                 { length: 10 },
-                (_, i) => new Date().getFullYear() - i
+                (_, i) => new Date().getFullYear() + i
               ).map((year) => (
                 <Picker.Item key={year} label={year.toString()} value={year} />
               ))}
@@ -292,7 +282,9 @@ export default function MisTurnos() {
                             />
                           </TouchableOpacity>
 
-                          <View style={[styles.dia, {backgroundColor: color}]}>
+                          <View
+                            style={[styles.dia, { backgroundColor: color }]}
+                          >
                             <Text style={styles.numero}>{dia(turno)}</Text>
                           </View>
                           <Text>{turno.turnHour}</Text>

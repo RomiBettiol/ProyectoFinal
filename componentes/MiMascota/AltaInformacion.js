@@ -89,7 +89,6 @@ export default function AltaInformacion({ visible, onClose, token }) {
                       },
                     }
                   );
-                  console.log("console log en alta informacion");
                   console.log("Respuesta del servidor:", response.data);
                   setShowSuccessModal(true);
                 } catch (error) {

@@ -47,10 +47,9 @@ export default function MisVacunas() {
   const [buttonTransform, setButtonTransform] = useState(0);
   const [mensaje, setMensaje] = useState("");
   const [error404, setError404] = useState(false);
-  const [image, setImage] = useState('');
-  const [mascotas, setMascotas] = useState('');
-  const color  = route.params?.color;
-  
+  const [image, setImage] = useState("");
+  const [mascotas, setMascotas] = useState("");
+  const color = route.params?.color;
 
   async function fetchVaccines() {
     try {
@@ -62,7 +61,6 @@ export default function MisVacunas() {
           },
         }
       );
-      console.log("Después de hacer la solicitud GET");
       if (response.data && Array.isArray(response.data.vaccines)) {
         setVaccines(response.data.vaccines);
       } else {
@@ -91,18 +89,10 @@ export default function MisVacunas() {
         const day = parseInt(dateParts[0], 10);
         const month = parseInt(dateParts[1], 10) - 1; // Restamos 1 porque los meses en JavaScript son 0-11
         const year = parseInt(dateParts[2], 10);
-        console.log(year);
-        console.log(month);
-        console.log(day);
         const vaccineDate = new Date(year, month, day);
-        console.log("vaccineDate: ", vaccineDate);
         const vaccinYear = vaccineDate.getFullYear();
-        console.log("vaccinYear: ", vaccinYear);
         const searchTextLower = searchText.toLowerCase();
-        console.log("searchTextLower: ", searchTextLower);
         const titleLower = vaccin.titleVaccine.toLowerCase();
-        console.log("titleLower: ", titleLower);
-        console.log("hora:", vaccin.vaccineHour);
         return (
           (selectedYear === null || vaccinYear === selectedYear) &&
           (searchText === "" || titleLower.includes(searchTextLower))
@@ -193,15 +183,10 @@ export default function MisVacunas() {
   };
 
   useEffect(() => {
-    console.log("vaccines: ");
-    console.log(vaccines);
-  }, [vaccines]);
-
-  
-  useEffect(() => {
-    const fetchMascotas= async () => {
+    const fetchMascotas = async () => {
       try {
-        const response = await axios.get(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
+        const response = await axios.get(
+          `https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
           {
             headers: {
               "auth-token": token,
@@ -211,9 +196,7 @@ export default function MisVacunas() {
 
         if (response.status === 200) {
           setMascotas(response.data);
-          console.log("mascota: ",mascotas);
           setImage(response.data.pet[0].image);
-          console.log("image: ", image);
         } else {
           setMascotas(response.data);
         }
@@ -225,17 +208,13 @@ export default function MisVacunas() {
     fetchMascotas();
   }, [token]);
 
-
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contentContainer1}>
-         <View style={[styles.container1 , {backgroundColor: color} ]}>
-            <Image
-              source={{uri: image}}
-              style={styles.imagMascota}
-            />
+          <View style={[styles.container1, { backgroundColor: color }]}>
+            <Image source={{ uri: image }} style={styles.imagMascota} />
             <View style={styles.containerTitulo}>
               <Text style={styles.titulo}>MIS VACUNAS</Text>
             </View>
@@ -319,7 +298,9 @@ export default function MisVacunas() {
                             />
                           </TouchableOpacity>
 
-                          <View style={[styles.dia , {backgroundColor: color}]}>
+                          <View
+                            style={[styles.dia, { backgroundColor: color }]}
+                          >
                             <Text style={styles.numero}>{dia(vaccin)}</Text>
                           </View>
                           <Text>{vaccin.vaccineHour}</Text>
@@ -465,7 +446,6 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 16,
-    
   },
   contentContainer1: {
     flex: 1,
@@ -492,8 +472,8 @@ const styles = StyleSheet.create({
   containerTitulo: {
     alignItems: "center", // Para centrar horizontal
     width: "90%",
-    height:"100%",
-    justifyContent: 'center',
+    height: "100%",
+    justifyContent: "center",
   },
   subtitulo: {
     fontSize: 16,

@@ -337,13 +337,13 @@ export default function EditarMascota({
           <View style={styles.subtitulo}>
             <Text style={styles.label}>Tipo de Animal</Text>
           </View>
-          <View style={[styles.dropdown, { borderRadius: 100 }]}>   
-              <ListaValoresColor
-                  selectedColorId={selectedColorId}
-                  setSelectedColorId={setSelectedColorId}
-                  token={token}
-                />
-           </View>
+          <View style={[styles.dropdown, { borderRadius: 100 }]}>
+            <ListaValoresColor
+              selectedColorId={selectedColorId}
+              setSelectedColorId={setSelectedColorId}
+              token={token}
+            />
+          </View>
           <ScrollView horizontal={true}>
             <View>
               <ListaValoresAnimal
@@ -400,8 +400,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     marginTop: 35,
-    height:'95%',
-    width:'95%'
+    height: "95%",
+    width: "95%",
   },
 
   dropdown: {

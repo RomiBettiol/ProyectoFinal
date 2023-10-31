@@ -45,9 +45,9 @@ export default function MiInfoImportante() {
   const mascotaId = route.params?.mascotaId;
   const { token } = route.params;
   const [mensaje, setMensaje] = useState("");
-  const [image, setImage] = useState('');
-  const [mascotas, setMascotas] = useState('');
-  const color  = route.params?.color;
+  const [image, setImage] = useState("");
+  const [mascotas, setMascotas] = useState("");
+  const color = route.params?.color;
   async function fetchInformacion() {
     try {
       const response = await axios.get(
@@ -127,9 +127,10 @@ export default function MiInfoImportante() {
     setOverlayVisible(false); // Cierra el modal NuevaMascota
   };
   useEffect(() => {
-    const fetchMascotas= async () => {
+    const fetchMascotas = async () => {
       try {
-        const response = await axios.get(`https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
+        const response = await axios.get(
+          `https://buddy-app2.loca.lt/mypet/pet/${mascotaId}`,
           {
             headers: {
               "auth-token": token,
@@ -139,7 +140,7 @@ export default function MiInfoImportante() {
 
         if (response.status === 200) {
           setMascotas(response.data);
-          console.log("mascota: ",mascotas);
+          console.log("mascota: ", mascotas);
           setImage(response.data.pet[0].image);
           console.log("image: ", image);
         } else {
@@ -153,17 +154,13 @@ export default function MiInfoImportante() {
     fetchMascotas();
   }, [token]);
 
-  
   return (
     <View style={styles.container}>
       <HeaderScreen token={token} />
       <ScrollView style={styles.scroll}>
         <View style={styles.contentContainer1}>
-          <View style={[styles.container1 , {backgroundColor: color} ]}>
-            <Image
-              source={{uri: image}}
-              style={styles.imagMascota}
-            />
+          <View style={[styles.container1, { backgroundColor: color }]}>
+            <Image source={{ uri: image }} style={styles.imagMascota} />
             <View style={styles.containerTitulo}>
               <Text style={styles.titulo}>INFORMACIÓN IMPORTANTE</Text>
             </View>
